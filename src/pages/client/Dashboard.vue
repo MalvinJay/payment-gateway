@@ -1,0 +1,148 @@
+<template>
+    <div>
+        <!-- Blue div -->
+        <el-card class="blue-pure b-0 blue-banner">
+            <div class="flex justify-content-between">
+                <div class="flex flex-column">
+                    <div class="flex">
+                        <p class="p-0 m-0">Today</p>
+                        <p class="p-0 m-0 bold-600" style="padding-left: 16px">GHc0.00</p>
+                    </div>
+                    <div class="flex align-items-center">
+                        <el-date-picker class="transparent-input"
+                            v-model="value2"
+                            type="date"
+                            placeholder="Yesterday"
+                            :picker-options="pickerOptions1">
+                            </el-date-picker>
+                        <p class="p-0 m-0 bold-600 little-money" style="padding-left: 16px">GHc0.00</p>
+                    </div>
+                </div>
+            </div>
+        </el-card>
+        <!-- Summary Div -->
+        <el-card class="b-0 analytics my-2">
+            <div class="flex flex-column analytics-div">
+                <p class="bold-600 blue-text pb-5 m-0">Analytics</p>
+                <div class="flex justify-content-between">
+                    <div style="height: 30px;" class="flex align-items-center">
+                        <el-checkbox-group v-model="checked" size="mini" class="dashboard-checkboxes mr-6 z-depth-button border-rounded">
+                            <el-checkbox-button v-for="city in durations" :label="city" :key="city">{{city}}</el-checkbox-button>
+                        </el-checkbox-group>
+                        <div class="w-200 mr-6 z-depth-button border-rounded">
+                            <el-date-picker class="date-input blue-text"
+                                v-model="date"
+                                type="date"
+                                placeholder="From.."
+                                default-value="2010-10-01"
+                                format="MMM dd, yyyy">
+                                </el-date-picker>
+                            <i class="arrow right icon"></i>
+                            <el-date-picker class="date-input"
+                                v-model="date1"
+                                type="date"
+                                placeholder="To.."
+                                default-value="2010-10-01"
+                                format="MMM dd, yyyy">
+                                </el-date-picker>
+                        </div>
+                        <div>
+                            <el-button class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text">Daily</el-button>
+                        </div>
+                    </div>
+                    <div>
+                        <el-button class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text"><i class="cog icon "></i> Customize</el-button>
+                    </div>
+                </div>
+            </div>
+            <div class="light-background analytics-div border-top flex flex-column justify-content-center">
+                <p class="grey-text m-0 pb-5">Gross Volume</p>
+                <p class="light-blue-text s-16 bold-600">GHc0.00</p>
+            </div>
+            <div class="light-background analytics-div border-top flex flex-column justify-content-center">
+                <p class="grey-text m-0 pb-5">New customers
+                    <el-popover
+                        placement="top-start"
+                        trigger="hover"
+                        content="Lorem">
+                        <el-button slot="reference" icon="info circle icon" type="text"></el-button>
+                        <!-- <i slot="reference" class="el-icon-info"></i> -->
+                    </el-popover>
+                </p>
+                <p class="light-blue-text s-16 bold-600">1</p>
+            </div>
+        </el-card>
+    </div>
+</template>
+
+<script>
+import EventBus from '../../event-bus.js'
+
+export default {
+  name: 'Dashboard',
+  data () {
+    return {
+      durations: ['1w', '4w', '1y', 'Mtd', 'Qtd', 'Ytd', 'All'],
+      checked: [],
+      value2: null,
+      date: '',
+      date1: ''
+    }
+  },
+  mounted () {
+    EventBus.$emit('sideNavClick', 'dashboard')
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.blue-banner{
+    color: white;
+    // font-weight: 500;
+    font-size: 18px;
+    .el-card__body{
+        padding: 10px 20px !important;
+    }
+}
+.little-money{
+    font-size: 12px;
+}
+.transparent-input{
+    width: 100px;
+}
+.date-input{
+    width: calc((200px/2) - 17px )
+}
+.w-200{
+    width: 200px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    i{
+        margin-top: -3px;
+    }
+}
+.mini-button{
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+
+    span{
+        font-weight: 600
+    }
+    i{
+        margin-right: 5px;
+    }
+}
+.analytics{
+    .el-card__body{
+        padding: 0 !important;
+    }
+    .analytics-div{
+        height: 100px;
+        padding: 20px;
+    }
+}
+</style>
