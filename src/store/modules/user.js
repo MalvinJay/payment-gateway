@@ -1,12 +1,17 @@
-import { AUTH_REQUEST } from './store-constants'
+import { AUTH_REQUEST, SET_TOKEN, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
 import { apiCall } from '../apiCall'
+import axios from 'axios'
 
 // state
 const state = {
   user: {
     data: [],
-    token: ''
-  }
+    token: localStorage.getItem('token'),
+    client_id: '',
+    client_secret: ''
+  },
+  client: {},
+  logIn: true
 }
 
 // getters
@@ -14,42 +19,67 @@ const getters = {
   user: state => state.user.data,
   userFilters: state => state.user.filters,
   userSortParams: state => state.user.sortParams,
-  userState: state => state.user.state
+  userState: state => state.user.state,
+  token: state => state.user.token
 }
 
 // mutations
 const mutations = {
-
+  [SET_TOKEN] (state) {
+    state.logIn = true
+    state.user.token = localStorage.getItem('token')
+  },
+  [SET_CLIENT_CRED] (state, data) {
+    state.client = data
+  },
+  [LOGOUT] (state) {
+    state.logIn = false
+    state.user.token = null
+  }
 }
 
 // actions
 const actions = {
-  [AUTH_REQUEST] ({ state, commit, rootGetters }, {user, password}) {
-    // if (user === 'user' && password === 'password') {
-    //     return true
-    // } else {
-    //     return false
-    // }
-    // if (cache && state.transactions.data.length !== 0) {
-    //   commit(SET_TRANSACTIONS_STATE, 'DATA')
-    // } else {
-    //   state.transactions.state = 'LOADING'
-    //   commit(SET_TRANSACTIONS_STATE, 'LOADING')
-    //   return new Promise((resolve, reject) => {
-    //     apiCall({
-    //       url: GET_TRANSACTIONS_URI,
-    //       method: 'GET',
-    //       token: rootGetters.token
-    //     }).then((response) => {
-    //       commit(TRANSACTIONS_FETCH, response.data)
-    //       resolve()
-    //     }).catch((error) => {
-    //       commit(SET_TRANSACTIONS_STATE, 'ERROR')
-    //       console.log(error)
-    //       reject(error)
-    //     })
-    //   })
-    // }
+  [LOGIN] ({ state, commit }, {email, password}) {
+    return new Promise((resolve, reject) => {
+      var url = `https://api.flopay.io/v1/flopay_client_login.json?email=${email}&password=${password}`
+      axios.post(url)
+        .then((response) => {
+          commit(SET_CLIENT_CRED, response.data.response.data.access_key)
+          localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
+          localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
+          resolve(response)
+        }).catch((error) => {
+          console.log(error)
+          reject(error)
+        })
+    })
+  },
+  [AUTH_REQUEST] ({ state, commit }) {
+    return new Promise((resolve, reject) => {
+      var url = `https://api.flopay.io/v1/login.json`
+      var params = {}
+      params.client_id = localStorage.getItem('client_id')
+      params.client_secret = localStorage.getItem('client_secret')
+      params.grant_type = 'client_credentials'
+      axios.post(url, params)
+        .then((response) => {
+          console.log('user token', response)
+          localStorage.setItem('token', response.data.access_token)
+          commit(SET_TOKEN, response.data.access_token)
+          resolve(response)
+        }).catch((error) => {
+          console.log(error)
+          reject(error)
+        })
+    })
+  },
+  [LOGOUT] ({ state, commit }) {
+    return new Promise((resolve, reject) => {
+      commit(LOGOUT)
+      localStorage.removeItem('token') // clear your user's token from localstorage
+      resolve()
+    })
   }
 }
 

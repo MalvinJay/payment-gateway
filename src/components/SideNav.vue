@@ -23,33 +23,67 @@
                     Dashboard
                 </template>
             </el-menu-item>
-            <el-submenu ref="sideMenu" index="11">
+            <el-submenu ref="sideMenu" index="2">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/payment.svg" alt="">Transactions
                 </template>
-                <el-menu-item route="/view" index="view">View Transactions</el-menu-item>
-                <el-menu-item route="/logs" index="logs">Logs</el-menu-item>
-                <el-menu-item index="settings">Settings</el-menu-item>
-                <el-menu-item index="1-4">Jobs</el-menu-item>
-                <el-menu-item index="1-5">Checkout</el-menu-item>
-                <el-menu-item index="1-6">Invoices</el-menu-item>
+                <el-menu-item route="/view" index="view">Payments</el-menu-item>
+                <el-menu-item route="/payouts" index="payouts">Payouts</el-menu-item>
+                <el-menu-item index="settings">Disputes</el-menu-item>
+                <el-menu-item index="product">Settings</el-menu-item>
             </el-submenu>
-            <el-menu-item index="3">
+            <el-submenu ref="sideMenu" index="3">
+                <template slot="title">
+                    <img class="mr-10" src="../assets/images/icons/balance.svg" alt="">Account
+                </template>
+                <el-menu-item index="3-1">Transactions</el-menu-item>
+                <el-menu-item index="3-2">Topups</el-menu-item>
+                <el-menu-item index="3-3">Settlements</el-menu-item>
+                <el-menu-item index="3-4">Settings</el-menu-item>
+            </el-submenu>
+            <el-menu-item index="contacts">
+                <template slot="title">
+                    <img class="mr-10" src="../assets/images/icons/customer.svg" alt="">
+                    Customers
+                </template>
+            </el-menu-item>
+            <el-submenu ref="sideMenu" index="5">
+                <template slot="title">
+                    <img class="mr-10" src="../assets/images/icons/billing.svg" alt="">Billing
+                </template>
+                <el-menu-item index="3-1">Invoices</el-menu-item>
+                <el-menu-item index="3-2">Subscriptions</el-menu-item>
+                <el-menu-item index="3-3">Products</el-menu-item>
+                <el-menu-item index="3-4">Orders</el-menu-item>
+            </el-submenu>
+            <el-submenu index="6">
+                <template slot="title">
+                    <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">Connect
+                </template>
+                <el-menu-item index="6-1">Accounts</el-menu-item>
+                <el-menu-item index="logs">Settlements</el-menu-item>
+                <el-menu-item index="settings">Fees</el-menu-item>
+                <el-menu-item index="product">Settings</el-menu-item>
+            </el-submenu>
+            <el-menu-item index="7">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/radar.svg" alt="">
                     FoneMessenger
                 </template>
             </el-menu-item>
-            <el-menu-item index="4">
+            <el-submenu ref="sideMenu" index="8">
                 <template slot="title">
-                    <img class="mr-10" src="../assets/images/icons/developer.svg" alt="">
-                    Report
+                    <img class="mr-10" src="../assets/images/icons/developer.svg" alt="">Developers
                 </template>
-            </el-menu-item>
-            <el-menu-item index="5">
+                <el-menu-item index="8-1">Apps</el-menu-item>
+                <el-menu-item index="events">Events</el-menu-item>
+                <el-menu-item index="logs">Logs</el-menu-item>
+                <el-menu-item index="product">Settings</el-menu-item>
+            </el-submenu>
+            <el-menu-item index="9">
                 <template slot="title">
-                    <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">
-                    Contacts
+                    <img class="mr-10" src="../assets/images/icons/business-settings.svg" alt="">
+                    Business
                 </template>
             </el-menu-item>
         </el-menu>

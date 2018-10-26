@@ -1,7 +1,7 @@
 <template>
     <div class="flex justify-content-between h-100 header">
-        <!-- <div class="search-div is-always"> -->
-            <el-input class="is-shadow border-rounded search-div" prefix-icon="el-icon-search" placeholder="Search..."></el-input>
+        <!-- <div> -->
+            <el-input @keyup.enter.native="searchButton" v-model="search" class="is-shadow border-rounded search-div" :prefix-icon="loading" placeholder="Search..."></el-input>
         <!-- </div> -->
         <div class="flex align-items-center header-side-panel">
             <el-dropdown trigger="click">
@@ -24,7 +24,7 @@
                     <el-dropdown-item divided>Lorem</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <el-dropdown trigger="click">
+            <el-dropdown class="logout-dropdown" @command="handleCommand" trigger="click">
                 <span class="el-dropdown-link">
                     <img class="img-big circle" src="../assets/images/profile/profile.jpg" alt="">
                 </span>
@@ -35,8 +35,8 @@
                             <p class="s-8">Role Here</p>
                         </div>
                     </el-dropdown-item>
-                    <el-dropdown-item>Profile</el-dropdown-item>
-                    <el-dropdown-item>Sign Out</el-dropdown-item>
+                    <el-dropdown-item class="header-user-dropdown">Profile</el-dropdown-item>
+                    <el-dropdown-item class="header-user-dropdown" command="logout">Sign Out</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -45,7 +45,38 @@
 
 <script>
 export default {
-  name: 'Header'
+  name: 'Header',
+  data () {
+    return {
+        search: '',
+        loading: 'el-icon-search'
+    }
+  },
+  methods: {
+    searchButton () {
+        this.loading = 'el-icon-loading'
+        this.$store.dispatch('searchTransactions', {search: this.search})
+        .then(() => {
+            this.$router.push('/view')
+            this.loading = 'el-icon-search'
+        })
+    },
+    logout () {
+        this.$store.dispatch('logout')
+        .then(() => {
+        this.$router.push('/login')
+        })
+    },
+    handleCommand (command) {
+        switch (command) {
+            case 'logout':
+                this.logout()
+                break
+            default:
+                break
+        }
+    }
+  }
 }
 </script>
 
@@ -68,6 +99,7 @@ export default {
     letter-spacing: 0.5px;
 }
 .dropdown-header{
+    padding: 10px 0;
     p{
         margin: 0;
         padding: 0;
@@ -79,6 +111,12 @@ export default {
     }
 }
 
+.header-user-dropdown{
+    line-height: 30px;
+    color: #586ada;
+    font-size: 1em;
+    font-weight: 600;
+}
 .w-200{
     width: 200px
 }

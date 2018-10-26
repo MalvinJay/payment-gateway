@@ -19,7 +19,26 @@
 
 <script>
 export default {
-  name: 'Client'
+  name: 'Client',
+  created () {
+    this.$store.dispatch('getTransactions')
+    this.$store.dispatch('getJobs')
+    this.$store.dispatch('getQueues')
+    this.$store.dispatch('getPayouts')
+  },
+  onIdle() {
+    console.log('ZZZ', Date.now())
+    this.$store.dispatch('logout')
+    .then(() => {
+      this.$router.push('/login')
+    })
+  },
+  onActive() {
+    setInterval(() => { 
+        this.$store.dispatch('getToken')
+    }, 3300000)
+    console.log('Awake', Date.now())
+  }
 }
 </script>
 

@@ -40,7 +40,7 @@ export default {
     padding: 2px 8px;
     font-weight: 500;
     line-height: 16px;
-    font-size: 13px;
+    font-size: 10px;
     border-radius: 20px;
     text-transform: capitalize;
     color: #4e566d;
@@ -48,7 +48,7 @@ export default {
     i{
         height: auto;
         margin-left: 5px;
-        font-size: 12px;
+        font-size: 10px;
     }
 }
 .success{

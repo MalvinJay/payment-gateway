@@ -1,12 +1,13 @@
 /* theme color */
 $--color-primary: #586ADA;
 
-/* icon font path, required */
-$--font-path: '~element-ui/lib/theme-chalk/fonts';
+// /* icon font path, required */
+// $--font-path: '~element-ui/lib/theme-chalk/fonts';
 
-@import "~element-ui/packages/theme-chalk/src/index";
+// @import "~element-ui/packages/theme-chalk/src/index";
 
 $border: #dcdfe6;
+
 
 .el-submenu__title{
     height: 46px;
@@ -15,6 +16,10 @@ $border: #dcdfe6;
 }
 .el-submenu__title:focus, .el-submenu__title:hover{
     background-color: transparent !important;
+}
+
+.el-submenu__title i{
+    display: none;
 }
 
 .header{
@@ -56,7 +61,7 @@ $border: #dcdfe6;
 
 }
 
-// 
+// date
 .date-input{
     .el-input__prefix, .el-input__suffix{
         display: none;
@@ -122,7 +127,30 @@ $border: #dcdfe6;
         text-transform: uppercase;
         font-size: 11px;
         font-weight: 600;
+        color: rgba(0,0,0,.87);
     }
+    
+}
+.transactions-table-body{
+    
+    td{
+        padding: 8px 0 !important;
+    }
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    .cell{
+        .mini-menu{
+            box-shadow: 0 0 0 1px rgba(43,45,80,0.1),0 2px 5px 0 rgba(43,45,80,0.1),0 3px 9px 0 rgba(43,45,80,0.08),0 1px 1.5px 0 rgba(0,0,0,0.08),0 1px 2px 0 rgba(0,0,0,0.08) !important;
+            i.first-icon{
+                // &:first-child{
+                    opacity: 1;
+                // }
+            }
+        }
+    }
+}
+.el-table__empty-text{
+    font-size: 12px;
 }
 // font size for select
 .el-select{
@@ -134,5 +162,162 @@ $border: #dcdfe6;
 .p-0{
     .el-card__body{
         padding: 0 !important
+    }
+}
+
+// card
+.card-0{
+    .el-card__body{
+        padding: 0;
+    }
+}
+
+.card-20{
+    .el-card__body{
+        padding: 20px;
+    }
+}
+
+// button
+.standard-button {
+    .el-button{
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+}
+
+.transaction-form{
+    // .el-form-item{
+    //     margin-bottom: 10px;
+    // }
+    // .el-input__inner{
+    //     height: 30px;
+    //     font-size: 12px;
+    // }
+    .el-form-item__label{
+        font-size: 12px;
+        color: black;
+    }
+}
+.default-form{
+    font-size: 12px;
+    .el-input__inner{
+        height: 30px;
+        font-size: 12px;
+    }
+    .el-form-item__label{
+        font-size: 12px;
+        text-transform: capitalize;
+    }
+    .el-switch__label *{
+        font-size: 12px;
+    }
+}
+
+.default-tab{
+    background: #E3E8EE;
+    box-shadow: none;
+    border: 0;
+
+    .el-tabs__header{
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
+        border-radius: 4px;
+        height: 50px;
+
+        .el-tabs__item{
+            height: 50px;
+            margin: 0;
+            line-height: 45px;
+            font-weight: 600;
+            &:first-child{
+                border-radius: 4px 0 0 4px
+            }
+
+            &:last-child{
+                border-radius: 0 4px 4px 0
+            }
+
+            &:hover{
+                color: $--color-primary;
+            }
+        }
+    }
+    .el-tabs__content{
+        margin-top: 20px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
+        border-radius: 4px;
+        background: white;
+        padding: 0;
+    }
+    .el-tabs__header .el-tabs__item.is-active{
+        color: $--color-primary;
+        border-bottom: 2px solid $--color-primary;
+    }
+}
+
+// filter-dropdown
+.filter-dropdown{
+    // .el-dropdown-menu{
+        width: 250px;
+        padding: 0;
+    // }
+    .el-dropdown-menu__item{
+        font-size: 12px;
+        padding-left: 6px;
+
+        &:hover{
+            background: transparent;
+            color: black;
+        }
+    }
+    .el-dropdown-menu__item--divided{
+        margin: 0;
+
+        &::before{
+            margin-left: -6px;
+            // height: 0;
+        }
+    }
+
+    .filter-input{
+        .el-input__prefix, .el-input__suffix{
+            display: none;
+        }
+        .el-input__inner{
+            background: transparent;
+            color: #4e566d;
+            padding-left: 3px;
+            padding-right: 0px;
+            height: 25px;
+            line-height: 25px;
+            font-size: 12px;
+            font-weight: 600;
+    
+            &::placeholder{
+                color: #4e566d !important;
+            }
+        } 
+    }
+}
+
+// new payment modal
+.new-transaction{
+    .el-dialog__title{
+        color: #2b2d50;
+        font-size: 16px;
+        font-weight: 500
+    }
+    .el-dialog__body{
+        background: #F7FAFC
+    }
+    .el-input__inner{
+        // box-shadow: 0 0 0 1px rgba(43,45,80,.1), 0 2px 5px 0 rgba(43,45,80,.08), 0 1px 1.5px 0 rgba(0,0,0,.07), 0 1px 2px 0 rgba(0,0,0,.08)
+    }
+}
+
+.no-padding-input{
+    .el-input__inner{
+        padding: 0 4px;
+        margin: 0;
     }
 }

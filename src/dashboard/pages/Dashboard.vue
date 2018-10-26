@@ -12,12 +12,14 @@
                         <el-date-picker class="transparent-input"
                             v-model="value2"
                             type="date"
-                            placeholder="Yesterday"
-                            :picker-options="pickerOptions1">
+                            placeholder="Yesterday">
                             </el-date-picker>
                         <p class="p-0 m-0 bold-600 little-money" style="padding-left: 16px">GHc0.00</p>
                     </div>
                 </div>
+            </div>
+            <div class="blue-graph">
+                <line-chart></line-chart>
             </div>
         </el-card>
         <!-- Summary Div -->
@@ -55,9 +57,14 @@
                     </div>
                 </div>
             </div>
-            <div class="light-background analytics-div border-top flex flex-column justify-content-center">
-                <p class="grey-text m-0 pb-5">Gross Volume</p>
-                <p class="light-blue-text s-16 bold-600">GHc0.00</p>
+            <div class="light-background analytics-div h-76 border-top flex justify-content-between align-items-center">
+                <div class="flex flex-column justify-content-center">
+                    <p class="grey-text m-0 pb-5">Gross Volume</p>
+                    <p class="light-blue-text s-16 bold-600">GHc0.00</p>
+                </div>
+                <div style="" class="w-50">
+                    <line-chart :data="data" :labels="labels"></line-chart>
+                </div>
             </div>
             <div class="light-background analytics-div border-top flex flex-column justify-content-center">
                 <p class="grey-text m-0 pb-5">New customers
@@ -86,7 +93,11 @@ export default {
       checked: [],
       value2: null,
       date: '',
-      date1: ''
+      date1: '',
+      data: [1, 4],
+      labels: ['Red', 'Blue'],
+      data1: [0, 0, 0, 0, 0],
+      labels1: []
     }
   },
   mounted () {
@@ -104,9 +115,14 @@ export default {
         padding: 10px 20px !important;
     }
 }
+
+.blue-graph{
+    height: 70px;
+}
 .little-money{
     font-size: 12px;
 }
+
 .transparent-input{
     width: 100px;
 }
@@ -144,5 +160,8 @@ export default {
         height: 100px;
         padding: 20px;
     }
+}
+.h-76{
+    height: 76px !important;
 }
 </style>
