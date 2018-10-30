@@ -115,24 +115,24 @@ const actions = {
   },
   [GET_CURRENT_CONTACT] ({ state, commit, rootGetters, dispatch }, id) {
     commit(SET_CURRENT_CONTACT_STATE, 'LOADING')
-    var contact = state.contacts.data.find(el => el.code === id)
-    commit(SET_CURRENT_CONTACT, contact)
-    commit(SET_CURRENT_CONTACT_STATE, 'DATA')
-    // return new Promise((resolve, reject) => {
-    //   apiCall({
-    //     url: `${GET_CONTACTS_URI}/${id}`,
-    //     method: 'GET',
-    //     token: rootGetters.token
-    //   }).then((response) => {
-    //     commit(SET_CURRENT_CONTACT_STATE, 'DATA')
-    //     commit(SET_CURRENT_CONTACT, response.data)
-    //     resolve()
-    //   }).catch((error) => {
-    //     commit(SET_CURRENT_CONTACT_STATE, 'ERROR')
-    //     console.log(error)
-    //     reject(error)
-    //   })
-    // })
+    // var contact = state.contacts.data.find(el => el.code === id)
+    // commit(SET_CURRENT_CONTACT, contact)
+    // commit(SET_CURRENT_CONTACT_STATE, 'DATA')
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `https://api.flopay.io/v1/clients/contacts/${id}`,
+        method: 'GET',
+        token: rootGetters.token
+      }).then((response) => {
+        commit(SET_CURRENT_CONTACT_STATE, 'DATA')
+        commit(SET_CURRENT_CONTACT, response.data)
+        resolve()
+      }).catch((error) => {
+        commit(SET_CURRENT_CONTACT_STATE, 'ERROR')
+        console.log(error)
+        reject(error)
+      })
+    })
   }
 }
 

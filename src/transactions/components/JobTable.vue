@@ -1,6 +1,10 @@
 <template>
     <div class="transactions">
-        <div class="trans-div flex justify-content-end">
+        <div class="trans-div flex justify-content-between">
+            <div class="flex align-items-baseline">
+                <p class="blue-text bold-600 s-16 m-0 p-0">Jobs</p>
+                <!-- <filter-component filterType="payment"></filter-component> -->
+            </div>
             <div>
                 <el-button @click="newJob" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
                 <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
@@ -27,7 +31,7 @@
                     <template slot-scope="scope">
                         <div class="mini-menu">
                             <i v-if="scope.row.status ==='failed'" class="reply icon blue-text cursor first-icon"></i>
-                            <el-dropdown trigger="click">
+                            <el-dropdown @command="command => handleCommand(command, scope.row)">
                                 <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
                                 <el-dropdown-menu class="w-200" slot="dropdown">
                                     <el-dropdown-item disabled>
@@ -35,8 +39,8 @@
                                             action
                                         </div>
                                     </el-dropdown-item>
-                                    <el-dropdown-item class="s-12">Edit Job</el-dropdown-item>
-                                    <el-dropdown-item class="s-12">Delete Job</el-dropdown-item>
+                                    <el-dropdown-item command="edit" class="s-12">Edit Job</el-dropdown-item>
+                                    <el-dropdown-item command="delete" class="s-12">Delete Job</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -102,10 +106,59 @@ export default {
         this.$store.dispatch('getTransactions', {page: val})
     },
     clickRow (row, event, column) {
-        this.$router.push(`/job/${row.name}`)
+        if (column.property) {
+            this.$router.push(`/job/${row.id}`)
+        }
+    },
+    editJob (id) {
+        this.$router.push(`/job/${id}`)
     },
     newJob () {
         this.$router.push('/new-job')
+    },
+    handleCommand (command, row) {
+        switch (command) {
+            case 'edit':
+                this.editJob(row.id)
+                break
+            case 'delete':
+                this.deleteJob(row.id)
+                break
+            default:
+                break
+        }
+    },
+    deleteJob (id) {
+        this.$confirm('This will permanently delete this job. Continue?', 'Warning', {
+          confirmButtonText: 'Delete',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('deleteJob', id)
+          .then((response) => {
+            if (response.data.success) {
+               this.$message({
+                    type: 'success',
+                    message: 'Job deleted'
+                })
+            } else {
+               this.$message({
+                    type: 'error',
+                    message: response.data.response.message
+                })
+            }  
+            
+            console.log('job delete', response.data)
+          }).catch((error) => {
+            this.$message({
+                type: 'error',
+                message: 'Job not deleted'
+            })
+            console.log('job delete error', error.response)
+          })
+        }).catch(() => {
+                  
+        })
     },
     submitForm(formName) {
         this.$refs[formName].validate((valid) => {

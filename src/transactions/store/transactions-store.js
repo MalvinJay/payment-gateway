@@ -4,7 +4,7 @@ import { TRANSACTION_CREATE, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SE
   SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, SET_PENDING_STATE, SET_PENDING_META, GET_CURRENT_TRANSACTION,
   GET_TRANSACTIONS_URI } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
-import Utils from '../../utils/Utils'
+import Utils from '../../utils/services'
 
 // state
 const state = {
@@ -170,7 +170,7 @@ const actions = {
   [TRANSACTION_CREATE] ({commit, state, rootGetters}, transaction) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_TRANSACTIONS_URI}`,
+        url: `https://api.flopay.io/v1/receive.json`,
         method: 'POST',
         data: transaction,
         token: rootGetters.token
@@ -215,28 +215,33 @@ const actions = {
     dispatch('getQueues', {page: 1})
   },
   [GET_PENDING] ({ state, commit, rootGetters }, {
-    page = 1
+    page = 1,
+    cache = true
   } = {}) {
     var filters = state.pending.filters
     var query = Utils.createQueryParams(filters, page)
     commit(SET_PENDING_STATE, 'LOADING')
     commit(SET_PENDING_FILTERS, filters)
-    return new Promise((resolve, reject) => {
-      apiCall({
-        url: `${GET_TRANSACTIONS_URI}${query}&statuses[]=pending`,
-        method: 'GET',
-        token: rootGetters.token
-      }).then((response) => {
-        commit(SET_PENDING_STATE, 'DATA')
-        commit(SET_PENDING_META, response.data.response.data)
-        commit(SET_PENDING, response.data.response.data.transactions)
-        resolve()
-      }).catch((error) => {
-        commit(SET_PENDING_STATE, 'ERROR')
-        console.log(error)
-        reject(error)
+    if (cache && state.pending.data) {
+      commit(SET_PENDING_STATE, 'DATA')
+    } else {
+      return new Promise((resolve, reject) => {
+        apiCall({
+          url: `${GET_TRANSACTIONS_URI}${query}&statuses[]=pending`,
+          method: 'GET',
+          token: rootGetters.token
+        }).then((response) => {
+          commit(SET_PENDING_STATE, 'DATA')
+          commit(SET_PENDING_META, response.data.response.data)
+          commit(SET_PENDING, response.data.response.data.transactions)
+          resolve()
+        }).catch((error) => {
+          commit(SET_PENDING_STATE, 'ERROR')
+          console.log(error)
+          reject(error)
+        })
       })
-    })
+    }
   },
   [SET_PENDING_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_PENDING_FILTERS, filters)

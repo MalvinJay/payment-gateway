@@ -73,7 +73,7 @@
                                     <div v-else>
                                         <p v-if="key === 'last run' || key === 'next run'" class="s-13 mono">{{value}}</p>
                                         <el-switch v-model="form.active" v-else-if="key === 'active'"></el-switch>
-                                        <el-input-number v-else :controls="false" style="width: 80%" size="mini" v-model="form[key]"></el-input-number>
+                                        <el-input-number class="text-left" v-else :controls="false" style="width: 80%;" size="mini" v-model="form[key]"></el-input-number>
                                     </div>
                                 </el-col>
                             </el-row>
@@ -89,7 +89,7 @@
                 <span class="blue-text bold-600 s-16">{{header}} runs</span>
             </div>
             <div>
-                <el-table @row-click="clickRun" empty-text="No job runs to display" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="form.runs">
+                <el-table @row-click="clickRun" empty-text="No job runs to display" v-loading="runLoading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="runs">
                     <el-table-column type="index"></el-table-column>
                     <el-table-column prop="date" label="Date"></el-table-column>
                     <el-table-column prop="time" label="Time"></el-table-column>
@@ -126,7 +126,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import EventBus from '../../event-bus.js'
-import Utils from '../../utils/Utils'
+import Utils from '../../utils/services'
+import Job from '../models/Job.js'
+
 export default {
     name: 'JobDetails',
     data () {
@@ -138,7 +140,8 @@ export default {
     },
     created () {
         // EventBus.$emit('sideNavClick', 'view')
-        this.$store.dispatch('getCurrentJob', this.$route.params.id)
+        this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
+        this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
     },
     methods: {
         clickRow () {
@@ -149,13 +152,15 @@ export default {
         },
         deleteCustomer (index, row) {
             console.log(index)
-            this.$store.dispatch('updateJob', {id: this.form.id, data: this.form})
+            var newForm = Job.getCreateView(this.form)
+            this.$store.dispatch('updateJob', {id: this.form.id, data: newForm})
             .then(() => {
                 this.$message({
                     message: 'Job Updated Successfully',
                     type: 'success'
                 })
-                this.form.contacts.splice(index, 1)
+                // this.form.contacts.splice(index, 1)
+                this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
             }).catch(() => {
                 this.$message({
                     message: 'Job Not Updated',
@@ -173,12 +178,15 @@ export default {
             this.readonly = true
         },
         update () {
-            this.$store.dispatch('updateJob', {id: this.form.id, data: this.form})
+            var newForm = Job.getCreateView(this.form)
+
+            this.$store.dispatch('updateJob', {id: this.form.id, data: newForm})
             .then(() => {
                 this.$message({
                     message: 'Job Updated Successfully',
                     type: 'success'
                 })
+                this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
             }).catch(() => {
                 this.$message({
                     message: 'Job Not Updated',
@@ -193,10 +201,15 @@ export default {
     computed: {
         ...mapGetters({
             form: 'currentJob',
-            state: 'currentJobState'
+            state: 'currentJobState',
+            runs: 'currentJobRuns',
+            runState: 'currentJobRunsState',
         }),
         loadingPage () {
             return this.state === 'LOADING'
+        },
+        runLoading () {
+            return this.runState === 'LOADING'
         },
         header () {
             return 'Job'

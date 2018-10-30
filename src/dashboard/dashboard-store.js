@@ -1,6 +1,6 @@
 import { GET_DASHBOARD_GRAPH, SET_DASHBOARD_FILTERS, SET_DASHBOARD_GRAPH, SET_DASHBOARD_GRAPH_STATE, GET_DASHBOARD_URI } from './dashboard-store-constants'
 import { apiCall } from '../store/apiCall'
-import Utils from '../utils/Utils'
+import Utils from '../utils/services'
 import Dashboard from './models/Dashboard'
 
 // state

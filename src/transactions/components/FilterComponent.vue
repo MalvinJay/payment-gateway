@@ -1,6 +1,7 @@
 <template>
     <el-dropdown ref="messageDrop" placement="bottom-start" trigger="click" :hide-on-click="false">
-        <el-button class="z-depth-button bold-600 el-dropdown-link s-13 open-sans mini-button" type="text"><i class="filter icon"></i> Filter</el-button>
+        <el-button class="z-depth-button bold-600 el-dropdown-link s-13 open-sans mini-button" type="text"><i class="filter icon"></i> Filter </el-button>
+        <!-- <span v-if="count != 0" class="border-left pl-6">2</span> -->
         <el-dropdown-menu class="filter-dropdown" slot="dropdown">
             <div class="dropdown-header flex justify-content-between align-items-center">
                 <el-button size="mini" @click="resetFilters" class="s-13 open-sans filter-button b-0">Clear</el-button>
@@ -72,14 +73,14 @@ export default {
             status: false,
             type: false,
             stati: [
-                {label: 'All', value: 'all'},
+                // {label: 'All', value: 'all'},
                 {label: 'Success', value: 'succeeded'},
                 {label: 'Pending', value: 'pending'},
                 {label: 'Failed', value: 'failed'}
             ],
             all: ['success', 'pending', 'failed'],
             types: [
-                {label: 'All', value: 'all'},
+                // {label: 'All', value: 'all'},
                 {label: 'Card', value: 'card'},
                 {label: 'Wallet', value: 'wallet'},
                 {label: 'Bank', value: 'bank'}
@@ -89,12 +90,14 @@ export default {
                 from: '',
                 statuses: [],
                 payment_types: []
-            }
+            },
+            count: 0
         }
     },
     methods: {
         createFilters () {
             this.$refs.messageDrop.hide()
+            this.count = this.size(this.filterType)
             if (this.filterType === 'queue') {
                 // this.filters.statuses = 'queued'
                 this.$store.dispatch('setQueueFilters', this.filters)
@@ -109,6 +112,13 @@ export default {
             //     this.$store.dispatch('getTransactions', {page: 1})
             // })
         },
+        size (obj) {
+            var size = 0, key
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++
+            }
+            return size
+        },
         resetFilters () {
             this.filters = {
                 to: '',
@@ -116,6 +126,11 @@ export default {
                 statuses: [],
                 payment_types: []
             }
+            this.date = false
+            this.status = false
+            this.type = false
+            this.count = 0
+            this.createFilters()
         },
         keepVisible () {
             this.$refs.messageDrop.show()
@@ -130,9 +145,9 @@ export default {
             }
         },
         removeAll (val) {
-            if (val === 'all') {
-                this.filters.statuses = []
-            }
+            // if (val === 'all') {
+            //     this.filters.statuses = []
+            // }
         },
         typeClick (val) {
             this.$refs.messageDrop.show()
@@ -144,9 +159,9 @@ export default {
             }
         },
         removeAllTypes (val) {
-            if (val === 'all') {
-                this.filters.payment_types = []
-            }
+            // if (val === 'all') {
+            //     this.filters.payment_types = []
+            // }
         }
     },
     computed: {

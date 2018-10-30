@@ -1,4 +1,4 @@
-import Utils from '../../utils/utils'
+import Utils from '../../utils/services'
 
 // properties
 let Dashboard = function (obj, isDetailed) {

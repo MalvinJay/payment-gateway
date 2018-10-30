@@ -8,19 +8,19 @@
                 </div>
                 <div>
                     <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
-                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+                    <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
                 </div>
             </div>
             <div>
-                <el-table empty-text="No contacts found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="contacts">
+                <el-table @row-click="clickRow" empty-text="No contacts found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="contacts">
                     <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column prop="name" label="Name">
                         <template slot-scope="scope">
-                            <router-link :to="{name: 'ContactDetails', params: {id: scope.row.code}}">
+                            <!-- <router-link :to="{name: 'ContactDetails', params: {id: scope.row.code}}"> -->
                                 <div class="flex align-items-center cursor black-text">
                                     {{scope.row.name}}
                                 </div>
-                            </router-link>
+                            <!-- </router-link> -->
                         </template>
                     </el-table-column>
                     <el-table-column :formatter="formatContent" :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
@@ -33,15 +33,11 @@
                                     <el-dropdown-menu class="w-200" slot="dropdown">
                                         <el-dropdown-item disabled>
                                             <div class="table-dropdown-header blue-text bold-600 text-uppercase">
-                                                action
+                                                actions
                                             </div>
                                         </el-dropdown-item>
-                                        <el-dropdown-item class="s-12">Recharge Funds</el-dropdown-item>
-                                        <el-dropdown-item divided disabled>
-                                            <div class="table-dropdown-header blue-text bold-600 text-uppercase">
-                                                connection
-                                            </div></el-dropdown-item>
-                                        <el-dropdown-item class="s-12">View Payment Details</el-dropdown-item>
+                                        <el-dropdown-item class="s-12">Edit Contact</el-dropdown-item>
+                                        <el-dropdown-item class="s-12">Delete Contact</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </div>
@@ -169,6 +165,11 @@ export default {
   methods: {
     handleCurrentChange (val) {
         this.$store.dispatch('setCurrentContacts', val)
+    },
+    clickRow (row, event, column) {
+        if (column.property) {
+            this.$router.push(`/contacts/${row.id}`)
+        }
     },
     //format the content of each quota
     formatContent (row, column, cellValue, index) {

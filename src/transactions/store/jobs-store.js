@@ -1,8 +1,8 @@
-import { GET_JOBS, SET_JOBS_STATE, AWS_BUCKET, ACCESS_KEY_ID, SET_FILE_UPLOAD_DETAILS,
+import { GET_JOBS, SET_JOBS_STATE, AWS_BUCKET, ACCESS_KEY_ID, SET_FILE_UPLOAD_DETAILS, GET_JOB_RUNS, SET_JOB_RUNS, SET_JOB_RUNS_STATE,
   CREATE_JOB_CONTACT, DELETE_JOB, UPDATE_JOB, GET_SINGLE_JOB, SET_SINGLE_JOB, SET_SINGLE_JOB_STATE,
   SECRET_ACCESS_KEY, SEND_TO_BUCKET, GET_JOBS_URI, SET_JOBS, CREATE_JOB } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
-import Utils from '../../utils/Utils'
+import Utils from '../../utils/services'
 var S3 = require('aws-sdk/clients/s3')
 
 // state
@@ -14,7 +14,9 @@ const state = {
   },
   currentJob: {
     data: {},
-    state: 'LOADING'
+    state: 'LOADING',
+    runs: [],
+    runState: 'LOADING'
   },
   file: {}
 }
@@ -26,7 +28,9 @@ const getters = {
   jobsCount: state => state.jobs.count,
   file: state => state.file,
   currentJob: state => state.currentJob.data,
-  currentJobState: state => state.currentJob.state
+  currentJobState: state => state.currentJob.state,
+  currentJobRuns: state => state.currentJob.runs,
+  currentJobRunsState: state => state.currentJob.runState
 }
 
 // mutations
@@ -38,11 +42,18 @@ const mutations = {
   [SET_JOBS_STATE] (state, data) {
     state.jobs.state = data
   },
+  [SET_JOB_RUNS] (state, payload) {
+    state.currentJob.runState = 'DATA'
+    state.currentJob.runs = payload
+  },
+  [SET_JOB_RUNS_STATE] (state, data) {
+    state.currentJob.runState = data
+  },
   [SET_FILE_UPLOAD_DETAILS] (state, data) {
     state.file = data
   },
   [SET_SINGLE_JOB] (state, data) {
-    console.log(data)  
+    console.log(data)
     state.currentJob.data = data
   },
   [SET_SINGLE_JOB_STATE] (state, data) {
@@ -68,6 +79,32 @@ const actions = {
           resolve()
         }).catch((error) => {
           commit(SET_JOBS_STATE, 'ERROR')
+          console.log(error)
+          reject(error)
+        })
+      })
+    }
+  },
+  [GET_JOB_RUNS] ({ state, commit, rootGetters }, { page = 1, cache = true, id } = {}) {
+    commit(SET_JOB_RUNS_STATE, 'LOADING')
+    if (cache && Utils.present(state.jobs.runs)) {
+      commit(SET_JOB_RUNS_STATE, 'DATA')
+    } else {
+      var data = {
+        is_sub_user: false
+      }
+      return new Promise((resolve, reject) => {
+        apiCall({
+          url: `https://api.flopay.io/v1/clients/jobs/files/${id}/run`,
+          method: 'POST',
+          token: rootGetters.token,
+          data: data
+        }).then((response) => {
+          commit(SET_JOB_RUNS_STATE, 'DATA')
+          commit(SET_JOB_RUNS, response.data.response.data.jobs)
+          resolve()
+        }).catch((error) => {
+          commit(SET_JOB_RUNS_STATE, 'ERROR')
           console.log(error)
           reject(error)
         })
@@ -143,21 +180,23 @@ const actions = {
   [DELETE_JOB] ({ rootGetters }, id) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_JOBS_URI}/${id}`,
+        url: `${GET_JOBS_URI}/files/${id}`,
         method: 'DELETE',
         token: rootGetters.token
       }).then((response) => {
-        resolve()
-      }).catch((error) => {
-        console.log(error)
+        console.log('errors dkfnb', response)
+        resolve(response)
+      }).catch(error => {
+        console.log('errors dkfnb', error.response)
         reject(error)
+        return error
       })
     })
   },
   [UPDATE_JOB] ({ rootGetters }, {id, data}) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_JOBS_URI}/${id}`,
+        url: `${GET_JOBS_URI}/files/${id}`,
         method: 'PUT',
         token: rootGetters.token,
         data: data
@@ -169,31 +208,31 @@ const actions = {
       })
     })
   },
-  [GET_SINGLE_JOB] ({ state, commit, rootGetters }, id) {
+  [GET_SINGLE_JOB] ({ state, commit, rootGetters }, { id, cache = true } = {}) {
     console.log(id)
     commit(SET_SINGLE_JOB_STATE, 'LOADING')
-    commit(SET_SINGLE_JOB, rootGetters.jobs.find(el => el.name === id))
-    commit(SET_SINGLE_JOB_STATE, 'DATA')
-    // if (state.currentJob.data.id === id) {
-    //   commit(SET_SINGLE_JOB_STATE, 'DATA')
-    // } else {
-    //   return new Promise((resolve, reject) => {
-    //     apiCall({
-    //       url: `https://api.flopay.io/v1/clients/job/file/${id}`,
-    //       method: 'GET',
-    //       token: rootGetters.token
-    //     }).then((response) => {
-    //       console.log('currentJob', response)
-    //       commit(SET_SINGLE_JOB_STATE, 'DATA')
-    //       commit(SET_SINGLE_JOB, response.data.response.data.jobs)
-    //       resolve()
-    //     }).catch((error) => {
-    //       commit(SET_SINGLE_JOB_STATE, 'ERROR')
-    //       console.log(error)
-    //       reject(error)
-    //     })
-    //   })
-    // }
+    // commit(SET_SINGLE_JOB, rootGetters.jobs.find(el => el.name === id))
+    // commit(SET_SINGLE_JOB_STATE, 'DATA')
+    if (Utils.present(state.currentJob.data.id === id) && cache) {
+      commit(SET_SINGLE_JOB_STATE, 'DATA')
+    } else {
+      return new Promise((resolve, reject) => {
+        apiCall({
+          url: `https://api.flopay.io/v1/clients/jobs/files/${id}`,
+          method: 'GET',
+          token: rootGetters.token
+        }).then((response) => {
+          console.log('currentJob', response)
+          commit(SET_SINGLE_JOB_STATE, 'DATA')
+          commit(SET_SINGLE_JOB, response.data.response.data.job)
+          resolve()
+        }).catch((error) => {
+          commit(SET_SINGLE_JOB_STATE, 'ERROR')
+          console.log(error)
+          reject(error)
+        })
+      })
+    }
   }
 }
 

@@ -133,7 +133,7 @@ export default {
         {label: 'Ytd', value: 'year'}
       ],
       payment: ['wallet', 'card','bank'],
-      status: ['success', 'pending','failed'],
+      status: ['Succeeded', 'pending','failed'],
       statue: [],
       cash: [],
       form: {

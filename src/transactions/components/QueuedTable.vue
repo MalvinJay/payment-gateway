@@ -1,12 +1,12 @@
 <template>
     <div class="transactions">
-        <div class="trans-div flex justify-content-between">
+        <div class="trans-div flex">
             <div>
                 <filter-component filterType="queue"></filter-component>
             </div>
             <div>
                 <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button> -->
-                <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+                <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
             </div>
         </div>
         <div>
@@ -98,7 +98,9 @@ export default {
   },
   methods: {
     clickRow (row, event, column) {
-        this.$router.push(`/view/${row.reference}`)
+        if (column.property) {
+            this.$router.push(`/view/${row.reference}`)
+        }
     },
     handleCurrentChange (val) {
         this.$store.dispatch('getQueues', {page: val})

@@ -352,3 +352,9 @@ $border: #dcdfe6;
 .el-menu{
     border: 0;
 }
+
+.text-left{
+    .el-input__inner{
+        text-align: left
+    }
+}

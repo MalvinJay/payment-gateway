@@ -13,7 +13,11 @@ $flopay: #67aee6;
 body{
     // font-family: "Open Sans";
     font-family: 'Varela Round', sans-serif;
-    background: $background
+    background: $background;
+    background-image: url('../images/BG.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-origin: center; 
 }
 *{
     outline: 0;
@@ -212,6 +216,12 @@ button{
 }
 .border-bottom{
     border-bottom: 1px solid $border
+}
+.border-right{
+    border-right: 1px solid $border
+}
+.border-left{
+    border-left: 1px solid $border
 }
 .test-data{
     border-top: solid 1px #f5925e !important;

@@ -4,7 +4,7 @@ import { PAYOUT_CREATE, SET_PAYOUTS_META, SET_PAYOUTS_FILTERS,
   SET_PAYOUTS,
   GET_TRANSACTIONS_URI } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
-import Utils from '../../utils/Utils'
+import Utils from '../../utils/services'
 
 // state
 const state = {

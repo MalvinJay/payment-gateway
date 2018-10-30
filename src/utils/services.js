@@ -20,6 +20,11 @@ export default {
       if (this.present(filters.cash_flow)) {
         query = query + `&cash_flow=${filters.cash_flow}`
       }
+      if (this.empty(filters.from) && this.empty(filters.to) && this.empty(filters.payment_types) && this.empty(filters.statuses)) {
+        query = query + '&all=true'  
+      }
+    } else {
+      query = query + '&all=true'
     }
     return query
   },
@@ -73,9 +78,9 @@ export default {
   },
   randomString2 (l) {
     let text = ''
-    let char_list = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let charList = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     for (let i = 0; i < l; i++) {
-      text += char_list.charAt(Math.floor(Math.random() * char_list.length))
+      text += charList.charAt(Math.floor(Math.random() * charList.length))
     }
     return text
   }

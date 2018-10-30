@@ -150,7 +150,7 @@ import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 var S3 = require('aws-sdk/clients/s3')
 import { AWS_BUCKET } from '../store/transactions-store-constants.js'
-import Utils from '../../utils/Utils'
+import Utils from '../../utils/services'
 
 export default {
     name: 'NewJob',
