@@ -26,7 +26,7 @@
         <el-card class="b-0 analytics my-2">
             <div class="flex flex-column analytics-div">
                 <p class="bold-600 blue-text pb-5 m-0">Analytics</p>
-                <div class="flex justify-content-between">
+                <div class="flex">
                     <div style="height: 30px;" class="flex align-items-center">
                         <el-radio-group @change="handleChange" v-model="form.time_interval" size="mini" class="dashboard-checkboxes mr-6 z-depth-button border-rounded">
                             <el-radio-button v-for="duration in durations" :label="duration.value" :key="duration.label">{{duration.label}}</el-radio-button>
@@ -56,12 +56,12 @@
                                 format="MMM dd, yyyy">
                             </el-date-picker>
                         </div> -->
-                        <div>
+                        <!-- <div>
                             <el-button class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text">Daily</el-button>
-                        </div>
+                        </div> -->
                     </div>
                     <div>
-                        <el-button class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text"><i class="cog icon "></i> Customize</el-button>
+                        <!-- <el-button class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text"><i class="cog icon "></i> Customize</el-button> -->
                     </div>
                 </div>
             </div>

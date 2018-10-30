@@ -12,10 +12,10 @@
                        <p class="text-uppercase s-12 bold-600 m-0 p-0">{{header}}</p>
                    </div>
                 </div>
-                <div>
+                <!-- <div>
                     <el-button v-if="status === 'failed'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Refund</el-button>
                     <el-button size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Note</el-button>
-                </div>
+                </div> -->
             </div>
             <!-- :class="[{success ? 'green': 'gray' }]" -->
             <div class="border-top px-20 py-10">
@@ -33,9 +33,9 @@
         <!-- Customer Detail Card -->
         <el-card class="my-2">
             <div slot="header">
-                <div class="flex justify-content-between">
+                <div class="flex">
                     <span class="blue-text bold-600 s-16">{{header}} details</span>
-                    <el-button @click="toggleReadonly" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" plain icon="pencil alternate icon">Update Details</el-button>
+                    <!-- <el-button @click="toggleReadonly" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" plain icon="pencil alternate icon">Update Details</el-button> -->
                 </div>
             </div>
             <div>
@@ -100,6 +100,80 @@
                 <el-button @click="update" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" type="primary">Save</el-button>
             </div>
         </el-card>
+        <el-card class="my-2">
+            <div slot="header">
+                <div class="flex">
+                    <span class="blue-text bold-600 s-16">{{header}} schedules</span>
+                </div>
+            </div>
+            <el-table @row-click="clickRow" empty-text="No schedules" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="form.schedules">
+                    <el-table-column type="index"></el-table-column>
+                    <el-table-column prop="service_code" label="Type">
+                        <template slot-scope="scope">
+                            <p v-if="scope.row.service_code === 'cashin'">payout</p>
+                            <p v-else>payment</p>
+                            
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="amount" label="amount">
+                        <template slot-scope="scope">
+                            {{scope.row.amount | money}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="provider_code" label="provider"></el-table-column>
+                    <el-table-column prop="updated_at" label="date">
+                        <template slot-scope="scope">
+                            {{scope.row.created_at | moment("MMM Do, YYYY")}}
+                        </template>
+                    </el-table-column>
+            </el-table>
+        </el-card>
+        <el-card class="my-2">
+            <div slot="header">
+                <div class="flex">
+                    <span class="blue-text bold-600 s-16">{{header}} transactions</span>
+                </div>
+            </div>
+            <el-table @row-click="clickRow" empty-text="No transactions" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="form.executed_transactions">
+                <el-table-column type="index"></el-table-column>
+                <el-table-column prop="service_code" label="Type" width="100">
+                    <template slot-scope="scope">
+                        <p v-if="scope.row.service_code === 'cashin'">payout</p>
+                        <p v-else>payment</p>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="status" label="" width="80">
+                    <template slot-scope="scope">
+                        <div class="flex">
+                            <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                            <the-tag v-else-if="scope.row.status === 'Failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
+                            <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="gross_amount" label="gross" width="80">
+                    <template slot-scope="scope">
+                        {{scope.row.gross_amount | money}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="charged_amount" label="fee" width="80">
+                    <template slot-scope="scope">
+                        {{scope.row.charged_amount | money}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="net_amount" label="net" width="80">
+                    <template slot-scope="scope">
+                        {{scope.row.net_amount | money}}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="reference" label="reference"></el-table-column>
+                <el-table-column prop="updated_at" label="date">
+                    <template slot-scope="scope">
+                        {{scope.row.created_at | moment("MMM Do, YYYY")}}
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-card>
     </div>
 </template>
 
@@ -157,12 +231,10 @@ export default {
             }
             var nForm = {
                 name: this.form.name,
-                'phone number': this.form.number,
+                'phone number': this.form.msisdn,
                 email: this.form.email ? this.form.email : '-',
                 type: this.form.type ? this.form.type : '-',
                 provider: this.form.bank ? this.form.bank : '-',
-                date: this.form.created_at ? this.form.created_at : '-',
-                time: this.form.created_at ? this.form.created_at : '-',
                 description: this.form.description ? this.form.description : '-'
             }
             return nForm

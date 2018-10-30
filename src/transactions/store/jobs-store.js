@@ -118,7 +118,7 @@ const actions = {
         token: rootGetters.token,
         data: job
       }).then((response) => {
-        resolve()
+        resolve(response)
       }).catch((error) => {
         console.log(error)
         reject(error)
@@ -200,7 +200,7 @@ const actions = {
         token: rootGetters.token,
         data: data
       }).then((response) => {
-        resolve()
+        resolve(response)
       }).catch((error) => {
         console.log(error)
         reject(error)
@@ -212,26 +212,26 @@ const actions = {
     commit(SET_SINGLE_JOB_STATE, 'LOADING')
     // commit(SET_SINGLE_JOB, rootGetters.jobs.find(el => el.name === id))
     // commit(SET_SINGLE_JOB_STATE, 'DATA')
-    if (Utils.present(state.currentJob.data.id === id) && cache) {
-      commit(SET_SINGLE_JOB_STATE, 'DATA')
-    } else {
-      return new Promise((resolve, reject) => {
-        apiCall({
-          url: `https://api.flopay.io/v1/clients/jobs/files/${id}`,
-          method: 'GET',
-          token: rootGetters.token
-        }).then((response) => {
-          console.log('currentJob', response)
-          commit(SET_SINGLE_JOB_STATE, 'DATA')
-          commit(SET_SINGLE_JOB, response.data.response.data.job)
-          resolve()
-        }).catch((error) => {
-          commit(SET_SINGLE_JOB_STATE, 'ERROR')
-          console.log(error)
-          reject(error)
-        })
+    // if (Utils.present(state.currentJob.data.id === id) && cache) {
+    //   commit(SET_SINGLE_JOB_STATE, 'DATA')
+    // } else {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `https://api.flopay.io/v1/clients/jobs/files/${id}`,
+        method: 'GET',
+        token: rootGetters.token
+      }).then((response) => {
+        console.log('currentJob', response)
+        commit(SET_SINGLE_JOB_STATE, 'DATA')
+        commit(SET_SINGLE_JOB, response.data.response.data.job)
+        resolve()
+      }).catch((error) => {
+        commit(SET_SINGLE_JOB_STATE, 'ERROR')
+        console.log(error)
+        reject(error)
       })
-    }
+    })
+    // }
   }
 }
 

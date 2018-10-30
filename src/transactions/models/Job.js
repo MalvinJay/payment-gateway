@@ -9,7 +9,7 @@ const getCreateView = (viewModel) => {
   let model = {}
   model = viewModel
   model.is_sub_user = false
-  model.contacts = viewModel.contacts.map(el => el.name)
+  //   model.contacts = viewModel.contacts.map(el => el.name)
   return model
 }
 

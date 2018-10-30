@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div v-else>
-                <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
+                <el-table  @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
                     <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column prop="amount" label="Amount" width="100">
                         <template slot-scope="scope">
@@ -41,7 +41,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                    <el-table-column :show-overflow-tooltip="true" :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                     <el-table-column prop="created_at" label="Date">
                         <template slot-scope="scope">
                             {{scope.row.created_at | moment("MMM Do, YYYY")}}
@@ -84,12 +84,12 @@
             :visible.sync="dialogVisible"
             width="30%">
             <div class="flex justify-content-center new-transaction-bg">
-                <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="100px">
-                    <el-form-item label="Name">
-                        <el-input v-model="form.name"></el-input>
+                <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="120px">
+                    <el-form-item label="Recipient Name">
+                        <el-input v-model="form.recipient_name"></el-input>
                     </el-form-item>
-                    <el-form-item class="h-auto" label="Phone Number" prop="phone">
-                        <el-input v-model="form.phone"></el-input>
+                    <el-form-item class="h-auto" label="Recipient Number" prop="recipient_no">
+                        <el-input v-model="form.recipient_no"></el-input>
                     </el-form-item>
                     <el-form-item label="Provider">
                         <el-select v-model="form.provider" placeholder="Select Provider">
@@ -100,8 +100,11 @@
                             ></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Amount" prop="amount">
-                        <el-input prefix-icon="dollar sign icon" v-model="form.amount"></el-input>
+                    <el-form-item label="Sender Amount" prop="sender_amount">
+                        <el-input class="little-padding-input" v-model="form.sender_amount"><span slot="prefix">&#8373</span></el-input>
+                    </el-form-item>
+                    <el-form-item label="Recipient Amount" prop="recipient_amount">
+                        <el-input class="little-padding-input" v-model="form.recipient_amount"><span slot="prefix">&#8373</span></el-input>
                     </el-form-item>
                     <el-form-item label="Remarks">
                         <el-input type="textarea" v-model="form.remarks"></el-input>
@@ -110,7 +113,7 @@
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
-                <el-button size="mini" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payment</el-button>
+                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payment</el-button>
             </span>
         </el-dialog>
     </div>
@@ -126,6 +129,7 @@ export default {
   data () {
     return {
       test: true,
+      createLoading: false,
       columns: [
         // {label: 'Method', dataField: 'method', width: '100px'},
         {label: 'Customer', dataField: 'customer', width: 'auto'},
@@ -138,19 +142,25 @@ export default {
       date: false,
       dialogVisible: false,
       form: {
-        amount: '',
-        currency: 'GHS',
-        customer_no: '',
+        sender_amount: '',
+        sender_currency: 'GHS',
+        recipient_amount: '',
+        recipient_currency: 'GHS',
+        recipient_no: '',
+        recipient_name: '',
+        provider: '',
         country_code: 'GH',
-        service_code: 'cashout',
-        live: false,
-        dummy: true
+        service_code: 'cashin',
+        live: false
       },
       rules: {
-        phone: [
+        recipient_no: [
             { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
         ],
-        amount: [
+        sender_amount: [
+            { required: true, message: 'This field is required', trigger: 'blur' }
+        ],
+        recipient_amount: [
             { required: true, message: 'This field is required', trigger: 'blur' }
         ]
       }
@@ -160,7 +170,7 @@ export default {
     this.$store.dispatch('getPayouts')
   },
   mounted () {
-    EventBus.$emit('sideNavClick', 'view')
+    EventBus.$emit('sideNavClick', 'payouts')
   },
   methods: {
     clickRow (row, event, column) {
@@ -172,22 +182,36 @@ export default {
         this.$store.dispatch('getPayouts', {page: val, cache: false})
     },
     fetchTransactions () {
-      this.$store.dispatch('getPayouts')
+      this.$store.dispatch('getPayouts', {cache: false})
     },
     submitForm(formName) {
+        this.createLoading = true
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.form.live = !this.test
             this.form.dummy = this.test
-            this.service_code = 'cashin'
+            this.form.service_code = 'cashin'
+            this.form.reference = 'FLPCI' + Math.floor(Math.random() * 99999999999)
+
             this.$store.dispatch('createPayouts', this.form)
             .then((response) => {
-                this.$message({
-                    message: 'Payout successful',
-                    type: 'success'
-                })
+                if (response.data.success) {
+                    this.$message({
+                        message: 'Payout successful',
+                        type: 'success'
+                    })
+                    this.fetchTransactions()
+                    this.dialogVisible = false
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.response.message.message
+                    })
+                }
+                this.createLoading = false
             })
           } else {
+            this.createLoading = false
             console.log('error submit!!')
             return false
           }

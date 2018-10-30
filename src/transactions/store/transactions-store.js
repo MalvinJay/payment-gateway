@@ -175,7 +175,7 @@ const actions = {
         data: transaction,
         token: rootGetters.token
       }).then((response) => {
-        resolve(response.data)
+        resolve(response)
       }).catch((error) => {
         console.log('ERROR', error)
         reject(error)

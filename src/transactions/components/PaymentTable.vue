@@ -79,10 +79,10 @@
             <div class="flex justify-content-center new-transaction-bg">
                 <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="100px">
                     <el-form-item label="Name">
-                        <el-input v-model="form.name"></el-input>
+                        <el-input v-model="form.customer_name"></el-input>
                     </el-form-item>
-                    <el-form-item class="h-auto" label="Phone Number" prop="phone">
-                        <el-input v-model="form.phone"></el-input>
+                    <el-form-item class="h-auto" label="Phone Number" prop="customer_no">
+                        <el-input v-model="form.customer_no"></el-input>
                     </el-form-item>
                     <el-form-item label="Provider">
                         <el-select v-model="form.provider" placeholder="Select Provider">
@@ -94,7 +94,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="Amount" prop="amount">
-                        <el-input prefix-icon="dollar sign icon" v-model="form.amount"></el-input>
+                        <el-input class="little-padding-input" v-model="form.amount"><span slot="prefix">&#8373</span></el-input>
                     </el-form-item>
                     <el-form-item label="Remarks">
                         <el-input type="textarea" v-model="form.remarks"></el-input>
@@ -103,7 +103,7 @@
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
-                <el-button size="mini" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payment</el-button>
+                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payment</el-button>
             </span>
         </el-dialog>
     </div>
@@ -118,7 +118,6 @@ export default {
   props: ['type'],
   data () {
     return {
-      test: true,
       columns: [
         // {label: 'Method', dataField: 'method', width: '100px'},
         {label: 'Customer', dataField: 'customer', width: 'auto'},
@@ -140,8 +139,9 @@ export default {
         live: false,
         dummy: true
       },
+      createLoading: false,
       rules: {
-        phone: [
+        customer_no: [
             { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
         ],
         amount: [
@@ -166,23 +166,47 @@ export default {
         this.$store.dispatch('getTransactions', {page: val, cache: false})
     },
     fetchTransactions () {
-      this.$store.dispatch('getTransactions')
+      this.$store.dispatch('getTransactions', {cache: false})
     },
     submitForm(formName) {
+        this.createLoading = true
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.form.live = !this.test
             this.form.dummy = this.test
-            this.service_code = 'cashout'
+            this.form.service_code = 'cashout'
+            this.form.reference = 'FLPCO' + Math.floor(Math.random() * 99999999999)
+
             this.$store.dispatch('createTransactions', this.form)
             .then((response) => {
+                if (response.data.success) {
+                    this.$message({
+                        message: 'Payment successful',
+                        type: 'success'
+                    })
+                    this.fetchTransactions()
+                    this.dialogVisible = false
+                } else {
                 this.$message({
-                    message: 'Payment successful',
-                    type: 'success'
+                        type: 'error',
+                        message: response.data.response.message.message
+                    })
+                }
+                this.createLoading = false
+            }).catch((error) => {
+                this.createLoading = false
+                const response = error.response
+                this.$message({
+                    message: response.data.error,
+                    type: 'error'
                 })
             })
           } else {
-            console.log('error submit!!')
+            this.createLoading = false  
+            this.$message({
+                message: 'Please correct the errors',
+                type: 'error'
+            })
             return false
           }
         })
@@ -197,7 +221,8 @@ export default {
       state: 'transactionsState',
       meta: 'transactionsMeta',
       providers: 'providers',
-      test: 'test'
+      test: 'test',
+      contacts: 'contacts'
     }),
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'

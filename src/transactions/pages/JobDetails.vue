@@ -30,18 +30,18 @@
                 <span class="blue-text bold-600 s-16">{{header}} details</span>
                 <div v-if="!readonly" class="flex justify-content-end">
                     <el-button @click="cancel" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" plain>Cancel</el-button>
-                    <el-button @click="update" v-loading="updateLoading" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" type="primary">Save</el-button>
+                    <el-button @click="update" :loading="updateLoading" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" type="primary">Save</el-button>
                 </div>
                 <el-button v-if="readonly" @click="toggleReadonly" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" plain icon="pencil alternate icon">Update Details</el-button>
             </div>
             <div>
                 <div v-if="hasNoData" class="center h-80">
-                    {{noData}}
+                    no Data
                 </div>
                 <div v-if="!hasNoData">
                     <div class="flex">
                         <div class="w-50">
-                            <el-row type="flex" align="middle" v-for="(value, key, index) in data" :key="index" class="mb-1">
+                            <el-row v-for="(value, key, index) in data" :key="index" class="mb-1">
                                 <el-col :span="8">
                                     <p class="m-0 text-capitalize lightgray s-14">{{key}}</p>
                                 </el-col>
@@ -52,9 +52,74 @@
                                         <p v-else class="s-13 mono">{{value}}</p>
                                     </div>
                                     <div v-else>
-                                        <p v-if="key === 'no of contacts' || key === 'number of runs' || key === 'owner'" class="s-13 mono">{{value}}</p>
+                                        <p v-if="key === 'number of runs' || key === 'owner'" class="s-13 mono">{{value}}</p>
                                         <p v-else-if="key === 'date'" class="s-13 mono">{{value | moment("hh:mm a")}}</p>
                                         <p v-else-if="key === 'time'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
+                                        <div v-else-if="key === 'schedule' && form.scheduled">
+                                            <div class="mb-2">
+                                                <div class="flex align-items-center h-30">
+                                                    <el-switch class="w-50" active-text="Daily" v-model="form.schedule" active-value="daily"></el-switch>
+                                                    <el-switch class="w-50" active-text="Weekly" v-model="form.schedule" active-value="weekly"></el-switch>
+                                                </div>
+                                                <div class="flex align-items-center h-30 mt-2">
+                                                    <el-switch class="w-50" active-text="Monthly" v-model="form.schedule" active-value="monthly"></el-switch>
+                                                    <el-switch class="w-50" active-text="BiMonthly" v-model="form.schedule" active-value="bimonthly"></el-switch>
+                                                </div>
+                                                <div class="flex align-items-center h-30 mt-2">
+                                                    <el-switch class="w-50" active-text="Quarterly" v-model="form.schedule" active-value="quarterly"></el-switch>
+                                                    <el-switch class="w-50" active-text="Yearly" v-model="form.schedule" active-value="yearly"></el-switch>
+                                                </div>
+                                            </div>
+                                            <!-- SWITCH FOR SCHEDULE -->
+                                            <transition name="el-fade-in">
+                                                <div v-if="form.schedule === 'daily'">
+                                                    <p class="text-uppercase s-12">time of trasactions postings</p>
+                                                    <el-time-select size="mini"
+                                                    v-model="schedule.time"
+                                                    :picker-options="{
+                                                        start: '08:30',
+                                                        step: '00:15',
+                                                        end: '18:30'
+                                                    }"
+                                                    placeholder="Select Time">
+                                                    </el-time-select>
+                                                </div>
+                                                <div v-else-if="form.schedule === 'weekly'">
+                                                    <p class="text-uppercase s-12">date & time of trasactions postings</p>
+                                                    <el-select placeholder="Select Date" class="w-50 mb-1" size="mini" v-model="schedule.date">
+                                                        <el-option v-for="(item, index) in days" :key="index" :label="item" :value="item"></el-option>
+                                                    </el-select>
+                                                    <el-time-select class="w-50" size="mini"
+                                                    v-model="schedule.time"
+                                                    :picker-options="{
+                                                        start: '08:30',
+                                                        step: '00:15',
+                                                        end: '18:30'
+                                                    }"
+                                                    placeholder="Select Time">
+                                                    </el-time-select>
+                                                </div>
+                                                <div v-else>
+                                                    <p class="text-uppercase s-12">date & time of trasactions postings</p>
+                                                    <el-date-picker class="w-50 mb-1" size="mini"
+                                                        type="date" 
+                                                        placeholder="Select Date"
+                                                        value-format="yyyy-MM-dd"
+                                                        format="MMM dd, yyyy"
+                                                        v-model="schedule.date" 
+                                                        :default-value="Date.now()"></el-date-picker>
+                                                    <el-time-select class="w-50" size="mini"
+                                                    v-model="schedule.time"
+                                                    :picker-options="{
+                                                        start: '08:30',
+                                                        step: '00:15',
+                                                        end: '18:30'
+                                                    }"
+                                                    placeholder="Select Time">
+                                                    </el-time-select>
+                                                </div>
+                                            </transition>
+                                        </div>
                                         <el-input v-else style="width: 80%" size="mini" v-model="form[key]"></el-input>
                                     </div>
                                 </el-col>
@@ -100,24 +165,28 @@
         <!-- JOB CONTACTS -->
         <el-card class="my-2">
             <div slot="header">
-                <span class="blue-text bold-600 s-16">{{header}} Contacts</span>
+                <span class="blue-text bold-600 s-16">{{header}} Customers</span>
             </div>
             <div>
-                <el-table @row-click="clickRow" empty-text="No job contacts" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="contacts">
+                <el-table @row-click="clickRow" empty-text="No job customers" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="form.contacts">
                     <el-table-column type="index"></el-table-column>
                     <el-table-column prop="name" label="name"></el-table-column>
                     <el-table-column prop="msisdn" label="Phone Number"></el-table-column>
-                    <el-table-column prop="email" label="email"></el-table-column>
+                    <el-table-column prop="amount" label="amount">
+                        <template slot-scope="scope">
+                            {{scope.row.amount | money}}
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="updated_at" label="date">
                         <template slot-scope="scope">
                             {{scope.row.updated_at | moment("MMM Do, YYYY")}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center">
+                    <!-- <el-table-column align="center">
                         <template slot-scope="scope">
                             <el-button class="p-0 m-0" @click.native.prevent="deleteCustomer(scope.$index, scope.row)" icon="trash alternate outline icon" type="text"></el-button>
                         </template>
-                    </el-table-column>
+                    </el-table-column> -->
                 </el-table>
             </div>
         </el-card>
@@ -138,17 +207,15 @@ export default {
             test: true,
             loading: false,
             readonly: true,
-            updateLoading: false
+            updateLoading: false,
+            schedule: [],
+            days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
         }
     },
-    created () {
-        // EventBus.$emit('sideNavClick', 'view')
-        this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
-        this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
-    },
     mounted () {
+        EventBus.$emit('sideNavClick', 'view')
         this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
-        this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
+        // this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
     },
     methods: {
         clickRow () {
@@ -187,8 +254,13 @@ export default {
         update () {
             this.updateLoading = true
             var newForm = Job.getCreateView(this.form)
-            this.$store.dispatch('updateJob', {id: this.form.id, data: this.form})
-            .then(() => {
+            var schedule = Utils.createJobQuery (newForm.schedule, this.schedule)
+            newForm.schedule = schedule
+            newForm.contacts = this.contacts
+            
+            this.$store.dispatch('updateJob', {id: this.form.id, data: newForm})
+            .then((response) => {
+                console.log('response', response)
                 if (response.data.success) {
                     this.$message({
                         message: 'Job Updated Successfully',
@@ -198,23 +270,23 @@ export default {
                     this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
                 } else {
                 this.$message({
-                        type: 'error',
-                        message: response.data.response.message
-                    })
-                    this.updateLoading = false
-                }
-                
-            }).catch(() => {
+                    type: 'error',
+                    message: response.data.response.message
+                })
                 this.updateLoading = false
+                this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
+            }
+                
+            }).catch((error) => {
+                this.updateLoading = false
+                const response = error.response
                 this.$message({
-                    message: 'Job Not Updated',
+                    message: response.data.error,
                     type: 'error'
                 })
+                this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
             })
         }
-    },
-    mounted () {
-        this.$store.dispatch('getCurrentJob', this.$route.params.id)
     },
     computed: {
         ...mapGetters({
@@ -241,23 +313,14 @@ export default {
                 owner: this.form.owner,
                 name: this.form.description,
                 'number of runs': this.form.number_of_runs,
-                schedule: this.form.schedule,
-                'no of contacts': this.form.contacts.length,
                 date: this.form.created_at,
                 time: this.form.created_at,
+                schedule: this.form.schedule,
             }
             return nForm
         },
-        contacts: {
-            get () {
-                return this.form.contacts.map(el => {
-                    el.email = Utils.present(el.email) ? el.email : '-'
-                    return el
-                })
-            },
-            set (value) {
-                this.form.contacts = value
-            }
+        contacts () {
+            return this.form.contacts.map(el => el.name)
         },
         data2 () {
             var nForm = {

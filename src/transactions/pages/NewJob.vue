@@ -244,8 +244,9 @@ export default {
                         this.loading = false
                     }).catch(() => {
                         this.loading = false
+                        const response = error.response
                         this.$message({
-                            message: 'Job creation failed',
+                            message: response.data.error,
                             type: 'error'
                         })
                     })

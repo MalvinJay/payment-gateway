@@ -166,7 +166,7 @@ export default {
     },
     computed: {
         showStatus () {
-            return this.filterType === 'payment'
+            return this.filterType === 'payment' || this.filterType === 'payouts'
         }
     }
 }

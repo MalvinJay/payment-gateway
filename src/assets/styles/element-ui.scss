@@ -359,3 +359,9 @@ $border: #dcdfe6;
         text-align: left
     }
 }
+
+.little-padding-input{
+    .el-input__inner{
+        padding-left: 20px
+    }
+}
