@@ -1,26 +1,25 @@
-import { AUTH_REQUEST, SET_TOKEN, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
+import { AUTH_REQUEST, SET_TOKEN, SET_CLIENT, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
 import { apiCall } from '../apiCall'
 import axios from 'axios'
 
 // state
 const state = {
   user: {
-    data: [],
+    data: {},
     token: localStorage.getItem('token'),
     client_id: '',
     client_secret: ''
   },
+  userdata: {},
   client: {},
   logIn: true
 }
 
 // getters
 const getters = {
-  user: state => state.user.data,
-  userFilters: state => state.user.filters,
-  userSortParams: state => state.user.sortParams,
-  userState: state => state.user.state,
-  token: state => state.user.token
+  user: state => state.userdata,
+  token: state => state.user.token,
+  client: state => state.client
 }
 
 // mutations
@@ -28,6 +27,10 @@ const mutations = {
   [SET_TOKEN] (state) {
     state.logIn = true
     state.user.token = localStorage.getItem('token')
+  },
+  [SET_CLIENT] (state, data) {
+    console.log('user')
+    state.userdata = data
   },
   [SET_CLIENT_CRED] (state, data) {
     state.client = data
@@ -45,6 +48,8 @@ const actions = {
       var url = `https://api.flopay.io/v1/flopay_client_login.json?email=${email}&password=${password}`
       axios.post(url)
         .then((response) => {
+          console.log('response', response)
+          commit(SET_CLIENT, response.data.response.data.client)
           commit(SET_CLIENT_CRED, response.data.response.data.access_key)
           localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
           localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)

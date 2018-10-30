@@ -133,11 +133,16 @@ const actions = {
     page = 1
   } = {}) {
     var filters = state.transactions.filters
-    filters.search_value = 'cashin'
-    var query = Utils.createQueryParams(filters, page)
+    var query = ''
+    if (Utils.empty(filters)) {
+      query = `?all=true&search_value=cashout&page=${page}&limit=10`
+    } else {
+      filters.search_value = 'cashout'
+      query = Utils.createQueryParams(filters, page)
+    }
     commit(SET_TRANSACTIONS_STATE, 'LOADING')
     commit(SET_TRANSACTIONS_FILTERS, filters)
-    if (cache) {
+    if (cache && Utils.present(state.transactions.data)) {
       commit(SET_TRANSACTIONS_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {
@@ -185,6 +190,7 @@ const actions = {
     // var fill = Utils.createQueryParams(filters)
     console.log('filters queue', filters)
     var query = Utils.createQueryParams(filters, page)
+    query += '&all=true'
     commit(SET_QUEUE_STATE, 'LOADING')
     commit(SET_QUEUE_FILTERS, filters)
     return new Promise((resolve, reject) => {

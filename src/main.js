@@ -6,6 +6,7 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css'
+import 'element-ui/lib/theme-chalk/base.css'
 import './assets/styles/element-variables.scss'
 import locale from 'element-ui/lib/locale/lang/en'
 import '@/assets/styles/app.scss'
@@ -17,6 +18,7 @@ import IdleVue from 'idle-vue'
 
 Vue.use(ElementUI, {locale})
 Vue.use(VueMoment)
+Vue.use(require('vue-chartist'))
 Vue.component(components)
 Vue.component(CollapseTransition.name, CollapseTransition)
 const eventsHub = new Vue()

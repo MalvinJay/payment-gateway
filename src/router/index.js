@@ -6,13 +6,19 @@ import Login from '@/pages/Login'
 import NotFound from '@/pages/NotFound'
 import Dashboard from '@/dashboard/pages/Dashboard'
 import ViewTransactions from '../transactions/pages/ViewTransactions'
-import Payouts from '../transactions/pages/Payouts'
+// import Payouts from '../transactions/pages/Payouts'
 import PaymentDetail from '../transactions/pages/PaymentDetail'
-import Customers from '../contacts/pages/Customers'
-import NewJob from '../transactions/pages/NewJob'
+// import Customers from '../contacts/pages/Customers'
+import ContactDetails from '../contacts/pages/ContactDetails'
+// import NewJob from '../transactions/pages/NewJob'
 import Logs from '@/pages/client/transactions/Logs'
 import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
+const Customers = () => import('../contacts/pages/Customers')
+const Payouts = () => import('../transactions/pages/Payouts')
+const NewJob = () => import('../transactions/pages/NewJob')
+const JobDetails = () => import('../transactions/pages/JobDetails')
+const RunDetails = () => import('../transactions/pages/RunDetails')
 
 Vue.use(Router)
 
@@ -38,9 +44,14 @@ let router = new Router({
           component: ViewTransactions
         },
         {
-          path: '/contacts',
-          name: 'Customers',
-          component: Customers
+          path: '/job/:id',
+          name: 'JobDetails',
+          component: JobDetails
+        },
+        {
+          path: '/run/:id',
+          name: 'RunDetails',
+          component: RunDetails
         },
         {
           path: '/new-job',
@@ -71,6 +82,16 @@ let router = new Router({
           path: '/product',
           name: 'NewProduct',
           component: NewProduct
+        },
+        {
+          path: '/contacts',
+          name: 'Customers',
+          component: Customers
+        },
+        {
+          path: '/contacts/:id',
+          name: 'ContactDetails',
+          component: ContactDetails
         }
       ]
     },
@@ -83,7 +104,7 @@ let router = new Router({
       }
     },
     { path: '/404', component: NotFound },
-    { path: '*', redirect: '/404' }
+    { path: '*', redirect: '/' }
   ]
 })
 

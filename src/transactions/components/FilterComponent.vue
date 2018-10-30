@@ -3,9 +3,9 @@
         <el-button class="z-depth-button bold-600 el-dropdown-link s-13 open-sans mini-button" type="text"><i class="filter icon"></i> Filter</el-button>
         <el-dropdown-menu class="filter-dropdown" slot="dropdown">
             <div class="dropdown-header flex justify-content-between align-items-center">
-                <el-button @click="resetFilters" class="s-13 open-sans filter-button">Clear</el-button>
+                <el-button size="mini" @click="resetFilters" class="s-13 open-sans filter-button b-0">Clear</el-button>
                 <p class="p-0 m-0 blue-text">Filters</p>
-                <el-button @click="createFilters" type="primary" class="s-13 open-sans filter-button">Done</el-button>
+                <el-button size="mini" @click="createFilters" type="primary" class="s-13 open-sans filter-button b-0">Done</el-button>
             </div>
             <el-dropdown-item>
                 <el-checkbox class="mr-10" v-model="date"></el-checkbox> Date</el-dropdown-item>
@@ -187,7 +187,7 @@ export default {
     border-bottom: 1px solid #e3e8ee;
 
     .filter-button{
-        height: 24px;
+        // height: 24px;
         padding: 4px 8px;
         display: flex;
         justify-content: center;

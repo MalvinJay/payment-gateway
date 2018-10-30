@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-card :class="[{'test-data': isTest}, 'flex', 'flex-column', 'card-0']">
+        <el-card :class="[{'test-data': isTest}, 'flex', 'flex-column', 'card-0', 'position-relative']">
             <div slot="header" class="flex justify-content-between align-items-center">
                 <h3 class="blue-text bold-500 m-0 pb-5">Create a Job</h3>
                 <div class="standard-button">
@@ -9,61 +9,106 @@
                 </div>
             </div>
             <div class="p-20">
+                <!-- JOB FORM -->
                 <el-form size="mini" class="default-form" label-position="right" :rules="rules" ref="form" :model="form" label-width="250px">
-                    <el-form-item label="Job name" prop="name">
-                        <el-input class="w-25" v-model="form.name"></el-input>
+                    <!-- NAME -->
+                    <el-form-item label="Job name" prop="description">
+                        <el-input class="w-25" v-model="form.description"></el-input>
                     </el-form-item>
-                    <el-form-item label="Job description">
+                    <!-- JOB DESCRIPTION -->
+                    <!-- <el-form-item label="Job description">
                         <el-input class="w-25" type="textarea" v-model="form.description"></el-input>
-                    </el-form-item>
+                    </el-form-item> -->
+                    <!-- JOB AMOUNT -->
                     <el-form-item label="Amount" prop="amount">
                         <el-input class="w-25" v-model="form.amount">
                             <span slot="prefix">&#8373</span>
                         </el-input>
                     </el-form-item>
+                    <!-- JOB LIMIT -->
                     <el-form-item label="Retry Limit">
-                        <el-input class="w-25" v-model.number="form.limit"></el-input>
+                        <el-input class="w-25" v-model.number="form.retry_limit"></el-input>
                     </el-form-item>
+                    <!-- JOB MODE -->
                     <el-form-item label="Mode">
                         <el-select v-model="form.scheduled">
                             <el-option label="Automatic" :value="true"></el-option>
                             <el-option label="Manual" :value="false"></el-option>
                         </el-select>
                     </el-form-item>
-                    <div v-if="form.mode === 'automatic'">
-                        <el-form-item label="time of trasactions postings">
-                            <el-time-select
-                            v-model="form.value1"
-                            :picker-options="{
-                                start: '08:30',
-                                step: '00:15',
-                                end: '18:30'
-                            }"
-                            placeholder="Select time">
-                            </el-time-select>
-                        </el-form-item>
+                    <!-- JOB AUTOMATIC SCHEDULED -->
+                    <div v-if="form.scheduled">
                         <el-form-item label="Frequency">
-                            <div class="flex justify-content-between align-items-center h-30">
-                                <el-switch active-text="Daily" v-model="form.schedule" active-value="daily"></el-switch>
-                                <el-switch active-text="Weekly" v-model="form.schedule" active-value="weekly"></el-switch>
-                                <el-switch active-text="Monthly" v-model="form.schedule" active-value="monthly"></el-switch>
-                                <el-switch active-text="BiMonthly" v-model="form.schedule" active-value="bimonthly"></el-switch>
-                                <el-switch active-text="Quarterly" v-model="form.schedule" active-value="quarterly"></el-switch>
-                                <el-switch active-text="Semi Annually" v-model="form.schedule" active-value="semi-annually"></el-switch>
+                            <div class="flex align-items-center h-30">
+                                <el-switch class="w-150" active-text="Daily" v-model="form.schedule" active-value="daily"></el-switch>
+                                <el-switch class="w-150" active-text="Weekly" v-model="form.schedule" active-value="weekly"></el-switch>
+                                <el-switch class="w-150" active-text="Monthly" v-model="form.schedule" active-value="monthly"></el-switch>
+                            </div>
+                            <div class="flex align-items-center h-30 mt-2">
+                                <el-switch class="w-150" active-text="BiMonthly" v-model="form.schedule" active-value="bimonthly"></el-switch>
+                                <el-switch class="w-150" active-text="Quarterly" v-model="form.schedule" active-value="quarterly"></el-switch>
+                                <el-switch class="w-150" active-text="Yearly" v-model="form.schedule" active-value="yearly"></el-switch>
                             </div>
                         </el-form-item>
+                        <!-- SWITCH FOR SCHEDULE -->
+                        <transition name="el-fade-in">
+                            <el-form-item v-if="form.schedule === 'daily'" label="time of trasactions postings">
+                                <el-time-select
+                                v-model="schedule.time"
+                                :picker-options="{
+                                    start: '08:30',
+                                    step: '00:15',
+                                    end: '18:30'
+                                }"
+                                placeholder="Select time">
+                                </el-time-select>
+                            </el-form-item>
+                            <el-form-item v-else-if="form.schedule === 'weekly'" label="date & time of trasactions postings">
+                                <el-select v-model="schedule.date">
+                                    <el-option v-for="(item, index) in days" :key="index" :label="item" :value="item"></el-option>
+                                </el-select>
+                                <el-time-select
+                                v-model="schedule.time"
+                                :picker-options="{
+                                    start: '08:30',
+                                    step: '00:15',
+                                    end: '18:30'
+                                }"
+                                placeholder="Select time">
+                                </el-time-select>
+                            </el-form-item>
+                            <el-form-item v-else label="date & time of trasactions postings">
+                                <el-date-picker
+                                    type="date"
+                                    placeholder="Date"
+                                    value-format="yyyy-MM-dd"
+                                    format="MMM dd, yyyy"
+                                    v-model="schedule.date" 
+                                    :default-value="Date.now()"></el-date-picker>
+                                <el-time-select
+                                v-model="schedule.time"
+                                :picker-options="{
+                                    start: '08:30',
+                                    step: '00:15',
+                                    end: '18:30'
+                                }"
+                                placeholder="Select time">
+                                </el-time-select>
+                            </el-form-item>
+                        </transition>
                     </div>
                     <el-form-item label="Beneficiaries">
-                        <el-select v-model="form.beneficiaries">
+                        <el-select v-model="beneficiaries">
                             <el-option label="Upload CSV" value="upload"></el-option>
                             <el-option label="Select Contacts" value="select"></el-option>
                         </el-select>
                     </el-form-item>
-                    <div v-if="form.beneficiaries === 'upload'">
+                    <div v-if="beneficiaries === 'upload'">
                         <el-form-item label="Upload CSV">
                             <el-upload
                             class="upload-demo"
                             action=""
+                            :on-change="onChange"
                             :auto-upload="false"
                             accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                             :file-list="form.fileList">
@@ -75,14 +120,14 @@
                     <div v-else>
                         <el-form-item label="add contacts">
                             <el-select
-                                v-model="form.contacts"
+                                v-model="contactData"
                                 multiple
                                 collapse-tags>
                                 <el-option
                                 v-for="item in contacts"
                                 :key="item.id"
                                 :label="item.name"
-                                :value="item.id">
+                                :value="item.name">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -103,6 +148,10 @@
 <script>
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
+var S3 = require('aws-sdk/clients/s3')
+import { AWS_BUCKET } from '../store/transactions-store-constants.js'
+import Utils from '../../utils/Utils'
+
 export default {
     name: 'NewJob',
     data () {
@@ -110,18 +159,26 @@ export default {
             isTest: true,
             form: {
                 name: '',
-                mode: 'automatic',
-                beneficiaries: 'upload',
-                times: [],
-                contacts: [],
-                daily: '',
-                is_sub_user: false,
-                service_code: 'cashout'
+                scheduled: true,
+                schedule: "daily",
+                // beneficiaries: 'upload',
+                // times: [],
+                // contacts: [],
+                timezone: "Africa/Accra",
+                country_code: "GH",
+                live: false,
+                test: true,
+                service_code: 'cashin'
             },
+            beneficiaries: 'upload',
+            contactData: [],
+            schedule: {},
             loading: false,
             response: {},
+            files: [],
+            days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
             rules: {
-                name: [
+                description: [
                     { required: true, message: 'This field is required', trigger: 'blur' },
                     { min: 3, message: 'Length should be at least 3 letters', trigger: 'blur' },
                 ],
@@ -136,7 +193,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            contacts: 'contacts'
+            contacts: 'contacts',
+            file: 'file'
         })
     },
     methods: {
@@ -147,12 +205,28 @@ export default {
             this.loading = true
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    this.$store.dispatch('createJob', this.form)
+                    var job = ''
+                    if (this.beneficiaries === 'upload') {
+                        job = 'createJob'
+                        this.form.upload_details = {
+                            Bucket: AWS_BUCKET,
+                            Key: this.file.key
+                        }
+                    } else {
+                        job = 'createJobContact'
+                        this.form.contacts = this.contactData
+                        this.form.is_sub_user = false
+                    }
+                    var schedule = Utils.createJobQuery (this.form.schedule, this.schedule)
+                    this.form.schedule = schedule
+
+                    this.$store.dispatch(job, this.form)
                     .then(() => {
                         this.$message({
                             message: 'Job created',
                             type: 'success'
                         })
+                        this.$store.dispatch('getJobs')
                         this.$router.push('/view')
                         this.loading = false
                     }).catch(() => {
@@ -170,78 +244,14 @@ export default {
                     })
                 }
             })
+        },
+        onChange (file, fileList){
+            this.files = fileList
+            let fileInput = this.$el.querySelector(".upload-demo input[type='file']")
+            let filess = fileInput.files[0]
+            console.log('file', filess)
+            this.$store.dispatch('sendToBucket', filess)
         }
-        // onChange (file, fileList){
-        //     // this.files = fileList
-        //     this.save()
-        // },
-        // uploadFile () {
-        //     let url = this.url 
-        //     let fileInput = this.$el.querySelector(".upload-demo input[type='file']")
-        //     let file = fileInput.files[0]
-        //     let that = this
-
-        //     function getFileExtension(filename) {
-        //         return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined;
-        //     }
-
-        //     var fileExtension = getFileExtension(file.name)
-
-        //     const _this = this
-        //     var BucketName = AWS_BUCKET
-        //     var accessKeyId = "AKIAISGE5JFR22F6XTLQ"
-        //     var SecretAccessKey = "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"
-        //     var fileName = file.name 
-        //     // aws.config.update({
-        //     //     region: 'eu-central-1', 
-        //     //     accessKeyId : accessKeyId,
-        //     //     secretAccessKey : SecretAccessKey,
-        //     // })
-
-        //     // var s3 = new AWS.S3({apiVersion: '2006-03-01',params: {Bucket: BucketName}})
-        //     var s3 = new S3({
-        //         apiVersion: '2006-03-01',
-        //         region: 'eu-central-1', 
-        //         accessKeyId: accessKeyId,
-        //         secretAccessKey: SecretAccessKey,
-        //         params: {Bucket: BucketName}
-        //     })
-        //     // var albumFileKey = encodeURIComponent("flopay-file-batch") + '//'
-        //     var albumFileKey = '//'
-        //     var fileKey = moment().format('YYMMddhhmmss')+"_" + Utils.randomString2(3) + "_" + file.name    
-        //     batchUploadsChannel.subscribe(fileKey, _this.onFileProcessed)
-        //     var params = {Bucket: BucketName, Key: fileKey, Body: file}
-
-        //     s3.upload(params, function(err, data) {
-        //         if(err){
-        //             console.log('err', err)
-        //             batchUploadsChannel.unsubscribe(fileKey, _this.onFileProcessed)
-        //             this.$emit('saveComplete', false)
-        //             that.$notify.error("Upload Failed")
-        //             return
-        //         }
-        //         console.log('DATA RESPONSE', data)
-        //         let admin = {
-        //             s3_object_key: data.key,
-        //             file_type: fileExtension
-        //         }
-                
-        //         axios.post(url, admin).then((response) => {
-        //             that.processingFile = true  
-        //         },error=>{
-        //             that.$notify.error("Upload Failed")
-        //             batchUploadsChannel.unsubscribe(fileKey, _this.onFileProcessed)
-        //             this.$emit('saveComplete', false)
-        //         });
-
-
-        //         let params = {Bucket: BucketName, Key: fileKey};
-        //         s3.getSignedUrl('getObject', params, function (err, url) {
-        //             console.log("The URL is", url);
-        //         });
-                
-        //     })
-        // },
     },
     mounted () {
         EventBus.$emit('sideNavClick', 'view')
@@ -250,5 +260,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.w-150{
+    width: 150px;
+}
+.mt-2{
+    margin-top: 1rem;
+}
 </style>

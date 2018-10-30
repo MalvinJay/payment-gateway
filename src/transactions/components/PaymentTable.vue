@@ -6,25 +6,24 @@
             </div>
             <div>
                 <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
-                <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+                <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
             </div>
         </div>
         <div>
-            <el-table empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
+            <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="amount" label="Amount" width="300">
+                <el-table-column prop="amount" label="Amount" width="100">
                     <template slot-scope="scope">
-                        <router-link :to="{name: 'ViewTransactionsDetails', params: {id: scope.row.reference}}">
-                            <div class="flex align-items-center cursor">
-                                <p style="color: #2b2d50; width: 25%" class="m-0 p-0 mr-10 bold-500 s-13">GHc{{scope.row.receiver_amount}}</p>
-                                <p class="m-0 p-0 mr-10">{{scope.row.receiver_currency}}</p>
-                                <div>
-                                    <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
-                                    <the-tag v-else-if="scope.row.status === 'Failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
-                                    <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
-                                </div>
-                            </div>
-                        </router-link>
+                            <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.receiver_amount | money}}</p>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="status" label="">
+                    <template slot-scope="scope">
+                        <div class="flex">
+                            <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                            <the-tag v-else-if="scope.row.status === 'Failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
+                            <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
@@ -33,21 +32,21 @@
                         {{scope.row.created_at | moment("MMM Do, YYYY")}}
                     </template>
                 </el-table-column>
-                <el-table-column width="100px">
+                <el-table-column width="80px">
                     <template slot-scope="scope">
                         <div class="mini-menu">
-                            <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i>
+                            <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i>
                             <el-dropdown trigger="click">
-                                <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
+                                <i class="ellipsis horizontal icon mr-0 cursor"></i>
                                 <el-dropdown-menu class="w-200" slot="dropdown">
                                     <el-dropdown-item disabled>
-                                        <div class="table-dropdown-header blue-text bold-600 text-uppercase">
+                                        <div class="table-dropdown-header bold-600 text-uppercase">
                                             action
                                         </div>
                                     </el-dropdown-item>
                                     <el-dropdown-item class="s-12">Recharge Funds</el-dropdown-item>
                                     <el-dropdown-item divided disabled>
-                                        <div class="table-dropdown-header blue-text bold-600 text-uppercase">
+                                        <div class="table-dropdown-header bold-600 text-uppercase">
                                             connection
                                         </div></el-dropdown-item>
                                     <el-dropdown-item class="s-12">View Payment Details</el-dropdown-item>
@@ -98,6 +97,7 @@
                 <el-button size="mini" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payment</el-button>
             </span>
         </el-dialog>
+        <export-modal :modalVisible.sync="exportVisible"></export-modal>
     </div>
 </template>
 
@@ -117,11 +117,13 @@ export default {
         {label: 'Reference', dataField: 'reference', width: 'auto'}
       ],
       styleObject: {
-        fontSize: '12px'
+        fontSize: '12px',
+        color: '#999999'
       },
       activeName: '1',
       date: false,
       dialogVisible: false,
+      exportVisible: false,
       form: {
         amount: '',
         currency: 'GHS',
@@ -148,6 +150,9 @@ export default {
     EventBus.$emit('sideNavClick', 'view')
   },
   methods: {
+    clickRow (row, event, column) {
+        this.$router.push(`/view/${row.reference}`)
+    },
     handleCurrentChange (val) {
         this.$store.dispatch('getTransactions', {page: val, cache: false})
     },

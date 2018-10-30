@@ -18,16 +18,23 @@
 </template>
 
 <script>
+import EventBus from '../event-bus.js'
 export default {
   name: 'Client',
   created () {
-    this.$store.dispatch('getTransactions')
+    var time = {
+        time_interval: 'month'
+    }
+    this.$store.dispatch('setDashboardFilters', time)
+    .then(() => {
+        EventBus.$emit('updateGraph')
+    })
+    this.$store.dispatch('getTransactions', {cache: false})
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getQueues')
     this.$store.dispatch('getPayouts')
   },
   onIdle() {
-    console.log('ZZZ', Date.now())
     this.$store.dispatch('logout')
     .then(() => {
       this.$router.push('/login')
@@ -37,7 +44,6 @@ export default {
     setInterval(() => { 
         this.$store.dispatch('getToken')
     }, 3300000)
-    console.log('Awake', Date.now())
   }
 }
 </script>

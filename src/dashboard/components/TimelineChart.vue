@@ -1,141 +1,113 @@
 <template>
     <div class="h-inherit">
-        <canvas class="line-chart" ref="line"></canvas>
+        <canvas class="time-chart" ref="time"></canvas>
     </div>
 </template>
 
 <script>
 import Chart from 'chart.js'
+
 export default {
-  name: 'LineChart',
-  props: ['data', 'labels'],
+  name: 'TimeLineChart',
+  props: ['data', 'labels', 'dashboard'],
   mounted () {
-    var line = this.$refs.line
-    var ctxl = line.getContext('2d')
-    // ctxl.height= 76
-    var myChartLine = new Chart(ctxl, {
-      type: 'line',
-      data: {
+    var time = this.$refs.time
+    var ctx = time.getContext('2d')
+    const data = {
         labels: this.labels,
         datasets: [{
-          data: this.data,
-          backgroundColor: '#E8EBF8',
-          pointBackgroundColor: 'rgba(255,255,255,1)',
-          pointRadius: '0',
-          borderColor: '#586ADA',
-          borderWidth: 2,
-          lineTension: 0
+            labels: this.labels,
+            data: this.data,
+            backgroundColor: 'transparent',
+            borderColor: '#E8EBF8',
+            borderWidth: 1,
+            pointRadius: 0,
+            pointHitRadius: 20,
+            lineTension: 0
         }]
-      },
-      options: {
+    }
+    Chart.Tooltip.positioners.myCustomPosition = function(unused, position) {
+        return { x: position.x, y: 230 }; // HARDCODING VALUES
+    }
+    const options = {
+        scales: {
+            yAxes: [{
+                display: false,
+                ticks: {
+                    beginAtZero: true,
+                    display: false
+                },
+                gridLines: {
+                    display: false
+                }
+                }],
+            xAxes: [{
+                // display: false,
+                // type: 'time',
+                // time: {
+                //     unit: 'day',
+                //     min: 1,
+                //     max: 31,
+                //     tooltipFormat: 'Do'
+                // },
+                ticks: {
+                    beginAtZero: false,
+                    display: false
+                },
+                gridLines: {
+                    display: true,
+                    color: "rgba(255, 255, 255, 0.1)",
+                    drawBorder: false,
+                    tickMarkLength: 0
+                }
+            }],
+            gridLines: {
+                color: "rgba(255, 255, 255, 0.1)",
+                drawTicks: false,
+                drawBorder: false,
+                // tickMarkLength: 40,
+            }
+        },
         legend: {
           display: false,
         },
-        layout: {
-          padding: {
-            left: 25  //set that fits the best
-          }
+        tooltips: {
+          callbacks: {
+                label: function(tooltipItem, data) {
+                    var label = data.datasets[tooltipItem.datasetIndex].label || ''
+
+                    if (label) {
+                        label += ': ';
+                    }
+                    tooltipItem.width = 500
+                    label += Math.round(tooltipItem.yLabel * 100) / 100;
+                    return label
+                }
+            },
+            backgroundColor: 'white',
+            titleFontColor: 'black',
+            footerFontColor: 'black',
+            bodyFontColor: 'black',
+            borderColor: '#dcdfe6',
+            borderWidth: 1,
+            displayColors: false
         },
         maintainAspectRatio: false,
-        scales: {
-        yAxes: [{
-          display: false,
-          ticks: {
-            beginAtZero: false,
-            display: false
-          },
-            // gridLines: {
-            //     display: false
-            // }
-        }],
-        xAxes: [{
-          display: false,
-          ticks: {
-            beginAtZero: false,
-            display: false
-          },
-          gridLines: {
-            display: false
-          }
-        }]
-      },
-      tooltips: {
-        // Disable the on-canvas tooltip
-        enabled: false,
-
-        custom: function(tooltipModel) {
-            // Tooltip Element
-          var tooltipEl = document.getElementById('chartjs-tooltip')
-
-          // Create element on first render
-          if (!tooltipEl) {
-            tooltipEl = document.createElement('div')
-            tooltipEl.id = 'chartjs-tooltip'
-            tooltipEl.innerHTML = "<table></table>"
-            document.body.appendChild(tooltipEl)
-          }
-
-            // Hide if no tooltip
-          if (tooltipModel.opacity === 0) {
-            tooltipEl.style.opacity = 0
-            return
-          }
-
-            // Set caret Position
-          tooltipEl.classList.remove('above', 'below', 'no-transform')
-          if (tooltipModel.yAlign) {
-            tooltipEl.classList.add(tooltipModel.yAlign)
-          } else {
-            tooltipEl.classList.add('no-transform')
-          }
-
-          function getBody(bodyItem) {
-            return bodyItem.lines
-          }
-
-            // Set Text
-          if (tooltipModel.body) {
-                var titleLines = tooltipModel.title || []
-                var bodyLines = tooltipModel.body.map(getBody)
-
-                var innerHtml = '<thead>';
-
-                titleLines.forEach(function(title) {
-                    innerHtml += '<tr><th>' + title + '</th></tr>'
-                })
-                innerHtml += '</thead><tbody>'
-
-                bodyLines.forEach(function(body, i) {
-                    var colors = tooltipModel.labelColors[i]
-                    var style = 'background:' + colors.backgroundColor
-                    style += '; border-color:' + colors.borderColor
-                    style += '; border-width: 2px'
-                    var span = '<span style="' + style + '"></span>'
-                    innerHtml += '<tr><td>' + span + body + '</td></tr>'
-                });
-                innerHtml += '</tbody>'
-
-                var tableRoot = tooltipEl.querySelector('table')
-                tableRoot.innerHTML = innerHtml
-          }
-
-            // `this` will be the overall tooltip
-            var position = this._chart.canvas.getBoundingClientRect()
-
-            // Display, position, and set styles for font
-            tooltipEl.style.opacity = 1
-            tooltipEl.style.position = 'absolute'
-            tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px'
-            tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px'
-            tooltipEl.style.fontFamily = tooltipModel._bodyFontFamily
-            tooltipEl.style.fontSize = tooltipModel.bodyFontSize + 'px'
-            tooltipEl.style.fontStyle = tooltipModel._bodyFontStyle
-            tooltipEl.style.padding = tooltipModel.yPadding + 'px ' + tooltipModel.xPadding + 'px'
-            tooltipEl.style.pointerEvents = 'none'
-          }
+        layout: {
+            padding: {
+                left: 5,
+                right: 5,
+                top: 20,
+                bottom: 20
+            }
         }
-      }
+    }
+    var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: options
     })
+    myLineChart.resize()
   }
 }
 </script>
@@ -143,7 +115,7 @@ export default {
 <style lang='scss' scoped>
 .h-inherit{
     height: inherit;
-    height: 44px;
+    height: 88px;
 }
 
 #canvas-holder {

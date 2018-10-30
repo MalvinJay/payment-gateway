@@ -1,24 +1,28 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans|Lato:100,300,400,500,700');
-$background: #E3E8EE;
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Varela+Round:100,300,400,500,700');
+// $background: #E3E8EE;
+$background: #f1f6f8;
 $blue: #2b2d50;
 $green: #09825d;
 $blue-pure: #586ada;
 $light-bg: #F7FAFC;
 $border: #dcdfe6;
 $gray: #4e566d;
+$orange: #f7921e;
+$flopay: #67aee6;
 
 body{
-    font-family: "Open Sans";
+    // font-family: "Open Sans";
+    font-family: 'Varela Round', sans-serif;
     background: $background
 }
 *{
     outline: 0;
 }
 .open-sans{
-    font-family: "Open Sans", sans-serif !important;
+    font-family: "Varela Round", sans-serif !important;
 }
 button{
-    font-family: "Open Sans" !important;
+    font-family: "Varela Round" !important;
 }
 
 .mono{
@@ -27,7 +31,12 @@ button{
 // input{
 //     font-family: "Lato";
 // }
-
+.bg-orange{
+    background: $orange;
+}
+.bg-white{
+    background: white;
+}
 .bg{
     background: $background;
 }
@@ -113,6 +122,18 @@ button{
 .my-2{
     margin: 1rem 0 !important;
 }
+
+.mx-1{
+    margin-left: 0.5rem !important;
+    margin-right: 0.5rem !important
+}
+.mx-2{
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+}
+.mr-0{
+    margin-right: 0 !important
+}
 .mr-2{
     margin-right: 1rem;
 }
@@ -195,6 +216,13 @@ button{
 .test-data{
     border-top: solid 1px #f5925e !important;
 }
+.test{
+    color: white;
+    border-radius: 0 0 4px 4px;
+    padding: 0 5px;
+    left: calc((100% - 20px) / 2);
+    font-size: 9px;
+}
 // images
 .img-fluid{
     width: 17px;
@@ -213,15 +241,24 @@ button{
 .text-capitalize{
     text-transform: capitalize
 }
+.text-center{
+    text-align: center
+}
 // color
 .blue-text{
     color: $blue !important;
+    // color: $flopay;
 }
 
 .green-text{
     color: $green !important;
 }
-
+.flopay-blue{
+    color: $flopay;
+}
+.orange-text{
+    color: $orange;
+}
 .blue-pure{
     background: $blue-pure!important
 }
@@ -283,4 +320,12 @@ button{
     font-size: 12px;
     text-transform: uppercase;
     color: #2b2d50;
+}
+
+.position-relative{
+    position: relative;
+}
+
+.position-absolute{
+    position: absolute;
 }

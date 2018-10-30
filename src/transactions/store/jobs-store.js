@@ -1,6 +1,9 @@
-import { GET_JOBS, SET_JOBS_STATE, GET_JOBS_URI, SET_JOBS, CREATE_JOB } from './transactions-store-constants'
+import { GET_JOBS, SET_JOBS_STATE, AWS_BUCKET, ACCESS_KEY_ID, SET_FILE_UPLOAD_DETAILS,
+  CREATE_JOB_CONTACT, DELETE_JOB, UPDATE_JOB, GET_SINGLE_JOB, SET_SINGLE_JOB, SET_SINGLE_JOB_STATE,
+  SECRET_ACCESS_KEY, SEND_TO_BUCKET, GET_JOBS_URI, SET_JOBS, CREATE_JOB } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
-// import Utils from '../utils/Utils'
+import Utils from '../../utils/Utils'
+var S3 = require('aws-sdk/clients/s3')
 
 // state
 const state = {
@@ -8,14 +11,22 @@ const state = {
     data: [],
     state: 'LOADING',
     count: 0
-  }
+  },
+  currentJob: {
+    data: {},
+    state: 'LOADING'
+  },
+  file: {}
 }
 
 // getters
 const getters = {
   jobs: state => state.jobs.data,
   jobsState: state => state.jobs.state,
-  jobsCount: state => state.jobs.count
+  jobsCount: state => state.jobs.count,
+  file: state => state.file,
+  currentJob: state => state.currentJob.data,
+  currentJobState: state => state.currentJob.state
 }
 
 // mutations
@@ -26,34 +37,47 @@ const mutations = {
   },
   [SET_JOBS_STATE] (state, data) {
     state.jobs.state = data
+  },
+  [SET_FILE_UPLOAD_DETAILS] (state, data) {
+    state.file = data
+  },
+  [SET_SINGLE_JOB] (state, data) {
+    console.log(data)  
+    state.currentJob.data = data
+  },
+  [SET_SINGLE_JOB_STATE] (state, data) {
+    state.currentJob.state = data
   }
 }
 
 // actions
 const actions = {
-  [GET_JOBS] ({ state, commit, rootGetters }, page = 1) {
+  [GET_JOBS] ({ state, commit, rootGetters }, { page = 1, cache = true } = {}) {
     commit(SET_JOBS_STATE, 'LOADING')
-    return new Promise((resolve, reject) => {
-      apiCall({
-        url: `${GET_JOBS_URI}`,
-        method: 'GET',
-        token: rootGetters.token
-      }).then((response) => {
-        console.log('jobs', response.data)
-        commit(SET_JOBS_STATE, 'DATA')
-        commit(SET_JOBS, response.data.response.data.jobs)
-        resolve()
-      }).catch((error) => {
-        commit(SET_JOBS_STATE, 'ERROR')
-        console.log(error)
-        reject(error)
+    if (cache && Utils.present(state.jobs.data)) {
+      commit(SET_JOBS_STATE, 'DATA')
+    } else {
+      return new Promise((resolve, reject) => {
+        apiCall({
+          url: `${GET_JOBS_URI}/files/all.json`,
+          method: 'GET',
+          token: rootGetters.token
+        }).then((response) => {
+          commit(SET_JOBS_STATE, 'DATA')
+          commit(SET_JOBS, response.data.response.data.jobs)
+          resolve()
+        }).catch((error) => {
+          commit(SET_JOBS_STATE, 'ERROR')
+          console.log(error)
+          reject(error)
+        })
       })
-    })
+    }
   },
   [CREATE_JOB] ({ state, commit, rootGetters }, job) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_JOBS_URI}`,
+        url: `${GET_JOBS_URI}/files.json`,
         method: 'POST',
         token: rootGetters.token,
         data: job
@@ -64,6 +88,112 @@ const actions = {
         reject(error)
       })
     })
+  },
+  [CREATE_JOB_CONTACT] ({ state, commit, rootGetters }, job) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_JOBS_URI}.json`,
+        method: 'POST',
+        token: rootGetters.token,
+        data: job
+      }).then((response) => {
+        resolve()
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  [SEND_TO_BUCKET] ({ state, commit, rootGetters }, file) {
+    function getFileExtension (filename) {
+      return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined
+    }
+
+    var fileExtension = getFileExtension(file.name)
+
+    var BucketName = AWS_BUCKET
+    var accessKeyId = ACCESS_KEY_ID
+    var SecretAccessKey = SECRET_ACCESS_KEY
+
+    var s3 = new S3({
+      apiVersion: '2006-03-01',
+      region: 'eu-central-1',
+      accessKeyId: accessKeyId,
+      secretAccessKey: SecretAccessKey,
+      params: {Bucket: BucketName}
+    })
+    var albumFileKey = encodeURIComponent('flopay-file-batch') + '/'
+    var fileKey = albumFileKey + Utils.randomString2(3) + '_' + file.name
+    // batchUploadsChannel.subscribe(fileKey, _this.onFileProcessed)
+    var params = {Bucket: BucketName, Key: fileKey, Body: file}
+
+    s3.upload(params, function (err, data) {
+      if (err) {
+        console.log('err', err)
+        return
+      }
+      console.log('DATA RESPONSE', data)
+      let admin = {
+        s3_object_key: data.key,
+        file_type: fileExtension
+      }
+      commit(SET_FILE_UPLOAD_DETAILS, data)
+    })
+  },
+  [DELETE_JOB] ({ rootGetters }, id) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_JOBS_URI}/${id}`,
+        method: 'DELETE',
+        token: rootGetters.token
+      }).then((response) => {
+        resolve()
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  [UPDATE_JOB] ({ rootGetters }, {id, data}) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_JOBS_URI}/${id}`,
+        method: 'PUT',
+        token: rootGetters.token,
+        data: data
+      }).then((response) => {
+        resolve()
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  [GET_SINGLE_JOB] ({ state, commit, rootGetters }, id) {
+    console.log(id)
+    commit(SET_SINGLE_JOB_STATE, 'LOADING')
+    commit(SET_SINGLE_JOB, rootGetters.jobs.find(el => el.name === id))
+    commit(SET_SINGLE_JOB_STATE, 'DATA')
+    // if (state.currentJob.data.id === id) {
+    //   commit(SET_SINGLE_JOB_STATE, 'DATA')
+    // } else {
+    //   return new Promise((resolve, reject) => {
+    //     apiCall({
+    //       url: `https://api.flopay.io/v1/clients/job/file/${id}`,
+    //       method: 'GET',
+    //       token: rootGetters.token
+    //     }).then((response) => {
+    //       console.log('currentJob', response)
+    //       commit(SET_SINGLE_JOB_STATE, 'DATA')
+    //       commit(SET_SINGLE_JOB, response.data.response.data.jobs)
+    //       resolve()
+    //     }).catch((error) => {
+    //       commit(SET_SINGLE_JOB_STATE, 'ERROR')
+    //       console.log(error)
+    //       reject(error)
+    //     })
+    //   })
+    // }
   }
 }
 

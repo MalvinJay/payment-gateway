@@ -10,21 +10,28 @@
             </div>
         </div>
         <div>
-            <el-table empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
+            <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="amount" label="Amount" width="300">
+                <el-table-column prop="amount" label="Amount" width="100">
                     <template slot-scope="scope">
-                        <router-link :to="{name: 'ViewTransactionsDetails', params: {id: scope.row.reference}}">
-                            <div class="flex align-items-center cursor">
-                                <p style="color: #2b2d50; width: 25%" class="m-0 p-0 mr-10 bold-500 s-13">GHc{{scope.row.receiver_amount}}</p>
-                                <p class="m-0 p-0 mr-10">{{scope.row.receiver_currency}}</p>
-                                <div>
-                                    <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
-                                    <the-tag v-else-if="scope.row.status === 'Failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
-                                    <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
-                                </div>
-                            </div>
-                        </router-link>
+                        <div class="flex align-items-center cursor">
+                            <p style="color: #2b2d50;" class="m-0 p-0 mr-10 bold-500 s-13">GHc{{scope.row.receiver_amount}}</p>
+                            <!-- <p class="m-0 p-0 mr-10">{{scope.row.receiver_currency}}</p>
+                            <div>
+                                <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                <the-tag v-else-if="scope.row.status === 'Failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
+                                <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
+                            </div> -->
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="status" label="">
+                    <template slot-scope="scope">
+                        <div class="flex">
+                            <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                            <the-tag v-else-if="scope.row.status === 'Failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
+                            <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
+                        </div>
                     </template>
                 </el-table-column>
                 <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
@@ -33,7 +40,7 @@
                         {{scope.row.created_at | moment("MMM Do, YYYY")}}
                     </template>
                 </el-table-column>
-                <el-table-column width="100px">
+                <el-table-column width="80px">
                     <template slot-scope="scope">
                         <div class="mini-menu">
                             <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i>
@@ -148,6 +155,9 @@ export default {
     EventBus.$emit('sideNavClick', 'view')
   },
   methods: {
+    clickRow (row, event, column) {
+        this.$router.push(`/view/${row.reference}`)
+    },
     handleCurrentChange (val) {
         this.$store.dispatch('getPayouts', {page: val, cache: false})
     },

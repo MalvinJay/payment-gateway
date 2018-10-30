@@ -89,21 +89,21 @@ $border: #dcdfe6;
     justify-content: space-around;
     width: 200px;
     margin-right: 10px;
-    .el-checkbox-button__inner{
+    .el-checkbox-button__inner,.el-radio-button__inner{
         border: 0 !important;
         padding: 0;
         color: #4e566d;
         font-weight: 600;
         font-size: 13px;
     }
-    .el-checkbox-button{
+    .el-checkbox-button,.el-radio-button{
         display: flex;
         align-items: center;
         justify-content: center;
         height: 30px;
     }
 
-    .el-checkbox-button.is-checked .el-checkbox-button__inner{
+    .el-checkbox-button.is-checked .el-checkbox-button__inner, .el-radio-button__orig-radio:checked + .el-radio-button__inner{
         color: #586ADA;
         background: transparent;
         border: 0;
@@ -126,8 +126,11 @@ $border: #dcdfe6;
         padding: 0;
         text-transform: uppercase;
         font-size: 11px;
-        font-weight: 600;
-        color: rgba(0,0,0,.87);
+        border-top: 1px solid #ebeef5;
+        // font-weight: 600;
+        // color: rgba(0,0,0,.87);
+        color: #999999;
+        font-weight: 100;
     }
     
 }
@@ -135,6 +138,10 @@ $border: #dcdfe6;
     
     td{
         padding: 8px 0 !important;
+
+        a{
+            color: #999999
+        }
     }
 }
 .el-table--enable-row-hover .el-table__body tr:hover>td{
@@ -215,7 +222,7 @@ $border: #dcdfe6;
 }
 
 .default-tab{
-    background: #E3E8EE;
+    background: transparent;
     box-shadow: none;
     border: 0;
 
@@ -252,6 +259,13 @@ $border: #dcdfe6;
     .el-tabs__header .el-tabs__item.is-active{
         color: $--color-primary;
         border-bottom: 2px solid $--color-primary;
+    }
+}
+
+.default-radio-group{
+    .el-radio-button__inner{
+        padding: 7px 0;
+        width: 100%;
     }
 }
 
@@ -320,4 +334,21 @@ $border: #dcdfe6;
         padding: 0 4px;
         margin: 0;
     }
+}
+
+.no-border-input{
+    .el-input__inner{
+        border: 0;
+        background: #f1f6f8;
+    }
+}
+
+.s-12{
+    .el-checkbox__label{
+        font-size: 12px;
+    }
+}
+
+.el-menu{
+    border: 0;
 }

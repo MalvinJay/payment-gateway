@@ -28,11 +28,11 @@
                 <span class="el-dropdown-link">
                     <img class="img-big circle" src="../assets/images/profile/profile.jpg" alt="">
                 </span>
-                <el-dropdown-menu slot="dropdown" class="w-100px">
+                <el-dropdown-menu slot="dropdown" class="w-200">
                     <el-dropdown-item disabled>
                         <div class="flex flex-column dropdown-header">
-                            <p class="blue-text">Sedinam Barbara Dwamena</p>
-                            <p class="s-8">Role Here</p>
+                            <p class="blue-text text-capitalize">{{user.full_name}}</p>
+                            <p class="s-8">{{user.company_name}}</p>
                         </div>
                     </el-dropdown-item>
                     <el-dropdown-item class="header-user-dropdown">Profile</el-dropdown-item>
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Header',
   data () {
@@ -76,6 +77,9 @@ export default {
                 break
         }
     }
+  },
+  computed: {
+    ...mapGetters(['user'])
   }
 }
 </script>

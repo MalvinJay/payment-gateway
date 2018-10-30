@@ -7,24 +7,17 @@
             </div>
         </div>
         <div>
-            <el-table empty-text="No jobs to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="jobs">
+            <el-table @row-click="clickRow" empty-text="No jobs to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredJobs">
                 <el-table-column type="selection" width="55">
                 </el-table-column>
-                <el-table-column prop="name" label="Job Name" width="250">
+                <el-table-column prop="description" label="Job Name" width="300">
                     <template slot-scope="scope">
-                        <router-link :to="{name: 'ViewTransactionsDetails', params: {id: scope.row.reference}}">
-                            <div class="flex align-items-center cursor">
-                                <p style="color: #2b2d50; width: 25%" class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.name}}</p>
-                                <div>
-                                    <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
-                                    <the-tag v-else-if="scope.row.status === 'Failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
-                                    <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
-                                </div>
-                            </div>
-                        </router-link>
+                        <!-- <router-link :to="{name: 'JobDetails', params: {id: scope.row.id}}"> -->
+                            <p style="color: #2b2d50;" class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.description}}</p>
+                        <!-- </router-link> -->
                     </template>
                 </el-table-column>
-                <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                <el-table-column :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                 <el-table-column prop="created_at" label="Date">
                     <template slot-scope="scope">
                         {{scope.row.created_at | moment("MMM Do, YYYY")}}
@@ -33,7 +26,7 @@
                 <el-table-column width="100px">
                     <template slot-scope="scope">
                         <div class="mini-menu">
-                            <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i>
+                            <i v-if="scope.row.status ==='failed'" class="reply icon blue-text cursor first-icon"></i>
                             <el-dropdown trigger="click">
                                 <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
                                 <el-dropdown-menu class="w-200" slot="dropdown">
@@ -42,12 +35,8 @@
                                             action
                                         </div>
                                     </el-dropdown-item>
-                                    <el-dropdown-item class="s-12">Recharge Funds</el-dropdown-item>
-                                    <el-dropdown-item divided disabled>
-                                        <div class="table-dropdown-header blue-text bold-600 text-uppercase">
-                                            connection
-                                        </div></el-dropdown-item>
-                                    <el-dropdown-item class="s-12">View Payment Details</el-dropdown-item>
+                                    <el-dropdown-item class="s-12">Edit Job</el-dropdown-item>
+                                    <el-dropdown-item class="s-12">Delete Job</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -60,41 +49,6 @@
                 :total="total">
             </el-pagination>
         </div>
-        <!-- New Payment -->
-        <el-dialog custom-class="new-transaction"
-            title="Create New Job"
-            :visible.sync="dialogVisible"
-            width="30%">
-            <div class="flex justify-content-center new-transaction-bg">
-                <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="100px">
-                    <el-form-item label="Name">
-                        <el-input v-model="form.name"></el-input>
-                    </el-form-item>
-                    <el-form-item class="h-auto" label="Phone Number" prop="phone">
-                        <el-input v-model="form.phone"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Provider">
-                        <el-select v-model="form.provider" placeholder="Select Provider">
-                            <el-option
-                                v-for="(item, index) in providers" :key="index"
-                                :label="item.label"
-                                :value="item.value"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Amount" prop="amount">
-                        <el-input prefix-icon="dollar sign icon" v-model="form.amount"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Remarks">
-                        <el-input type="textarea" v-model="form.remarks"></el-input>
-                    </el-form-item>
-                </el-form>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button class="z-depth-button b-0 open-sans mini-button black-text" @click="dialogVisible = false">Cancel</el-button>
-                <el-button class="z-depth-button b-0 bold-500 open-sans mini-button white-text" type="primary" @click="submitForm('form')">Create Payment</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 
@@ -108,8 +62,8 @@ export default {
     return {
       test: true,
       columns: [
-        {label: 'CONTACTS', dataField: 'contacts', width: 'auto'},
-        {label: 'NUMBER OF RUNS', dataField: 'customer', width: 'auto'}
+        {label: 'CONTACTS', dataField: 'contact', align: 'center'},
+        {label: 'NUMBER OF RUNS', dataField: 'number_of_runs', align:"right"}
         // {label: 'STATUS', dataField: 'reference', width: 'auto'}
       ],
       styleObject: {
@@ -147,6 +101,9 @@ export default {
     handleCurrentChange (val) {
         this.$store.dispatch('getTransactions', {page: val})
     },
+    clickRow (row, event, column) {
+        this.$router.push(`/job/${row.name}`)
+    },
     newJob () {
         this.$router.push('/new-job')
     },
@@ -177,6 +134,14 @@ export default {
       meta: 'transactionsMeta',
       providers: 'providers'
     }),
+    filteredJobs () {
+        return this.jobs.map(el => {
+          var con = el.contacts.length
+          el.contact = con ? con : 0
+          el.description = el.description ? el.description : el.name
+          return el
+        })
+    },
     total () {
       return this.jobs.length
     },

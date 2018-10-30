@@ -1,6 +1,7 @@
 <template>
     <div>
-        <el-tabs class="default-tab" :class="{'test-data': test}" stretch type="border-card">
+        <el-tabs class="default-tab" :class="[{'test-data': test}, 'position-relative']" stretch type="border-card">
+            <!-- <div v-show="test" class="position-absolute bg-orange test">TEST DATA</div> -->
             <el-tab-pane label="Payments">
                 <!-- FOUND IN TRANSACTIONS/COMPONENTS -->
                 <payment-table type="payment"></payment-table>
@@ -36,9 +37,9 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'view')
-    this.$store.dispatch('getTransactions')
-    this.$store.dispatch('getJobs')
-    this.$store.dispatch('getQueues')
+    this.$store.dispatch('getTransactions', {cache: false})
+    // this.$store.dispatch('getJobs')
+    // this.$store.dispatch('getQueues')
   },
   computed: {
     ...mapGetters({

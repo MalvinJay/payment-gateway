@@ -62,12 +62,16 @@ const actions = {
     cache = true
   } = {}) {
     var filters = state.payouts.filters
-    filters.search_value = 'cashout'
-    var query = Utils.createQueryParams(filters, page)
-    console.log('query', query)
+    var query = ''
+    if (Utils.empty(filters)) {
+      query = `?all=true&search_value=cashin&page=${page}&limit=10`
+    } else {
+      filters.search_value = 'cashin'
+      query = Utils.createQueryParams(filters, page)
+    }
     commit(SET_PAYOUTS_STATE, 'LOADING')
     commit(SET_PAYOUTS_FILTERS, filters)
-    if (cache) {
+    if (cache && Utils.present(state.payouts.data)) {
       commit(SET_PAYOUTS_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {
@@ -76,6 +80,7 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
+          console.log('payouts', response)
           commit(SET_PAYOUTS_STATE, 'DATA')
           commit(SET_PAYOUTS_META, response.data.response.data)
           commit(SET_PAYOUTS, response.data.response.data.transactions)

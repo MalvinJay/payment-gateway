@@ -16,11 +16,11 @@
                     <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column prop="name" label="Name">
                         <template slot-scope="scope">
-                            <!-- <router-link :to="{name: 'ViewTransactionsDetails', params: {id: scope.row.reference}}"> -->
+                            <router-link :to="{name: 'ContactDetails', params: {id: scope.row.code}}">
                                 <div class="flex align-items-center cursor black-text">
                                     {{scope.row.name}}
                                 </div>
-                            <!-- </router-link> -->
+                            </router-link>
                         </template>
                     </el-table-column>
                     <el-table-column :formatter="formatContent" :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
@@ -54,41 +54,66 @@
                     :total="total">
                 </el-pagination>
             </div>
-            <!-- New Payment -->
-            <!-- <el-dialog custom-class="new-transaction"
-                title="Create New Payment - Mobile Money"
+            <!-- New Customer -->
+            <el-dialog custom-class="new-transaction"
+                title="Create Contact"
                 :visible.sync="dialogVisible"
                 width="30%">
                 <div class="flex justify-content-center new-transaction-bg">
-                    <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="100px">
-                        <el-form-item label="Name">
-                            <el-input v-model="form.name"></el-input>
+                    <el-form style="width:90%" size="mini" ref="form" label-position="left" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="150px">
+                        <el-form-item label="Contact Name">
+                            <el-input v-model="form.deposit_account.account_name"></el-input>
+                        </el-form-item>
+                        <el-form-item class="h-auto" label="Contact Email" prop="email">
+                            <el-input v-model="form.deposit_account.email"></el-input>
                         </el-form-item>
                         <el-form-item class="h-auto" label="Phone Number" prop="phone">
-                            <el-input v-model="form.phone"></el-input>
+                            <el-input v-model="form.deposit_account.customer_msisdn"></el-input>
                         </el-form-item>
-                        <el-form-item label="Provider">
-                            <el-select v-model="form.provider" placeholder="Select Provider">
-                                <el-option
-                                    v-for="(item, index) in providers" :key="index"
-                                    :label="item.label"
-                                    :value="item.value"
-                                ></el-option>
-                            </el-select>
+                        <el-form-item label="Description">
+                            <el-input autosize type="textarea" v-model="form.description"></el-input>
                         </el-form-item>
-                        <el-form-item label="Amount" prop="amount">
-                            <el-input prefix-icon="dollar sign icon" v-model="form.amount"></el-input>
+                        <el-form-item label="Mode">
+                            <el-radio-group class="w-100 default-radio-group" v-model="form.mode">
+                                <el-radio-button class="w-50" label="mobile">Mobile Money</el-radio-button>
+                                <el-radio-button class="w-50" label="bank">Bank</el-radio-button>
+                            </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="Remarks">
-                            <el-input type="textarea" v-model="form.remarks"></el-input>
-                        </el-form-item>
+                        <div v-if="form.mode === 'mobile'">
+                            <el-form-item label="Provider Name">
+                                <el-select class="w-100" v-model="form.accounts_provider_code" placeholder="Select Provider">
+                                    <el-option
+                                        v-for="(item, index) in providers" :key="index"
+                                        :label="item.label"
+                                        :value="item.value"
+                                    ></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="Mobile Money Number">
+                                <el-input type="text" v-model="form.deposit_account.phone"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Branch">
+                                <el-input type="text" v-model="form.deposit_account.bank"></el-input>
+                            </el-form-item>
+                        </div>
+                        <div v-else>
+                            <el-form-item label="Bank">
+                                <el-input type="text" v-model="form.deposit_account.bank"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Account Number">
+                                <el-input type="text" v-model="form.deposit_account.account_no"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Branch">
+                                <el-input type="text" v-model="form.deposit_account.branch"></el-input>
+                            </el-form-item>
+                        </div>
                     </el-form>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                    <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
-                    <el-button size="mini" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payment</el-button>
+                    <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="resetForm('form')">Cancel</el-button>
+                    <el-button size="mini" class="z-depth-button b-0 bold-500 open-sans white-text" :loading="createLoading" type="primary" @click="submitForm('form')">Create Contact</el-button>
                 </span>
-            </el-dialog> -->
+            </el-dialog>
         </div>
     </el-card>
 </template>
@@ -105,7 +130,7 @@ export default {
       test: true,
       columns: [
         {label: 'Type', dataField: 'type', width: 'auto'},
-        {label: 'phone number', dataField: 'phone', width: 'auto'},
+        {label: 'phone number', dataField: 'account_no', width: 'auto'},
         {label: 'Provider', dataField: 'bank', width: 'auto'},
         {label: 'Owner', dataField: 'owner', width: 'auto'}
       ],
@@ -116,19 +141,20 @@ export default {
       date: false,
       dialogVisible: false,
       form: {
-        amount: '',
-        currency: 'GHS',
-        customer_no: '',
-        country_code: 'GH',
-        service_code: 'cashout',
-        live: false,
-        dummy: true
+        mode: 'mobile',
+        deposit_account: {
+
+        }
       },
+      createLoading: false,
       rules: {
         phone: [
             { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
         ],
         amount: [
+            { required: true, message: 'This field is required', trigger: 'blur' }
+        ],
+        email: [
             { required: true, message: 'This field is required', trigger: 'blur' }
         ]
       }
@@ -149,30 +175,45 @@ export default {
         return cellValue = typeof cellValue === 'undefined' || !cellValue ? '-' : cellValue
     },
     submitForm(formName) {
+        this.createLoading = true
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$store.dispatch('createTransactions', this.form)
+            this.$store.dispatch('createContact', this.form)
             .then((response) => {
+                this.createLoading = false
                 this.$message({
-                    message: 'Payment successful',
+                    message: 'Contact Created Successfully',
                     type: 'success'
+                })
+                this.dialogVisible = false
+            }).catch(() => {
+                this.createLoading = false
+                this.$message({
+                    message: 'Unable to create Contact. Please try again later',
+                    type: 'error'
                 })
             })
           } else {
-            console.log('error submit!!')
-            return false
+            this.createLoading = false
+            this.$message({
+                message: 'Please fill form correctly',
+                type: 'error'
+            })
           }
         })
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-      }
+    },
+    resetForm (formName) {
+        this.dialogVisible = false
+        this.createLoading = false
+        this.$refs[formName].resetFields()
+    }
   },
   computed: {
     ...mapGetters({
       contacts: 'currentContacts',
       state: 'contactsState',
-      count: 'contactsCount'
+      count: 'contactsCount',
+      providers: 'providers'
     }),
     total () {
       return this.count

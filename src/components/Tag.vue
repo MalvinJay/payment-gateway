@@ -1,7 +1,7 @@
 <template>
   <div :class="[{success: isSuccess}, 'tag-success', 'flex']">
     <p class="p-0 m-0">{{title}}</p>
-    <i :class="icon"></i>
+    <!-- <i :class="icon"></i> -->
   </div>
 </template>
 
@@ -37,7 +37,7 @@ export default {
     // border-radius: 0.2em;
     // margin: 0 6px;
     // color: #484bad;
-    padding: 2px 8px;
+    padding: 3px 10px;
     font-weight: 500;
     line-height: 16px;
     font-size: 10px;

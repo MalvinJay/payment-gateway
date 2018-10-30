@@ -1,22 +1,27 @@
 <template>
     <div class="bg pt-20 nav-container">
-        <div class="center">
-            <div class="ui card z-depth navigation-card">
-                <!-- navigation card content -->
+        <!-- <div class="center"> -->
+            <el-card class="navigation-card card-0">
+                <div class="flex align-items-center">
+                    <avatar :size="25" username="Flopay" backgroundColor="#f7921e"></avatar>
+                    <p class="text-uppercase s-18 blue-text p-0 m-0 bold-500">Flopay</p>                
+                </div>
+            </el-card>
+            <!-- <div class="ui card z-depth navigation-card"> -->
+                <!-- navigation card content
                 <div class="content">
-                    <!-- card items -->
                     <div class="ui items">
-                        <!-- logo of client -->
                         <div class="item no-margin h-100 center">
                             <div class="ui center-block tiny image">
+                                <avatar username="Flopay"></avatar>
                                 <img src="../assets/images/logo/BondCollect.png" alt="">
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <el-menu router :unique-opened="true" :default-active="defaultActive" active-text-color='#586ada' text-color="#2b2d50" background-color="#E3E8EE">
+                </div> -->
+            <!-- </div> -->
+        <!-- </div> -->
+        <el-menu router :unique-opened="true" :default-active="defaultActive" active-text-color='#586ADA' text-color="#999999" background-color="#f1f6f8">
             <el-menu-item route="/" index="dashboard">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/home.svg" alt="">
@@ -41,7 +46,7 @@
                 <el-menu-item index="3-3">Settlements</el-menu-item>
                 <el-menu-item index="3-4">Settings</el-menu-item>
             </el-submenu>
-            <el-menu-item index="contacts">
+            <el-menu-item route="/contacts" index="contacts">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/customer.svg" alt="">
                     Customers
@@ -148,7 +153,9 @@ export default {
     margin: 0 auto;
 }
 .navigation-card{
-    width: 95%;
-    height: 80px;
+    // width: 95%;
+    width: 80%;
+    padding: 5px 15px;
+    // height: 80px;
 }
 </style>
