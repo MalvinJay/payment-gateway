@@ -135,12 +135,13 @@ $border: #dcdfe6;
     
 }
 .transactions-table-body{
-    
     td{
         padding: 8px 0 !important;
+        // color: #999999;
+        text-transform: capitalize;
 
-        a{
-            color: #999999
+        a,p,div{
+            // color: #999999
         }
     }
 }

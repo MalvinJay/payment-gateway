@@ -7,4 +7,4 @@ export const GET_CURRENT_CONTACT = 'getCurrentContact'
 export const SET_CURRENT_CONTACT = 'setCurrentContact'
 export const SET_CURRENT_CONTACT_STATE = 'setCurrentContactState'
 
-export const GET_CONTACTS_URI = 'https://api.flopay.io/v1/accounts'
+export const GET_CONTACTS_URI = 'https://api.flopay.io/v1/clients/contacts/all'

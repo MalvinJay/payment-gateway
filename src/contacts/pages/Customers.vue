@@ -1,18 +1,25 @@
 <template>
     <el-card class="card-0">
         <div class="transactions">
-            <div class="customer-div flex justify-content-between">
+            <div class="customer-div flex">
                 <div class="flex align-items-baseline">
                     <p class="blue-text bold-600 s-16 m-0 p-0">Contacts</p>
                     <!-- <filter-component filterType="payment"></filter-component> -->
                 </div>
                 <div>
-                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
+                    <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button> -->
                     <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
                 </div>
             </div>
             <div>
-                <el-table @row-click="clickRow" empty-text="No contacts found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="contacts">
+                <div class="center h-80" v-if="error">
+                    <div class="center flex-column">
+                       <p class="m-0 p-0">Unable to load this page</p>
+                       <el-button @click.prevent="fetchCustomers" icon="sync icon" type="text">Retry</el-button>
+                    </div>
+                </div>
+                <div v-else>
+                    <el-table @row-click="clickRow" empty-text="No contacts found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="contacts">
                     <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column prop="name" label="Name">
                         <template slot-scope="scope">
@@ -43,12 +50,15 @@
                             </div>
                         </template>
                     </el-table-column>
-                </el-table>
-                <el-pagination class="my-2 flex justify-content-end"
-                    @current-change="handleCurrentChange"
-                    layout="prev, pager, next"
-                    :total="total">
-                </el-pagination>
+                    </el-table>
+                    <el-pagination class="my-2 flex justify-content-end"
+                        @current-change="handleCurrentChange"
+                        layout="prev, pager, next"
+                        :total="total">
+                    </el-pagination>
+                </div>
+                
+                
             </div>
             <!-- New Customer -->
             <el-dialog custom-class="new-transaction"
@@ -60,24 +70,24 @@
                         <el-form-item label="Contact Name">
                             <el-input v-model="form.deposit_account.account_name"></el-input>
                         </el-form-item>
-                        <el-form-item class="h-auto" label="Contact Email" prop="email">
+                        <el-form-item class="h-auto" label="Contact Email" prop="deposit_account.email">
                             <el-input v-model="form.deposit_account.email"></el-input>
                         </el-form-item>
-                        <el-form-item class="h-auto" label="Phone Number" prop="phone">
+                        <el-form-item class="h-auto" label="Phone Number" prop="deposit_account.customer_msisdn">
                             <el-input v-model="form.deposit_account.customer_msisdn"></el-input>
                         </el-form-item>
                         <el-form-item label="Description">
                             <el-input autosize type="textarea" v-model="form.description"></el-input>
                         </el-form-item>
                         <el-form-item label="Mode">
-                            <el-radio-group class="w-100 default-radio-group" v-model="form.mode">
+                            <el-radio-group class="w-100 default-radio-group" v-model="form.accounts_provider_code">
                                 <el-radio-button class="w-50" label="mobile">Mobile Money</el-radio-button>
                                 <el-radio-button class="w-50" label="bank">Bank</el-radio-button>
                             </el-radio-group>
                         </el-form-item>
-                        <div v-if="form.mode === 'mobile'">
+                        <div v-if="form.accounts_provider_code === 'mobile'">
                             <el-form-item label="Provider Name">
-                                <el-select class="w-100" v-model="form.accounts_provider_code" placeholder="Select Provider">
+                                <el-select class="w-100" v-model="form.code" placeholder="Select Provider">
                                     <el-option
                                         v-for="(item, index) in providers" :key="index"
                                         :label="item.label"
@@ -126,8 +136,8 @@ export default {
       test: true,
       columns: [
         {label: 'Type', dataField: 'type', width: 'auto'},
-        {label: 'phone number', dataField: 'account_no', width: 'auto'},
-        {label: 'Provider', dataField: 'bank', width: 'auto'},
+        {label: 'phone number', dataField: 'msisdn', width: 'auto'},
+        {label: 'Provider', dataField: 'provider', width: 'auto'},
         {label: 'Owner', dataField: 'owner', width: 'auto'}
       ],
       styleObject: {
@@ -137,20 +147,21 @@ export default {
       date: false,
       dialogVisible: false,
       form: {
-        mode: 'mobile',
+        accounts_provider_code: 'mobile',
         deposit_account: {
 
         }
       },
+      retryLoading: false,
       createLoading: false,
       rules: {
-        phone: [
+        'deposit_account.customer_msisdn': [
             { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
         ],
         amount: [
             { required: true, message: 'This field is required', trigger: 'blur' }
         ],
-        email: [
+        'deposit_account.email': [
             { required: true, message: 'This field is required', trigger: 'blur' }
         ]
       }
@@ -170,6 +181,9 @@ export default {
         if (column.property) {
             this.$router.push(`/contacts/${row.id}`)
         }
+    },
+    fetchCustomers () {
+      this.$store.dispatch('getContacts')
     },
     //format the content of each quota
     formatContent (row, column, cellValue, index) {
@@ -221,6 +235,9 @@ export default {
     },
     loading () {
       return this.state === 'LOADING'
+    },
+    error () {
+      return this.state === 'ERROR' && this.state !== 'LOADING'
     }
   }
 }

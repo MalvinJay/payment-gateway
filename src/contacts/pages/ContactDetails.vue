@@ -64,7 +64,8 @@
                                         <p v-else class="s-13 mono">{{value}}</p>
                                     </div>
                                     <div v-else>
-                                        <el-input style="width: 80%" size="mini" v-model="data[key]"></el-input>
+                                        <p v-if="key === 'date' || key === 'time'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
+                                        <el-input v-else style="width: 80%" size="mini" v-model="data[key]"></el-input>
                                     </div>
                                 </el-col>
                             </el-row>
@@ -156,13 +157,13 @@ export default {
             }
             var nForm = {
                 name: this.form.name,
-                'phone number': this.form.account_no,
+                'phone number': this.form.number,
                 email: this.form.email ? this.form.email : '-',
                 type: this.form.type ? this.form.type : '-',
-                bank: this.form.bank,
-                date: this.form.created_at,
-                time: this.form.created_at,
-                description: this.form.remarks ? this.form.remarks : '-'
+                provider: this.form.bank ? this.form.bank : '-',
+                date: this.form.created_at ? this.form.created_at : '-',
+                time: this.form.created_at ? this.form.created_at : '-',
+                description: this.form.description ? this.form.description : '-'
             }
             return nForm
         },
@@ -170,7 +171,7 @@ export default {
             var nForm = {
                 'Send emails to': this.form.email ? this.form.email : 'Not Provided',
                 'Address': this.form.address ? this.form.address : 'Not Provided',
-                'Phone Number': this.form.account_no ? this.form.account_no : 'Not Provided'
+                'Send messages to': this.form.number ? this.form.number : 'Not Provided'
             }
             return nForm
         },

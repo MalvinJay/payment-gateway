@@ -4,6 +4,9 @@
             <el-input @keyup.enter.native="searchButton" v-model="search" class="is-shadow border-rounded search-div" :prefix-icon="loading" placeholder="Search..."></el-input>
         <!-- </div> -->
         <div class="flex align-items-center header-side-panel">
+            <div style="height: 25px">
+                <el-switch active-text="Test" v-model="testData"></el-switch>
+            </div>
             <el-dropdown trigger="click">
                 <span class="el-dropdown-link">
                     <img class="img-fluid" src="../assets/images/icons/bookmark.svg" alt="">
@@ -31,8 +34,8 @@
                 <el-dropdown-menu slot="dropdown" class="w-200">
                     <el-dropdown-item disabled>
                         <div class="flex flex-column dropdown-header">
-                            <p class="blue-text text-capitalize">{{user.full_name}}</p>
-                            <p class="s-8">{{user.company_name}}</p>
+                            <p class="blue-text text-capitalize">{{client.full_name}}</p>
+                            <p class="s-8">{{client.company_name}}</p>
                         </div>
                     </el-dropdown-item>
                     <el-dropdown-item class="header-user-dropdown">Profile</el-dropdown-item>
@@ -79,7 +82,21 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user', 'test']),
+    testData: {
+        get () {
+            return this.test
+        },
+        set (value) {
+            this.$store.dispatch('setTest', value)
+        }
+    },
+    client () {
+        return {
+            full_name: localStorage.getItem('name'),
+            company_name: localStorage.getItem('company')
+        }
+    }
   }
 }
 </script>
@@ -134,8 +151,9 @@ export default {
     width: 40%;
 }
 .header-side-panel{
-    width: 7%;
+    width: 15%;
     justify-content: space-between;
+    align-items: center;
 }
 
 </style>

@@ -30,7 +30,7 @@
                 <span class="blue-text bold-600 s-16">{{header}} details</span>
                 <div v-if="!readonly" class="flex justify-content-end">
                     <el-button @click="cancel" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" plain>Cancel</el-button>
-                    <el-button @click="update" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" type="primary">Save</el-button>
+                    <el-button @click="update" v-loading="updateLoading" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" type="primary">Save</el-button>
                 </div>
                 <el-button v-if="readonly" @click="toggleReadonly" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" plain icon="pencil alternate icon">Update Details</el-button>
             </div>
@@ -73,6 +73,7 @@
                                     <div v-else>
                                         <p v-if="key === 'last run' || key === 'next run'" class="s-13 mono">{{value}}</p>
                                         <el-switch v-model="form.active" v-else-if="key === 'active'"></el-switch>
+                                        <el-input v-else-if="key === 'retry limit'" v-model="form.retry_limit" style="width: 80%;" size="mini"></el-input>
                                         <el-input-number class="text-left" v-else :controls="false" style="width: 80%;" size="mini" v-model="form[key]"></el-input-number>
                                     </div>
                                 </el-col>
@@ -128,6 +129,7 @@ import { mapGetters } from 'vuex'
 import EventBus from '../../event-bus.js'
 import Utils from '../../utils/services'
 import Job from '../models/Job.js'
+import moment from 'moment'
 
 export default {
     name: 'JobDetails',
@@ -135,11 +137,16 @@ export default {
         return {
             test: true,
             loading: false,
-            readonly: true
+            readonly: true,
+            updateLoading: false
         }
     },
     created () {
         // EventBus.$emit('sideNavClick', 'view')
+        this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
+        this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
+    },
+    mounted () {
         this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
         this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
     },
@@ -151,9 +158,9 @@ export default {
             this.$router.push(`/run/${row.id}`)
         },
         deleteCustomer (index, row) {
-            console.log(index)
+            // console.log(index)
             var newForm = Job.getCreateView(this.form)
-            this.$store.dispatch('updateJob', {id: this.form.id, data: newForm})
+            this.$store.dispatch('updateJob', {id: this.form.id, data: this.form})
             .then(() => {
                 this.$message({
                     message: 'Job Updated Successfully',
@@ -178,16 +185,27 @@ export default {
             this.readonly = true
         },
         update () {
+            this.updateLoading = true
             var newForm = Job.getCreateView(this.form)
-
-            this.$store.dispatch('updateJob', {id: this.form.id, data: newForm})
+            this.$store.dispatch('updateJob', {id: this.form.id, data: this.form})
             .then(() => {
+                if (response.data.success) {
+                    this.$message({
+                        message: 'Job Updated Successfully',
+                        type: 'success'
+                    })
+                    this.updateLoading = false
+                    this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
+                } else {
                 this.$message({
-                    message: 'Job Updated Successfully',
-                    type: 'success'
-                })
-                this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
+                        type: 'error',
+                        message: response.data.response.message
+                    })
+                    this.updateLoading = false
+                }
+                
             }).catch(() => {
+                this.updateLoading = false
                 this.$message({
                     message: 'Job Not Updated',
                     type: 'error'
@@ -244,7 +262,6 @@ export default {
         data2 () {
             var nForm = {
                 'retry limit': this.form.retry_limit ? this.form.retry_limit : '-',
-                amount: this.form.amount  ? this.form.amount : '-',
                 'last run': this.form.last_run  ? this.form.last_run : 'No previous run',
                 'next run': this.form.next_run  ? this.form.next_run : 'No run scheduled',
                 active: this.form.active ? this.form.active : false

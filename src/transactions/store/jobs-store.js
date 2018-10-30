@@ -53,7 +53,6 @@ const mutations = {
     state.file = data
   },
   [SET_SINGLE_JOB] (state, data) {
-    console.log(data)
     state.currentJob.data = data
   },
   [SET_SINGLE_JOB_STATE] (state, data) {
@@ -95,7 +94,7 @@ const actions = {
       }
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `https://api.flopay.io/v1/clients/jobs/files/${id}/run`,
+          url: `https://api.flopay.io/v1/clients/jobs/${id}/contacts`,
           method: 'POST',
           token: rootGetters.token,
           data: data
@@ -196,7 +195,7 @@ const actions = {
   [UPDATE_JOB] ({ rootGetters }, {id, data}) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_JOBS_URI}/files/${id}`,
+        url: `${GET_JOBS_URI}/files.json`,
         method: 'PUT',
         token: rootGetters.token,
         data: data
@@ -209,7 +208,7 @@ const actions = {
     })
   },
   [GET_SINGLE_JOB] ({ state, commit, rootGetters }, { id, cache = true } = {}) {
-    console.log(id)
+    console.log('id', id)
     commit(SET_SINGLE_JOB_STATE, 'LOADING')
     // commit(SET_SINGLE_JOB, rootGetters.jobs.find(el => el.name === id))
     // commit(SET_SINGLE_JOB_STATE, 'DATA')

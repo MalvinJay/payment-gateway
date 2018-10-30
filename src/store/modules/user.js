@@ -1,4 +1,4 @@
-import { AUTH_REQUEST, SET_TOKEN, SET_CLIENT, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
+import { AUTH_REQUEST, SET_TEST, SET_TOKEN, SET_CLIENT, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
 import { apiCall } from '../apiCall'
 import axios from 'axios'
 
@@ -12,14 +12,16 @@ const state = {
   },
   userdata: {},
   client: {},
-  logIn: true
+  logIn: true,
+  test: true
 }
 
 // getters
 const getters = {
   user: state => state.userdata,
   token: state => state.user.token,
-  client: state => state.client
+  client: state => state.client,
+  test: state => state.test
 }
 
 // mutations
@@ -28,9 +30,13 @@ const mutations = {
     state.logIn = true
     state.user.token = localStorage.getItem('token')
   },
+  //   client data
   [SET_CLIENT] (state, data) {
-    console.log('user')
     state.userdata = data
+  },
+  //   test
+  [SET_TEST] (state, data) {
+    state.test = data
   },
   [SET_CLIENT_CRED] (state, data) {
     state.client = data
@@ -50,6 +56,8 @@ const actions = {
         .then((response) => {
           console.log('response', response)
           commit(SET_CLIENT, response.data.response.data.client)
+          localStorage.setItem('name', response.data.response.data.client.full_name)
+          localStorage.setItem('company', response.data.response.data.client.company_name)
           commit(SET_CLIENT_CRED, response.data.response.data.access_key)
           localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
           localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
@@ -85,6 +93,9 @@ const actions = {
       localStorage.removeItem('token') // clear your user's token from localstorage
       resolve()
     })
+  },
+  [SET_TEST] ({ commit }, data) {
+    commit(SET_TEST, data)
   }
 }
 

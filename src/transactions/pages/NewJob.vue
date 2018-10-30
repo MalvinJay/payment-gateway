@@ -20,11 +20,11 @@
                         <el-input class="w-25" type="textarea" v-model="form.description"></el-input>
                     </el-form-item> -->
                     <!-- JOB AMOUNT -->
-                    <el-form-item label="Amount" prop="amount">
+                    <!-- <el-form-item label="Amount" prop="amount">
                         <el-input class="w-25" v-model="form.amount">
                             <span slot="prefix">&#8373</span>
                         </el-input>
-                    </el-form-item>
+                    </el-form-item> -->
                     <!-- JOB LIMIT -->
                     <el-form-item label="Retry Limit">
                         <el-input class="w-25" v-model.number="form.retry_limit"></el-input>
@@ -97,13 +97,13 @@
                             </el-form-item>
                         </transition>
                     </div>
-                    <el-form-item label="Beneficiaries">
+                    <!-- <el-form-item label="Beneficiaries">
                         <el-select v-model="beneficiaries">
                             <el-option label="Upload CSV" value="upload"></el-option>
                             <el-option label="Select Contacts" value="select"></el-option>
                         </el-select>
-                    </el-form-item>
-                    <div v-if="beneficiaries === 'upload'">
+                    </el-form-item> -->
+                    <!-- <div v-if="beneficiaries === 'upload'"> -->
                         <el-form-item label="Upload CSV">
                             <el-upload
                             class="upload-demo"
@@ -116,8 +116,8 @@
                                 <!-- <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 500kb</div> -->
                             </el-upload>
                         </el-form-item>
-                    </div>
-                    <div v-else>
+                    <!-- </div> -->
+                    <!-- <div v-else>
                         <el-form-item label="add contacts">
                             <el-select
                                 v-model="contactData"
@@ -131,7 +131,7 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                    </div>
+                    </div> -->
                     <el-form-item label="Approval Settings">
                         <el-switch
                         v-model="form.approval"
@@ -166,8 +166,8 @@ export default {
                 // contacts: [],
                 timezone: "Africa/Accra",
                 country_code: "GH",
-                live: false,
-                test: true,
+                live: !this.testData,
+                test: this.testData,
                 service_code: 'cashin'
             },
             beneficiaries: 'upload',
@@ -194,8 +194,12 @@ export default {
     computed: {
         ...mapGetters({
             contacts: 'contacts',
-            file: 'file'
-        })
+            file: 'file',
+            test: 'test'
+        }),
+        testData () {
+            return this.test
+        }
     },
     methods: {
         cancel () {
@@ -217,17 +221,26 @@ export default {
                         this.form.contacts = this.contactData
                         this.form.is_sub_user = false
                     }
+                    this.form.test = this.test
+                    this.form.live = !this.test
                     var schedule = Utils.createJobQuery (this.form.schedule, this.schedule)
                     this.form.schedule = schedule
 
                     this.$store.dispatch(job, this.form)
-                    .then(() => {
+                    .then((response) => {
+                        if (response.data.success) {
+                            this.$message({
+                                type: 'success',
+                                message: 'Job created',
+                            })
+                            this.$store.dispatch('getJobs')
+                            this.$router.push('/view')
+                        } else {
                         this.$message({
-                            message: 'Job created',
-                            type: 'success'
-                        })
-                        this.$store.dispatch('getJobs')
-                        this.$router.push('/view')
+                                type: 'error',
+                                message: response.data.response.message
+                            })
+                        }
                         this.loading = false
                     }).catch(() => {
                         this.loading = false

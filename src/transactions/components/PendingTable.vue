@@ -13,7 +13,7 @@
             <el-table @row-click="clickRow" @selection-change="handleSelectionChange" empty-text="No transactions pending approval" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
                 <el-table-column type="selection" width="55">
                 </el-table-column>
-                <el-table-column prop="amount" label="Amount" width="300">
+                <el-table-column prop="amount" label="Amount" width="100">
                     <template slot-scope="scope">
                         <div class="flex align-items-center cursor">
                             <p style="color: #2b2d50" class="m-0 p-0 mr-10 bold-500 s-13">GHc{{scope.row.receiver_amount}}</p>
@@ -78,7 +78,7 @@ export default {
     return {
       test: true,
       columns: [
-        {label: 'Method', dataField: 'method', width: '100px'},
+        // {label: 'Method', dataField: 'method', width: '100px'},
         {label: 'Customer', dataField: 'customer', width: 'auto'},
         {label: 'Reference', dataField: 'reference', width: 'auto'}
       ],

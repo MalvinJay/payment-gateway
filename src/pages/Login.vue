@@ -12,16 +12,16 @@
                 <el-form-item prop="password" class="m-0">
                     <el-input class="no-border-input" placeholder="Password" v-model="form.password" type="password"></el-input>
                 </el-form-item>
-                <div class="flex justify-content-between align-items-center s-12 my-2">
+                <div v-if="false" class="flex justify-content-between align-items-center s-12 my-2">
                     <el-checkbox size="mini" v-model="remember" label="Remember me?"></el-checkbox>
                     <el-button size="mini" type="text">Forgot password?</el-button>
                 </div>
-                <el-form-item>
+                <el-form-item class="my-2">
                     <el-button class="w-100" :loading="loading" type="warning" @click="login('form')">Sign In</el-button>
                 </el-form-item>
             </el-form>
         </div>
-        <div class="border border-rounded center w-30 my-2">
+        <div v-if="false" class="border border-rounded center w-30 my-2">
             <p style="color: #808080" class="p-0 m-0">Don't have an account?</p>
             <el-button class="mx-1" type="text">Sign Up</el-button>
         </div>

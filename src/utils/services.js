@@ -21,10 +21,34 @@ export default {
         query = query + `&cash_flow=${filters.cash_flow}`
       }
       if (this.empty(filters.from) && this.empty(filters.to) && this.empty(filters.payment_types) && this.empty(filters.statuses)) {
-        query = query + '&all=true'  
+        query = query + '&all=true'
       }
     } else {
       query = query + '&all=true'
+    }
+    return query
+  },
+  createPendingParams (filters, page = 1) {
+    var query = `?page=${page}&limit=10`
+    if (this.present(filters)) {
+      if (this.present(filters.from) && this.present(filters.to)) {
+        query = query + `&from=${filters.from}&to=${filters.to}`
+      }
+      if (this.present(filters.payment_types)) {
+        query = query + `&payment_types[]=${filters.payment_types}`
+      }
+      if (this.present(filters.statuses)) {
+        query = query + `&statuses[]=${filters.statuses}`
+      }
+      if (this.present(filters.search_value)) {
+        query = query + `&search_value=${filters.search_value}`
+      }
+      if (this.present(filters.time_interval)) {
+        query = query + `&time_interval=${filters.time_interval}`
+      }
+      if (this.present(filters.cash_flow)) {
+        query = query + `&cash_flow=${filters.cash_flow}`
+      }
     }
     return query
   },

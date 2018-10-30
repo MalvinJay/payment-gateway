@@ -11,47 +11,53 @@
             </div>
         </div>
         <div>
-            <el-table @row-click="clickRow" empty-text="No jobs to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredJobs">
-                <el-table-column type="selection" width="55">
-                </el-table-column>
-                <el-table-column prop="description" label="Job Name" width="300">
-                    <template slot-scope="scope">
-                        <!-- <router-link :to="{name: 'JobDetails', params: {id: scope.row.id}}"> -->
-                            <p style="color: #2b2d50;" class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.description}}</p>
-                        <!-- </router-link> -->
-                    </template>
-                </el-table-column>
-                <el-table-column :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
-                <el-table-column prop="created_at" label="Date">
-                    <template slot-scope="scope">
-                        {{scope.row.created_at | moment("MMM Do, YYYY")}}
-                    </template>
-                </el-table-column>
-                <el-table-column width="100px">
-                    <template slot-scope="scope">
-                        <div class="mini-menu">
-                            <i v-if="scope.row.status ==='failed'" class="reply icon blue-text cursor first-icon"></i>
-                            <el-dropdown @command="command => handleCommand(command, scope.row)">
-                                <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
-                                <el-dropdown-menu class="w-200" slot="dropdown">
-                                    <el-dropdown-item disabled>
-                                        <div class="table-dropdown-header blue-text bold-600 text-uppercase">
-                                            action
-                                        </div>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item command="edit" class="s-12">Edit Job</el-dropdown-item>
-                                    <el-dropdown-item command="delete" class="s-12">Delete Job</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </div>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination class="my-2 flex justify-content-end"
-                @current-change="handleCurrentChange"
-                layout="prev, pager, next"
-                :total="total">
-            </el-pagination>
+            <div class="center h-80" v-if="error">
+                <div class="center flex-column">
+                    <p class="m-0 p-0">Unable to load this page</p>
+                    <el-button @click.prevent="fetchTransactions" icon="sync icon" type="text">Retry</el-button>
+                </div>
+            </div>
+            <div v-else>
+                <el-table @row-click="clickRow" empty-text="No jobs to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredJobs">
+                    <el-table-column type="selection" width="55">
+                    </el-table-column>
+                    <el-table-column prop="description" label="Job Name" width="300">
+                        <template slot-scope="scope">
+                            <p style="color: #2b2d50;" class="m-0 cursor p-0 mr-10 bold-500 s-13">{{scope.row.description}}</p>
+                        </template>
+                    </el-table-column>
+                    <el-table-column :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                    <el-table-column prop="created_at" label="Date">
+                        <template slot-scope="scope">
+                            {{scope.row.created_at | moment("MMM Do, YYYY")}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="100px">
+                        <template slot-scope="scope">
+                            <div class="mini-menu">
+                                <i v-if="scope.row.status ==='failed'" class="reply icon blue-text cursor first-icon"></i>
+                                <el-dropdown @command="command => handleCommand(command, scope.row)">
+                                    <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
+                                    <el-dropdown-menu class="w-200" slot="dropdown">
+                                        <el-dropdown-item disabled>
+                                            <div class="table-dropdown-header blue-text bold-600 text-uppercase">
+                                                action
+                                            </div>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item command="edit" class="s-12">Edit Job</el-dropdown-item>
+                                        <el-dropdown-item command="delete" class="s-12">Delete Job</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination class="my-2 flex justify-content-end"
+                    @current-change="handleCurrentChange"
+                    layout="prev, pager, next"
+                    :total="total">
+                </el-pagination>
+            </div>
         </div>
     </div>
 </template>
@@ -96,14 +102,14 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('getTransactions')
+    this.$store.dispatch('getJobs')
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'view')
   },
   methods: {
     handleCurrentChange (val) {
-        this.$store.dispatch('getTransactions', {page: val})
+        this.$store.dispatch('getJobs', {page: val})
     },
     clickRow (row, event, column) {
         if (column.property) {
@@ -115,6 +121,9 @@ export default {
     },
     newJob () {
         this.$router.push('/new-job')
+    },
+    fetchTransactions () {
+      this.$store.dispatch('getJobs')
     },
     handleCommand (command, row) {
         switch (command) {
@@ -184,9 +193,11 @@ export default {
     ...mapGetters({
       jobs: 'jobs',
       state: 'jobsState',
-      meta: 'transactionsMeta',
       providers: 'providers'
     }),
+    error () {
+      return this.state === 'ERROR' && this.state !== 'LOADING'
+    },
     filteredJobs () {
         return this.jobs.map(el => {
           var con = el.contacts.length

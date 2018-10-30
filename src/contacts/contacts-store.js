@@ -33,15 +33,15 @@ const getters = {
 const mutations = {
   [SET_CONTACTS] (state, payload) {
     state.contacts.state = 'DATA'
-    var contacts = []
-    payload.forEach(element => {
-      element.accounts.forEach(el => {
-        el.type = element.name
-        contacts.push(el)
-      })
-    })
-    state.contacts.count = contacts.length
-    state.contacts.data = contacts
+    // var contacts = []
+    // payload.forEach(element => {
+    //   element.accounts.forEach(el => {
+    //     el.type = element.name
+    //     contacts.push(el)
+    //   })
+    // })
+    state.contacts.count = payload.length
+    state.contacts.data = payload
   },
   [SET_CURRENT_CONTACTS] (state, {
     page = 1,
@@ -77,7 +77,8 @@ const actions = {
           token: rootGetters.token
         }).then((response) => {
           commit(SET_CONTACTS_STATE, 'DATA')
-          commit(SET_CONTACTS, response.data.response.data.deposit_accounts)
+          console.log('conatc', response.data)
+          commit(SET_CONTACTS, response.data.response.data.contacts)
           commit(SET_CURRENT_CONTACTS, {payload: state.contacts.data, page: 1})
           resolve()
         }).catch((error) => {
@@ -125,7 +126,7 @@ const actions = {
         token: rootGetters.token
       }).then((response) => {
         commit(SET_CURRENT_CONTACT_STATE, 'DATA')
-        commit(SET_CURRENT_CONTACT, response.data)
+        commit(SET_CURRENT_CONTACT, response.data.response.data)
         resolve()
       }).catch((error) => {
         commit(SET_CURRENT_CONTACT_STATE, 'ERROR')

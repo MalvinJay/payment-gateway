@@ -32,14 +32,15 @@ export default {
       ],
       styleObject: {
         fontSize: '12px'
-      }
+      },
+      tabValue: ''
     }
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'view')
-    this.$store.dispatch('getTransactions', {cache: false})
-    // this.$store.dispatch('getJobs')
-    // this.$store.dispatch('getQueues')
+    this.$store.dispatch('getTransactions')
+    this.$store.dispatch('getJobs')
+    this.$store.dispatch('getQueues')
   },
   computed: {
     ...mapGetters({

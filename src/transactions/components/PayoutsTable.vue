@@ -10,69 +10,77 @@
             </div>
         </div>
         <div>
-            <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
-                <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="amount" label="Amount" width="100">
-                    <template slot-scope="scope">
-                        <div class="flex align-items-center cursor">
-                            <p style="color: #2b2d50;" class="m-0 p-0 mr-10 bold-500 s-13">GHc{{scope.row.receiver_amount}}</p>
-                            <!-- <p class="m-0 p-0 mr-10">{{scope.row.receiver_currency}}</p>
-                            <div>
+            <div class="center h-80" v-if="error">
+                <div class="center flex-column">
+                    <p class="m-0 p-0">Unable to load this page</p>
+                    <el-button @click.prevent="fetchTransactions" icon="sync icon" type="text">Retry</el-button>
+                </div>
+            </div>
+            <div v-else>
+                <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
+                    <el-table-column type="selection" width="55"></el-table-column>
+                    <el-table-column prop="amount" label="Amount" width="100">
+                        <template slot-scope="scope">
+                            <div class="flex align-items-center cursor">
+                                <p style="color: #2b2d50;" class="m-0 p-0 mr-10 bold-500 s-13">GHc{{scope.row.receiver_amount}}</p>
+                                <!-- <p class="m-0 p-0 mr-10">{{scope.row.receiver_currency}}</p>
+                                <div>
+                                    <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-else-if="scope.row.status === 'Failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
+                                    <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
+                                </div> -->
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="status" label="" width="100">
+                        <template slot-scope="scope">
+                            <div class="flex">
                                 <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
                                 <the-tag v-else-if="scope.row.status === 'Failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
                                 <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
-                            </div> -->
-                        </div>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="status" label="">
-                    <template slot-scope="scope">
-                        <div class="flex">
-                            <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
-                            <the-tag v-else-if="scope.row.status === 'Failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
-                            <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
-                        </div>
-                    </template>
-                </el-table-column>
-                <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
-                <el-table-column prop="created_at" label="Date">
-                    <template slot-scope="scope">
-                        {{scope.row.created_at | moment("MMM Do, YYYY")}}
-                    </template>
-                </el-table-column>
-                <el-table-column width="80px">
-                    <template slot-scope="scope">
-                        <div class="mini-menu">
-                            <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i>
-                            <el-dropdown trigger="click">
-                                <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
-                                <el-dropdown-menu class="w-200" slot="dropdown">
-                                    <el-dropdown-item disabled>
-                                        <div class="table-dropdown-header blue-text bold-600 text-uppercase">
-                                            action
-                                        </div>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item class="s-12">Recharge Funds</el-dropdown-item>
-                                    <el-dropdown-item divided disabled>
-                                        <div class="table-dropdown-header blue-text bold-600 text-uppercase">
-                                            connection
-                                        </div></el-dropdown-item>
-                                    <el-dropdown-item class="s-12">View Payment Details</el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </div>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination class="my-2 flex justify-content-end"
-                @current-change="handleCurrentChange"
-                layout="prev, pager, next"
-                :total="total">
-            </el-pagination>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                    <el-table-column prop="created_at" label="Date">
+                        <template slot-scope="scope">
+                            {{scope.row.created_at | moment("MMM Do, YYYY")}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column width="80px">
+                        <template slot-scope="scope">
+                            <div class="mini-menu">
+                                <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i>
+                                <el-dropdown trigger="click">
+                                    <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
+                                    <el-dropdown-menu class="w-200" slot="dropdown">
+                                        <el-dropdown-item disabled>
+                                            <div class="table-dropdown-header blue-text bold-600 text-uppercase">
+                                                action
+                                            </div>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item class="s-12">Recharge Funds</el-dropdown-item>
+                                        <el-dropdown-item divided disabled>
+                                            <div class="table-dropdown-header blue-text bold-600 text-uppercase">
+                                                connection
+                                            </div></el-dropdown-item>
+                                        <el-dropdown-item class="s-12">View Payment Details</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination class="my-2 flex justify-content-end"
+                    @current-change="handleCurrentChange"
+                    layout="prev, pager, next"
+                    :total="total">
+                </el-pagination>
+            </div>
         </div>
         <!-- New Payment -->
         <el-dialog custom-class="new-transaction"
-            title="Create New Payment - Mobile Money"
+            title="Create New Payout - Mobile Money"
             :visible.sync="dialogVisible"
             width="30%">
             <div class="flex justify-content-center new-transaction-bg">
@@ -119,7 +127,7 @@ export default {
     return {
       test: true,
       columns: [
-        {label: 'Method', dataField: 'method', width: '100px'},
+        // {label: 'Method', dataField: 'method', width: '100px'},
         {label: 'Customer', dataField: 'customer', width: 'auto'},
         {label: 'Reference', dataField: 'reference', width: 'auto'}
       ],
@@ -163,13 +171,19 @@ export default {
     handleCurrentChange (val) {
         this.$store.dispatch('getPayouts', {page: val, cache: false})
     },
+    fetchTransactions () {
+      this.$store.dispatch('getPayouts')
+    },
     submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.form.live = !this.test
+            this.form.dummy = this.test
+            this.service_code = 'cashin'
             this.$store.dispatch('createPayouts', this.form)
             .then((response) => {
                 this.$message({
-                    message: 'Payment successful',
+                    message: 'Payout successful',
                     type: 'success'
                 })
             })
@@ -188,10 +202,14 @@ export default {
       transactions: 'payouts',
       state: 'payoutsState',
       meta: 'payoutsMeta',
-      providers: 'providers'
+      providers: 'providers',
+      test: 'test'
     }),
     total () {
       return this.meta.trans
+    },
+    error () {
+      return this.state === 'ERROR' && this.state !== 'LOADING'
     },
     filteredTransactions () {
         return this.transactions.map(el => {

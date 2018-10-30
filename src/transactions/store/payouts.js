@@ -71,7 +71,7 @@ const actions = {
     }
     commit(SET_PAYOUTS_STATE, 'LOADING')
     commit(SET_PAYOUTS_FILTERS, filters)
-    if (cache && Utils.present(state.payouts.data)) {
+    if (cache && state.payouts.data.length !== 0) {
       commit(SET_PAYOUTS_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {

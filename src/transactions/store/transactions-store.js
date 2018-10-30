@@ -142,7 +142,7 @@ const actions = {
     }
     commit(SET_TRANSACTIONS_STATE, 'LOADING')
     commit(SET_TRANSACTIONS_FILTERS, filters)
-    if (cache && Utils.present(state.transactions.data)) {
+    if (cache && state.transactions.data.length !== 0) {
       commit(SET_TRANSACTIONS_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {
@@ -183,7 +183,8 @@ const actions = {
     })
   },
   [GET_QUEUE] ({ state, commit, rootGetters }, {
-    page = 1
+    page = 1,
+    cache = true
   } = {}) {
     // var filters = state.queues.filters
     var filters = {...state.queues.filters, search_value: 'queued'}
@@ -193,22 +194,26 @@ const actions = {
     query += '&all=true'
     commit(SET_QUEUE_STATE, 'LOADING')
     commit(SET_QUEUE_FILTERS, filters)
-    return new Promise((resolve, reject) => {
-      apiCall({
-        url: `${GET_TRANSACTIONS_URI}${query}&statuses[]=queued`,
-        method: 'GET',
-        token: rootGetters.token
-      }).then((response) => {
-        commit(SET_QUEUE_STATE, 'DATA')
-        commit(SET_QUEUE_META, response.data.response.data)
-        commit(SET_QUEUE, response.data.response.data.transactions)
-        resolve()
-      }).catch((error) => {
-        commit(SET_QUEUE_STATE, 'ERROR')
-        console.log(error)
-        reject(error)
+    if (cache && state.queues.data.length !== 0) {
+      commit(SET_QUEUE_STATE, 'DATA')
+    } else {
+      return new Promise((resolve, reject) => {
+        apiCall({
+          url: `${GET_TRANSACTIONS_URI}${query}`,
+          method: 'GET',
+          token: rootGetters.token
+        }).then((response) => {
+          commit(SET_QUEUE_STATE, 'DATA')
+          commit(SET_QUEUE_META, response.data.response.data)
+          commit(SET_QUEUE, response.data.response.data.transactions)
+          resolve()
+        }).catch((error) => {
+          commit(SET_QUEUE_STATE, 'ERROR')
+          console.log(error)
+          reject(error)
+        })
       })
-    })
+    }
   },
   [SET_QUEUE_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_QUEUE_FILTERS, filters)
@@ -219,10 +224,10 @@ const actions = {
     cache = true
   } = {}) {
     var filters = state.pending.filters
-    var query = Utils.createQueryParams(filters, page)
+    var query = Utils.createPendingParams(filters, page)
     commit(SET_PENDING_STATE, 'LOADING')
     commit(SET_PENDING_FILTERS, filters)
-    if (cache && state.pending.data) {
+    if (cache && state.pending.data.length !== 0) {
       commit(SET_PENDING_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {
