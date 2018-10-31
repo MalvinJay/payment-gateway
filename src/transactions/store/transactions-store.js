@@ -191,7 +191,7 @@ const actions = {
     // var fill = Utils.createQueryParams(filters)
     console.log('filters queue', filters)
     var query = Utils.createQueryParams(filters, page)
-    query += '&all=true'
+    // query += '&all=true'
     commit(SET_QUEUE_STATE, 'LOADING')
     commit(SET_QUEUE_FILTERS, filters)
     if (cache && state.queues.data.length !== 0) {
@@ -217,7 +217,7 @@ const actions = {
   },
   [SET_QUEUE_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_QUEUE_FILTERS, filters)
-    dispatch('getQueues', {page: 1})
+    dispatch('getQueues', {page: 1, cache: false})
   },
   [GET_PENDING] ({ state, commit, rootGetters }, {
     page = 1,
@@ -250,7 +250,7 @@ const actions = {
   },
   [SET_PENDING_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_PENDING_FILTERS, filters)
-    dispatch('getPending', {page: 1})
+    dispatch('getPending', {page: 1, cache: false})
   },
   [GET_CURRENT_TRANSACTION] ({ state, commit, rootGetters }, id) {
     // var trans = state.transactions.data.find(el => el.reference === id)

@@ -27,6 +27,14 @@
                         </template>
                     </el-table-column>
                     <el-table-column :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                    <el-table-column prop="scheduled" label="">
+                        <template slot-scope="scope">
+                            <div class="flex">
+                                <the-tag v-if="scope.row.scheduled" status="success" title="Automatic" icon="detail check icon"></the-tag>
+                                <the-tag v-else status="failed" title="Manual" icon="reply icon"></the-tag>
+                            </div>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="created_at" label="Date">
                         <template slot-scope="scope">
                             {{scope.row.created_at | moment("MMM Do, YYYY")}}
@@ -68,6 +76,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'JobTable',
+  props: ['type'],
   data () {
     return {
       test: true,
@@ -150,6 +159,7 @@ export default {
                     type: 'success',
                     message: 'Job deleted'
                 })
+                this.$store.dispatch('getJobs', {cache: false})
             } else {
                this.$message({
                     type: 'error',

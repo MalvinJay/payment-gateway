@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-card :class="[{'test-data': isTest}, 'flex', 'flex-column', 'card-0', 'position-relative']">
+        <el-card v-loading="fileUploading" :class="[{'test-data': isTest}, 'flex', 'flex-column', 'card-0', 'position-relative']">
             <div slot="header" class="flex justify-content-between align-items-center">
                 <h3 class="blue-text bold-500 m-0 pb-5">Create a Job</h3>
                 <div class="standard-button">
@@ -195,10 +195,14 @@ export default {
         ...mapGetters({
             contacts: 'contacts',
             file: 'file',
-            test: 'test'
+            test: 'test',
+            state: 'fileState'
         }),
         testData () {
             return this.test
+        },
+        fileUploading () {
+            return this.state === 'LOADING'
         }
     },
     methods: {
@@ -210,18 +214,23 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     var job = ''
-                    if (this.beneficiaries === 'upload') {
-                        job = 'createJob'
-                        this.form.upload_details = {
-                            Bucket: AWS_BUCKET,
-                            Key: this.file.key
-                        }
-                    } else {
-                        job = 'createJobContact'
-                        this.form.contacts = this.contactData
-                        this.form.is_sub_user = false
+                    // if (this.beneficiaries === 'upload') {
+                    job = 'createJob'
+                    this.form.upload_details = {
+                        Bucket: AWS_BUCKET,
+                        Key: this.file.key
                     }
+                    this.form.batch_details = {
+                        Bucket: AWS_BUCKET,
+                        Key: this.file.key
+                    }
+                    // } else {
+                    //     job = 'createJobContact'
+                    //     this.form.contacts = this.contactData
+                    //     this.form.is_sub_user = false
+                    // }
                     this.form.test = this.test
+                    this.form.dummy = this.test
                     this.form.live = !this.test
                     var schedule = Utils.createJobQuery (this.form.schedule, this.schedule)
                     this.form.schedule = schedule
@@ -233,7 +242,8 @@ export default {
                                 type: 'success',
                                 message: 'Job created',
                             })
-                            this.$store.dispatch('getJobs')
+                            this.$store.dispatch('getJobs', {cache: false})
+                            EventBus.$emit('tabNumber', '3')
                             this.$router.push('/view')
                         } else {
                         this.$message({
@@ -242,7 +252,7 @@ export default {
                             })
                         }
                         this.loading = false
-                    }).catch(() => {
+                    }).catch((error) => {
                         this.loading = false
                         const response = error.response
                         this.$message({

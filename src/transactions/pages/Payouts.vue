@@ -13,7 +13,7 @@
                 <pending-table></pending-table>
             </el-tab-pane>
             <el-tab-pane label="Jobs">
-                <job-table></job-table>
+                <job-table type="cashin"></job-table>
             </el-tab-pane>
         </el-tabs>
     </div>

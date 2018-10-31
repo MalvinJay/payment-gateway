@@ -9,7 +9,11 @@
                    </div>
                    <div>
                        <p class="text-uppercase s-12 bold-600 m-0 p-0">{{header}}</p>
+                       <!-- <el-button size="mini" type="primary" :loading="runLoading" @click="runJob" v-else>Run Job</el-button> -->
                    </div>
+                </div>
+                <div>
+                    <el-button :loading="runLoading" @click="runJob" v-if="!form.scheduled" icon="undo icon" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain>Run Job</el-button>
                 </div>
             </div>
             <div class="border-top px-20 py-10">
@@ -32,11 +36,11 @@
                     <el-button @click="cancel" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" plain>Cancel</el-button>
                     <el-button @click="update" :loading="updateLoading" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" type="primary">Save</el-button>
                 </div>
-                <el-button v-if="readonly" @click="toggleReadonly" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" plain icon="pencil alternate icon">Update Details</el-button>
+                <!-- <el-button v-if="readonly" @click="toggleReadonly" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" plain icon="pencil alternate icon">Update Details</el-button> -->
             </div>
             <div>
                 <div v-if="hasNoData" class="center h-80">
-                    no Data
+                    No Data
                 </div>
                 <div v-if="!hasNoData">
                     <div class="flex">
@@ -133,11 +137,13 @@
                                 <el-col :span="16">
                                     <div v-if="readonly">
                                         <el-switch disabled v-model="data2[key]" v-if="key === 'active'"></el-switch>
+                                        <el-switch disabled v-model="data2[key]" v-else-if="key === 'test'"></el-switch>
                                         <p v-else class="s-13 mono">{{value}}</p>
                                     </div>
                                     <div v-else>
-                                        <p v-if="key === 'last run' || key === 'next run'" class="s-13 mono">{{value}}</p>
+                                        <p v-if="key === 'last run' || key === 'next run'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
                                         <el-switch v-model="form.active" v-else-if="key === 'active'"></el-switch>
+                                        <el-switch v-model="form.test" v-else-if="key === 'test'"></el-switch>
                                         <el-input v-else-if="key === 'retry limit'" v-model="form.retry_limit" style="width: 80%;" size="mini"></el-input>
                                         <el-input-number class="text-left" v-else :controls="false" style="width: 80%;" size="mini" v-model="form[key]"></el-input-number>
                                     </div>
@@ -155,17 +161,50 @@
                 <span class="blue-text bold-600 s-16">{{header}} runs</span>
             </div>
             <div>
-                <el-table @row-click="clickRun" empty-text="No job runs to display" v-loading="runLoading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="runs">
-                    <el-table-column type="index"></el-table-column>
-                    <el-table-column prop="date" label="Date"></el-table-column>
-                    <el-table-column prop="time" label="Time"></el-table-column>
+                <el-table highlight-current-row empty-text="No job runs to display" v-loading="loadingPage" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="runs">
+                    <el-table-column type="expand">
+                        <template slot-scope="props">
+                            <p>Name: {{ props.row.receiver_name }}</p>
+                            <p>Phone Number: {{ props.row.receiver_no }}</p>
+                            <p>Amount: {{ props.row.sender_amount | money}}</p>
+                            <p>Remarks: {{ props.row.remarks }}</p>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="reference" label="reference"></el-table-column>
+                    <el-table-column prop="status" label="">
+                        <template slot-scope="scope">
+                            <div class="flex">
+                                <the-tag status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="date" label="Date">
+                        <template slot-scope="scope">
+                            {{scope.row.updated_at | moment("MMM Do, YYYY")}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="time" label="Time">
+                        <template slot-scope="scope">
+                            {{scope.row.updated_at | moment("hh:mm A")}}
+                        </template>
+                    </el-table-column>
                 </el-table>
             </div>
         </el-card>
         <!-- JOB CONTACTS -->
         <el-card class="my-2">
-            <div slot="header">
+            <div class="flex align-items-baseline" slot="header">
                 <span class="blue-text bold-600 s-16">{{header}} Customers</span>
+                <!-- <el-upload
+                class="upload-contacts no-show-upload"
+                action=""
+                :on-change="onChange"
+                :auto-upload="false"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                :file-list="form.fileList">
+                <el-button @click="addContactToJob" :loading="addLoading" type="primary" class="z-depth-button s-13 open-sans mini-button b-0" size="mini" icon="plus icon">Upload Contacts</el-button>
+                </el-upload> -->
+                
             </div>
             <div>
                 <el-table @row-click="clickRow" empty-text="No job customers" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="form.contacts">
@@ -199,6 +238,8 @@ import EventBus from '../../event-bus.js'
 import Utils from '../../utils/services'
 import Job from '../models/Job.js'
 import moment from 'moment'
+import { diff } from 'semver'
+import { AWS_BUCKET } from '../store/transactions-store-constants.js'
 
 export default {
     name: 'JobDetails',
@@ -208,19 +249,25 @@ export default {
             loading: false,
             readonly: true,
             updateLoading: false,
+            addLoading: false,
             schedule: [],
-            days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
+            days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
+            field: {}
         }
     },
+    // watch: {
+    //     form (oldvalue, newValue) {
+    //         console.log('old')
+    //         var differ = diff(oldvalue, newValue)
+    //         console.log('unique', differ)
+    //     }
+    // },
     mounted () {
         EventBus.$emit('sideNavClick', 'view')
         this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
         // this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
     },
     methods: {
-        clickRow () {
-
-        },
         clickRun (row, event, column) {
             this.$router.push(`/run/${row.id}`)
         },
@@ -245,11 +292,62 @@ export default {
             //     this.$store.dispatch('employeeFetchAbsences', this.$route.params.id)
             // })
         },
+        addContactToJob () {
+        },
         toggleReadonly () {
             this.readonly = !this.readonly
         },
         cancel () {
             this.readonly = true
+        },
+        runJob () {
+            this.runLoading = true
+            
+            this.$store.dispatch('runJob', this.form.id)
+            .then((response) => {
+                console.log('response', response)
+                if (response.data.success) {
+                    this.$message({
+                        message: 'Job Run Successfully',
+                        type: 'success'
+                    })
+                    this.runLoading= false
+                    EventBus.$emit('tabNumber', '3')
+                    this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
+                } else {
+                this.$message({
+                    type: 'error',
+                    message: response.data.response.message
+                })
+                this.runLoading= false
+            }
+            }).catch((error) => {
+                this.runLoading= false
+                const response = error.response
+                this.$message({
+                    message: response.data.error,
+                    type: 'error'
+                })
+            }) 
+        },
+        onChange (file, fileList){
+            this.addLoading = true
+            let fileInput = this.$el.querySelector(".upload-contacts input[type='file']")
+            let filess = fileInput.files[0]
+            console.log('file', filess)
+            this.$store.dispatch('sendToBucket', filess)
+            .then((response) => {
+                console.log('fileState', this.fileState)
+                console.log('fileState', this.file)
+                var upload = {
+                    batch_details: {
+                        Bucket: AWS_BUCKET,
+                        Key: 'flopay-file-batch/' + filess.name
+                    }
+                }
+                this.$store.dispatch('createJobContact', {id: this.form.id, job: upload})
+                this.addLoading = false
+            })
         },
         update () {
             this.updateLoading = true
@@ -294,6 +392,8 @@ export default {
             state: 'currentJobState',
             runs: 'currentJobRuns',
             runState: 'currentJobRunsState',
+            file: 'file',
+            fileState: 'fileState'
         }),
         loadingPage () {
             return this.state === 'LOADING'
@@ -327,7 +427,8 @@ export default {
                 'retry limit': this.form.retry_limit ? this.form.retry_limit : '-',
                 'last run': this.form.last_run  ? this.form.last_run : 'No previous run',
                 'next run': this.form.next_run  ? this.form.next_run : 'No run scheduled',
-                active: this.form.active ? this.form.active : false
+                active: this.form.active ? this.form.active : false,
+                test: this.form.test
             }
             return nForm
         },

@@ -1,16 +1,16 @@
 <template>
     <div>
-        <el-tabs class="default-tab" :class="[{'test-data': test}, 'position-relative']" stretch type="border-card">
+        <el-tabs v-model="activeName" class="default-tab" :class="[{'test-data': test}, 'position-relative']" stretch type="border-card">
             <!-- <div v-show="test" class="position-absolute bg-orange test">TEST DATA</div> -->
-            <el-tab-pane label="Payments">
+            <el-tab-pane name="1" label="Payments">
                 <!-- FOUND IN TRANSACTIONS/COMPONENTS -->
                 <payment-table type="payment"></payment-table>
             </el-tab-pane>
-            <el-tab-pane label="Queued">
+            <el-tab-pane name="2" label="Queued">
                 <queued-table></queued-table>
             </el-tab-pane>
-            <el-tab-pane label="Jobs">
-                <job-table></job-table>
+            <el-tab-pane name="3" label="Jobs">
+                <job-table type="cashout"></job-table>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -25,6 +25,7 @@ export default {
   data () {
     return {
       test: true,
+      activeName: '1',
       columns: [
         {label: 'Trans Type', dataField: 'type'},
         {label: 'Beneficiary', dataField: 'customer'},
@@ -38,9 +39,18 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'view')
+    EventBus.$on('tabNumber', this.updateTab)
     this.$store.dispatch('getTransactions')
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getQueues')
+  },
+  beforeDestroy () {
+    EventBus.$off('tabNumber', this.updateTab)
+  },
+  methods: {
+    updateTab (val) {
+        this.activeName = val
+    }  
   },
   computed: {
     ...mapGetters({

@@ -1,7 +1,7 @@
 <template>
     <div v-loading="loadingPage">
         <!-- Run Card -->
-        <el-card :class="{'test-data': test}" class="card-0">
+        <el-card class="card-0">
             <div class="flex flex-column p-20">
                 <div class="flex justify-content-between align-items-baseline mb-1">
                    <div class="flex align-items-baseline">
@@ -94,7 +94,6 @@ export default {
     name: 'RunDetails',
     data () {
         return {
-            test: true,
             status: 'failed',
             edit: false,
             readonly: true,
@@ -121,7 +120,7 @@ export default {
     },
     mounted () {
         EventBus.$emit('sideNavClick', 'view')
-        this.$store.dispatch('getCurrentContact', this.$route.params.id)
+        this.$store.dispatch('getCurrentRun', this.$route.params.id)
     },
     computed: {
         ...mapGetters({

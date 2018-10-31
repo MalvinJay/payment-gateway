@@ -32,7 +32,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="status" label="" width="100">
+                    <el-table-column prop="status" label="" width="auto">
                         <template slot-scope="scope">
                             <div class="flex">
                                 <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>

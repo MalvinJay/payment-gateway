@@ -18,6 +18,8 @@
                             type="date"
                             placeholder="From.."
                             @change="keepVisible"
+                            @focus="keepVisible"
+                            @blur="keepVisible"
                             value-format="yyyy-MM-dd"
                             format="MMM dd, yyyy">
                             </el-date-picker>
@@ -25,6 +27,8 @@
                             v-model="filters.to"
                             type="date"
                             @change="keepVisible"
+                            @focus="keepVisible"
+                            @blur="keepVisible"
                             placeholder="To.."
                             value-format="yyyy-MM-dd"
                             format="MMM dd, yyyy">
@@ -133,6 +137,7 @@ export default {
             this.createFilters()
         },
         keepVisible () {
+            console.log('now')
             this.$refs.messageDrop.show()
         },
         statusClick (val) {
@@ -163,6 +168,10 @@ export default {
             //     this.filters.payment_types = []
             // }
         }
+    },
+    mounted () {
+        EventBus.$on('blur', this.keepVisible)
+        EventBus.$on('focus', this.keepVisible)
     },
     computed: {
         showStatus () {
