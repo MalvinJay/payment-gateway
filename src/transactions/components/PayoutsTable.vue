@@ -71,11 +71,17 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination class="my-2 flex justify-content-end"
-                    @current-change="handleCurrentChange"
-                    layout="prev, pager, next"
-                    :total="total">
-                </el-pagination>
+                <!-- FOOTER -->
+                <div class="flex justify-content-between align-items-center px-10">
+                    <div class="s-12">
+                        {{transactions.length}} results
+                    </div>
+                    <el-pagination class="my-2 flex justify-content-end"
+                        @current-change="handleCurrentChange"
+                        layout="prev, pager, next"
+                        :total="total">
+                    </el-pagination>
+                </div>
             </div>
         </div>
         <!-- New Payment -->
@@ -133,7 +139,8 @@ export default {
       columns: [
         // {label: 'Method', dataField: 'method', width: '100px'},
         {label: 'Customer', dataField: 'customer', width: 'auto'},
-        {label: 'Reference', dataField: 'reference', width: 'auto'}
+        {label: 'Reference', dataField: 'reference', width: 'auto'},
+        {label: 'type', dataField: 'transaction_type', width: '100px'}
       ],
       styleObject: {
         fontSize: '12px'

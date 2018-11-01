@@ -13,7 +13,7 @@ const state = {
   userdata: {},
   client: {},
   logIn: true,
-  test: true
+  test: false
 }
 
 // getters

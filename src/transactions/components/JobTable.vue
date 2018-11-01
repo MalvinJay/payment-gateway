@@ -60,11 +60,17 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination class="my-2 flex justify-content-end"
-                    @current-change="handleCurrentChange"
-                    layout="prev, pager, next"
-                    :total="total">
-                </el-pagination>
+                <!-- FOOTER -->
+                <div class="flex justify-content-between align-items-center px-10">
+                    <div class="s-12">
+                        {{jobs.length}} results
+                    </div>
+                    <el-pagination class="my-2 flex justify-content-end"
+                        @current-change="handleCurrentChange"
+                        layout="prev, pager, next"
+                        :total="total">
+                    </el-pagination>
+                </div>
             </div>
         </div>
     </div>

@@ -34,8 +34,8 @@
                 </template>
                 <el-menu-item route="/view" index="view">Payments</el-menu-item>
                 <el-menu-item route="/payouts" index="payouts">Payouts</el-menu-item>
-                <el-menu-item index="settings">Disputes</el-menu-item>
-                <el-menu-item index="product">Settings</el-menu-item>
+                <el-menu-item index="2-3">Disputes</el-menu-item>
+                <el-menu-item index="2-4">Settings</el-menu-item>
             </el-submenu>
             <el-submenu ref="sideMenu" index="3">
                 <template slot="title">
@@ -66,9 +66,9 @@
                     <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">Connect
                 </template>
                 <el-menu-item index="6-1">Accounts</el-menu-item>
-                <el-menu-item index="logs">Settlements</el-menu-item>
-                <el-menu-item index="settings">Fees</el-menu-item>
-                <el-menu-item index="product">Settings</el-menu-item>
+                <el-menu-item index="6-2">Settlements</el-menu-item>
+                <el-menu-item index="6-3">Fees</el-menu-item>
+                <el-menu-item index="6-4">Settings</el-menu-item>
             </el-submenu>
             <el-menu-item index="7">
                 <template slot="title">
@@ -81,9 +81,9 @@
                     <img class="mr-10" src="../assets/images/icons/developer.svg" alt="">Developers
                 </template>
                 <el-menu-item index="8-1">Apps</el-menu-item>
-                <el-menu-item index="events">Events</el-menu-item>
-                <el-menu-item index="logs">Logs</el-menu-item>
-                <el-menu-item index="product">Settings</el-menu-item>
+                <el-menu-item index="8-2">Events</el-menu-item>
+                <el-menu-item index="8-3">Logs</el-menu-item>
+                <el-menu-item index="8-4">Settings</el-menu-item>
             </el-submenu>
             <el-menu-item index="9">
                 <template slot="title">

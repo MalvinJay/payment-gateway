@@ -19,12 +19,12 @@
             <div v-else>
                 <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
                     <el-table-column type="selection" width="55"></el-table-column>
-                    <el-table-column prop="amount" label="Amount" width="100">
+                    <el-table-column label="Amount" width="100">
                         <template slot-scope="scope">
-                                <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.receiver_amount | money}}</p>
+                            <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.receiver_amount | money}}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="status" label="" width="100">
+                    <el-table-column prop="status" label="" width="auto">
                         <template slot-scope="scope">
                             <div class="flex">
                                 <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
@@ -63,11 +63,18 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination class="my-2 flex justify-content-end"
-                    @current-change="handleCurrentChange"
-                    layout="prev, pager, next"
-                    :total="total">
-                </el-pagination>
+                <!-- FOOTER -->
+                <div class="flex justify-content-between align-items-center px-10">
+                    <div class="s-12">
+                        {{transactions.length}} results
+                    </div>
+                    <el-pagination class="my-2 flex justify-content-end"
+                        @current-change="handleCurrentChange"
+                        layout="prev, pager, next"
+                        :total="total">
+                    </el-pagination>
+                </div>
+                
             </div>
         </div>
 
@@ -106,6 +113,7 @@
                 <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payment</el-button>
             </span>
         </el-dialog>
+        <export-modal :modalVisible.sync="exportVisible"></export-modal>
     </div>
 </template>
 
@@ -121,7 +129,8 @@ export default {
       columns: [
         // {label: 'Method', dataField: 'method', width: '100px'},
         {label: 'Customer', dataField: 'customer', width: 'auto'},
-        {label: 'Reference', dataField: 'reference', width: 'auto'}
+        {label: 'Reference', dataField: 'reference', width: 'auto'},
+        {label: 'type', dataField: 'transaction_type', width: '100px'}
       ],
       styleObject: {
         fontSize: '12px'
@@ -155,6 +164,9 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'view')
+    EventBus.$on('exportModal', (val) => {
+        this.exportVisible = false
+    })
   },
   methods: {
     clickRow (row, event, column) {
@@ -217,6 +229,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+    // 1. what you want to call the getter here : 2. the name of the getter from the vuex store
       transactions: 'transactions',
       state: 'transactionsState',
       meta: 'transactionsMeta',
@@ -234,9 +247,11 @@ export default {
         return this.transactions.map(el => {
             el.method = 'Wallet'
             el.customer = `${el.receiver_no} - ${el.receiver_name}`
-            el.date = Date.now()
             return el
         })
+    },
+    count () {
+        // return this.transactions.length
     },
     loading () {
       return this.state === 'LOADING'

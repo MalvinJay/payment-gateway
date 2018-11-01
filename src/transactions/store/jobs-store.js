@@ -91,7 +91,7 @@ const actions = {
         }).then((response) => {
           commit(SET_JOBS_STATE, 'DATA')
           commit(SET_JOBS, response.data.response.data.jobs)
-          resolve()
+          resolve(response)
         }).catch((error) => {
           commit(SET_JOBS_STATE, 'ERROR')
           console.log(error)
@@ -102,29 +102,29 @@ const actions = {
   },
   [GET_JOB_RUNS] ({ state, commit, rootGetters }, { page = 1, cache = true, id } = {}) {
     commit(SET_JOB_RUNS_STATE, 'LOADING')
-    if (cache && Utils.present(state.jobs.runs)) {
-      commit(SET_JOB_RUNS_STATE, 'DATA')
-    } else {
-      var data = {
-        is_sub_user: false
-      }
-      return new Promise((resolve, reject) => {
-        apiCall({
-          url: `https://api.flopay.io/v1/clients/jobs/${id}/contacts`,
-          method: 'POST',
-          token: rootGetters.token,
-          data: data
-        }).then((response) => {
-          commit(SET_JOB_RUNS_STATE, 'DATA')
-          commit(SET_JOB_RUNS, response.data.response.data.jobs)
-          resolve()
-        }).catch((error) => {
-          commit(SET_JOB_RUNS_STATE, 'ERROR')
-          console.log(error)
-          reject(error)
-        })
-      })
+    // if (cache && Utils.present(state.jobs.runs)) {
+    //   commit(SET_JOB_RUNS_STATE, 'DATA')
+    // } else {
+    var data = {
+      is_sub_user: false
     }
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `https://api.flopay.io/v1/clients/jobs/groups?job_id=${id}`,
+        method: 'GET',
+        token: rootGetters.token,
+        data: data
+      }).then((response) => {
+        commit(SET_JOB_RUNS_STATE, 'DATA')
+        commit(SET_JOB_RUNS, response.data.response.data.groups)
+        resolve()
+      }).catch((error) => {
+        commit(SET_JOB_RUNS_STATE, 'ERROR')
+        console.log(error)
+        reject(error)
+      })
+    })
+    // }
   },
   [RUN_JOB] ({ state, commit, rootGetters }, id) {
     commit(SET_JOB_RUNS_STATE, 'LOADING')
@@ -266,7 +266,7 @@ const actions = {
         console.log('currentJob', response)
         commit(SET_SINGLE_JOB_STATE, 'DATA')
         commit(SET_SINGLE_JOB, response.data.response.data.job)
-        commit(SET_JOB_RUNS, response.data.response.data.executed_transactions)
+        // commit(SET_JOB_RUNS, response.data.response.data.executed_transactions)
         resolve()
       }).catch((error) => {
         commit(SET_SINGLE_JOB_STATE, 'ERROR')
@@ -278,7 +278,7 @@ const actions = {
   }
 //   [GET_CURRENT_RUN] ({ state, commit, rootGetters }, { id, jobId, cache = true } = {}) {
 //     commit(SET_SINGLE_JOB_STATE, 'LOADING')
-//     var par 
+//     var par
 //     if (Utils.present(state.currentJob.runs) && cache) {
 //       commit(SET_SINGLE_JOB_STATE, 'DATA')
 //     } else {

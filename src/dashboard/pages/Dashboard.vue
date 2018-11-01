@@ -68,7 +68,7 @@
             <div class="light-background analytics-div h-76 border-top flex justify-content-between align-items-center">
                 <div class="flex flex-column justify-content-center">
                     <p class="grey-text m-0 pb-5">Gross Volume</p>
-                    <p class="light-blue-text s-16 bold-600">GHc0.00</p>
+                    <p class="light-blue-text s-16 bold-600">{{grossVolume | money}}</p>
                 </div>
                 <div style="height: 88px" class="w-50">
                     <!-- <canvas ref="dashline"></canvas> -->
@@ -86,7 +86,7 @@
                             <el-button class="p-0" slot="reference" icon="info circle icon" type="text"></el-button>
                         </el-popover>
                     </div>
-                    <p class="light-blue-text s-16 bold-600">1</p>
+                    <p class="light-blue-text s-16 bold-600">{{depositVolume | money}}</p>
                 </div>
                 <div style="height: 88px" class="w-50">
                     <!-- <canvas ref="dashline"></canvas> -->
@@ -105,7 +105,7 @@
                             <!-- <i slot="reference" class="el-icon-info"></i> -->
                         </el-popover>
                     </div>
-                    <p class="light-blue-text s-16 bold-600">1</p>
+                    <p class="light-blue-text s-16 bold-600">{{withVolume | money}}</p>
                 </div>
                 <div style="height: 88px" class="w-50">
                     <!-- <canvas ref="dashline"></canvas> -->
@@ -119,6 +119,7 @@
 <script>
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
+import Utils from '../../utils/services'
 
 export default {
   name: 'Dashboard',
@@ -235,6 +236,18 @@ export default {
         dashboard: 'dashboard',
         state: 'dashboardState'
     }),
+    grossVolume () {
+        var gross = Utils.sum(this.dashboard.map(el => el.count))
+        return gross
+    },
+    withVolume () {
+        var gross = Utils.sum(this.dashboard.map(el => el.withdrawal_count))
+        return gross
+    },
+    depositVolume () {
+        var gross = Utils.sum(this.dashboard.map(el => el.deposit_count))
+        return gross
+    },
     chartData () {
         var count = ''
         return {

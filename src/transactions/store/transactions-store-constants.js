@@ -11,6 +11,11 @@ export const SET_CURRENT_TRANSACTION_STATE = 'setCurrentTransactionState'
 
 export const GET_TRANSACTIONS_URI = 'https://api.flopay.io/v2/transactions.json'
 
+// reports
+export const GET_FIELDS = 'getFields'
+export const SET_FIELDS = 'setFields'
+export const SET_FIELDS_STATE = 'setFieldsState'
+
 // payouts
 export const PAYOUTS_FETCH = 'getPayouts'
 export const PAYOUT_CREATE = 'createPayouts'

@@ -139,6 +139,7 @@ $border: #dcdfe6;
         padding: 8px 0 !important;
         // color: #999999;
         text-transform: capitalize;
+        cursor: pointer;
 
         a,p,div{
             // color: #999999
@@ -316,7 +317,7 @@ $border: #dcdfe6;
 }
 
 // new payment modal
-.new-transaction{
+.new-transaction,.export-dialog{
     .el-dialog__title{
         color: #2b2d50;
         font-size: 16px;
@@ -329,7 +330,11 @@ $border: #dcdfe6;
         // box-shadow: 0 0 0 1px rgba(43,45,80,.1), 0 2px 5px 0 rgba(43,45,80,.08), 0 1px 1.5px 0 rgba(0,0,0,.07), 0 1px 2px 0 rgba(0,0,0,.08)
     }
 }
-
+.export-dialog{
+    .el-dialog__body{
+        padding: 0
+    }
+}
 .no-padding-input{
     .el-input__inner{
         padding: 0 4px;
@@ -369,5 +374,11 @@ $border: #dcdfe6;
 .no-show-upload{
     .el-upload-list{
         display: none
+    }
+}
+
+.default-table-expanded{
+    .el-table__expanded-cell{
+        padding: 0 20px;
     }
 }

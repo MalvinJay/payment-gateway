@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-card v-loading="fileUploading" :class="[{'test-data': isTest}, 'flex', 'flex-column', 'card-0', 'position-relative']">
+        <el-card v-loading="fileUploading" element-loading-text="Uploading file..." :class="[{'test-data': isTest}, 'flex', 'flex-column', 'card-0', 'position-relative']">
             <div slot="header" class="flex justify-content-between align-items-center">
                 <h3 class="blue-text bold-500 m-0 pb-5">Create a Job</h3>
                 <div class="standard-button">
@@ -64,7 +64,7 @@
                                 </el-time-select>
                             </el-form-item>
                             <el-form-item v-else-if="form.schedule === 'weekly'" label="date & time of trasactions postings">
-                                <el-select v-model="schedule.date">
+                                <el-select placeholder="select day" v-model="schedule.date">
                                     <el-option v-for="(item, index) in days" :key="index" :label="item" :value="item"></el-option>
                                 </el-select>
                                 <el-time-select
@@ -78,6 +78,7 @@
                                 </el-time-select>
                             </el-form-item>
                             <el-form-item v-else label="date & time of trasactions postings">
+                                <!-- <el-input placeholder="input " class="w-25" v-model="schedule.date"></el-input> -->
                                 <el-date-picker
                                     type="date"
                                     placeholder="Date"
@@ -132,12 +133,13 @@
                             </el-select>
                         </el-form-item>
                     </div> -->
-                    <el-form-item label="Approval Settings">
-                        <el-switch
+                    <el-form-item label="Download File Format">
+                        <a download="file_format.csv" href="../../../static/Batch_file_format.csv">Download file format</a>
+                        <!-- <el-switch
                         v-model="form.approval"
                         active-text="Require Approval"
                         inactive-text="Deny Approval">
-                        </el-switch>
+                        </el-switch> -->
                     </el-form-item>
                 </el-form>
             </div>

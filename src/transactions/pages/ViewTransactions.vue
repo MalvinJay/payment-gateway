@@ -39,7 +39,10 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'view')
-    EventBus.$on('tabNumber', this.updateTab)
+    EventBus.$on('tabNumber', (val) => {
+        console.log('valtab', val)
+        this.activeName = val
+    })
     this.$store.dispatch('getTransactions')
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getQueues')

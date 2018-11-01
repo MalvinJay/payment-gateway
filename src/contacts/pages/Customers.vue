@@ -20,42 +20,48 @@
                 </div>
                 <div v-else>
                     <el-table @row-click="clickRow" empty-text="No contacts found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="contacts">
-                    <el-table-column type="selection" width="55"></el-table-column>
-                    <el-table-column prop="name" label="Name">
-                        <template slot-scope="scope">
-                            <!-- <router-link :to="{name: 'ContactDetails', params: {id: scope.row.code}}"> -->
-                                <div class="flex align-items-center cursor black-text">
-                                    {{scope.row.name}}
+                        <el-table-column type="selection" width="55"></el-table-column>
+                        <el-table-column prop="name" label="Name">
+                            <template slot-scope="scope">
+                                <!-- <router-link :to="{name: 'ContactDetails', params: {id: scope.row.code}}"> -->
+                                    <div class="flex align-items-center cursor black-text">
+                                        {{scope.row.name}}
+                                    </div>
+                                <!-- </router-link> -->
+                            </template>
+                        </el-table-column>
+                        <el-table-column :formatter="formatContent" :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                        <el-table-column width="100px">
+                            <template slot-scope="scope">
+                                <div class="mini-menu">
+                                    <i v-if="scope.row.status ==='failed'" class="reply icon blue-text cursor first-icon"></i>
+                                    <el-dropdown trigger="click">
+                                        <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
+                                        <el-dropdown-menu class="w-200" slot="dropdown">
+                                            <el-dropdown-item disabled>
+                                                <div class="table-dropdown-header blue-text bold-600 text-uppercase">
+                                                    actions
+                                                </div>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item class="s-12">Edit Contact</el-dropdown-item>
+                                            <el-dropdown-item class="s-12">Delete Contact</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
                                 </div>
-                            <!-- </router-link> -->
-                        </template>
-                    </el-table-column>
-                    <el-table-column :formatter="formatContent" :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
-                    <el-table-column width="100px">
-                        <template slot-scope="scope">
-                            <div class="mini-menu">
-                                <i v-if="scope.row.status ==='failed'" class="reply icon blue-text cursor first-icon"></i>
-                                <el-dropdown trigger="click">
-                                    <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
-                                    <el-dropdown-menu class="w-200" slot="dropdown">
-                                        <el-dropdown-item disabled>
-                                            <div class="table-dropdown-header blue-text bold-600 text-uppercase">
-                                                actions
-                                            </div>
-                                        </el-dropdown-item>
-                                        <el-dropdown-item class="s-12">Edit Contact</el-dropdown-item>
-                                        <el-dropdown-item class="s-12">Delete Contact</el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </el-dropdown>
-                            </div>
-                        </template>
-                    </el-table-column>
+                            </template>
+                        </el-table-column>
                     </el-table>
-                    <el-pagination class="my-2 flex justify-content-end"
-                        @current-change="handleCurrentChange"
-                        layout="prev, pager, next"
-                        :total="total">
-                    </el-pagination>
+                    <!-- FOOTER -->
+                    <div class="flex justify-content-between align-items-center px-10">
+                        <div class="s-12">
+                            {{contacts.length}} results
+                        </div>
+                        <el-pagination class="my-2 flex justify-content-end"
+                            @current-change="handleCurrentChange"
+                            layout="prev, pager, next"
+                            :total="total">
+                        </el-pagination>
+                    </div>
                 </div>
                 
                 

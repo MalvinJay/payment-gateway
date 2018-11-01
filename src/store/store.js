@@ -4,7 +4,8 @@ import Vuex from 'vuex'
 import transactions from '../transactions/store/transactions-store'
 import dashboard from '../dashboard/dashboard-store'
 import jobs from '../transactions/store/jobs-store'
-import payouts from '../transactions/store/payouts'
+import payouts from '../transactions/store/payouts-store'
+import reports from '../transactions/store/reports-store'
 import contacts from '../contacts/contacts-store'
 import user from './modules/user'
 
@@ -20,6 +21,7 @@ export default new Vuex.Store({
     jobs,
     dashboard,
     contacts,
-    payouts
+    payouts,
+    reports
   }
 })
