@@ -1,0 +1,384 @@
+/* theme color */
+$--color-primary: #586ADA;
+
+// /* icon font path, required */
+// $--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+// @import "~element-ui/packages/theme-chalk/src/index";
+
+$border: #dcdfe6;
+
+
+.el-submenu__title{
+    height: 46px;
+    line-height: 46px;
+    padding-left: 4px !important;
+}
+.el-submenu__title:focus, .el-submenu__title:hover{
+    background-color: transparent !important;
+}
+
+.el-submenu__title i{
+    display: none;
+}
+
+.header{
+    padding-top: 20px;
+    .el-input__icon, .el-input__inner{
+        height: 30px !important;
+        line-height: 30px !important;
+    }
+}
+
+// transparent input -- dashboard
+.transparent-input{
+    color: white;
+    .el-input__prefix, .el-input__suffix{
+        color: white;
+        height: 30px;
+        display: none;
+        .el-input__icon{
+            height: 30px;
+        }
+
+        i{
+            line-height: 30px
+        }
+    }
+    .el-input__inner{
+        background: transparent;
+        border: 0;
+        color: white;
+        padding-left: 0px;
+        padding-right: 0px;
+        height: 30px;
+        line-height: 30px;
+
+        &::placeholder{
+            color: white !important;
+        }
+    }
+
+}
+
+// date
+.date-input{
+    .el-input__prefix, .el-input__suffix{
+        display: none;
+    }
+    .el-input__inner{
+        background: transparent;
+        border: 0;
+        color: #4e566d;
+        padding-left: 3px;
+        padding-right: 0px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 13px;
+        font-weight: 600;
+
+        &::placeholder{
+            color: #4e566d !important;
+        }
+    }
+}
+.dashboard-checkboxes{
+    // border: 1px solid $border;
+    height: 30px;
+    display: flex;
+    justify-content: space-around;
+    width: 200px;
+    margin-right: 10px;
+    .el-checkbox-button__inner,.el-radio-button__inner{
+        border: 0 !important;
+        padding: 0;
+        color: #4e566d;
+        font-weight: 600;
+        font-size: 13px;
+    }
+    .el-checkbox-button,.el-radio-button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+    }
+
+    .el-checkbox-button.is-checked .el-checkbox-button__inner, .el-radio-button__orig-radio:checked + .el-radio-button__inner{
+        color: #586ADA;
+        background: transparent;
+        border: 0;
+        box-shadow: none
+    }
+}
+
+.analytics, .transactions{
+    .el-card__body{
+        padding: 0 !important;
+    }
+}
+
+.transactions-table-header{
+    background-color: #F7FAFC !important;
+    height: 36px !important;
+
+    th{
+        background-color: #F7FAFC !important;
+        padding: 0;
+        text-transform: uppercase;
+        font-size: 11px;
+        border-top: 1px solid #ebeef5;
+        // font-weight: 600;
+        // color: rgba(0,0,0,.87);
+        color: #999999;
+        font-weight: 100;
+    }
+    
+}
+.transactions-table-body{
+    td{
+        padding: 8px 0 !important;
+        // color: #999999;
+        text-transform: capitalize;
+        cursor: pointer;
+
+        a,p,div{
+            // color: #999999
+        }
+    }
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    .cell{
+        .mini-menu{
+            box-shadow: 0 0 0 1px rgba(43,45,80,0.1),0 2px 5px 0 rgba(43,45,80,0.1),0 3px 9px 0 rgba(43,45,80,0.08),0 1px 1.5px 0 rgba(0,0,0,0.08),0 1px 2px 0 rgba(0,0,0,0.08) !important;
+            i.first-icon{
+                // &:first-child{
+                    opacity: 1;
+                // }
+            }
+        }
+    }
+}
+.el-table__empty-text{
+    font-size: 12px;
+}
+// font size for select
+.el-select{
+    .el-input{
+        font-size: 13px;
+    }
+}
+// padding for card body
+.p-0{
+    .el-card__body{
+        padding: 0 !important
+    }
+}
+
+// card
+.card-0{
+    .el-card__body{
+        padding: 0;
+    }
+}
+
+.card-20{
+    .el-card__body{
+        padding: 20px;
+    }
+}
+
+// button
+.standard-button {
+    .el-button{
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+}
+
+.transaction-form{
+    // .el-form-item{
+    //     margin-bottom: 10px;
+    // }
+    // .el-input__inner{
+    //     height: 30px;
+    //     font-size: 12px;
+    // }
+    .el-form-item__label{
+        font-size: 12px;
+        color: black;
+    }
+}
+.default-form{
+    font-size: 12px;
+    .el-input__inner{
+        height: 30px;
+        font-size: 12px;
+    }
+    .el-form-item__label{
+        font-size: 12px;
+        text-transform: capitalize;
+    }
+    .el-switch__label *{
+        font-size: 12px;
+    }
+}
+
+.default-tab{
+    background: transparent;
+    box-shadow: none;
+    border: 0;
+
+    .el-tabs__header{
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
+        border-radius: 4px;
+        height: 50px;
+
+        .el-tabs__item{
+            height: 50px;
+            margin: 0;
+            line-height: 45px;
+            font-weight: 600;
+            &:first-child{
+                border-radius: 4px 0 0 4px
+            }
+
+            &:last-child{
+                border-radius: 0 4px 4px 0
+            }
+
+            &:hover{
+                color: $--color-primary;
+            }
+        }
+    }
+    .el-tabs__content{
+        margin-top: 20px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.12), 0 0 6px 0 rgba(0, 0, 0, 0.04);
+        border-radius: 4px;
+        background: white;
+        padding: 0;
+    }
+    .el-tabs__header .el-tabs__item.is-active{
+        color: $--color-primary;
+        border-bottom: 2px solid $--color-primary;
+    }
+}
+
+.default-radio-group{
+    .el-radio-button__inner{
+        padding: 7px 0;
+        width: 100%;
+    }
+}
+
+// filter-dropdown
+.filter-dropdown{
+    // .el-dropdown-menu{
+        width: 250px;
+        padding: 0;
+    // }
+    .el-dropdown-menu__item{
+        font-size: 12px;
+        padding-left: 6px;
+
+        &:hover{
+            background: transparent;
+            color: black;
+        }
+    }
+    .el-dropdown-menu__item--divided{
+        margin: 0;
+
+        &::before{
+            margin-left: -6px;
+            // height: 0;
+        }
+    }
+
+    .filter-input{
+        .el-input__prefix, .el-input__suffix{
+            display: none;
+        }
+        .el-input__inner{
+            background: transparent;
+            color: #4e566d;
+            padding-left: 3px;
+            padding-right: 0px;
+            height: 25px;
+            line-height: 25px;
+            font-size: 12px;
+            font-weight: 600;
+    
+            &::placeholder{
+                color: #4e566d !important;
+            }
+        } 
+    }
+}
+
+// new payment modal
+.new-transaction,.export-dialog{
+    .el-dialog__title{
+        color: #2b2d50;
+        font-size: 16px;
+        font-weight: 500
+    }
+    .el-dialog__body{
+        background: #F7FAFC
+    }
+    .el-input__inner{
+        // box-shadow: 0 0 0 1px rgba(43,45,80,.1), 0 2px 5px 0 rgba(43,45,80,.08), 0 1px 1.5px 0 rgba(0,0,0,.07), 0 1px 2px 0 rgba(0,0,0,.08)
+    }
+}
+.export-dialog{
+    .el-dialog__body{
+        padding: 0
+    }
+}
+.no-padding-input{
+    .el-input__inner{
+        padding: 0 4px;
+        margin: 0;
+    }
+}
+
+.no-border-input{
+    .el-input__inner{
+        border: 0;
+        background: #f1f6f8;
+    }
+}
+
+.s-12{
+    .el-checkbox__label{
+        font-size: 12px;
+    }
+}
+
+.el-menu{
+    border: 0;
+}
+
+.text-left{
+    .el-input__inner{
+        text-align: left
+    }
+}
+
+.little-padding-input{
+    .el-input__inner{
+        padding-left: 20px
+    }
+}
+
+.no-show-upload{
+    .el-upload-list{
+        display: none
+    }
+}
+
+.default-table-expanded{
+    .el-table__expanded-cell{
+        padding: 0 20px;
+    }
+}

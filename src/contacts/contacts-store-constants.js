@@ -1,0 +1,10 @@
+export const GET_CONTACTS = 'getContacts'
+export const SET_CONTACTS = 'setContacts'
+export const SET_CONTACTS_STATE = 'setContactsState'
+export const SET_CURRENT_CONTACTS = 'setCurrentContacts'
+export const CREATE_CONTACT = 'createContact'
+export const GET_CURRENT_CONTACT = 'getCurrentContact'
+export const SET_CURRENT_CONTACT = 'setCurrentContact'
+export const SET_CURRENT_CONTACT_STATE = 'setCurrentContactState'
+
+export const GET_CONTACTS_URI = 'https://api.flopay.io/v1/clients/contacts/all'

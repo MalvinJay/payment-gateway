@@ -1,0 +1,326 @@
+<template>
+    <el-card class="card-0">
+        <div class="transactions">
+            <div class="customer-div flex">
+                <div class="flex align-items-baseline">
+                    <p class="blue-text bold-600 s-16 m-0 p-0">Contacts</p>
+                    <!-- <filter-component filterType="payment"></filter-component> -->
+                </div>
+                <div>
+                    <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button> -->
+                    <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
+                </div>
+            </div>
+            <div>
+                <div class="center h-80" v-if="error">
+                    <div class="center flex-column">
+                       <p class="m-0 p-0">Unable to load this page</p>
+                       <el-button @click.prevent="fetchCustomers" icon="sync icon" type="text">Retry</el-button>
+                    </div>
+                </div>
+                <div v-else>
+                    <el-table @row-click="clickRow" empty-text="No contacts found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="contacts">
+                        <el-table-column type="selection" width="55"></el-table-column>
+                        <el-table-column prop="name" label="Name">
+                            <template slot-scope="scope">
+                                <!-- <router-link :to="{name: 'ContactDetails', params: {id: scope.row.code}}"> -->
+                                    <div class="flex align-items-center cursor black-text">
+                                        {{scope.row.name}}
+                                    </div>
+                                <!-- </router-link> -->
+                            </template>
+                        </el-table-column>
+                        <el-table-column :formatter="formatContent" :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                        <el-table-column width="100px">
+                            <template slot-scope="scope">
+                                <div class="mini-menu">
+                                    <i v-if="scope.row.status ==='failed'" class="reply icon blue-text cursor first-icon"></i>
+                                    <el-dropdown trigger="click">
+                                        <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
+                                        <el-dropdown-menu class="w-200" slot="dropdown">
+                                            <el-dropdown-item disabled>
+                                                <div class="table-dropdown-header blue-text bold-600 text-uppercase">
+                                                    actions
+                                                </div>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item class="s-12">Edit Contact</el-dropdown-item>
+                                            <el-dropdown-item class="s-12">Delete Contact</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <!-- FOOTER -->
+                    <div class="flex justify-content-between align-items-center px-10">
+                        <div class="s-12">
+                            {{contacts.length}} results
+                        </div>
+                        <el-pagination class="my-2 flex justify-content-end"
+                            @current-change="handleCurrentChange"
+                            layout="prev, pager, next"
+                            :total="total">
+                        </el-pagination>
+                    </div>
+                </div>
+                
+                
+            </div>
+            <!-- New Customer -->
+            <el-dialog custom-class="new-transaction"
+                title="Create Contact"
+                :visible.sync="dialogVisible"
+                width="30%">
+                <div class="flex justify-content-center new-transaction-bg">
+                    <el-form style="width:90%" size="mini" ref="form" label-position="left" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="150px">
+                        <el-form-item label="Contact Name">
+                            <el-input v-model="form.deposit_account.account_name"></el-input>
+                        </el-form-item>
+                        <el-form-item class="h-auto" label="Contact Email" prop="deposit_account.email">
+                            <el-input v-model="form.deposit_account.email"></el-input>
+                        </el-form-item>
+                        <el-form-item class="h-auto" label="Phone Number" prop="deposit_account.customer_msisdn">
+                            <el-input v-model="form.deposit_account.customer_msisdn"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Description">
+                            <el-input autosize type="textarea" v-model="form.description"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Mode">
+                            <el-radio-group class="w-100 default-radio-group" v-model="form.accounts_provider_code">
+                                <el-radio-button class="w-50" label="mobile">Mobile Money</el-radio-button>
+                                <el-radio-button class="w-50" label="bank">Bank</el-radio-button>
+                            </el-radio-group>
+                        </el-form-item>
+                        <div v-if="form.accounts_provider_code === 'mobile'">
+                            <el-form-item label="Provider Name">
+                                <el-select class="w-100" v-model="form.code" placeholder="Select Provider">
+                                    <el-option
+                                        v-for="(item, index) in providers" :key="index"
+                                        :label="item.label"
+                                        :value="item.value"
+                                    ></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="Mobile Money Number">
+                                <el-input type="text" v-model="form.deposit_account.phone"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Branch">
+                                <el-input type="text" v-model="form.deposit_account.bank"></el-input>
+                            </el-form-item>
+                        </div>
+                        <div v-else>
+                            <el-form-item label="Bank">
+                                <el-input type="text" v-model="form.deposit_account.bank"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Account Number">
+                                <el-input type="text" v-model="form.deposit_account.account_no"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Branch">
+                                <el-input type="text" v-model="form.deposit_account.branch"></el-input>
+                            </el-form-item>
+                        </div>
+                    </el-form>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="resetForm('form')">Cancel</el-button>
+                    <el-button size="mini" class="z-depth-button b-0 bold-500 open-sans white-text" :loading="createLoading" type="primary" @click="submitForm('form')">Create Contact</el-button>
+                </span>
+            </el-dialog>
+        </div>
+    </el-card>
+</template>
+
+<script>
+import EventBus from '../../event-bus.js'
+import { mapGetters } from 'vuex'
+
+export default {
+  name: 'Contacts',
+  props: ['type'],
+  data () {
+    return {
+      test: true,
+      columns: [
+        {label: 'Type', dataField: 'type', width: 'auto'},
+        {label: 'phone number', dataField: 'msisdn', width: 'auto'},
+        {label: 'Provider', dataField: 'provider', width: 'auto'},
+        {label: 'Owner', dataField: 'owner', width: 'auto'}
+      ],
+      styleObject: {
+        fontSize: '12px'
+      },
+      activeName: '1',
+      date: false,
+      dialogVisible: false,
+      form: {
+        accounts_provider_code: 'mobile',
+        deposit_account: {
+
+        }
+      },
+      retryLoading: false,
+      createLoading: false,
+      rules: {
+        'deposit_account.customer_msisdn': [
+            { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
+        ],
+        amount: [
+            { required: true, message: 'This field is required', trigger: 'blur' }
+        ],
+        'deposit_account.email': [
+            { required: true, message: 'This field is required', trigger: 'blur' }
+        ]
+      }
+    }
+  },
+  created () {
+    this.$store.dispatch('getContacts')
+  },
+  mounted () {
+    EventBus.$emit('sideNavClick', 'contacts')
+  },
+  methods: {
+    handleCurrentChange (val) {
+        this.$store.dispatch('setCurrentContacts', val)
+    },
+    clickRow (row, event, column) {
+        if (column.property) {
+            this.$router.push(`/contacts/${row.id}`)
+        }
+    },
+    fetchCustomers () {
+      this.$store.dispatch('getContacts')
+    },
+    //format the content of each quota
+    formatContent (row, column, cellValue, index) {
+        return cellValue = typeof cellValue === 'undefined' || !cellValue ? '-' : cellValue
+    },
+    submitForm(formName) {
+        this.createLoading = true
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$store.dispatch('createContact', this.form)
+            .then((response) => {
+                this.createLoading = false
+                this.$message({
+                    message: 'Contact Created Successfully',
+                    type: 'success'
+                })
+                this.dialogVisible = false
+            }).catch(() => {
+                this.createLoading = false
+                this.$message({
+                    message: 'Unable to create Contact. Please try again later',
+                    type: 'error'
+                })
+            })
+          } else {
+            this.createLoading = false
+            this.$message({
+                message: 'Please fill form correctly',
+                type: 'error'
+            })
+          }
+        })
+    },
+    resetForm (formName) {
+        this.dialogVisible = false
+        this.createLoading = false
+        this.$refs[formName].resetFields()
+    }
+  },
+  computed: {
+    ...mapGetters({
+      contacts: 'currentContacts',
+      state: 'contactsState',
+      count: 'contactsCount',
+      providers: 'providers'
+    }),
+    total () {
+      return this.count
+    },
+    loading () {
+      return this.state === 'LOADING'
+    },
+    error () {
+      return this.state === 'ERROR' && this.state !== 'LOADING'
+    }
+  }
+}
+</script>
+
+
+<style lang="scss" scoped>
+.mini-menu{
+    position: absolute;
+    top: 8px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    transition: all ease;
+    line-height: normal;
+    right: 20px;
+
+    &:hover{
+        // background: red;
+    }
+    .first-icon{
+        opacity: 0;
+    }
+    i{
+        // &:first-child{
+        //     opacity: 0;
+        // }
+        font-size: 12px;
+    }
+}
+.new-transaction{
+    .el-dialog__header{
+        color: #2b2d50;
+    }
+    .el-dialog__body{
+        padding: 20px
+    }
+}
+.new-transaction-bg{
+    background: #F7FAFC;
+}
+.mini-button{
+    // height: 30px;
+    line-height: 1em;
+    // padding: 0 10px;
+    padding: 7px 10px !important;
+    color: rgba(0,0,0,.6);
+
+    &:hover{
+        color: rgba(0,0,0,.8);
+    }
+
+    span{
+        font-weight: 600
+    }
+    i{
+        margin-right: 5px;
+    }
+}
+.customer-div{
+    height: 60px;
+    padding: 20px 20px 0 20px
+}
+.transactions-table-header{
+    background-color: #F7FAFC !important;
+    height: 36px !important;
+
+    th{
+        background-color: #F7FAFC !important;
+        padding: 0 !important;
+    }
+
+}
+.white-text{
+    color: white
+}
+.mr-10{
+    margin-right: 10px;
+}
+</style>
+
