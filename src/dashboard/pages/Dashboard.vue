@@ -5,14 +5,14 @@
             <div class="flex justify-content-between">
                 <div class="flex flex-column">
                     <div class="flex">
-                        <p class="p-0 m-0">Today</p>
-                        <p class="p-0 m-0 bold-600" style="padding-left: 16px">GHc0.00</p>
+                        <p class="p-0 m-0">Account Balance</p>
+                        <p class="p-0 m-0 bold-600" style="padding-left: 16px">{{balance | money}}</p>
                     </div>
                     <div class="flex align-items-center">
                         <el-date-picker class="transparent-input"
                             v-model="value2"
                             type="date"
-                            placeholder="Yesterday">
+                            placeholder="Today">
                             </el-date-picker>
                         <p class="p-0 m-0 bold-600 little-money" style="padding-left: 16px">GHc0.00</p>
                     </div>
@@ -145,6 +145,7 @@ export default {
       value2: null,
       date: '',
       date1: '',
+      balance: localStorage.getItem('balance'),
       data: [1, 4],
       labels: ['Red', 'Blue'],
       data1: [0, 0, 0, 0, 0],

@@ -264,9 +264,9 @@
             </el-card>             -->
             <!-- JOB CONTACTS -->
             <el-card class="my-2">
-                <div class="flex align-items-baseline" slot="header">
+                <div class="flex align-items-baseline justify-content-between" slot="header">
                     <span class="blue-text bold-600 s-16">Subscribers</span>
-                    <!-- <el-upload
+                    <el-upload
                         class="upload-contacts no-show-upload"
                         action=""
                         :on-change="onChange"
@@ -274,7 +274,7 @@
                         accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                         :file-list="form.fileList">
                         <el-button :loading="addLoading" type="primary" class="z-depth-button s-13 open-sans mini-button b-0" size="mini" icon="plus icon">Upload Contacts</el-button>
-                    </el-upload> -->
+                    </el-upload>
                 </div>
                 <div>
                     <el-table empty-text="No job customers" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="form.contacts">
@@ -412,16 +412,33 @@ export default {
             console.log('file', filess)
             this.$store.dispatch('sendToBucket', filess)
             .then((response) => {
-                console.log('fileState', this.fileState)
-                console.log('fileState', this.file)
-                var upload = {
-                    batch_details: {
+                console.log('data res', response)
+                if (response) {
+                    console.log('fileState', this.fileState)
+                    console.log('fileState', response.body)
+                    var upload = {
                         Bucket: AWS_BUCKET,
-                        Key: 'flopay-file-batch/' + filess.name
+                        Key: this.file.key
                     }
+                    var query = Utils.addContactToJobQuery(upload)
+                    this.$store.dispatch('createJobContact', {id: this.form.id, job: query})
+                    .then((res) => {
+                        if (res.data.success) {
+                            this.$message({
+                                type: 'success',
+                                message: res.data.response.message,
+                            })
+                            this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
+                        } else {
+                            this.$message({
+                                type: 'error',
+                                message: res.data.response.message,
+                            })
+                        }
+                        this.addLoading = false
+                    })
                 }
-                this.$store.dispatch('createJobContact', {id: this.form.id, job: upload})
-                this.addLoading = false
+                
             })
         },
         update () {

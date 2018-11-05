@@ -2,7 +2,7 @@
     <div class="transactions">
         <div class="trans-div flex justify-content-between">
             <div>
-                <filter-component filterType="payment"></filter-component>
+                <filter-component dispatch="setTransactionsFilters" filterType="payment"></filter-component>
             </div>
             <div>
                 <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
@@ -43,20 +43,20 @@
                         <template slot-scope="scope">
                             <div class="mini-menu">
                                 <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i>
-                                <el-dropdown trigger="click">
+                                <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
                                     <i class="ellipsis horizontal icon mr-0 cursor"></i>
                                     <el-dropdown-menu class="w-200" slot="dropdown">
-                                        <el-dropdown-item disabled>
+                                        <el-dropdown-item v-if="scope.row.status.toLowerCase() ==='failed'" disabled>
                                             <div class="table-dropdown-header bold-600 text-uppercase">
                                                 action
                                             </div>
                                         </el-dropdown-item>
-                                        <el-dropdown-item class="s-12">Recharge Funds</el-dropdown-item>
-                                        <el-dropdown-item divided disabled>
+                                        <el-dropdown-item command="open" v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Open Ticket</el-dropdown-item>
+                                        <el-dropdown-item :divided="scope.row.status.toLowerCase() ==='failed'" disabled>
                                             <div class="table-dropdown-header bold-600 text-uppercase">
                                                 connection
                                             </div></el-dropdown-item>
-                                        <el-dropdown-item class="s-12">View Payment Details</el-dropdown-item>
+                                        <el-dropdown-item command="edit" class="s-12">View Payment Details</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </div>
@@ -114,6 +114,7 @@
             </span>
         </el-dialog>
         <export-modal :modalVisible.sync="exportVisible"></export-modal>
+        <ticket-modal :transaction="transaction" :ticketVisible.sync="ticketVisible"></ticket-modal>
     </div>
 </template>
 
@@ -136,9 +137,11 @@ export default {
         fontSize: '12px'
       },
       activeName: '1',
+      transaction: {},
       date: false,
       dialogVisible: false,
       exportVisible: false,
+      ticketVisible: false,
       form: {
         amount: '',
         currency: 'GHS',
@@ -167,6 +170,9 @@ export default {
     EventBus.$on('exportModal', (val) => {
         this.exportVisible = false
     })
+    EventBus.$on('ticketModal', (val) => {
+        this.ticketVisible = false
+    })
   },
   methods: {
     clickRow (row, event, column) {
@@ -179,6 +185,19 @@ export default {
     },
     fetchTransactions () {
       this.$store.dispatch('getTransactions', {cache: false})
+    },
+    handleTableCommand (command, row) {
+        switch (command) {
+            case 'edit':
+                this.$router.push(`view/${row.id}`)
+                break
+            case 'open':
+                this.ticketVisible = true
+                this.transaction = row
+                break
+            default:
+                break
+        }
     },
     submitForm(formName) {
         this.createLoading = true
@@ -259,7 +278,6 @@ export default {
   }
 }
 </script>
-
 
 <style lang="scss" scoped>
 

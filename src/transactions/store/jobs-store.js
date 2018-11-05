@@ -110,7 +110,8 @@ const actions = {
     }
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `https://api.flopay.io/v1/clients/jobs/groups?job_id=${id}`,
+        url: `https://api.flopay.io/v1/clients/jobs/groups?job_id=${id}&all=true`,
+        // url: `https://785af3e3.ngrok.io/api/v1/clients/jobs/groups?job_id=55&all=true`,
         method: 'GET',
         token: rootGetters.token,
         data: data
@@ -167,10 +168,9 @@ const actions = {
     console.log(job)
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `https://api.flopay.io/v1/clients/jobs/files/${id}/data`,
-        method: 'PUT',
-        token: rootGetters.token,
-        data: job
+        url: `https://api.flopay.io/v1/clients/jobs/files/${id}/data?${job}`,
+        method: 'POST',
+        token: rootGetters.token
       }).then((response) => {
         resolve(response)
       }).catch((error) => {
@@ -202,20 +202,23 @@ const actions = {
     var fileKey = albumFileKey + Utils.randomString2(3) + '_' + file.name
     // batchUploadsChannel.subscribe(fileKey, _this.onFileProcessed)
     var params = {Bucket: BucketName, Key: fileKey, Body: file}
-
-    s3.upload(params, function (err, data) {
-      if (err) {
-        console.log('err', err)
-        commit(SET_FILE_STATE, 'ERROR')
-        return
-      }
-      console.log('DATA RESPONSE', data)
-      let admin = {
-        s3_object_key: data.key,
-        file_type: fileExtension
-      }
-      commit(SET_FILE_UPLOAD_DETAILS, data)
-      commit(SET_FILE_STATE, 'DATA')
+    return new Promise((resolve, reject) => {
+      s3.upload(params, function (err, data) {
+        if (err) {
+          console.log('err', err)
+          commit(SET_FILE_STATE, 'ERROR')
+          reject(err)
+          return
+        }
+        console.log('DATA RESPONSE', data)
+        let admin = {
+          s3_object_key: data.key,
+          file_type: fileExtension
+        }
+        resolve(data)
+        commit(SET_FILE_UPLOAD_DETAILS, data)
+        commit(SET_FILE_STATE, 'DATA')
+      })
     })
   },
   [DELETE_JOB] ({ rootGetters }, id) {

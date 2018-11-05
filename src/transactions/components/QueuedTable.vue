@@ -2,7 +2,7 @@
     <div class="transactions">
         <div class="trans-div flex">
             <div>
-                <filter-component filterType="queue"></filter-component>
+                <filter-component dispatch="setQueueFilters" filterType="queue"></filter-component>
             </div>
             <div>
                 <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button> -->

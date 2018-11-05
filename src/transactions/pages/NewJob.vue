@@ -5,7 +5,7 @@
                 <h3 class="blue-text bold-500 m-0 pb-5">Create a Job</h3>
                 <div class="standard-button">
                     <el-button @click="cancel" class="z-depth-button bold-600 s-13 open-sans b-0" size="mini">Cancel</el-button>
-                    <el-button @click="save('form')" :loading="loading" class="z-depth-button bold-600 s-13 open-sans b-0" size="mini" type="primary">Save Job</el-button>
+                    <el-button :disabled="fileError" @click="save('form')" :loading="loading" class="z-depth-button bold-600 s-13 open-sans b-0" size="mini" type="primary">Save Job</el-button>
                 </div>
             </div>
             <div class="p-20">
@@ -116,6 +116,10 @@
                             <el-button size="small" type="primary">Click to upload</el-button>
                                 <!-- <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 500kb</div> -->
                             </el-upload>
+                            <div v-if="fileError" class="mt-2">
+                                <p class="p-0 m-0">Error in Uploading File</p>
+                                <el-button type="text" :loading="fileUploading" icon="sync icon" @click="onChange">Retry</el-button>
+                            </div>
                         </el-form-item>
                     <!-- </div> -->
                     <!-- <div v-else>
@@ -134,7 +138,7 @@
                         </el-form-item>
                     </div> -->
                     <el-form-item label="Download File Format">
-                        <a download="file_format.csv" href="../../../static/Batch_file_format.csv">Download file format</a>
+                        <a download href="../../../static/Batch_file_format.csv">Download file format</a>
                         <!-- <el-switch
                         v-model="form.approval"
                         active-text="Require Approval"
@@ -205,6 +209,9 @@ export default {
         },
         fileUploading () {
             return this.state === 'LOADING'
+        },
+        fileError () {
+            return this.state === 'ERROR'
         }
     },
     methods: {
@@ -248,7 +255,7 @@ export default {
                             EventBus.$emit('tabNumber', '3')
                             this.$router.push('/view')
                         } else {
-                        this.$message({
+                            this.$message({
                                 type: 'error',
                                 message: response.data.response.message
                             })
@@ -271,7 +278,7 @@ export default {
                 }
             })
         },
-        onChange (file, fileList){
+        onChange (file, fileList) {
             this.files = fileList
             let fileInput = this.$el.querySelector(".upload-demo input[type='file']")
             let filess = fileInput.files[0]

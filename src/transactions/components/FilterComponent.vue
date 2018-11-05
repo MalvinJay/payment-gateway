@@ -79,7 +79,7 @@
 import EventBus from '../../event-bus.js'
 export default {
     name: 'FilterComponent',
-    props: ['filterType'],
+    props: ['filterType', 'dispatch'],
     data () {
         return {
             date: false,
@@ -111,17 +111,17 @@ export default {
         createFilters () {
             this.$refs.messageDrop.hide()
             this.count = this.size(this.filterType)
-            
-            if (this.filterType === 'queue') {
-                // this.filters.statuses = 'queued'
-                this.$store.dispatch('setQueueFilters', this.filters)
-            } else if (this.filterType === 'pending') {
-                this.$store.dispatch('setPendingFilters', this.filters)
-            } else if (this.filterType === 'payouts') {
-                this.$store.dispatch('setPayoutsFilters', this.filters)
-            } else {
-                this.$store.dispatch('setTransactionsFilters', this.filters)
-            }
+            this.$store.dispatch(this.dispatch, this.filters)
+            // if (this.filterType === 'queue') {
+            //     // this.filters.statuses = 'queued'
+            //     this.$store.dispatch('setQueueFilters', this.filters)
+            // } else if (this.filterType === 'pending') {
+            //     this.$store.dispatch('setPendingFilters', this.filters)
+            // } else if (this.filterType === 'payouts') {
+            //     this.$store.dispatch('setPayoutsFilters', this.filters)
+            // } else {
+            //     this.$store.dispatch('setTransactionsFilters', this.filters)
+            // }
             // .then(() => {
             //     this.$store.dispatch('getTransactions', {page: 1})
             // })

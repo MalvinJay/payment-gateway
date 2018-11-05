@@ -68,7 +68,10 @@ export default {
     logout () {
         this.$store.dispatch('logout')
         .then(() => {
-        this.$router.push('/login')
+            this.$session.remove('client')
+            // this.$session.remove(key)
+            this.$session.destroy()
+            this.$router.push('/login')
         })
     },
     handleCommand (command) {

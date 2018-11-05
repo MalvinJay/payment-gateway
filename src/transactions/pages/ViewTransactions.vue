@@ -46,6 +46,7 @@ export default {
     this.$store.dispatch('getTransactions')
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getQueues')
+    this.$store.dispatch('getFields')
   },
   beforeDestroy () {
     EventBus.$off('tabNumber', this.updateTab)

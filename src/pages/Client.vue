@@ -30,9 +30,18 @@ export default {
         EventBus.$emit('updateGraph')
     })
     this.$store.dispatch('getTransactions', {cache: false})
+    this.$store.dispatch('setClient', JSON.parse(this.$session.get('client')))
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getQueues')
     this.$store.dispatch('getPayouts')
+  },
+  mounted () {
+    window.addEventListener('unload', this.leaving(), false)
+  },
+  methods: {
+    leaving () {
+        this.$store.dispatch('getToken')
+    }
   },
   onIdle() {
     this.$store.dispatch('logout')
@@ -41,7 +50,8 @@ export default {
     })
   },
   onActive() {
-    setInterval(() => { 
+    setInterval(() => {
+        this.$store.dispatch('setClient', JSON.parse(this.$session.get('client')))
         this.$store.dispatch('getToken')
     }, 3300000)
   }

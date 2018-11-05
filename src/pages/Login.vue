@@ -56,7 +56,15 @@ export default {
           if (valid) {
             this.$store.dispatch('login', {email: this.form.email, password: this.form.password})
             .then((response) => {
-                this.$store.dispatch('getToken').then(() => {
+                this.$session.start()
+                console.log('login', response)
+                this.$session.set('client', JSON.stringify(response.data.response.data))
+                    
+                this.$store.dispatch('getToken')
+                .then((response) => {
+                    // SETTING TOKEN
+                    this.$session.set('token', response.data.access_token)
+                    this.$store.dispatch('setToken', response.data.access_token)
                     this.$message({
                         message: 'Login successful',
                         type: 'success'
