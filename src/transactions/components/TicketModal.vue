@@ -60,10 +60,10 @@ export default {
             amount: this.transaction.receiver_amount,
             reference: this.transaction.reference,
             date_of_transaction: this.transaction.created_at,
-            email: [localStorage.getItem('email')],
+            email: [this.$session.getItem('email')],
             customer_name: this.transaction.receiver_name,
             provider_reference: this.transaction.provider_ref,
-            from: localStorage.getItem('email')
+            from: this.$session.getItem('email')
         }
         this.$store.dispatch('createTicket', form)
         .then((response) => {

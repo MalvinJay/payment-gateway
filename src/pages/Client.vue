@@ -35,14 +35,14 @@ export default {
     this.$store.dispatch('getQueues')
     this.$store.dispatch('getPayouts')
   },
-  mounted () {
-    window.addEventListener('unload', this.leaving(), false)
-  },
-  methods: {
-    leaving () {
-        this.$store.dispatch('getToken')
-    }
-  },
+//   mounted () {
+//     window.addEventListener('unload', this.leaving(), false)
+//   },
+//   methods: {
+//     leaving () {
+//         this.$store.dispatch('getToken')
+//     }
+//   },
   onIdle() {
     this.$store.dispatch('logout')
     .then(() => {

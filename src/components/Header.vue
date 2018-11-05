@@ -69,7 +69,7 @@ export default {
         this.$store.dispatch('logout')
         .then(() => {
             this.$session.remove('client')
-            // this.$session.remove(key)
+            this.$session.remove('token')
             this.$session.destroy()
             this.$router.push('/login')
         })
@@ -96,8 +96,8 @@ export default {
     },
     client () {
         return {
-            full_name: localStorage.getItem('name'),
-            company_name: localStorage.getItem('company')
+            full_name: this.user.client.full_name,
+            company_name: this.user.client.company_name
         }
     }
   }

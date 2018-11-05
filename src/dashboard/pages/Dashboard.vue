@@ -145,12 +145,10 @@ export default {
       value2: null,
       date: '',
       date1: '',
-      balance: localStorage.getItem('balance'),
       data: [1, 4],
       labels: ['Red', 'Blue'],
       data1: [0, 0, 0, 0, 0],
       labels1: [0, 0, 0, 0, 0],
-      
         chartOptions: {
             scales: {
                 yAxes: [{
@@ -235,8 +233,12 @@ export default {
   computed: {
     ...mapGetters({
         dashboard: 'dashboard',
-        state: 'dashboardState'
+        state: 'dashboardState',
+        user: 'user'
     }),
+    balance () {
+        return this.user.available_balance
+    },
     grossVolume () {
         var gross = Utils.sum(this.dashboard.map(el => el.count))
         return gross

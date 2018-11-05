@@ -56,26 +56,34 @@ export default {
           if (valid) {
             this.$store.dispatch('login', {email: this.form.email, password: this.form.password})
             .then((response) => {
-                this.$session.start()
-                console.log('login', response)
-                this.$session.set('client', JSON.stringify(response.data.response.data))
+                if (response.data.success) {
+
+                    this.$session.start()
+                    this.$session.set('client', JSON.stringify(response.data.response.data))
                     
-                this.$store.dispatch('getToken')
-                .then((response) => {
-                    // SETTING TOKEN
-                    this.$session.set('token', response.data.access_token)
-                    this.$store.dispatch('setToken', response.data.access_token)
-                    this.$message({
-                        message: 'Login successful',
-                        type: 'success'
+                    // login suucessfull
+                    this.$store.dispatch('getToken')
+                    .then((response) => {
+                        // SETTING TOKEN
+                        this.$session.set('token', response.data.access_token)
+                        this.$store.dispatch('setToken', response.data.access_token)
+                        this.$message({
+                            message: 'Login successful',
+                            type: 'success'
+                        })
+                        this.$router.push('/')
                     })
-                    this.loading = false
-                    this.$router.push('/')
-                })
+                } else {
+                    this.$message({
+                        message: response.data.response.message,
+                        type: 'error'
+                    })
+                }
+                this.loading = false
             }).catch((error) => {
                 this.loading = false
                 this.$message({
-                    message: 'Wrong email and password combination',
+                    message: 'Error. Please try again later',
                     type: 'error'
                 })
             })

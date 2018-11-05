@@ -7,7 +7,7 @@ const user = {
   state: {
     user: {
       data: {},
-      token: '',
+      token: localStorage.getItem('token'),
       client_id: '',
       client_secret: ''
     },
@@ -90,9 +90,9 @@ const user = {
         axios.post(url, params)
           .then((response) => {
             console.log('user token', response)
-            // localStorage.setItem('token', response.data.access_token)
-            commit(SET_TOKEN, response.data.access_token)
+            localStorage.setItem('token', response.data.access_token)
             resolve(response)
+            commit(SET_TOKEN, response.data.access_token)
           }).catch((error) => {
             console.log(error)
             reject(error)
