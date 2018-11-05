@@ -48,6 +48,17 @@ const user = {
       state.client = data
     },
     [LOGOUT] (state) {
+      state.client = {}
+      state.user = {
+        data: {},
+        token: localStorage.getItem('token'),
+        client_id: '',
+        client_secret: ''
+      }
+      state.userdata = {}
+      state.permissions = {
+        data: []
+      }
       state.logIn = false
       state.user.token = null
     },
@@ -104,6 +115,9 @@ const user = {
       return new Promise((resolve, reject) => {
         commit(LOGOUT)
         localStorage.removeItem('token') // clear your user's token from localstorage
+        localStorage.removeItem('client_id')
+        localStorage.removeItem('client_secret')
+
         resolve()
       })
     },
