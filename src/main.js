@@ -15,10 +15,13 @@ import store from './store/store.js'
 import VueMoment from 'vue-moment'
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 import IdleVue from 'idle-vue'
+import VueLocalStorage from 'vue-localstorage'
+import VueSession from 'vue-session'
 
+Vue.use(VueSession)
+Vue.use(VueLocalStorage)
 Vue.use(ElementUI, {locale})
 Vue.use(VueMoment)
-Vue.use(require('vue-chartist'))
 Vue.component(components)
 Vue.component(CollapseTransition.name, CollapseTransition)
 const eventsHub = new Vue()

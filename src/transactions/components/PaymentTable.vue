@@ -2,7 +2,7 @@
     <div class="transactions">
         <div class="trans-div flex justify-content-between">
             <div>
-                <filter-component filterType="payment"></filter-component>
+                <filter-component dispatch="setTransactionsFilters" filterType="payment"></filter-component>
             </div>
             <div>
                 <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>

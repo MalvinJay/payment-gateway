@@ -121,6 +121,10 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.matched.some(record => record.meta.guest)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
+    //   next({
+    //     path: '/login',
+    //     params: { nextUrl: to.fullPath }
+    //   })
       next()
     } else {
       next({ name: 'Dashboard' })
