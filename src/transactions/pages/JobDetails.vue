@@ -9,7 +9,7 @@
         </div>
         <div v-else v-loading="loadingPage">
             <!-- BRIEF INFO -->
-            <el-card :class="{'test-data': test}" class="card-0 position-relative">
+            <el-card class="card-0 position-relative">
                 <div class="flex flex-column p-20">
                     <div class="flex justify-content-between align-items-baseline mb-1">
                     <div class="flex align-items-baseline">
@@ -36,6 +36,7 @@
                     </div>
                 </div>
             </el-card>
+
             <!-- JOB DETAILS -->
             <el-card class="my-2">
                 <div class="flex justify-content-between" slot="header">
@@ -161,8 +162,8 @@
                         </div>
                     </div>
                 </div>
-
             </el-card>
+
             <!-- JOB RUNS -->
             <el-card class="my-2">
                 <div slot="header">
@@ -193,7 +194,6 @@
                                             {{ scope.row.charged_amount | money}}
                                         </template>
                                     </el-table-column>
-                                    <!-- <el-table-column width="150" show-overflow-tooltip prop="response_message" label="remarks"></el-table-column> -->
                                     <el-table-column prop="status" label="" width="80px">
                                         <template slot-scope="scope">
                                             <div class="flex">
@@ -218,50 +218,7 @@
                     </el-table>
                 </div>
             </el-card>
-           <!-- JOB RUNS WITH ITS TRANSACTIONS -->
-            <!-- <el-card class="my-2">
-                <div slot="header">
-                    <span class="blue-text bold-600 s-16">{{header}} runs</span>
-                </div>
-                <div>
-                    <el-table highlight-current-row empty-text="No job runs to display" v-loading="loadingPage" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="runs">
-                        <el-table-column type="expand" label="run_ID">
-                            <template slot-scope="props">
-                                <p>Name: {{ props.row.receiver_name }}</p>
-                                <p>Phone Number: {{ props.row.receiver_no }}</p>
-                                <p>Amount: {{ props.row.sender_amount | money}}</p>
-                                <p>Remarks: {{ props.row.remarks }}</p>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="reference" label="reference"></el-table-column>
-                        <el-table-column prop="status" label="run_TIME">
-                            <template slot-scope="scope">
-                                <div class="flex">
-                                    <the-tag status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
-                                </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="type" label="Type">
-                            <template slot-scope="scope">
-                                <div class="flex">
-                                    <p v-if="scope.row.service_code === 'cashin'">Payout</p>
-                                    <p v-else>Payment</p>
-                                </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="date" label="Date">
-                            <template slot-scope="scope">
-                                {{scope.row.updated_at | moment("MMM Do, YYYY")}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="time" label="Time">
-                            <template slot-scope="scope">
-                                {{scope.row.updated_at | moment("hh:mm A")}}
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-            </el-card>             -->
+
             <!-- JOB CONTACTS -->
             <el-card class="my-2">
                 <div class="flex align-items-baseline justify-content-between" slot="header">
@@ -309,7 +266,6 @@ import EventBus from '../../event-bus.js'
 import Utils from '../../utils/services'
 import Job from '../models/Job.js'
 import moment from 'moment'
-import { diff } from 'semver'
 import { AWS_BUCKET } from '../store/transactions-store-constants.js'
 
 export default {
@@ -323,16 +279,19 @@ export default {
             addLoading: false,
             schedule: [],
             days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
-            field: {}
+            field: {},
+            changedFields: []
         }
     },
-    // watch: {
-    //     form (oldvalue, newValue) {
-    //         console.log('old')
-    //         var differ = diff(oldvalue, newValue)
-    //         console.log('unique', differ)
-    //     }
-    // },
+    watch: {
+        form (oldValue, newValue) {
+            
+            var fields = ['description', 'retry_limit', 'scheduled']
+            var diff = Utils.getChangedFields(newValue, fields, oldValue )
+            this.changedFields.push = diff
+            console.log('result', diff)
+        }
+    },
     mounted () {
         EventBus.$emit('sideNavClick', 'view')
         this.$store.dispatch('getJobRuns', {id: this.$route.params.id})

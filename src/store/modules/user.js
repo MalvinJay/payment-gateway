@@ -85,8 +85,8 @@ const user = {
       return new Promise((resolve, reject) => {
         var url = `https://api.flopay.io/v1/login.json`
         var params = {}
-        params.client_id = localStorage.getItem('client_id')
-        params.client_secret = localStorage.getItem('client_secret')
+        params.client_id = state.client.client_id
+        params.client_secret = state.client.client_secret
         params.grant_type = 'client_credentials'
         axios.post(url, params)
           .then((response) => {
