@@ -5,7 +5,7 @@
                 <filter-component filterType="pending"></filter-component>
             </div> -->
             <div>
-                <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Approve</el-button>
+                <el-button v-if="canApproveTransactions" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Approve</el-button>
                 <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
             </div>
         </div>
@@ -79,7 +79,7 @@ import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'QueuedTable',
+  name: 'PendingTable',
   data () {
     return {
       test: true,
@@ -117,8 +117,12 @@ export default {
     ...mapGetters({
       transactions: 'pending',
       meta: 'pendingMeta',
-      state: 'pendingState'
+      state: 'pendingState',
+      permissions: 'permissions'
     }),
+    canApproveTransactions () {
+        return this.permissions.some(el => el.code === 'approve_transaction')
+    },
     total () {
       return this.meta.trans
     },

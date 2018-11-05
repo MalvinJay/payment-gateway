@@ -37,6 +37,7 @@ const user = {
     },
     //   client data
     [SET_CLIENT] (state, data) {
+      state.permissions.data = data.client.privileges
       state.userdata = data
     },
     //   test

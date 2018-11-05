@@ -5,7 +5,7 @@
                 <filter-component dispatch="setPayoutsFilters" filterType="payouts"></filter-component>
             </div>
             <div>
-                <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
+                <el-button v-if="canMakePayouts" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
                 <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
             </div>
         </div>
@@ -130,7 +130,7 @@ import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'PaymentTable',
+  name: 'PayoutsTable',
   props: ['type'],
   data () {
     return {
@@ -234,7 +234,8 @@ export default {
       state: 'payoutsState',
       meta: 'payoutsMeta',
       providers: 'providers',
-      test: 'test'
+      test: 'test',
+      permissions: 'permissions'
     }),
     total () {
       return this.meta.trans
@@ -252,6 +253,9 @@ export default {
     },
     loading () {
       return this.state === 'LOADING'
+    },
+    canMakePayouts () {
+        return this.permissions.some(el => el.code === 'make_payout')
     }
   }
 }
