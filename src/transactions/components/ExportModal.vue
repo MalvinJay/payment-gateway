@@ -5,23 +5,42 @@
         :visible="modalVisible"
         width="35%">
         <div class="flex justify-content-center new-export-bg">
-            <el-form size="mini" class="my-2" style="width: 90%" ref="form" :model="form" label-position="top">
+            <el-form hide-required-asterisk class="transaction-form my-2" size="mini" style="width: 90%" :rules="rules" ref="form" :model="form" label-position="top">
                 <el-form-item label="Type of Transaction">
                     <div class="flex justify-content-between align-items-center">
-                        <!-- <el-checkbox-group class="flex justify-content" > -->
-                            <el-checkbox v-model="form.payment_types" @change="handleCheckedTypesChange" v-for="payment in types" :label="payment.value" :key="payment.value">{{payment.label}}</el-checkbox>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox>
-                        <!-- </el-checkbox-group> -->
+                        <el-checkbox v-model="form.payment_types" @change="handleCheckedTypesChange" v-for="payment in types" :label="payment.value" :key="payment.value">{{payment.label}}</el-checkbox>
+                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox>
                     </div>
                 </el-form-item>
-                <el-form-item label="Date Range">
+                <el-form-item label="Select Date">
                     <el-date-picker
-                    v-model="form.daterange"
+                    v-model="dateColumns"
                     type="daterange"
-                    :unlink-panels="true"
                     start-placeholder="Start date"
                     end-placeholder="End date">
                     </el-date-picker>
+                </el-form-item>
+                <el-form-item label="Columns">
+                    <el-select placeholder="" v-model="column">
+                        <el-option label="All" value="all"></el-option>
+                        <el-option label="Custom" value="custom"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-if="column == 'custom'" class="my-2">
+                    <el-checkbox-group v-model="fieldColumns">
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-checkbox class="no-margin-checkbox m-0" v-for="(field, index) in fieldSet.slice(0, 10)" :key="index" :label="field.key">{{field.value}}</el-checkbox>
+                        </el-col>
+                        <el-col class="flex flex-column" :span="12">
+                            <el-checkbox class="no-margin-checkbox m-0" v-for="(field, index) in fieldSet.slice(11, 20)" :key="index" :label="field.key">{{field.value}}</el-checkbox>
+                        </el-col>
+                    </el-row>
+                    </el-checkbox-group>
+                </el-form-item>
+                <el-form-item class="flex justify-content-end">
+                    <el-button @click="close">Cancel</el-button>
+                    <el-button @click="submitExport('form')" type="primary" :loading="loading">Submit</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -30,6 +49,9 @@
 
 <script>
 import EventBus from '../../event-bus.js'
+import { mapGetters } from 'vuex'
+import Utils from '../../utils/services'
+
 export default {
     name: 'ExportModal',
     props: ['modalVisible'],
@@ -43,7 +65,18 @@ export default {
         ],
         isIndeterminate: false,
         form: {
-            payment_types: []
+            payment_types: [],
+            fields: '',
+            file_type: 'csv',
+            from: '',
+            to: ''
+        },
+        loading: false,
+        column: 'all',
+        rules: {
+          payment_types: [
+            { required: true, message: 'Please select at least one option', trigger: 'change' }
+          ]
         }
       }
     },
@@ -59,7 +92,81 @@ export default {
       },
       close () {
         EventBus.$emit('exportModal', false)
+      },
+      submitExport (formName) {
+        this.loading = true
+        this.form.fields = this.column === 'all' ? this.fieldSet.map(el => el.key).join(',') : this.form.fields
+        var query = Utils.createExportQuery(this.form)
+        console.log('query', query)
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$store.dispatch('submitReport', query)
+            .then((response) => {
+                if (response.data.success) {
+                    console.log(response)
+                    this.$message({
+                        type: 'success',
+                        message: response.data.response.message,
+                    })
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.response.message
+                    })
+                }
+                this.loading = false
+            }).catch((error) => {
+                this.loading = false
+                const response = error.response
+                this.$message({
+                    message: response.data.error,
+                    type: 'error'
+                })
+            })
+          } else {
+            this.loading = false
+            this.$message({
+                message: 'Please fill the form properly',
+                type: 'error'
+            })
+            return false
+          }
+        })
       }
+    },
+    computed: {
+        ...mapGetters({
+            fields: 'fields'
+        }),
+        fieldSet () {
+            var props = Object.keys(this.fields).map(function(key) {
+                return { key: key, value: this[key] }
+            }, this.fields)
+            return props
+            // props.sort(function(p1, p2) { return p2.value - p1.value; });
+            // var topThree = props.slice(0, 3);
+        },
+        fieldColumns: {
+            get () {
+                return this.form.fields.split(',')
+            },
+            set (value) {
+                console.log('selected', value.join(','))
+                this.form.fields = value.join(',')
+            }
+        },
+        dateColumns: {
+            get () {
+                var from = this.form.from
+                var to = this.form.to
+                var arr = [from, to]
+                return arr
+            },
+            set (value) {
+                this.form.from = value[0]
+                this.form.to = value[1]
+            }
+        }
     }
 }
 </script>
@@ -75,5 +182,8 @@ export default {
 }
 .new-export-bg{
     background: #F7FAFC;
+}
+.m-0{
+    margin: 0 !important;
 }
 </style>

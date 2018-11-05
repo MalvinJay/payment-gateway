@@ -2,106 +2,105 @@ import { AUTH_REQUEST, SET_TEST, SET_TOKEN, SET_CLIENT, LOGIN, LOGOUT, SET_CLIEN
 import { apiCall } from '../apiCall'
 import axios from 'axios'
 
+const user = {
 // state
-const state = {
-  user: {
-    data: {},
-    token: localStorage.getItem('token'),
-    client_id: '',
-    client_secret: ''
+  state: {
+    user: {
+      data: {},
+      token: localStorage.getItem('token'),
+      client_id: '',
+      client_secret: ''
+    },
+    userdata: {},
+    client: {},
+    logIn: true,
+    test: false
   },
-  userdata: {},
-  client: {},
-  logIn: true,
-  test: false
-}
 
-// getters
-const getters = {
-  user: state => state.userdata,
-  token: state => state.user.token,
-  client: state => state.client,
-  test: state => state.test
-}
+  // getters
+  getters: {
+    user: state => state.userdata,
+    token: state => state.user.token,
+    client: state => state.client,
+    test: state => state.test
+  },
 
-// mutations
-const mutations = {
-  [SET_TOKEN] (state) {
-    state.logIn = true
-    state.user.token = localStorage.getItem('token')
+  // mutations
+  mutations: {
+    [SET_TOKEN] (state) {
+      state.logIn = true
+      state.user.token = localStorage.getItem('token')
+    },
+    //   client data
+    [SET_CLIENT] (state, data) {
+      state.userdata = data
+    },
+    //   test
+    [SET_TEST] (state, data) {
+      state.test = data
+    },
+    [SET_CLIENT_CRED] (state, data) {
+      state.client = data
+    },
+    [LOGOUT] (state) {
+      state.logIn = false
+      state.user.token = null
+    }
   },
-  //   client data
-  [SET_CLIENT] (state, data) {
-    state.userdata = data
-  },
-  //   test
-  [SET_TEST] (state, data) {
-    state.test = data
-  },
-  [SET_CLIENT_CRED] (state, data) {
-    state.client = data
-  },
-  [LOGOUT] (state) {
-    state.logIn = false
-    state.user.token = null
+
+  // actions
+  actions: {
+    [LOGIN] ({ state, commit }, {email, password}) {
+      return new Promise((resolve, reject) => {
+        var url = `https://api.flopay.io/v1/flopay_client_login.json?email=${email}&password=${password}`
+        localStorage.setItem('password', password)
+        axios.post(url)
+          .then((response) => {
+            console.log('response', response)
+            commit(SET_CLIENT, response.data.response.data.client)
+            localStorage.setItem('name', response.data.response.data.client.full_name)
+            localStorage.setItem('company', response.data.response.data.client.company_name)
+            localStorage.setItem('email', response.data.response.data.client.email)
+            localStorage.setItem('balance', response.data.response.data.available_balance)
+            commit(SET_CLIENT_CRED, response.data.response.data.access_key)
+            localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
+            localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
+            resolve(response)
+          }).catch((error) => {
+            console.log(error)
+            reject(error)
+          })
+      })
+    },
+    [AUTH_REQUEST] ({ state, commit }) {
+      return new Promise((resolve, reject) => {
+        var url = `https://api.flopay.io/v1/login.json`
+        var params = {}
+        params.client_id = localStorage.getItem('client_id')
+        params.client_secret = localStorage.getItem('client_secret')
+        params.grant_type = 'client_credentials'
+        axios.post(url, params)
+          .then((response) => {
+            console.log('user token', response)
+            localStorage.setItem('token', response.data.access_token)
+            commit(SET_TOKEN, response.data.access_token)
+            resolve(response)
+          }).catch((error) => {
+            console.log(error)
+            reject(error)
+          })
+      })
+    },
+    [LOGOUT] ({ state, commit }) {
+      return new Promise((resolve, reject) => {
+        commit(LOGOUT)
+        localStorage.removeItem('token') // clear your user's token from localstorage
+        resolve()
+      })
+    },
+    [SET_TEST] ({ commit }, data) {
+      commit(SET_TEST, data)
+    }
   }
 }
-
-// actions
-const actions = {
-  [LOGIN] ({ state, commit }, {email, password}) {
-    return new Promise((resolve, reject) => {
-      var url = `https://api.flopay.io/v1/flopay_client_login.json?email=${email}&password=${password}`
-      axios.post(url)
-        .then((response) => {
-          console.log('response', response)
-          commit(SET_CLIENT, response.data.response.data.client)
-          localStorage.setItem('name', response.data.response.data.client.full_name)
-          localStorage.setItem('company', response.data.response.data.client.company_name)
-          commit(SET_CLIENT_CRED, response.data.response.data.access_key)
-          localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
-          localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
-          resolve(response)
-        }).catch((error) => {
-          console.log(error)
-          reject(error)
-        })
-    })
-  },
-  [AUTH_REQUEST] ({ state, commit }) {
-    return new Promise((resolve, reject) => {
-      var url = `https://api.flopay.io/v1/login.json`
-      var params = {}
-      params.client_id = localStorage.getItem('client_id')
-      params.client_secret = localStorage.getItem('client_secret')
-      params.grant_type = 'client_credentials'
-      axios.post(url, params)
-        .then((response) => {
-          console.log('user token', response)
-          localStorage.setItem('token', response.data.access_token)
-          commit(SET_TOKEN, response.data.access_token)
-          resolve(response)
-        }).catch((error) => {
-          console.log(error)
-          reject(error)
-        })
-    })
-  },
-  [LOGOUT] ({ state, commit }) {
-    return new Promise((resolve, reject) => {
-      commit(LOGOUT)
-      localStorage.removeItem('token') // clear your user's token from localstorage
-      resolve()
-    })
-  },
-  [SET_TEST] ({ commit }, data) {
-    commit(SET_TEST, data)
-  }
-}
-
-export default {
-  state,
-  getters,
-  actions,
-  mutations
-}
+export default user

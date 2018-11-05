@@ -1,4 +1,37 @@
 export default {
+  createExportQuery (form) {
+    var query = 'file_type=csv'
+    if (this.present(form.from)) {
+      query = query += `&start_date=${form.from}`
+    }
+    if (this.present(form.to)) {
+      query = query += `&end_date=${form.to}`
+    }
+    if (this.present(form.fields)) {
+      if (form.fields.length === 1) {
+        query = query += `&fields[]=${form.fields}`
+      } else {
+        var q = form.fields.split(',')
+        q.forEach(element => {
+          query = query += `&fields[]=${element}`
+        })
+      }
+    //   query = query += `&fields[]=${form.fields}`
+    }
+    if (this.present(form.payment_types)) {
+      if (form.payment_types.length === 1) {
+        query = query += `&payment_types[]=${form.payment_types}`
+      } else {
+        var w = form.payment_types
+        w.forEach(element => {
+          query = query += `&payment_types[]=${element}`
+        })
+      }
+
+    //   query = query += `&payment_types[]=${form.payment_types.join(',')}`
+    }
+    return query
+  },
   createQueryParams (filters, page = 1) {
     var query = `?page=${page}&limit=10`
     if (this.present(filters)) {
@@ -73,6 +106,10 @@ export default {
   },
   sum (arr) {
     return arr.reduce((sum, x) => sum + x)
+  },
+  addContactToJobQuery (batch) {
+    var query = `batch_details[Key]=${batch.Key}&batch_details[Bucket]=flopay-batchstore`
+    return query
   },
   createJobQuery (schedule, job) {
     var newString = schedule

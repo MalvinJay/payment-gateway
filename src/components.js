@@ -13,6 +13,7 @@ import JobTable from '@/transactions/components/JobTable'
 import FilterComponent from '@/transactions/components/FilterComponent'
 import ExportModal from './transactions/components/ExportModal'
 import Avatar from '@/components/Avatar'
+const TicketModal = () => import('./transactions/components/TicketModal')
 
 Vue.component('side-nav', SideNav)
 Vue.component('the-header', Header)
@@ -27,6 +28,7 @@ Vue.component('payouts-table', PayoutsTable)
 Vue.component('job-table', JobTable)
 Vue.component('filter-component', FilterComponent)
 Vue.component('export-modal', ExportModal)
+Vue.component('ticket-modal', TicketModal)
 Vue.component('avatar', Avatar)
 
 export default {
@@ -40,6 +42,7 @@ export default {
   PaymentTable: PaymentTable,
   PendingTable: PendingTable,
   ExportModal: ExportModal,
+  TicketModal: TicketModal,
   JobTable: JobTable,
   QueuedTable: QueuedTable,
   PayoutsTable: PayoutsTable,

@@ -1,8 +1,8 @@
 import { TRANSACTION_CREATE, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SEARCH_TRANSACTIONS,
-  TRANSACTIONS_FETCH, SET_CURRENT_TRANSACTION_STATE,
+  TRANSACTIONS_FETCH, SET_CURRENT_TRANSACTION_STATE, GET_BASE_URI,
   SET_TRANSACTIONS_STATE, GET_QUEUE, SET_QUEUE, SET_QUEUE_STATE, SET_QUEUE_FILTERS, SET_QUEUE_META, SET_CURRENT_TRANSACTION,
   SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, SET_PENDING_STATE, SET_PENDING_META, GET_CURRENT_TRANSACTION,
-  GET_TRANSACTIONS_URI } from './transactions-store-constants'
+  GET_TRANSACTIONS_URI, CREATE_TICKET } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 
@@ -301,7 +301,25 @@ const actions = {
         reject(error)
       })
     })
+  },
+  [CREATE_TICKET] ({ commit, rootGetters }, ticket) {
+    console.log('ticket', ticket)
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/clients/tickets/via/support`,
+        method: 'POST',
+        token: rootGetters.token,
+        data: ticket
+      }).then((response) => {
+        console.log('trans', response)
+        resolve(response)
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
   }
+
 }
 
 export default {

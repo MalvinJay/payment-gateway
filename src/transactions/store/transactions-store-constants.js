@@ -10,11 +10,14 @@ export const SET_CURRENT_TRANSACTION = 'setCurrentTransaction'
 export const SET_CURRENT_TRANSACTION_STATE = 'setCurrentTransactionState'
 
 export const GET_TRANSACTIONS_URI = 'https://api.flopay.io/v2/transactions.json'
+export const GET_BASE_URI = 'https://api.flopay.io/'
 
 // reports
 export const GET_FIELDS = 'getFields'
 export const SET_FIELDS = 'setFields'
 export const SET_FIELDS_STATE = 'setFieldsState'
+export const SUBMIT_REPORT = 'submitReport'
+export const DOWNLOAD_REPORT = 'downloadReport'
 
 // payouts
 export const PAYOUTS_FETCH = 'getPayouts'
@@ -61,7 +64,7 @@ export const SET_QUEUE_STATE = 'setQueueState'
 export const SET_QUEUE_FILTERS = 'setQueueFilters'
 export const SET_QUEUE_META = 'setQueueMeta'
 
-//  QUEUED
+//  PENDING
 export const GET_PENDING = 'getPending'
 export const SET_PENDING = 'setPending'
 export const SET_PENDING_STATE = 'setPendingState'
@@ -70,3 +73,6 @@ export const SET_PENDING_META = 'setPendingMeta'
 
 // SEARCH
 export const SEARCH_TRANSACTIONS = 'searchTransactions'
+
+// TICKET
+export const CREATE_TICKET = 'createTicket'
