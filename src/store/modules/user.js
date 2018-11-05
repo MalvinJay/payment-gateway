@@ -115,9 +115,8 @@ const user = {
       return new Promise((resolve, reject) => {
         commit(LOGOUT)
         localStorage.removeItem('token') // clear your user's token from localstorage
-        localStorage.removeItem('client_id')
-        localStorage.removeItem('client_secret')
-
+        // localStorage.removeItem('client_id')
+        // localStorage.removeItem('client_secret')
         resolve()
       })
     },
