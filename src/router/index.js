@@ -128,6 +128,7 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
+    //   console.log('app stat', !this.a.app.$session.exists())
       store.dispatch('getToken')
       next()
     }
