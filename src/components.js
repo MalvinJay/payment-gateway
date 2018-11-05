@@ -13,6 +13,7 @@ import JobTable from '@/transactions/components/JobTable'
 import FilterComponent from '@/transactions/components/FilterComponent'
 import ExportModal from './transactions/components/ExportModal'
 import Avatar from '@/components/Avatar'
+import ChargesTable from '@/accounts/components/ChargesTable'
 
 Vue.component('side-nav', SideNav)
 Vue.component('the-header', Header)
@@ -28,6 +29,7 @@ Vue.component('job-table', JobTable)
 Vue.component('filter-component', FilterComponent)
 Vue.component('export-modal', ExportModal)
 Vue.component('avatar', Avatar)
+Vue.component('charges-table', ChargesTable)
 
 export default {
   SideNav: SideNav,
@@ -41,6 +43,7 @@ export default {
   PendingTable: PendingTable,
   ExportModal: ExportModal,
   JobTable: JobTable,
+  ChargesTable: ChargesTable,
   QueuedTable: QueuedTable,
   PayoutsTable: PayoutsTable,
   Avatar: Avatar

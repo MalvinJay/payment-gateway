@@ -72,6 +72,10 @@ button{
     justify-content: space-between
 }
 
+.justify-content-around{
+    justify-content: space-around
+}
+
 .justify-content-end{
     justify-content: flex-end
 }
@@ -258,6 +262,9 @@ button{
 .text-center{
     text-align: center
 }
+.text-left{
+    text-align: left
+}
 // color
 .blue-text{
     color: $blue !important;
@@ -298,7 +305,6 @@ button{
 .bold-600{
     font-weight: 600 !important;
 }
-
 .bold-500{
     font-weight: 500 !important;
 }
@@ -324,10 +330,9 @@ button{
     font-size: 12px !important
 }
 
-.cursor{
+.cursor {
     cursor: pointer;
 }
-
 
 // general formatting
 .table-dropdown-header{
@@ -342,4 +347,13 @@ button{
 
 .position-absolute{
     position: absolute;
+}
+
+//scrollbar formatting
+::-webkit-scrollbar {
+    width: 4px!important;
+
+    &::hover {
+        width: 10px!important;
+    }
 }

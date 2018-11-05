@@ -6,6 +6,8 @@ import Login from '@/pages/Login'
 import NotFound from '@/pages/NotFound'
 import Dashboard from '@/dashboard/pages/Dashboard'
 import ViewTransactions from '../transactions/pages/ViewTransactions'
+import Fees from '../accounts/pages/Fees'
+import FeesDetail from '../accounts/pages/FeesDetail'
 // import Payouts from '../transactions/pages/Payouts'
 import PaymentDetail from '../transactions/pages/PaymentDetail'
 // import Customers from '../contacts/pages/Customers'
@@ -69,10 +71,20 @@ let router = new Router({
           component: PaymentDetail
         },
         {
+          path: '/fees',
+          name: 'Fees',
+          component: Fees
+        },       
+        {
           path: '/logs',
           name: 'Logs',
           component: Logs
         },
+        {
+          path: '/fees/:id',
+          name: 'FeesDetails',
+          component: FeesDetail
+        },         
         {
           path: '/settings',
           name: 'Settings',

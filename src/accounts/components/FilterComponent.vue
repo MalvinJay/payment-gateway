@@ -8,70 +8,61 @@
                 <p class="p-0 m-0 blue-text">Filters</p>
                 <el-button size="mini" @click="createFilters" type="primary" class="s-13 open-sans filter-button b-0">Done</el-button>
             </div>
-
             <el-dropdown-item>
-                <el-checkbox class="mr-10" v-model="date"></el-checkbox> Date
-            </el-dropdown-item>
-            <el-collapse-transition>
-                <div class="filter-bg" v-show="date">
-                    <div class="flex align-items-center">
-                        <el-date-picker class="filter-input blue-text mr-10"
-                            v-model="filters.from"
-                            type="date"
-                            placeholder="From.."
-                            @change="keepVisible"
-                            @focus="keepVisible"
-                            @blur="keepVisible"
-                            value-format="yyyy-MM-dd"
-                            format="MMM dd, yyyy">
-                        </el-date-picker>
-                        <el-date-picker class="filter-input"
-                            v-model="filters.to"
-                            type="date"
-                            @change="keepVisible"
-                            @focus="keepVisible"
-                            @blur="keepVisible"
-                            placeholder="To.."
-                            value-format="yyyy-MM-dd"
-                            format="MMM dd, yyyy">
-                        </el-date-picker>
+                <el-checkbox class="mr-10" v-model="date"></el-checkbox> Date</el-dropdown-item>
+                <el-collapse-transition>
+                    <div class="filter-bg" v-show="date">
+                        <div class="flex align-items-center">
+                            <el-date-picker class="filter-input blue-text mr-10"
+                                v-model="filters.from"
+                                type="date"
+                                placeholder="From.."
+                                @change="keepVisible"
+                                @focus="keepVisible"
+                                @blur="keepVisible"
+                                value-format="yyyy-MM-dd"
+                                format="MMM dd, yyyy">
+                                </el-date-picker>
+                            <el-date-picker class="filter-input"
+                                v-model="filters.to"
+                                type="date"
+                                @change="keepVisible"
+                                @focus="keepVisible"
+                                @blur="keepVisible"
+                                placeholder="To.."
+                                value-format="yyyy-MM-dd"
+                                format="MMM dd, yyyy">
+                                </el-date-picker>
+                        </div>
                     </div>
-                </div>
-            </el-collapse-transition>
-
-            <el-dropdown-item v-if="showStatus" divided>
-                <el-checkbox class="mr-10" v-model="status"></el-checkbox> Status
-            </el-dropdown-item>
-            <el-collapse-transition>
-                <div class="filter-bg" v-show="status">
-                    <el-select size="mini" v-model="filters.statuses" @remove-tag="removeAll" @change="statusClick" multiple collapse-tags placeholder="Select Status">
-                        <el-option
-                        v-for="item in stati"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-            </el-collapse-transition>
-
-            <el-dropdown-item divided>
-                <el-checkbox class="mr-10" v-model="type"></el-checkbox> Payment Type
-            </el-dropdown-item>
-            <el-collapse-transition>
-                <div class="filter-bg" v-show="type">
-                    <el-select size="mini" v-model="filters.payment_types" @remove-tag="removeAllTypes" @change="typeClick" multiple collapse-tags placeholder="Select Type">
-                        <el-option
-                        v-for="item in types"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
-            </el-collapse-transition>
-
-        </el-dropdown-menu>
+                </el-collapse-transition>
+                <el-dropdown-item v-if="showStatus" divided><el-checkbox class="mr-10" v-model="status"></el-checkbox> Status</el-dropdown-item>
+                <el-collapse-transition>
+                    <div class="filter-bg" v-show="status">
+                        <el-select size="mini" v-model="filters.statuses" @remove-tag="removeAll" @change="statusClick" multiple collapse-tags placeholder="Select Status">
+                            <el-option
+                            v-for="item in stati"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </el-collapse-transition>
+                <el-dropdown-item divided><el-checkbox class="mr-10" v-model="type"></el-checkbox> Payment Type</el-dropdown-item>
+                <el-collapse-transition>
+                    <div class="filter-bg" v-show="type">
+                        <el-select size="mini" v-model="filters.payment_types" @remove-tag="removeAllTypes" @change="typeClick" multiple collapse-tags placeholder="Select Type">
+                            <el-option
+                            v-for="item in types"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </el-collapse-transition>
+                </el-dropdown-menu>
     </el-dropdown>
 </template>
 
@@ -111,7 +102,6 @@ export default {
         createFilters () {
             this.$refs.messageDrop.hide()
             this.count = this.size(this.filterType)
-            
             if (this.filterType === 'queue') {
                 // this.filters.statuses = 'queued'
                 this.$store.dispatch('setQueueFilters', this.filters)

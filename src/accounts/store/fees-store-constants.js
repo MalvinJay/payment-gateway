@@ -1,0 +1,10 @@
+// fees
+export const FEES_FETCH = 'getFees'
+export const SET_FEES = 'setFees'
+export const SET_FEES_STATE = 'setFeesState'
+export const SET_FEES_META = 'setFeesMeta'
+export const SET_FEES_FILTERS = 'setFeesFilters'
+export const GET_CURRENT_FEE = 'getCurrentFee'
+export const SET_CURRENT_FEE = 'setCurrentFee'
+export const SET_CURRENT_FEES_STATE = 'setCurrentFeesState'
+export const GET_FEES_URI = 'https://api.flopay.io/v2/transactions.json'

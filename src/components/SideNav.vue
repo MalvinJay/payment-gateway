@@ -41,7 +41,7 @@
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/balance.svg" alt="">Account
                 </template>
-                <el-menu-item index="3-1">Transactions</el-menu-item>
+                <el-menu-item route="/fees" index="fees">Fees</el-menu-item>
                 <el-menu-item index="3-2">Topups</el-menu-item>
                 <el-menu-item index="3-3">Settlements</el-menu-item>
                 <el-menu-item index="3-4">Settings</el-menu-item>
@@ -85,12 +85,22 @@
                 <el-menu-item index="8-3">Logs</el-menu-item>
                 <el-menu-item index="8-4">Settings</el-menu-item>
             </el-submenu>
-            <el-menu-item index="9">
+            <el-submenu ref="sideMenu" index="9">
                 <template slot="title">
-                    <img class="mr-10" src="../assets/images/icons/business-settings.svg" alt="">
-                    Business
+                    <img class="mr-10" src="../assets/images/icons/business-settings.svg" alt=""> Business Settings
                 </template>
-            </el-menu-item>
+                <el-menu-item index="8-1">Verifications</el-menu-item>
+                <el-menu-item index="8-2">Tax details</el-menu-item>
+                <el-menu-item index="8-3">Team</el-menu-item>
+                <el-menu-item index="8-4">Roles</el-menu-item>   
+                <el-menu-item index="8-5">Integration</el-menu-item>    
+                <el-menu-item index="8-6">Relay</el-menu-item>    
+                <el-menu-item index="8-7">Authorized apps</el-menu-item>
+                <el-menu-item index="8-8">Data</el-menu-item>
+                <el-menu-item index="8-9">Customer emails</el-menu-item>
+                <el-menu-item index="8-10">Documents</el-menu-item>
+                <el-menu-item index="8-11">Security history</el-menu-item>
+            </el-submenu>
         </el-menu>
     </div>
 </template>

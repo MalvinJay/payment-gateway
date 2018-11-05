@@ -6,6 +6,7 @@ import dashboard from '../dashboard/dashboard-store'
 import jobs from '../transactions/store/jobs-store'
 import payouts from '../transactions/store/payouts-store'
 import reports from '../transactions/store/reports-store'
+import fees from '../accounts/store/fees-store'
 import contacts from '../contacts/contacts-store'
 import user from './modules/user'
 
@@ -21,6 +22,7 @@ export default new Vuex.Store({
     jobs,
     dashboard,
     contacts,
+    fees,
     payouts,
     reports
   }
