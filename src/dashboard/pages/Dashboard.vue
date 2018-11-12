@@ -71,7 +71,6 @@
                     <p class="light-blue-text s-16 bold-600">{{grossVolume | money}}</p>
                 </div>
                 <div style="height: 88px" class="w-50">
-                    <!-- <canvas ref="dashline"></canvas> -->
                     <line-chart id="line-chart" :data="chartData" :labels="chartOptions"></line-chart>
                 </div>
             </div>
@@ -89,7 +88,6 @@
                     <p class="light-blue-text s-16 bold-600">{{depositVolume | money}}</p>
                 </div>
                 <div style="height: 88px" class="w-50">
-                    <!-- <canvas ref="dashline"></canvas> -->
                     <line-chart id="deposit" :data="chartDataDep" :labels="chartOptions"></line-chart>
                 </div>
             </div>
@@ -102,13 +100,11 @@
                             trigger="hover"
                             content="Lorem">
                             <el-button class="p-0" slot="reference" icon="info circle icon" type="text"></el-button>
-                            <!-- <i slot="reference" class="el-icon-info"></i> -->
                         </el-popover>
                     </div>
                     <p class="light-blue-text s-16 bold-600">{{withVolume | money}}</p>
                 </div>
                 <div style="height: 88px" class="w-50">
-                    <!-- <canvas ref="dashline"></canvas> -->
                     <line-chart id="with" :data="chartDataWith" :labels="chartOptions"></line-chart>
                 </div>
             </div>
@@ -300,6 +296,7 @@ export default {
         }
     },
     pageLoading () {
+        console.log('state', this.state)
         return this.state === 'LOADING'
     },
     days () {

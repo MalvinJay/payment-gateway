@@ -4,7 +4,13 @@
             <el-card class="navigation-card card-0">
                 <div class="flex align-items-center">
                     <avatar :size="25" username="Flopay" backgroundColor="#f7921e"></avatar>
-                    <p class="text-uppercase s-18 blue-text p-0 m-0 bold-500">Flopay</p>                
+                    <el-popover
+                        placement="top-start"
+                        width="200"
+                        trigger="hover"
+                        :content="user.client.company_name">
+                        <p slot="reference" class="text-uppercase s-18 blue-text p-0 m-0 bold-500 client_name">{{user.client.company_name}}</p>                
+                    </el-popover>
                 </div>
             </el-card>
             <!-- <div class="ui card z-depth navigation-card"> -->
@@ -32,7 +38,7 @@
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/payment.svg" alt="">Transactions
                 </template>
-                <el-menu-item route="/view" index="view">Payments</el-menu-item>
+                <el-menu-item route="/payments" index="payments">Payments</el-menu-item>
                 <el-menu-item route="/payouts" index="payouts">Payouts</el-menu-item>
                 <el-menu-item index="2-3">Disputes</el-menu-item>
                 <el-menu-item index="2-4">Settings</el-menu-item>
@@ -97,6 +103,7 @@
 
 <script>
 import EventBus from '../event-bus.js'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'SideNav',
@@ -115,6 +122,11 @@ export default {
     updateNav (payload) {
       this.defaultActive = payload
     }
+  },
+  computed: {
+    ...mapGetters({
+        user: 'user'
+    })
   }
 }
 </script>
@@ -157,5 +169,12 @@ export default {
     width: 80%;
     padding: 5px 15px;
     // height: 80px;
+}
+.client_name{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100px;
+    display: block;
+    overflow: hidden
 }
 </style>

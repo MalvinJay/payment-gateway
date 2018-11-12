@@ -39,7 +39,7 @@ let router = new Router({
           component: Dashboard
         },
         {
-          path: '/view',
+          path: '/payments',
           name: 'ViewTransactions',
           component: ViewTransactions
         },
@@ -64,7 +64,7 @@ let router = new Router({
           component: Payouts
         },
         {
-          path: '/view/:id',
+          path: '/payments/:id',
           name: 'ViewTransactionsDetails',
           component: PaymentDetail
         },

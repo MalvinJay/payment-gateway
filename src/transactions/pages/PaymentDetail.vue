@@ -108,7 +108,7 @@ export default {
 
     },
     created () {
-        // EventBus.$emit('sideNavClick', 'view')
+        // EventBus.$emit('sideNavClick', 'payments')
     },
     methods: {
         fetchTransactions () {
@@ -119,7 +119,7 @@ export default {
         if (this.header === 'Payout') {
             EventBus.$emit('sideNavClick', 'payouts')
         } else {
-            EventBus.$emit('sideNavClick', 'view')
+            EventBus.$emit('sideNavClick', 'payments')
         }
         this.$store.dispatch('getCurrentTransaction', this.$route.params.id)
     },

@@ -1,4 +1,5 @@
 import { AUTH_REQUEST, SET_TEST, SET_TOKEN, SET_CLIENT, SET_PERMISSIONS, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
+import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../apiCall'
 import axios from 'axios'
 
@@ -72,7 +73,7 @@ const user = {
   actions: {
     [LOGIN] ({ state, commit }, {email, password}) {
       return new Promise((resolve, reject) => {
-        var url = `https://api.flopay.io/v1/flopay_client_login.json?email=${email}&password=${password}`
+        var url = `${GET_BASE_URI}/v1/flopay_client_login.json?email=${email}&password=${password}`
         localStorage.setItem('password', password)
         axios.post(url)
           .then((response) => {
@@ -94,11 +95,16 @@ const user = {
     },
     [AUTH_REQUEST] ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        var url = `https://api.flopay.io/v1/login.json`
+        var url = `${GET_BASE_URI}/v1/login.json`
+        // var params = {
+        //   ...state.client,
+        //   grant_type: 'client_credentials'
+        // }
         var params = {}
-        params.client_id = state.client.client_id
-        params.client_secret = state.client.client_secret
+        params.client_id = 'defb88495e0eb3f9b625716ed4470b574097a88812d1b6ac49f6580a16f7e492'
+        params.client_secret = '5246712000ae13015390fcc740ae35afbf6ac4f5dcd9cdcf47710c22b2351c01'
         params.grant_type = 'client_credentials'
+        console.log('params', params)
         axios.post(url, params)
           .then((response) => {
             console.log('user token', response)

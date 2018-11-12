@@ -219,7 +219,7 @@ export default {
     },
     methods: {
         cancel () {
-            this.$router.push('/view')
+            this.$router.push('/payments')
         },
         save (formName) {
             this.loading = true
@@ -256,7 +256,7 @@ export default {
                             })
                             this.$store.dispatch('getJobs', {cache: false})
                             EventBus.$emit('tabNumber', '3')
-                            this.$router.push('/view')
+                            this.$router.push('/payments')
                         } else {
                             this.$message({
                                 type: 'error',
@@ -290,7 +290,7 @@ export default {
         }
     },
     mounted () {
-        EventBus.$emit('sideNavClick', 'view')
+        EventBus.$emit('sideNavClick', 'payments')
     }
 }
 </script>

@@ -1,5 +1,5 @@
 import { GET_CONTACTS, SET_CONTACTS_STATE, GET_CURRENT_CONTACT, SET_CURRENT_CONTACT, SET_CURRENT_CONTACT_STATE,
-  CREATE_CONTACT, SET_CURRENT_CONTACTS, GET_CONTACTS_URI, SET_CONTACTS } from './contacts-store-constants'
+  CREATE_CONTACT, SET_CURRENT_CONTACTS, SET_CURRENT_CONTACT_SCHEDULES, SET_CURRENT_CONTACT_TRANSACTIONS, GET_CONTACTS_URI, SET_CONTACTS } from './contacts-store-constants'
 import { apiCall } from '../store/apiCall'
 // import Utils from '../utils/Utils'
 
@@ -15,6 +15,8 @@ const state = {
   },
   currentContact: {
     data: {},
+    schedules: [],
+    transactions: [],
     state: 'LOADING'
   }
 }
@@ -26,6 +28,8 @@ const getters = {
   contactsCount: state => state.contacts.count,
   currentContacts: state => state.currentContacts.data,
   currentContact: state => state.currentContact.data,
+  currentContactSchedules: state => state.currentContact.schedules,
+  currentContactTransactions: state => state.currentContact.transactions,
   currentContactState: state => state.currentContact.state
 }
 
@@ -40,6 +44,8 @@ const mutations = {
     //     contacts.push(el)
     //   })
     // })
+    // var contacts = Object.values(payload.reduce((acc, cur) => Object.assign(acc, {[cur.name]: cur}), {}))
+    // console.log('payload contact', contacts)
     state.contacts.count = payload.length
     state.contacts.data = payload
   },
@@ -57,6 +63,12 @@ const mutations = {
   },
   [SET_CURRENT_CONTACT] (state, data) {
     state.currentContact.data = data
+  },
+  [SET_CURRENT_CONTACT_SCHEDULES] (state, data) {
+    state.currentContact.schedules = data
+  },
+  [SET_CURRENT_CONTACT_TRANSACTIONS] (state, data) {
+    state.currentContact.transactions = data
   },
   [SET_CURRENT_CONTACT_STATE] (state, data) {
     state.currentContact.state = data
@@ -77,8 +89,8 @@ const actions = {
           token: rootGetters.token
         }).then((response) => {
           commit(SET_CONTACTS_STATE, 'DATA')
-          console.log('conatc', response.data)
           commit(SET_CONTACTS, response.data.response.data.contacts)
+          //   state.contacts.count = response.data.response.data.contacts_total
           commit(SET_CURRENT_CONTACTS, {payload: state.contacts.data, page: 1})
           resolve()
         }).catch((error) => {
@@ -127,6 +139,8 @@ const actions = {
       }).then((response) => {
         commit(SET_CURRENT_CONTACT_STATE, 'DATA')
         commit(SET_CURRENT_CONTACT, response.data.response.data)
+        dispatch(SET_CURRENT_CONTACT_SCHEDULES, {contacts: response.data.response.data.schedules})
+        dispatch(SET_CURRENT_CONTACT_TRANSACTIONS, {contacts: response.data.response.data.executed_transactions})
         resolve()
       }).catch((error) => {
         commit(SET_CURRENT_CONTACT_STATE, 'ERROR')
@@ -134,6 +148,18 @@ const actions = {
         reject(error)
       })
     })
+  },
+  [SET_CURRENT_CONTACT_SCHEDULES] ({ state, commit }, { page = 1, contacts = state.currentContact.data.schedules } = {}) {
+    var items = contacts.slice((page * 10) - 10, page * 10).map(i => {
+      return i
+    })
+    commit(SET_CURRENT_CONTACT_SCHEDULES, items)
+  },
+  [SET_CURRENT_CONTACT_TRANSACTIONS] ({ state, commit }, { page = 1, contacts = state.currentContact.data.executed_transactions } = {}) {
+    var items = contacts.slice((page * 10) - 10, page * 10).map(i => {
+      return i
+    })
+    commit(SET_CURRENT_CONTACT_TRANSACTIONS, items)
   }
 }
 

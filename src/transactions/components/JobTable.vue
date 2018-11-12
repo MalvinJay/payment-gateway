@@ -120,7 +120,7 @@ export default {
     this.$store.dispatch('getJobs')
   },
   mounted () {
-    EventBus.$emit('sideNavClick', 'view')
+    EventBus.$emit('sideNavClick', 'payments')
   },
   methods: {
     handleCurrentChange (val) {

@@ -19,7 +19,7 @@
             <div v-else>
                 <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
                     <el-table-column type="selection" width="55"></el-table-column>
-                    <el-table-column label="Amount" width="100">
+                    <el-table-column prop="amount" label="Amount" width="100">
                         <template slot-scope="scope">
                             <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.receiver_amount | money}}</p>
                         </template>
@@ -166,7 +166,7 @@ export default {
     this.$store.dispatch('getTransactions')
   },
   mounted () {
-    EventBus.$emit('sideNavClick', 'view')
+    EventBus.$emit('sideNavClick', 'payments')
     EventBus.$on('exportModal', (val) => {
         this.exportVisible = false
     })
@@ -176,8 +176,9 @@ export default {
   },
   methods: {
     clickRow (row, event, column) {
+        console.log('row', column)
         if (column.property) {
-            this.$router.push(`/view/${row.reference}`)
+            this.$router.push(`/payments/${row.reference}`)
         }
     },
     handleCurrentChange (val) {
@@ -189,7 +190,7 @@ export default {
     handleTableCommand (command, row) {
         switch (command) {
             case 'edit':
-                this.$router.push(`view/${row.id}`)
+                this.$router.push(`payments/${row.id}`)
                 break
             case 'open':
                 this.ticketVisible = true

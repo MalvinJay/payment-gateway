@@ -61,7 +61,7 @@ export default {
         this.loading = 'el-icon-loading'
         this.$store.dispatch('searchTransactions', {search: this.search})
         .then(() => {
-            this.$router.push('/view')
+            this.$router.push('/payments')
             this.loading = 'el-icon-search'
         })
     },

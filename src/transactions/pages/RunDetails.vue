@@ -116,10 +116,10 @@ export default {
         },
     },
     created () {
-        // EventBus.$emit('sideNavClick', 'view')
+        // EventBus.$emit('sideNavClick', 'payments')
     },
     mounted () {
-        EventBus.$emit('sideNavClick', 'view')
+        EventBus.$emit('sideNavClick', 'payments')
         this.$store.dispatch('getCurrentRun', this.$route.params.id)
     },
     computed: {

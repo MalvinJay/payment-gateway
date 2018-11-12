@@ -11,8 +11,8 @@ $orange: #f7921e;
 $flopay: #67aee6;
 
 body{
-    // font-family: "Open Sans";
-    font-family: 'Varela Round', sans-serif;
+    font-family: "Open Sans";
+    // font-family: 'Varela Round', sans-serif;
     background: $background;
     background-image: url('../images/BG.png');
     background-repeat: no-repeat;
@@ -20,16 +20,16 @@ body{
     background-origin: center; 
 }
 input{
-    font-family: 'Varela Round', sans-serif !important;
+    font-family: 'Open Sans', sans-serif !important;
 }
 *{
     outline: 0;
 }
 .open-sans{
-    font-family: "Varela Round", sans-serif !important;
+    font-family: "Open Sans", sans-serif !important;
 }
 button{
-    font-family: "Varela Round" !important;
+    font-family: "Open Sans" !important;
 }
 
 .mono{

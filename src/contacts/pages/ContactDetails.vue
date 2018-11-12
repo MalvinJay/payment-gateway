@@ -7,7 +7,7 @@
                 <el-button @click.prevent="fetchTransactions" icon="sync icon" type="text">Retry</el-button>
             </div>
         </div>
-        <!-- LOADING AND NOT ERRO -->
+        <!-- LOADING AND NOT ERROR -->
         <div v-else v-loading="loadingPage">
             <!-- Name Card -->
             <el-card :class="{'test-data': test}" class="card-0">
@@ -109,13 +109,15 @@
                     <el-button @click="update" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" size="mini" type="primary">Save</el-button>
                 </div>
             </el-card>
+            <!-- SCHEDULES -->
             <el-card class="my-2">
                 <div slot="header">
                     <div class="flex">
                         <span class="blue-text bold-600 s-16">{{header}} schedules</span>
                     </div>
                 </div>
-                <el-table @row-click="clickRow" empty-text="No schedules" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="form.schedules">
+                
+                <el-table empty-text="No schedules" v-loading="loadingPage" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="schedules">
                         <el-table-column type="index"></el-table-column>
                         <el-table-column prop="service_code" label="Type">
                             <template slot-scope="scope">
@@ -136,14 +138,25 @@
                             </template>
                         </el-table-column>
                 </el-table>
+                <div class="flex justify-content-between align-items-center px-10">
+                    <div class="s-12">
+                        {{schedules.length}} results
+                    </div>
+                    <el-pagination class="my-2 flex justify-content-end"
+                        @current-change="handleScheduleChange"
+                        layout="prev, pager, next"
+                        :total="schedulesTotal">
+                    </el-pagination>
+                </div>
             </el-card>
+            <!-- TRANSACTIONS -->
             <el-card class="my-2">
                 <div slot="header">
                     <div class="flex">
                         <span class="blue-text bold-600 s-16">{{header}} transactions</span>
                     </div>
                 </div>
-                <el-table @row-click="clickRow" empty-text="No transactions" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="form.executed_transactions">
+                <el-table empty-text="No transactions" v-loading="loadingPage" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="transactions">
                     <el-table-column type="index"></el-table-column>
                     <el-table-column prop="service_code" label="Type" width="100">
                         <template slot-scope="scope">
@@ -151,7 +164,7 @@
                             <p v-else>payment</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="status" label="" width="80">
+                    <el-table-column prop="status" label="" width="">
                         <template slot-scope="scope">
                             <div class="flex">
                                 <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
@@ -182,6 +195,16 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <div class="flex justify-content-between align-items-center px-10">
+                    <div class="s-12">
+                        {{transactions.length}} results
+                    </div>
+                    <el-pagination class="my-2 flex justify-content-end"
+                        @current-change="handleTransactionsChange"
+                        layout="prev, pager, next"
+                        :total="transactionsTotal">
+                    </el-pagination>
+                </div>
             </el-card>
         </div>
     </div>
@@ -202,12 +225,15 @@ export default {
             page: this.$route.path
         }
     },
-    watch: {
-
-    },
     methods: {
         toggleReadonly () {
             this.readonly = !this.readonly
+        },
+        handleScheduleChange (val) {
+            this.$store.dispatch('setCurrentContactSchedules', {page: val})
+        },
+        handleTransactionsChange (val) {
+            this.$store.dispatch('setCurrentContactTransactions', {page: val})
         },
         cancel () {
             this.readonly = true
@@ -220,7 +246,7 @@ export default {
         }
     },
     created () {
-        // EventBus.$emit('sideNavClick', 'view')
+        // EventBus.$emit('sideNavClick', 'payments')
     },
     mounted () {
         EventBus.$emit('sideNavClick', 'contacts')
@@ -229,13 +255,24 @@ export default {
     computed: {
         ...mapGetters({
             form: 'currentContact',
-            state: 'currentContactState'
+            state: 'currentContactState',
+            schedules: 'currentContactSchedules',
+            transactions: 'currentContactTransactions'
         }),
         loadingPage () {
             return this.state === 'LOADING'
         },
         success () {
             return this.status === 'paid'
+        },
+        schedulesTotal () {
+           return this.form.schedules.length 
+        },
+        transactionsTotal () {
+           return this.form.executed_transactions.length 
+        },
+        error () {
+            return this.state === 'ERROR'
         },
         data () {
             var symbol = '\u20B5'

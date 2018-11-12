@@ -108,12 +108,12 @@ export default {
     }
   },
   mounted () {
-    EventBus.$emit('sideNavClick', 'view')
+    EventBus.$emit('sideNavClick', 'payments')
   },
   methods: {
     clickRow (row, event, column) {
         if (column.property) {
-            this.$router.push(`/view/${row.reference}`)
+            this.$router.push(`/payments/${row.reference}`)
         }
     },
     handleCurrentChange (val) {

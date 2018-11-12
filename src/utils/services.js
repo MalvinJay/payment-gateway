@@ -95,6 +95,14 @@ export default {
     })
     return retObj
   },
+  createJobDetailsArray (form, fields) {
+    var newQuery = ''
+    fields.forEach(element => {
+      newQuery = newQuery + `&${element}=${form[element]}`
+      console.log('formsdlfh', newQuery)
+    })
+    return newQuery.substring(1)
+  },
   present (value) {
     if (!value) {
       return false
@@ -128,7 +136,7 @@ export default {
         newString = `${newString} at ${job.time}`
         break
       case 'weekly':
-        newString = `${job.time} every ${job.date} `
+        newString = `${job.time} every ${job.date}`
         break
       case 'monthly':
         newString = `every month at ${job.date}`

@@ -9,8 +9,10 @@
                 <el-form-item prop="email">
                     <el-input autocomplete="on" class="no-border-input" placeholder="Email" v-model="form.email" type="email"></el-input>
                 </el-form-item>
-                <el-form-item prop="password" class="m-0">
-                    <el-input class="no-border-input" placeholder="Password" v-model="form.password" type="password"></el-input>
+                <el-form-item prop="password" class="">
+                    <el-input class="no-border-input" placeholder="Password" v-model="form.password" :type="type">
+                        <i slot="suffix" @click="showPassword" class="el-input__icon eye icon"></i>
+                    </el-input>
                 </el-form-item>
                 <div v-if="false" class="flex justify-content-between align-items-center s-12 my-2">
                     <el-checkbox size="mini" v-model="remember" label="Remember me?"></el-checkbox>
@@ -36,6 +38,7 @@ export default {
       form: {},
       loading: false,
       remember: false,
+      type: 'password',
       rules: {
         email: [
             { required: true, message: 'Please input email', trigger: 'blur' }
@@ -104,6 +107,9 @@ export default {
           }
         })
     },
+    showPassword () {
+        this.type = this.type === 'password' ? 'text' : 'password'
+    }
     // login () {
     //   const { username, password } = this.form
     //   if (username === 'admin' && password === 'password') {

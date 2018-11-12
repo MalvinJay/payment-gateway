@@ -1,6 +1,7 @@
 import { GET_JOBS, SET_JOBS_STATE, AWS_BUCKET, ACCESS_KEY_ID, SET_FILE_UPLOAD_DETAILS, GET_JOB_RUNS, SET_JOB_RUNS, SET_JOB_RUNS_STATE,
   CREATE_JOB_CONTACT, DELETE_JOB, UPDATE_JOB, GET_SINGLE_JOB, SET_SINGLE_JOB, SET_SINGLE_JOB_STATE, RUN_JOB, SET_FILE_STATE, GET_CURRENT_RUN, SET_CURRENT_RUN, SET_CURRENT_RUN_STATE,
-  SECRET_ACCESS_KEY, SEND_TO_BUCKET, GET_JOBS_URI, SET_JOBS, CREATE_JOB } from './transactions-store-constants'
+  SECRET_ACCESS_KEY, SEND_TO_BUCKET, DELETE_JOB_CONTACT, GET_BASE_URI, SET_JOBS, CREATE_JOB,
+  SET_CURRENT_JOB_RUNS, GET_CURRENT_JOB_RUNS } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 var S3 = require('aws-sdk/clients/s3')
@@ -16,6 +17,7 @@ const state = {
     data: {},
     state: 'LOADING',
     runs: [],
+    currentRuns: [],
     runState: 'DATA',
     currentRun: {},
     currentRunState: 'LOADING'
@@ -34,6 +36,7 @@ const getters = {
   currentJob: state => state.currentJob.data,
   currentJobState: state => state.currentJob.state,
   currentJobRuns: state => state.currentJob.runs,
+  currentRuns: state => state.currentJob.currentRuns,
   currentJobRunsState: state => state.currentJob.runState,
   currentRun: state => state.currentJob.currentRun,
   currentRunState: state => state.currentJob.currentRunState
@@ -51,6 +54,9 @@ const mutations = {
   [SET_JOB_RUNS] (state, payload) {
     state.currentJob.runState = 'DATA'
     state.currentJob.runs = payload
+  },
+  [SET_CURRENT_JOB_RUNS] (state, payload) {
+    state.currentJob.currentRuns = payload
   },
   [SET_JOB_RUNS_STATE] (state, data) {
     state.currentJob.runState = data
@@ -85,7 +91,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_JOBS_URI}/files/all.json`,
+          url: `${GET_BASE_URI}/v1/clients/jobs/files/all.json`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
@@ -100,7 +106,7 @@ const actions = {
       })
     }
   },
-  [GET_JOB_RUNS] ({ state, commit, rootGetters }, { page = 1, cache = true, id } = {}) {
+  [GET_JOB_RUNS] ({ state, commit, rootGetters, dispatch }, { page = 1, cache = true, id } = {}) {
     commit(SET_JOB_RUNS_STATE, 'LOADING')
     // if (cache && Utils.present(state.jobs.runs)) {
     //   commit(SET_JOB_RUNS_STATE, 'DATA')
@@ -110,7 +116,7 @@ const actions = {
     }
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `https://api.flopay.io/v1/clients/jobs/groups?job_id=${id}&all=true`,
+        url: `${GET_BASE_URI}/v1/clients/jobs/groups?job_id=${id}&all=true`,
         // url: `https://785af3e3.ngrok.io/api/v1/clients/jobs/groups?job_id=55&all=true`,
         method: 'GET',
         token: rootGetters.token,
@@ -118,6 +124,7 @@ const actions = {
       }).then((response) => {
         commit(SET_JOB_RUNS_STATE, 'DATA')
         commit(SET_JOB_RUNS, response.data.response.data.groups)
+        dispatch(GET_CURRENT_JOB_RUNS, response.data.response.data.groups)
         resolve()
       }).catch((error) => {
         commit(SET_JOB_RUNS_STATE, 'ERROR')
@@ -127,6 +134,12 @@ const actions = {
     })
     // }
   },
+  [GET_CURRENT_JOB_RUNS] ({ state, commit }, { page = 1, runs = state.currentJob.runs } = {}) {
+    var items = runs.slice((page * 10) - 10, page * 10).map(i => {
+      return i
+    })
+    commit(SET_CURRENT_JOB_RUNS, items)
+  },
   [RUN_JOB] ({ state, commit, rootGetters }, id) {
     commit(SET_JOB_RUNS_STATE, 'LOADING')
     var data = {
@@ -134,7 +147,7 @@ const actions = {
     }
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `https://api.flopay.io/v1/clients/jobs/files/${id}/run`,
+        url: `${GET_BASE_URI}/v1/clients/jobs/files/${id}/run`,
         method: 'POST',
         token: rootGetters.token,
         data: data
@@ -152,7 +165,7 @@ const actions = {
   [CREATE_JOB] ({ state, commit, rootGetters }, job) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_JOBS_URI}/files.json`,
+        url: `${GET_BASE_URI}/v1/clients/jobs/files.json`,
         method: 'POST',
         token: rootGetters.token,
         data: job
@@ -168,9 +181,26 @@ const actions = {
     console.log(job)
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `https://api.flopay.io/v1/clients/jobs/files/${id}/data?${job}`,
+        url: `${GET_BASE_URI}/v1/clients/jobs/files/${id}/data?${job}`,
         method: 'POST',
         token: rootGetters.token
+      }).then((response) => {
+        resolve(response)
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  [DELETE_JOB_CONTACT] ({ state, commit, rootGetters }, {id, job}) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}/v1/clients/jobs/files/${job}/contact`,
+        method: 'DELETE',
+        token: rootGetters.token,
+        data: {
+          contact_id: id
+        }
       }).then((response) => {
         resolve(response)
       }).catch((error) => {
@@ -224,7 +254,7 @@ const actions = {
   [DELETE_JOB] ({ rootGetters }, id) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_JOBS_URI}/files/${id}`,
+        url: `${GET_BASE_URI}/v1/clients/jobs/files/${id}`,
         method: 'DELETE',
         token: rootGetters.token
       }).then((response) => {
@@ -240,10 +270,9 @@ const actions = {
   [UPDATE_JOB] ({ rootGetters }, {id, data}) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_JOBS_URI}/files.json`,
+        url: `${GET_BASE_URI}v1/clients/jobs/files/${id}?${data}&is_sub_user=false`,
         method: 'PUT',
-        token: rootGetters.token,
-        data: data
+        token: rootGetters.token
       }).then((response) => {
         resolve(response)
       }).catch((error) => {
@@ -262,15 +291,19 @@ const actions = {
     // } else {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `https://api.flopay.io/v1/clients/jobs/files/${id}`,
+        url: `${GET_BASE_URI}/v1/clients/jobs/files/${id}`,
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
-        console.log('currentJob', response)
-        commit(SET_SINGLE_JOB_STATE, 'DATA')
-        commit(SET_SINGLE_JOB, response.data.response.data.job)
-        // commit(SET_JOB_RUNS, response.data.response.data.executed_transactions)
-        resolve()
+        if (response.data.success) {
+          console.log('currentJob', response)
+          commit(SET_SINGLE_JOB_STATE, 'DATA')
+          commit(SET_SINGLE_JOB, response.data.response.data.job)
+          // commit(SET_JOB_RUNS, response.data.response.data.executed_transactions)
+          resolve()
+        } else {
+          commit(SET_SINGLE_JOB_STATE, 'ERROR')
+        }
       }).catch((error) => {
         commit(SET_SINGLE_JOB_STATE, 'ERROR')
         console.log(error)
@@ -287,7 +320,7 @@ const actions = {
 //     } else {
 //       return new Promise((resolve, reject) => {
 //         apiCall({
-//           url: `https://api.flopay.io/v1/clients/jobs/files/${id}`,
+//           url: `${GET_BASE_URI}/v1/clients/jobs/files/${id}`,
 //           method: 'GET',
 //           token: rootGetters.token
 //         }).then((response) => {

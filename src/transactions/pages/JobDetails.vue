@@ -62,12 +62,15 @@
                                         <div v-if="readonly">
                                             <p v-if="key === 'time'" class="s-13 mono">{{value | moment("hh:mm a")}}</p>
                                             <p v-else-if="key === 'date'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
+                                            <el-switch disabled v-else-if="key === 'scheduled'" class="w-50" v-model="form.scheduled"></el-switch>
                                             <p v-else class="s-13 mono">{{value}}</p>
                                         </div>
                                         <div v-else>
                                             <p v-if="key === 'number of runs' || key === 'owner'" class="s-13 mono">{{value}}</p>
-                                            <p v-else-if="key === 'date'" class="s-13 mono">{{value | moment("hh:mm a")}}</p>
-                                            <p v-else-if="key === 'time'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
+                                            <p v-else-if="key === 'time'" class="s-13 mono">{{value | moment("hh:mm a")}}</p>
+                                            <p v-else-if="key === 'date'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
+                                            <el-input v-else-if="key === 'name'" style="width: 80%" size="mini" v-model="form.description"></el-input>
+                                            <el-switch v-else-if="key === 'scheduled'" class="w-50" v-model="form.scheduled"></el-switch>
                                             <div v-else-if="key === 'schedule' && form.scheduled">
                                                 <div class="mb-2">
                                                     <div class="flex align-items-center h-30">
@@ -165,7 +168,7 @@
             </el-card>
 
             <!-- JOB RUNS -->
-            <el-card class="my-2">
+            <el-card class="my-2 card-0">
                 <div slot="header">
                     <span class="blue-text bold-600 s-16">{{header}} runs</span>
                 </div>
@@ -194,7 +197,7 @@
                                             {{ scope.row.charged_amount | money}}
                                         </template>
                                     </el-table-column>
-                                    <el-table-column prop="status" label="" width="80px">
+                                    <el-table-column prop="status" label="" >
                                         <template slot-scope="scope">
                                             <div class="flex">
                                                 <the-tag status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
@@ -216,6 +219,17 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <!-- FOOTER -->
+                    <div class="flex justify-content-between align-items-center px-10">
+                        <div class="s-12">
+                            {{runs.length}} results
+                        </div>
+                        <el-pagination class="my-2 flex justify-content-end"
+                            @current-change="handleCurrentChange"
+                            layout="prev, pager, next"
+                            :total="totalRuns">
+                        </el-pagination>
+                    </div>
                 </div>
             </el-card>
 
@@ -248,11 +262,11 @@
                                 {{scope.row.updated_at | moment("MMM Do, YYYY")}}
                             </template>
                         </el-table-column>
-                        <!-- <el-table-column align="center">
+                        <el-table-column align="center">
                             <template slot-scope="scope">
-                                <el-button class="p-0 m-0" @click.native.prevent="deleteCustomer(scope.$index, scope.row)" icon="trash alternate outline icon" type="text"></el-button>
+                                <el-button :loading="deleteLoading" class="p-0 m-0" @click.native.prevent="deleteJobContact(scope.$index, scope.row)" icon="trash alternate outline icon" type="text"></el-button>
                             </template>
-                        </el-table-column> -->
+                        </el-table-column>
                     </el-table>
                 </div>
             </el-card>
@@ -280,20 +294,21 @@ export default {
             schedule: [],
             days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
             field: {},
-            changedFields: []
+            changedFields: {},
+            deleteLoading: false
         }
     },
-    watch: {
-        form (oldValue, newValue) {
-            
-            var fields = ['description', 'retry_limit', 'scheduled']
-            var diff = Utils.getChangedFields(newValue, fields, oldValue )
-            this.changedFields.push = diff
-            console.log('result', diff)
-        }
-    },
+    // watch: {
+    //     form (oldValue, newValue) {
+    //         var fields = ['description', 'retry_limit', 'scheduled', 'schedule', 'active', 'test']
+    //         var diff = Utils.getChangedFields(newValue, fields, oldValue )
+    //         // Object.assign(this.changedFields, diff)
+    //         this.changedFields = diff
+    //         console.log('result', diff)
+    //     }
+    // },
     mounted () {
-        EventBus.$emit('sideNavClick', 'view')
+        EventBus.$emit('sideNavClick', 'payments')
         this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
 
         this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
@@ -347,7 +362,10 @@ export default {
                     })
                     this.runLoading= false
                     EventBus.$emit('tabNumber', '3')
-                    this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
+                    setTimeout(() => {
+                        this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
+                        // this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
+                    }, 5000)
                 } else {
                 this.$message({
                     type: 'error',
@@ -360,6 +378,35 @@ export default {
                 const response = error.response
                 this.$message({
                     message: response.data.error,
+                    type: 'error'
+                })
+            }) 
+        },
+        deleteJobContact (index, row) {
+            this.deleteLoading = true
+            
+            this.$store.dispatch('deleteJobContact', {id: row.id, job: this.$route.params.id})
+            .then((response) => {
+                console.log('delete', response)
+                if (response.data.success) {
+                    this.$message({
+                        message: 'Contact Deleted Successfully',
+                        type: 'success'
+                    })
+                    this.deleteLoading= false
+                    this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.response.message
+                    })
+                    this.deleteLoading= false
+                }
+            }).catch((error) => {
+                this.deleteLoading= false
+                const response = error.response
+                this.$message({
+                    message: 'Delete failed',
                     type: 'error'
                 })
             }) 
@@ -402,10 +449,14 @@ export default {
         },
         update () {
             this.updateLoading = true
-            var newForm = Job.getCreateView(this.form)
-            var schedule = Utils.createJobQuery (newForm.schedule, this.schedule)
-            newForm.schedule = schedule
-            newForm.contacts = this.contacts
+           
+            this.form.schedule = this.form.scheduled ? Utils.createJobQuery (this.form.schedule, this.schedule) : 'false'
+            var newForm = Utils.createJobDetailsArray(this.form, ['description', 'scheduled', 'schedule', 'retry_limit', 'active', 'test'])
+            console.log(newForm)
+            // var newForm = Job.getCreateView(this.form)
+            // var schedule = Utils.createJobQuery (newForm.schedule, this.schedule)
+            // newForm.schedule = schedule
+            // newForm.contacts = this.contacts
             
             this.$store.dispatch('updateJob', {id: this.form.id, data: newForm})
             .then((response) => {
@@ -418,30 +469,31 @@ export default {
                     this.updateLoading = false
                     this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
                 } else {
-                this.$message({
-                    type: 'error',
-                    message: response.data.response.message
-                })
-                this.updateLoading = false
-                this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
-            }
-                
+                    this.$message({
+                        type: 'error',
+                        message: response.data.response.message
+                    })
+                    this.updateLoading = false
+                }
             }).catch((error) => {
                 this.updateLoading = false
                 const response = error.response
                 this.$message({
-                    message: response.data.error,
+                    message: 'Update failed. Please try again later',
                     type: 'error'
                 })
-                this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
             })
+        },
+        handleCurrentChange (val) {
+            this.$store.dispatch('getCurrentJobRuns', {page: val})
         }
     },
     computed: {
         ...mapGetters({
             form: 'currentJob',
             state: 'currentJobState',
-            runs: 'currentJobRuns',
+            runs: 'currentRuns',
+            totalRunsStore: 'currentJobRuns',
             runState: 'currentJobRunsState',
             file: 'file',
             fileState: 'fileState'
@@ -458,6 +510,9 @@ export default {
         header () {
             return 'Job'
         },
+        totalRuns () {
+            return this.totalRunsStore.length
+        },
         data () {
             var symbol = '\u20B5'
             if (this.form.currency === 'GHs') {
@@ -469,7 +524,10 @@ export default {
                 'number of runs': this.form.number_of_runs,
                 date: this.form.created_at,
                 time: this.form.created_at,
-                schedule: this.form.schedule,
+                scheduled: this.form.scheduled
+            }
+            if (this.form.scheduled) {
+                nForm.schedule = this.form.schedule
             }
             return nForm
         },
