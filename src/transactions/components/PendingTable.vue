@@ -1,11 +1,12 @@
 <template>
     <div class="transactions">
-        <div class="trans-div flex justify-content-end">
-            <!-- <div>
-                <filter-component filterType="pending"></filter-component>
-            </div> -->
+        <div class="trans-div flex justify-content-between">
+            <div class="flex align-items-baseline">
+                <p class="blue-text bold-600 s-16 m-0 p-0">Pending Transactions</p>
+                <!-- <filter-component filterType="pending"></filter-component> -->
+            </div>
             <div>
-                <el-button v-if="canApproveTransactions" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Approve</el-button>
+                <!-- <el-button v-if="canApproveTransactions" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Approve</el-button> -->
                 <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
             </div>
         </div>
