@@ -1,18 +1,18 @@
 <template>
     <div class="bg pt-20 nav-container">
         <!-- <div class="center"> -->
-            <el-card class="navigation-card card-0">
+            <div class="navigation-card card-0">
                 <div class="flex align-items-center">
-                    <avatar :size="25" username="Flopay" backgroundColor="#f7921e"></avatar>
+                    <el-button class="side-button" icon="bars icon"></el-button>
+                    <!-- <avatar :size="25" username="Flopay" backgroundColor="#f7921e"></avatar> -->
                     <el-popover
                         placement="top-start"
-                        width="200"
                         trigger="hover"
                         :content="user.client.company_name">
-                        <p slot="reference" class="text-uppercase s-18 blue-text p-0 m-0 bold-500 client_name">{{user.client.company_name}}</p>                
+                        <p slot="reference" class="text-uppercase s-16 p-0 m-0 bold-500 client_name">{{user.client.company_name}}</p>                
                     </el-popover>
                 </div>
-            </el-card>
+            </div>
             <!-- <div class="ui card z-depth navigation-card"> -->
                 <!-- navigation card content
                 <div class="content">
@@ -167,7 +167,9 @@ export default {
 .navigation-card{
     // width: 95%;
     width: 80%;
-    padding: 5px 15px;
+    padding: 5px 0px;
+    background: #f1f6f8;
+    color: #999999;
     // height: 80px;
 }
 .client_name{
@@ -175,6 +177,7 @@ export default {
     text-overflow: ellipsis;
     width: 100px;
     display: block;
-    overflow: hidden
+    overflow: hidden;
+    color: #999999;
 }
 </style>

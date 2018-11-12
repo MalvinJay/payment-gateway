@@ -3,8 +3,8 @@
         <!-- <div> -->
             <el-input @keyup.enter.native="searchButton" v-model="search" class="is-shadow border-rounded search-div" :prefix-icon="loading" placeholder="Search..."></el-input>
         <!-- </div> -->
-        <div class="flex align-items-center header-side-panel">
-            <div style="height: 25px">
+        <div class="flex align-items-center justify-content-end header-side-panel">
+            <!-- <div style="height: 25px">
                 <el-switch active-text="Test" v-model="testData"></el-switch>
             </div>
             <el-dropdown trigger="click">
@@ -26,7 +26,7 @@
                     </el-dropdown-item>
                     <el-dropdown-item divided>Lorem</el-dropdown-item>
                 </el-dropdown-menu>
-            </el-dropdown>
+            </el-dropdown> -->
             <el-dropdown class="logout-dropdown" @command="handleCommand" trigger="click">
                 <span class="el-dropdown-link">
                     <img class="img-big circle" src="../assets/images/profile/profile.jpg" alt="">
@@ -38,7 +38,7 @@
                             <p class="s-8">{{client.company_name}}</p>
                         </div>
                     </el-dropdown-item>
-                    <el-dropdown-item class="header-user-dropdown">Profile</el-dropdown-item>
+                    <!-- <el-dropdown-item class="header-user-dropdown">Profile</el-dropdown-item> -->
                     <el-dropdown-item class="header-user-dropdown" command="logout">Sign Out</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -155,8 +155,8 @@ export default {
 }
 .header-side-panel{
     width: 15%;
-    justify-content: space-between;
-    align-items: center;
+    // justify-content: space-between;
+    // align-items: center;
 }
 
 </style>
