@@ -21,6 +21,7 @@
                 </div> -->
             <!-- </div> -->
         <!-- </div> -->
+
         <el-menu router :unique-opened="true" :default-active="defaultActive" active-text-color='#586ADA' text-color="#999999" background-color="#f1f6f8">
             <el-menu-item route="/" index="dashboard">
                 <template slot="title">
@@ -82,24 +83,25 @@
                 </template>
                 <el-menu-item index="8-1">Apps</el-menu-item>
                 <el-menu-item index="8-2">Events</el-menu-item>
-                <el-menu-item index="8-3">Logs</el-menu-item>
+                <el-menu-item route="/logs" index="8-3">Logs</el-menu-item>
                 <el-menu-item index="8-4">Settings</el-menu-item>
             </el-submenu>
-            <el-submenu ref="sideMenu" index="9">
+            <el-submenu ref="sideMenu" route="/account" index="9">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/business-settings.svg" alt=""> Business Settings
                 </template>
-                <el-menu-item index="8-1">Verifications</el-menu-item>
-                <el-menu-item index="8-2">Tax details</el-menu-item>
-                <el-menu-item index="8-3">Team</el-menu-item>
-                <el-menu-item index="8-4">Roles</el-menu-item>   
-                <el-menu-item index="8-5">Integration</el-menu-item>    
-                <el-menu-item index="8-6">Relay</el-menu-item>    
-                <el-menu-item index="8-7">Authorized apps</el-menu-item>
-                <el-menu-item index="8-8">Data</el-menu-item>
-                <el-menu-item index="8-9">Customer emails</el-menu-item>
-                <el-menu-item index="8-10">Documents</el-menu-item>
-                <el-menu-item index="8-11">Security history</el-menu-item>
+                <el-menu-item route="/account" index="9-1">Account Set-up</el-menu-item>
+                <!-- <el-menu-item index="9-2">Verifications</el-menu-item> -->
+                <el-menu-item route="/account/taxation" index="9-2">Tax details</el-menu-item>
+                <el-menu-item route="/account/team" index="9-3">Team</el-menu-item>
+                <el-menu-item route="/account/roles" index="9-4">Roles</el-menu-item>   
+                <!-- <el-menu-item index="9-6">Integration</el-menu-item>     -->
+                <!-- <el-menu-item index="9-7">Relay</el-menu-item>     -->
+                <!-- <el-menu-item index="9-8">Authorized apps</el-menu-item> -->
+                <el-menu-item route="/account/reports" index="9-5">Data Reports</el-menu-item>
+                <!-- <el-menu-item index="9-10">Customer emails</el-menu-item> -->
+                <!-- <el-menu-item index="9-11">Documents</el-menu-item> -->
+                <!-- <el-menu-item index="9-12">Security history</el-menu-item> -->
             </el-submenu>
         </el-menu>
     </div>

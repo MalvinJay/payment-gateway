@@ -22,6 +22,12 @@ const NewJob = () => import('../transactions/pages/NewJob')
 const JobDetails = () => import('../transactions/pages/JobDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
 
+import Account from '../settings/pages/bs_settings'
+import Tax from '../settings/pages/taxation'
+import Team from '../settings/pages/team'
+import Roles from '../settings/pages/roles'
+import Reports from '../settings/pages/roles'
+
 Vue.use(Router)
 
 let router = new Router({
@@ -104,7 +110,57 @@ let router = new Router({
           path: '/contacts/:id',
           name: 'ContactDetails',
           component: ContactDetails
-        }
+        },
+        {
+          path: '/account',
+          name: 'Account',
+          component: Account,
+          meta: {
+            requiresAuth: true
+          }
+          // children: [
+            // {
+            //   path: '/account/taxation',
+            //   name: 'Taxation',
+            //   component: Tax
+            // },
+            // {
+            //   path: '/account/team',
+            //   name: 'Team',
+            //   component: Team
+            // },         
+            // {
+            //   path: '/account/roles',
+            //   name: 'Roles',
+            //   component: Roles
+            // },
+            // {
+            //   path: '/account/reports',
+            //   name: 'Reports',
+            //   component: Reports
+            // }
+          // ]
+        },
+        {
+          path: '/account/taxation',
+          name: 'Taxation',
+          component: Tax
+        },
+        {
+          path: '/account/team',
+          name: 'Team',
+          component: Team
+        },         
+        {
+          path: '/account/roles',
+          name: 'Roles',
+          component: Roles
+        },
+        {
+          path: '/account/reports',
+          name: 'Reports',
+          component: Reports
+        }            
       ]
     },
     {

@@ -123,10 +123,12 @@ export default {
     mounted () {
         EventBus.$emit('sideNavClick', 'view')
         EventBus.$on('tabNumber', (val) => {
-            console.log('valtab', val)
             this.activeName = val
             this.exportVisible = false
-        })        
+        })
+        EventBus.$on('exportModal', (val) => {
+            this.exportVisible = false
+        })
         this.$store.dispatch('getFees')        
     },
     beforeDestroy() {

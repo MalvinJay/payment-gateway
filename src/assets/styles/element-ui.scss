@@ -386,3 +386,46 @@ $border: #dcdfe6;
 .no-margin-checkbox{
     margin-left: 0;
 }
+
+.el-card {
+    .el-card__footer {
+        position: relative;
+        width: calc(100% + 40px);
+        left: -20px;
+        bottom: -20px;
+        background-color: #fff;
+        padding: 15px;
+        border-top: 1px solid #ebeef5;
+    }
+}
+
+.el-form-item__label {
+    align-self: flex-start;
+    flex: 30% 0 0;
+    font-weight: lighter !important;
+}
+
+.el-form-item__content {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column!important;
+    flex: 0 0 20%;
+    margin-left: 0!important;
+}
+
+.custom {
+    .el-card__body {
+        background-color: #f7fafc;
+    }
+}
+
+.search_n_roles {
+    .el-input{
+        input {
+            height: 30px;
+        }
+    }
+    input {
+        border-radius: 30px;
+    }
+}
