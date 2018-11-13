@@ -146,6 +146,9 @@
                         </el-switch> -->
                     </el-form-item>
                 </el-form>
+                <div class="flex justify-content-end">
+                    <p class="s-12">NB: Vodafone numbers not supported</p>
+                </div>
             </div>
         </el-card>
     </div>

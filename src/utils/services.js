@@ -1,3 +1,4 @@
+import equal from 'fast-deep-equal'
 export default {
   createExportQuery (form) {
     var query = 'file_type=csv'
@@ -84,6 +85,15 @@ export default {
       }
     }
     return query
+  },
+  getChangedFields (obj, fields, original) {
+    let retObj = {}
+    fields.forEach(el => {
+      if (!equal(obj[el], original[el])) {
+        retObj[el] = obj[el]
+      }
+    })
+    return retObj
   },
   present (value) {
     if (!value) {

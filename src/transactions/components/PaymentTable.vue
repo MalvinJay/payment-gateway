@@ -6,7 +6,11 @@
             </div>
             <div>
                 <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
+<<<<<<< HEAD
                 <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+=======
+                <!-- <el-button v-if="canGenerateReports" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
+>>>>>>> a71c6d1425679edcd566cc1e15e1886287d57660
             </div>
         </div>
         <div>
@@ -254,8 +258,12 @@ export default {
       meta: 'transactionsMeta',
       providers: 'providers',
       test: 'test',
-      contacts: 'contacts'
+      contacts: 'contacts',
+      permissions: 'permissions'
     }),
+    canGenerateReports () {
+        return this.permissions.some(el => el.code === 'generate_reports')
+    },
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'
     },

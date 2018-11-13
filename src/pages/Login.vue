@@ -60,19 +60,25 @@ export default {
 
                     this.$session.start()
                     this.$session.set('client', JSON.stringify(response.data.response.data))
+                    this.$store.dispatch('setClient', response.data.response.data)
                     
-                    // login suucessfull
-                    this.$store.dispatch('getToken')
-                    .then((response) => {
-                        // SETTING TOKEN
-                        this.$session.set('token', response.data.access_token)
-                        this.$store.dispatch('setToken', response.data.access_token)
-                        this.$message({
-                            message: 'Login successful',
-                            type: 'success'
+                    if (this.$session.has('client')) {
+                        // login suucessful
+                        this.$store.dispatch('getToken')
+                        .then((response) => {
+                            // SETTING TOKEN
+                            this.$session.set('token', response.data.access_token)
+                            this.$store.dispatch('setToken', response.data.access_token)
+                            this.$message({
+                                message: 'Login successful',
+                                type: 'success'
+                            })
+                            this.$router.push('/')
                         })
-                        this.$router.push('/')
-                    })
+                    } else {
+                        this.$store.dispatch('setClient', response.data.response.data)
+                    }
+                    
                 } else {
                     this.$message({
                         message: response.data.response.message,

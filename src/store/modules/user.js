@@ -37,6 +37,7 @@ const user = {
     },
     //   client data
     [SET_CLIENT] (state, data) {
+      state.permissions.data = data.client.privileges
       state.userdata = data
     },
     //   test
@@ -47,6 +48,17 @@ const user = {
       state.client = data
     },
     [LOGOUT] (state) {
+      state.client = {}
+      state.user = {
+        data: {},
+        token: localStorage.getItem('token'),
+        client_id: '',
+        client_secret: ''
+      }
+      state.userdata = {}
+      state.permissions = {
+        data: []
+      }
       state.logIn = false
       state.user.token = null
     },
@@ -84,8 +96,8 @@ const user = {
       return new Promise((resolve, reject) => {
         var url = `https://api.flopay.io/v1/login.json`
         var params = {}
-        params.client_id = localStorage.getItem('client_id')
-        params.client_secret = localStorage.getItem('client_secret')
+        params.client_id = state.client.client_id
+        params.client_secret = state.client.client_secret
         params.grant_type = 'client_credentials'
         axios.post(url, params)
           .then((response) => {
@@ -103,6 +115,8 @@ const user = {
       return new Promise((resolve, reject) => {
         commit(LOGOUT)
         localStorage.removeItem('token') // clear your user's token from localstorage
+        // localStorage.removeItem('client_id')
+        // localStorage.removeItem('client_secret')
         resolve()
       })
     },
