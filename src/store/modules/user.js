@@ -1,4 +1,4 @@
-import { AUTH_REQUEST, SET_TEST, SET_TOKEN, SET_CLIENT, SET_PERMISSIONS, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
+import { AUTH_REQUEST, SET_PAGE_LOADING, SET_TEST, SET_TOKEN, SET_CLIENT, SET_PERMISSIONS, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../apiCall'
 import axios from 'axios'
@@ -18,7 +18,8 @@ const user = {
     test: false,
     permissions: {
       data: []
-    }
+    },
+    pageLoading: false
   },
 
   // getters
@@ -27,7 +28,8 @@ const user = {
     token: state => state.user.token,
     client: state => state.client,
     test: state => state.test,
-    permissions: state => state.permissions.data
+    permissions: state => state.permissions.data,
+    pageLoading: state => state.pageLoading
   },
 
   // mutations
@@ -66,6 +68,10 @@ const user = {
     // PERMISSIONs
     [SET_PERMISSIONS] (state, data) {
       state.permissions.data = data
+    },
+    // page loading
+    [SET_PAGE_LOADING] (state, data) {
+      state.pageLoading = data
     }
   },
 

@@ -6,7 +6,7 @@
         width="25%">
         <div class="flex new-ticket-bg">
             <el-form ref="ticketForm" size="mini" class="w-80 m-auto">
-                <el-form-item label="Possible reason">
+                <el-form-item label="Issue">
                     <el-select class="w-100" placeholder="Please select reason" v-model="form.description">
                         <el-option
                             v-for="item in reasons"

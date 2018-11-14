@@ -107,14 +107,13 @@
                     <!-- <div v-if="beneficiaries === 'upload'"> -->
                         <el-form-item label="Upload CSV">
                             <el-upload
-                            class="upload-demo"
-                            action=""
-                            :on-change="onChange"
-                            :auto-upload="false"
-                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                            :file-list="form.fileList">
-                            <el-button size="small" type="primary">Click to upload</el-button>
-                                <!-- <div slot="tip" class="el-upload__tip">jpg/png files with a size less than 500kb</div> -->
+                                class="upload-demo"
+                                action=""
+                                :on-change="onChange"
+                                :auto-upload="false"
+                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                :file-list="form.fileList">
+                                <el-button size="small" type="primary">Click to upload</el-button>
                             </el-upload>
                             <div v-if="fileError" class="mt-2">
                                 <p class="p-0 m-0">Error in Uploading File</p>

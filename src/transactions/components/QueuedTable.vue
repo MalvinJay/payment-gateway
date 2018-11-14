@@ -18,11 +18,7 @@
             </div>
             <div v-else>
                 <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
-                    <el-table-column type="selection" width="55">
-                        <!-- <template slot-scope="scope">
-                            <el-checkbox v-if="scope.row.status === 'Paid'"></el-checkbox>
-                        </template> -->
-                    </el-table-column>
+                    <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column prop="amount" label="Amount" width="100">
                         <template slot-scope="scope">
                             <div class="flex align-items-center cursor">
@@ -57,7 +53,9 @@
                                                 action
                                             </div>
                                         </el-dropdown-item>
-                                        <el-dropdown-item class="s-12">Recharge Funds</el-dropdown-item>
+                                        <el-dropdown-item class="s-12">Retry</el-dropdown-item>
+                                        <el-dropdown-item class="s-12">Cancel</el-dropdown-item>
+                                        <el-dropdown-item class="s-12">Open Ticket</el-dropdown-item>
                                         <el-dropdown-item divided disabled>
                                             <div class="table-dropdown-header blue-text bold-600 text-uppercase">
                                                 connection

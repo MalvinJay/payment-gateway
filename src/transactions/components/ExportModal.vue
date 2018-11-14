@@ -9,7 +9,7 @@
                 <el-form-item label="Type of Transaction">
                     <div class="flex justify-content-between align-items-center">
                         <el-checkbox v-model="form.payment_types" @change="handleCheckedTypesChange" v-for="payment in types" :label="payment.value" :key="payment.value">{{payment.label}}</el-checkbox>
-                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox>
+                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">All</el-checkbox>
                     </div>
                 </el-form-item>
                 <el-form-item label="Select Date">
@@ -40,7 +40,8 @@
                 </el-form-item>
                 <el-form-item class="flex justify-content-end">
                     <el-button @click="close">Cancel</el-button>
-                    <el-button @click="submitExport('form')" type="primary" :loading="loading">Submit</el-button>
+                    <a v-if="ready" download :href="this.link" type="primary">Download</a>
+                    <el-button v-else @click="submitExport('form')" type="primary" :loading="loading">Submit</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -51,6 +52,7 @@
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 import Utils from '../../utils/services'
+import moment from 'moment'
 
 export default {
     name: 'ExportModal',
@@ -58,6 +60,7 @@ export default {
     data() {
       return {
         checkAll: false,
+        ready: false,
         types: [
             {label: 'Bank Account', value: 'bank'},
             {label: 'Card', value: 'card'},
@@ -103,7 +106,8 @@ export default {
             this.$store.dispatch('submitReport', query)
             .then((response) => {
                 if (response.data.success) {
-                    console.log(response)
+                    console.log('success', response)
+                    this.ready = true
                     this.$message({
                         type: 'success',
                         message: response.data.response.message,
@@ -132,11 +136,17 @@ export default {
             return false
           }
         })
+      },
+      download () {
+        this.$store.dispatch('downloadReport', this.link)
+        window.location.href = this.link
+        // this.$router.push(this.link)
       }
     },
     computed: {
         ...mapGetters({
-            fields: 'fields'
+            fields: 'fields',
+            link: 'downloadLink'
         }),
         fieldSet () {
             var props = Object.keys(this.fields).map(function(key) {
@@ -163,8 +173,8 @@ export default {
                 return arr
             },
             set (value) {
-                this.form.from = value[0]
-                this.form.to = value[1]
+                this.form.from = moment(value[0]).format('YYYY-MM-DD')
+                this.form.to = moment(value[1]).format('YYYY-MM-DD')
             }
         }
     }

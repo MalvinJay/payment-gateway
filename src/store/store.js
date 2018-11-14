@@ -6,7 +6,9 @@ import dashboard from '../dashboard/dashboard-store'
 import jobs from '../transactions/store/jobs-store'
 import payouts from '../transactions/store/payouts-store'
 import reports from '../transactions/store/reports-store'
+import disputes from '../transactions/store/disputes-store'
 import contacts from '../contacts/contacts-store'
+import fonemessenger from '../fonemessenger/store/fonemessenger-store'
 import user from './modules/user'
 
 // axios.defaults.baseURL = 'https://api.flopay.io/'
@@ -22,6 +24,8 @@ export default new Vuex.Store({
     dashboard,
     contacts,
     payouts,
-    reports
+    reports,
+    fonemessenger,
+    disputes
   }
 })

@@ -40,7 +40,7 @@
                 </template>
                 <el-menu-item route="/payments" index="payments">Payments</el-menu-item>
                 <el-menu-item route="/payouts" index="payouts">Payouts</el-menu-item>
-                <el-menu-item index="2-3">Disputes</el-menu-item>
+                <el-menu-item route="/disputes" index="disputes">Disputes</el-menu-item>
                 <el-menu-item index="2-4">Settings</el-menu-item>
             </el-submenu>
             <el-submenu ref="sideMenu" index="3">
@@ -76,7 +76,7 @@
                 <el-menu-item index="6-3">Fees</el-menu-item>
                 <el-menu-item index="6-4">Settings</el-menu-item>
             </el-submenu>
-            <el-menu-item index="7">
+            <el-menu-item route="/fonemessenger" index="fonemessenger">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/radar.svg" alt="">
                     FoneMessenger
@@ -151,14 +151,14 @@ export default {
     .el-menu-item{
         height: 30px !important;
         line-height: 30px !important;
-        padding-left: 40px !important;
+        padding-left: 60px !important;
         font-size: 13px;
     }
 }
 .el-menu-item, .el-submenu__title{
     height: 46px;
     line-height: 46px;
-    padding-left: 4px !important;
+    padding-left: 30px !important;
 }
 .nav-container{
     width: 230px;
@@ -175,7 +175,7 @@ export default {
 .client_name{
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: 100px;
+    width: 90%;
     display: block;
     overflow: hidden;
     color: #999999;

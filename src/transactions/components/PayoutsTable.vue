@@ -36,7 +36,7 @@
                         <template slot-scope="scope">
                             <div class="flex">
                                 <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
-                                <the-tag v-else-if="scope.row.status === 'Failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
+                                <the-tag v-else-if="scope.row.status.toLowerCase() === 'failed'" status="success" :title="scope.row.status" icon="close icon"></the-tag>
                                 <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
                             </div>
                         </template>
@@ -59,7 +59,8 @@
                                                 action
                                             </div>
                                         </el-dropdown-item>
-                                        <el-dropdown-item class="s-12">Recharge Funds</el-dropdown-item>
+                                        <el-dropdown-item class="s-12">Open Ticket</el-dropdown-item>
+                                        <el-dropdown-item class="s-12">Retry</el-dropdown-item>
                                         <el-dropdown-item divided disabled>
                                             <div class="table-dropdown-header blue-text bold-600 text-uppercase">
                                                 connection
