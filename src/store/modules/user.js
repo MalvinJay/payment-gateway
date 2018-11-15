@@ -29,7 +29,8 @@ const user = {
     client: state => state.client,
     test: state => state.test,
     permissions: state => state.permissions.data,
-    pageLoading: state => state.pageLoading
+    pageLoading: state => state.pageLoading,
+    logIn: state => state.logIn
   },
 
   // mutations
@@ -41,6 +42,7 @@ const user = {
     //   client data
     [SET_CLIENT] (state, data) {
       state.permissions.data = data.client.privileges
+      state.user.data = data
       state.userdata = data
     },
     //   test

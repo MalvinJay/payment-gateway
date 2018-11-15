@@ -17,6 +17,12 @@ import ContactDetails from '../contacts/pages/ContactDetails'
 import Logs from '@/pages/client/transactions/Logs'
 import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
+
+import Account from '../settings/pages/bs_settings'
+import Tax from '../settings/pages/taxation'
+import Team from '../settings/pages/team'
+import Roles from '../settings/pages/roles'
+import Reports from '../settings/pages/roles'
 const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
@@ -24,12 +30,6 @@ const Disputes = () => import('../transactions/pages/Disputes')
 const JobDetails = () => import('../transactions/pages/JobDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
 const FoneMessenger = () => import('../fonemessenger/pages/FoneMessenger')
-
-import Account from '../settings/pages/bs_settings'
-import Tax from '../settings/pages/taxation'
-import Team from '../settings/pages/team'
-import Roles from '../settings/pages/roles'
-import Reports from '../settings/pages/roles'
 
 Vue.use(Router)
 
@@ -83,7 +83,7 @@ let router = new Router({
           path: '/fees',
           name: 'Fees',
           component: Fees
-        },       
+        },
         {
           path: '/logs',
           name: 'Logs',
@@ -93,7 +93,7 @@ let router = new Router({
           path: '/fees/:id',
           name: 'FeesDetails',
           component: FeesDetail
-        },         
+        },
         {
           path: '/settings',
           name: 'Settings',
@@ -117,7 +117,7 @@ let router = new Router({
         {
           path: '/account',
           name: 'Account',
-          component: Account,
+          component: Account
         },
         {
           path: '/account/taxation',
@@ -128,7 +128,7 @@ let router = new Router({
           path: '/account/team',
           name: 'Team',
           component: Team
-        },         
+        },
         {
           path: '/account/roles',
           name: 'Roles',
@@ -138,7 +138,7 @@ let router = new Router({
           path: '/account/reports',
           name: 'Reports',
           component: Reports
-        },     
+        },
         // disputes
         {
           path: '/disputes',
@@ -167,8 +167,10 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-//   console.log('app', )
-  //   this.a.app.$session.exists())
+  console.log('app', store)
+  console.log('app', store.state.user)
+  console.log('app', store.state.user.logIn)
+  console.log('store', store)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
       next({
@@ -176,7 +178,7 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-      if (Object.keys(store.getters.user).length !== 0) {
+      if (store.state.user.logIn) {
         store.dispatch('getToken')
         next()
       } else {

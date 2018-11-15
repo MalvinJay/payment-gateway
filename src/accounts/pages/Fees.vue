@@ -22,29 +22,29 @@
                         <el-table-column type="selection" width="55"></el-table-column>
                         <el-table-column prop="type" label="Type" width="100">
                             <template slot-scope="scope">
-                                <p class="bold-600">Charge</p>
+                                <p>Charge</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Net" width="80">
+                        <el-table-column label="Net">
                             <template slot-scope="scope">
-                                <p class="m-0 p-0 mr-10 bold-600 s-13">{{scope.row.net_amount | money}}</p>
+                                <p class="m-0 p-0 mr-10 s-13">{{scope.row.net_amount | money}}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Amount" width="80">
+                        <el-table-column label="Amount">
                             <template slot-scope="scope">
-                                <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.receiver_amount | money}}</p>
+                                <p class="m-0 p-0 mr-10 s-13">{{scope.row.receiver_amount | money}}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Fee" width="80">
+                        <el-table-column label="Fee">
                             <template slot-scope="scope">
-                                <p class="m-0 p-0 mr-10 bold-500 s-13">({{scope.row.charged_amount | money}})</p>
+                                <p class="m-0 p-0 mr-10 s-13">{{scope.row.charged_amount | money}}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="" width="80">
+                        <!-- <el-table-column label="">
                             <template slot-scope="scope">
-                                <p class="m-0 p-0 mr-10 bold-500 s-13 text-left">GHS</p>
+                                <p class="m-0 p-0 mr-10 s-13 text-left">GHS</p>
                             </template>
-                        </el-table-column>                        
+                        </el-table-column>                         -->
                         <el-table-column label="Description" width="auto">
                             <template slot-scope="scope">
                                 <p class="m-0 p-0 mr-10">Charge taken</p>
@@ -67,7 +67,7 @@
                                                     action
                                                 </div>
                                             </el-dropdown-item>
-                                            <el-dropdown-item class="s-12">Recharge Funds</el-dropdown-item>
+                                            <el-dropdown-item class="s-12">Open Ticket</el-dropdown-item>
                                             <el-dropdown-item divided disabled>
                                                 <div class="table-dropdown-header bold-600 text-uppercase">
                                                     connection
@@ -106,7 +106,6 @@ export default {
     data () {
         return {
             test: true,
-            activeName: '1',
             columns: [
                 {label: 'Net', dataField: 'type'},
                 {label: 'Amount', dataField: 'customer'},
@@ -114,30 +113,19 @@ export default {
             ],
             styleObject: {
                 fontSize: '12px'
-            },
-            tabValue: '',
-            dialogVisible: false,
-            exportVisible: false,                 
+            }
         }
     },
+    created () {
+        this.$store.dispatch('getFees')
+    },
     mounted () {
-        EventBus.$emit('sideNavClick', 'view')
-        EventBus.$on('tabNumber', (val) => {
-            this.activeName = val
-            this.exportVisible = false
-        })
+        EventBus.$emit('sideNavClick', 'fees')
         EventBus.$on('exportModal', (val) => {
             this.exportVisible = false
         })
-        this.$store.dispatch('getFees')        
-    },
-    beforeDestroy() {
-        EventBus.$off('tabNumber', this.updateTab)
     },
     methods: {
-        updateTab(val) {
-            this.activeName = val
-        },
         clickRow (row, event, column) {
             if (column.property) {
                 this.$router.push(`/fees/${row.reference}`)
@@ -165,8 +153,8 @@ export default {
             return this.state === 'LOADING'
         },
         filteredFees () {
-            return this.fees;
-        },                
+            return this.fees
+        }                
     }
 }
 </script>
