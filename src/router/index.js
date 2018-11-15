@@ -6,6 +6,8 @@ import Login from '@/pages/Login'
 import NotFound from '@/pages/NotFound'
 import Dashboard from '@/dashboard/pages/Dashboard'
 import ViewTransactions from '../transactions/pages/ViewTransactions'
+import Fees from '../accounts/pages/Fees'
+import FeesDetail from '../accounts/pages/FeesDetail'
 // import Payouts from '../transactions/pages/Payouts'
 import PaymentDetail from '../transactions/pages/PaymentDetail'
 // import Customers from '../contacts/pages/Customers'
@@ -19,6 +21,12 @@ const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
 const JobDetails = () => import('../transactions/pages/JobDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
+
+import Account from '../settings/pages/bs_settings'
+import Tax from '../settings/pages/taxation'
+import Team from '../settings/pages/team'
+import Roles from '../settings/pages/roles'
+import Reports from '../settings/pages/roles'
 
 Vue.use(Router)
 
@@ -69,10 +77,20 @@ let router = new Router({
           component: PaymentDetail
         },
         {
+          path: '/fees',
+          name: 'Fees',
+          component: Fees
+        },       
+        {
           path: '/logs',
           name: 'Logs',
           component: Logs
         },
+        {
+          path: '/fees/:id',
+          name: 'FeesDetails',
+          component: FeesDetail
+        },         
         {
           path: '/settings',
           name: 'Settings',
@@ -92,7 +110,57 @@ let router = new Router({
           path: '/contacts/:id',
           name: 'ContactDetails',
           component: ContactDetails
-        }
+        },
+        {
+          path: '/account',
+          name: 'Account',
+          component: Account,
+          meta: {
+            requiresAuth: true
+          }
+          // children: [
+            // {
+            //   path: '/account/taxation',
+            //   name: 'Taxation',
+            //   component: Tax
+            // },
+            // {
+            //   path: '/account/team',
+            //   name: 'Team',
+            //   component: Team
+            // },         
+            // {
+            //   path: '/account/roles',
+            //   name: 'Roles',
+            //   component: Roles
+            // },
+            // {
+            //   path: '/account/reports',
+            //   name: 'Reports',
+            //   component: Reports
+            // }
+          // ]
+        },
+        {
+          path: '/account/taxation',
+          name: 'Taxation',
+          component: Tax
+        },
+        {
+          path: '/account/team',
+          name: 'Team',
+          component: Team
+        },         
+        {
+          path: '/account/roles',
+          name: 'Roles',
+          component: Roles
+        },
+        {
+          path: '/account/reports',
+          name: 'Reports',
+          component: Reports
+        }            
       ]
     },
     {

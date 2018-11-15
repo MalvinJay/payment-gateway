@@ -30,6 +30,7 @@ Vue.component('filter-component', FilterComponent)
 Vue.component('export-modal', ExportModal)
 Vue.component('ticket-modal', TicketModal)
 Vue.component('avatar', Avatar)
+// Vue.component('charges-table', ChargesTable)
 
 export default {
   SideNav: SideNav,
@@ -44,6 +45,7 @@ export default {
   ExportModal: ExportModal,
   TicketModal: TicketModal,
   JobTable: JobTable,
+  // ChargesTable: ChargesTable,
   QueuedTable: QueuedTable,
   PayoutsTable: PayoutsTable,
   Avatar: Avatar

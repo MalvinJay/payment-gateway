@@ -387,11 +387,91 @@ $border: #dcdfe6;
     margin-left: 0;
 }
 
-.side-button{
-    padding: 5px;
-    margin-right: 5px;
+.el-card {
+    .el-card__footer {
+        position: relative;
+        width: calc(100% + 40px);
+        left: -20px;
+        bottom: -10px;
+        background-color: #fff;
+        padding: 15px;
+        border-top: 1px solid #ebeef5;
+    }
+}
 
-    i{
-        margin: 0;
+.el-form-item__label {
+    align-self: flex-start;
+    flex: 30% 0 0;
+    font-weight: lighter !important;
+}
+
+.el-form-item__content {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column!important;
+    flex: 0 0 20%;
+    margin-left: 0!important;
+}
+
+.breathe {
+    .cell {
+        padding-left: 20px;
+    }  
+    table th {
+        font-weight: 600!important;
+        color: initial;
+        font-size: 13px;
+    }  
+}
+
+.no-padding {
+    .el-card__body {
+        background-color: #f7fafc;
+        padding: 0!important;
+    }
+}
+
+.custom {
+    .el-card__body {
+        background-color: #f7fafc;
+        padding: 0 20px 10px 20px;
+
+        .no-header {
+            .transactions-table-header {
+                display: none!important;
+            }
+
+            .cell {
+                padding-left: 20px;
+            }
+        }
+    }
+}
+
+.search_n_ roles {
+    .el-input--mini {
+        .el-input__inner:hover {
+            border-radius: 20px!important;
+        }
+    }
+    .roles { 
+        border: 1px solid #c0c4cc;
+        border-radius: 5px;
+        input {
+            border: none;
+        }
+    }
+}
+
+.bars.icon {
+    margin: 0;
+}
+
+.invite-user {
+    .el-dialog__header {
+        display: none;
+    }
+    .el-dialog__body {
+        padding: 0;
     }
 }
