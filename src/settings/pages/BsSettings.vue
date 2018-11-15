@@ -110,6 +110,7 @@ export default {
         Method: 'POST',
         URL: '/v1/subscriptions/sub_DmJ2N7WjyCfpcm'
       },
+      createLoading: false,
       info: {
           Account_name: 'Client Name',
           Country: 'Ghana',
