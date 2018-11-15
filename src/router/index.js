@@ -124,6 +124,8 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+//   console.log('app', )
+  //   this.a.app.$session.exists())
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
       next({
@@ -131,7 +133,7 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-      if (this.a.app.$session.exists()) {
+      if (Object.keys(store.getters.user).length !== 0) {
         store.dispatch('getToken')
         next()
       } else {
