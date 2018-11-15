@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store/store'
-import Utils from '../utils/services'
 import Client from '@/pages/Client'
 import Login from '@/pages/Login'
 import NotFound from '@/pages/NotFound'
@@ -17,11 +16,12 @@ import Logs from '@/pages/client/transactions/Logs'
 import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
 
-import Account from '@/settings/pages/BsSettings'
-import Tax from '@/settings/pages/Taxation'
-import Team from '@/settings/pages/Team'
-import Roles from '@/settings/pages/Roles'
-import Reports from '@/settings/pages/Reports'
+// import Account from '@/settings/pages/BsSettings'
+// // import Tax from '@/settings/pages/Taxation'
+// import Team from '@/settings/pages/Team'
+// import Roles from '@/settings/pages/Roles'
+// import Reports from '@/settings/pages/Reports'
+// const Tax = require('../settings/pages/Taxation')
 const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
@@ -127,31 +127,31 @@ let router = new Router({
           name: 'ContactDetails',
           component: ContactDetails
         },
-        {
-          path: '/account',
-          name: 'Account',
-          component: Account
-        },
-        {
-          path: '/taxation',
-          name: 'Taxation',
-          component: Tax
-        },
-        {
-          path: '/team',
-          name: 'Team',
-          component: Team
-        },
-        {
-          path: '/roles',
-          name: 'Roles',
-          component: Roles
-        },
-        {
-          path: '/reports',
-          name: 'Reports',
-          component: Reports
-        },
+        // {
+        //   path: '/account',
+        //   name: 'Account',
+        //   component: Account
+        // },
+        // {
+        //   path: '/taxation',
+        //   name: 'Taxation',
+        //   component: Tax
+        // },
+        // {
+        //   path: '/team',
+        //   name: 'Team',
+        //   component: Team
+        // },
+        // {
+        //   path: '/roles',
+        //   name: 'Roles',
+        //   component: Roles
+        // },
+        // {
+        //   path: '/reports',
+        //   name: 'Reports',
+        //   component: Reports
+        // },
         // disputes
         {
           path: '/disputes',
