@@ -173,7 +173,7 @@
                     <span class="blue-text bold-600 s-16">{{header}} runs</span>
                 </div>
                 <div>
-                    <el-table class="default-table-expanded" empty-text="No job runs to display" v-loading="loadingPage" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="runs">
+                    <el-table @row-click="clickRun" ref="run" class="default-table-expanded" empty-text="No job runs to display" v-loading="loadingPage" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="runs">
                         <el-table-column type="expand">
                             <template slot-scope="props">
                                 <el-table empty-text="No transactions" tooltip-effect="light" header-row-class-name="transactions-table-header" row-class-name="transactions-table-body" :data="props.row.executed_transctions">
@@ -315,7 +315,7 @@ export default {
     },
     methods: {
         clickRun (row, event, column) {
-            this.$router.push(`/run/${row.id}`)
+            this.$refs.run.toggleRowExpansion(row)
         },
         fetchTransactions () {
             this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})

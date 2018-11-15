@@ -72,10 +72,10 @@ export default {
                             // SETTING TOKEN
                             this.$session.set('token', response.data.access_token)
                             this.$store.dispatch('setToken', response.data.access_token)
-                            this.$message({
-                                message: 'Login successful',
-                                type: 'success'
-                            })
+                            // this.$message({
+                            //     message: 'Login successful',
+                            //     type: 'success'
+                            // })
                             this.$router.push('/')
                         })
                     } else {

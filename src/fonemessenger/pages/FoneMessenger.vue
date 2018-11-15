@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div v-else>
-                    <el-table @row-click="clickRow" empty-text="No fone messengers to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="messages">
+                    <el-table ref="fone" @row-click="clickRow" empty-text="No fone messengers to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="messages">
                         <el-table-column type="expand" width="55">
                             <template slot-scope="props">
                                 <div class="pl-15">
@@ -107,9 +107,7 @@ export default {
         this.$store.dispatch('getFoneMessengers', {page: val, cache: false})
     },
     clickRow (row, event, column) {
-        if (column.property) {
-            this.$router.push(`/job/${row.id}`)
-        }
+        this.$refs.fone.toggleRowExpansion(row)
     },
     fetchMessages () {
       this.$store.dispatch('getFoneMessengers')

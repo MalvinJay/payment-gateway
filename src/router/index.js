@@ -17,11 +17,11 @@ import Logs from '@/pages/client/transactions/Logs'
 import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
 
-const Account = () => import('../settings/pages/BsSettings')
-const Tax = () => import('../settings/pages/Taxation')
-const Team = () => import('../settings/pages/Team')
-const Roles = () => import('../settings/pages/Roles')
-const Reports = () => import('../settings/pages/Reports')
+import Account from '../settings/pages/BsSettings'
+import Tax from '../settings/pages/Taxation'
+import Team from '../settings/pages/Team'
+import Roles from '../settings/pages/Roles'
+import Reports from '../settings/pages/Reports'
 const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
@@ -133,22 +133,22 @@ let router = new Router({
           component: Account
         },
         {
-          path: '/account/taxation',
+          path: '/taxation',
           name: 'Taxation',
           component: Tax
         },
         {
-          path: '/account/team',
+          path: '/team',
           name: 'Team',
           component: Team
         },
         {
-          path: '/account/roles',
+          path: '/roles',
           name: 'Roles',
           component: Roles
         },
         {
-          path: '/account/reports',
+          path: '/reports',
           name: 'Reports',
           component: Reports
         },
