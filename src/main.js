@@ -41,7 +41,8 @@ Vue.filter('money', function (value, currency, options) {
   options = options || {}
   currency = currency || 'GHS'
   if (currency === 'GHS') {
-    symbol = '\u20B5'
+    // symbol = '\u20B5'
+    symbol = 'GHs'
   }
   if (options.symbol === 'text') {
     symbol = 'GHS'

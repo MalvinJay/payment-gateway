@@ -5,7 +5,7 @@ import {
   SET_FEES_META,
   SET_FEES_FILTERS,
   GET_FEES_URI
-} from './fees-store-constants'
+} from './store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 

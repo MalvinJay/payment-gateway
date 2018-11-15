@@ -8,3 +8,13 @@ export const GET_CURRENT_FEE = 'getCurrentFee'
 export const SET_CURRENT_FEE = 'setCurrentFee'
 export const SET_CURRENT_FEES_STATE = 'setCurrentFeesState'
 export const GET_FEES_URI = 'https://api.flopay.io/v2/transactions.json'
+
+// topups
+export const GET_TOPUPS = 'getTopUps'
+export const SET_TOPUPS = 'setTopUps'
+export const SET_TOPUPS_STATE = 'setTopUpsState'
+
+// topups
+export const GET_SETTLEMENTS = 'getSettlements'
+export const SET_SETTLEMENTS = 'setSettlements'
+export const SET_SETTLEMENTS_STATE = 'setSettlementsState'

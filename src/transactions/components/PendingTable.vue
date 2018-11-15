@@ -36,6 +36,11 @@
                         {{scope.row.created_at | moment("MMM Do, YYYY")}}
                     </template>
                 </el-table-column>
+                <el-table-column prop="created_at" label="Time" width="80">
+                    <template slot-scope="scope">
+                        {{scope.row.created_at | moment("HH:mm A")}}
+                    </template>
+                </el-table-column>
                 <el-table-column width="80px">
                     <template slot-scope="scope">
                         <div class="mini-menu">
@@ -48,8 +53,6 @@
                                             action
                                         </div>
                                     </el-dropdown-item>
-                                    <el-dropdown-item class="s-12">Retry</el-dropdown-item>
-                                    <el-dropdown-item class="s-12">Cancel</el-dropdown-item>
                                     <el-dropdown-item class="s-12">Open Ticket</el-dropdown-item>
                                     <el-dropdown-item divided disabled>
                                         <div class="table-dropdown-header blue-text bold-600 text-uppercase">

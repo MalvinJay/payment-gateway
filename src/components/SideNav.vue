@@ -1,32 +1,17 @@
 <template>
     <div class="bg pt-20 nav-container">
-        <!-- <div class="center"> -->
-            <div class="navigation-card card-0">
-                <div class="flex align-items-center">
-                    <el-button class="side-button" icon="bars icon" style="padding: 5px;"></el-button>
-                    <!-- <avatar :size="25" username="Flopay" backgroundColor="#f7921e"></avatar> -->
-                    <el-popover
-                        placement="top-start"
-                        trigger="hover"
-                        :content="user.client.company_name">
-                        <p slot="reference" class="text-uppercase s-16 p-0 m-0 bold-500 client_name">{{user.client.company_name}}</p>                
-                    </el-popover>
-                </div>
+        <div class="navigation-card card-0">
+            <div class="flex align-items-center">
+                <el-button class="side-button" icon="bars icon" style="padding: 5px;margin-right: 5px"></el-button>
+                <!-- <avatar :size="25" username="Flopay" backgroundColor="#f7921e"></avatar> -->
+                <el-popover
+                    placement="top-start"
+                    trigger="hover"
+                    :content="user.client.company_name">
+                    <p slot="reference" class="text-uppercase s-16 p-0 m-0 bold-500 client_name">{{user.client.company_name}}</p>                
+                </el-popover>
             </div>
-            <!-- <div class="ui card z-depth navigation-card"> -->
-                <!-- navigation card content
-                <div class="content">
-                    <div class="ui items">
-                        <div class="item no-margin h-100 center">
-                            <div class="ui center-block tiny image">
-                                <avatar username="Flopay"></avatar>
-                                <img src="../assets/images/logo/BondCollect.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-            <!-- </div> -->
-        <!-- </div> -->
+        </div>
 
         <el-menu router :unique-opened="true" :default-active="defaultActive" active-text-color='#586ADA' text-color="#999999" background-color="#f1f6f8">
             <el-menu-item route="/" index="dashboard">
@@ -49,8 +34,8 @@
                     <img class="mr-10" src="../assets/images/icons/balance.svg" alt="">Account
                 </template>
                 <el-menu-item route="/fees" index="fees">Fees</el-menu-item>
-                <el-menu-item index="3-2">Topups</el-menu-item>
-                <el-menu-item index="3-3">Settlements</el-menu-item>
+                <el-menu-item route="/topups" index="topups">Topups</el-menu-item>
+                <el-menu-item route="/settlements" index="settlements">Settlements</el-menu-item>
                 <el-menu-item index="3-4">Settings</el-menu-item>
             </el-submenu>
             <el-menu-item route="/contacts" index="contacts">

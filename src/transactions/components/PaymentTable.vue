@@ -6,7 +6,7 @@
             </div>
             <div>
                 <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
-                <el-button v-if="canGenerateReports" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+                <!-- <el-button v-if="canGenerateReports" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
             </div>
         </div>
         <div>
@@ -34,9 +34,14 @@
                         </template>
                     </el-table-column>
                     <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
-                    <el-table-column prop="created_at" label="Date">
+                    <el-table-column prop="created_at" label="Date" width="120">
                         <template slot-scope="scope">
                             {{scope.row.created_at | moment("MMM Do, YYYY")}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="created_at" label="Time" width="80">
+                        <template slot-scope="scope">
+                            {{scope.row.created_at | moment("HH:mm A")}}
                         </template>
                     </el-table-column>
                     <el-table-column width="80px">

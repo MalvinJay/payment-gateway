@@ -18,10 +18,16 @@
                 </div>
                 <div v-else>
                     <el-table @row-click="clickRow" empty-text="No fone messengers to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="messages">
-                        <el-table-column type="selection" width="55">
+                        <el-table-column type="expand" width="55">
+                            <template slot-scope="props">
+                                <div class="pl-15">
+                                    <p class="blue-text s-13 bold-600">Message: </p>
+                                    <p class="s-12 gray">{{ props.row.message }}</p>
+                                </div>
+                            </template>
                         </el-table-column>
                         <el-table-column :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
-                        <el-table-column show-overflow-tooltip label="Message text" prop="message"></el-table-column>
+                        <!-- <el-table-column show-overflow-tooltip label="Message text" prop="message"></el-table-column> -->
                         <el-table-column width="80px">
                             <template slot-scope="scope">
                                 <div class="flex">
@@ -32,6 +38,11 @@
                         <el-table-column prop="updated_at" label="Date">
                             <template slot-scope="scope">
                                 {{scope.row.updated_at | moment("MMM Do, YYYY")}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="created_at" label="Time" width="80">
+                            <template slot-scope="scope">
+                                {{scope.row.created_at | moment("HH:mm A")}}
                             </template>
                         </el-table-column>
                     </el-table>
@@ -175,6 +186,26 @@ export default {
 .new-transaction-bg{
     background: #F7FAFC;
 }
+.trans-div{
+    height: 60px;
+    padding: 20px 20px 0 20px
+}
+.transactions-table-header{
+    background-color: #F7FAFC !important;
+    height: 36px !important;
+
+    th{
+        background-color: #F7FAFC !important;
+        padding: 0 !important;
+    }
+
+}
+.mr-10{
+    margin-right: 10px;
+}
+.pl-15{
+    padding-left: 15px;
+}
 .mini-button{
     // height: 30px;
     line-height: 1em;
@@ -192,26 +223,6 @@ export default {
     i{
         margin-right: 5px;
     }
-}
-.trans-div{
-    height: 60px;
-    padding: 20px 20px 0 20px
-}
-.transactions-table-header{
-    background-color: #F7FAFC !important;
-    height: 36px !important;
-
-    th{
-        background-color: #F7FAFC !important;
-        padding: 0 !important;
-    }
-
-}
-.white-text{
-    color: white
-}
-.mr-10{
-    margin-right: 10px;
 }
 </style>
 

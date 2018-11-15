@@ -7,8 +7,7 @@ import Login from '@/pages/Login'
 import NotFound from '@/pages/NotFound'
 import Dashboard from '@/dashboard/pages/Dashboard'
 import ViewTransactions from '../transactions/pages/ViewTransactions'
-import Fees from '../accounts/pages/Fees'
-import FeesDetail from '../accounts/pages/FeesDetail'
+
 // import Payouts from '../transactions/pages/Payouts'
 import PaymentDetail from '../transactions/pages/PaymentDetail'
 // import Customers from '../contacts/pages/Customers'
@@ -18,18 +17,22 @@ import Logs from '@/pages/client/transactions/Logs'
 import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
 
-import Account from '../settings/pages/bs_settings'
-import Tax from '../settings/pages/taxation'
-import Team from '../settings/pages/team'
-import Roles from '../settings/pages/roles'
-import Reports from '../settings/pages/roles'
-const Customers = () => import('../contacts/pages/Customers')
+const Account = () => import(/* webpackChunkName: "group-foo" */ '../settings/pages/BsSettings')
+const Tax = () => import(/* webpackChunkName: "group-foo" */ '../settings/pages/Taxation')
+const Team = () => import(/* webpackChunkName: "group-foo" */ '../settings/pages/Team')
+const Roles = () => import(/* webpackChunkName: "group-foo" */ '../settings/pages/Roles')
+const Reports = () => import(/* webpackChunkName: "group-foo" */ '../settings/pages/Reports')
+const Customers = () => import(/* webpackChunkName: "group-foo" */ '../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
 const Disputes = () => import('../transactions/pages/Disputes')
 const JobDetails = () => import('../transactions/pages/JobDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
 const FoneMessenger = () => import('../fonemessenger/pages/FoneMessenger')
+const Fees = () => import('../accounts/pages/Fees')
+const FeesDetail = () => import('../accounts/pages/FeesDetail')
+const TopUps = () => import('../accounts/pages/TopUps')
+const Settlements = () => import('../accounts/pages/Settlements')
 
 Vue.use(Router)
 
@@ -83,6 +86,16 @@ let router = new Router({
           path: '/fees',
           name: 'Fees',
           component: Fees
+        },
+        {
+          path: '/topups',
+          name: 'TopUps',
+          component: TopUps
+        },
+        {
+          path: '/settlements',
+          name: 'Settlements',
+          component: Settlements
         },
         {
           path: '/logs',

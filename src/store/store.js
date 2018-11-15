@@ -7,6 +7,8 @@ import jobs from '../transactions/store/jobs-store'
 import payouts from '../transactions/store/payouts-store'
 import reports from '../transactions/store/reports-store'
 import fees from '../accounts/store/fees-store'
+import topups from '../accounts/store/topups-store'
+import settlements from '../accounts/store/settlements-store'
 import disputes from '../transactions/store/disputes-store'
 import contacts from '../contacts/contacts-store'
 import fonemessenger from '../fonemessenger/store/fonemessenger-store'
@@ -32,6 +34,8 @@ export default new Vuex.Store({
     teams,
     roles,
     fonemessenger,
-    disputes
+    disputes,
+    topups,
+    settlements
   }
 })

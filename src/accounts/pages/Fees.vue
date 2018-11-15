@@ -20,7 +20,7 @@
                 <div v-else>
                     <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredFees">
                         <el-table-column type="selection" width="55"></el-table-column>
-                        <el-table-column prop="type" label="Type" width="100">
+                        <el-table-column prop="type" label="Type">
                             <template slot-scope="scope">
                                 <p>Charge</p>
                             </template>
@@ -53,6 +53,11 @@
                         <el-table-column prop="created_at" label="Date" width="150">
                             <template slot-scope="scope">
                                 {{scope.row.created_at | moment("MMM Do, YYYY")}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="created_at" label="Time" width="80">
+                            <template slot-scope="scope">
+                                {{scope.row.created_at | moment("HH:mm A")}}
                             </template>
                         </el-table-column>
                         <el-table-column width="80px">
