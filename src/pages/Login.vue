@@ -5,7 +5,7 @@
         </div>
         <div class="logo-div w-30 bg-white border-rounded">
             <p class="text-center flopay-blue bold-500 s-16">Welcome Back</p>
-            <el-form :model="form" :rules="rules" ref="form">
+            <el-form @keyup.enter.native="login('form')" :model="form" :rules="rules" ref="form">
                 <el-form-item prop="email">
                     <el-input autocomplete="on" class="no-border-input" placeholder="Email" v-model="form.email" type="email"></el-input>
                 </el-form-item>

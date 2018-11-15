@@ -11,14 +11,20 @@ export const SET_CURRENT_TRANSACTION_STATE = 'setCurrentTransactionState'
 
 export const GET_TRANSACTIONS_URI = 'https://api.flopay.io/v2/transactions.json'
 export const GET_BASE_URI = 'https://api.flopay.io/'
-// export const GET_BASE_URI = 'https://1bd8cd5c.ngrok.io/api'
 
 // reports
 export const GET_FIELDS = 'getFields'
 export const SET_FIELDS = 'setFields'
 export const SET_FIELDS_STATE = 'setFieldsState'
+export const SET_DOWNLOAD_LINK = 'setDownloadLink'
 export const SUBMIT_REPORT = 'submitReport'
 export const DOWNLOAD_REPORT = 'downloadReport'
+
+// disputes
+export const GET_DISPUTES = 'getDisputes'
+export const SET_DISPUTES = 'setDisputes'
+export const SET_DISPUTES_STATE = 'setDisputesState'
+export const CREATE_DISPUTE = 'createDisputes'
 
 // payouts
 export const PAYOUTS_FETCH = 'getPayouts'

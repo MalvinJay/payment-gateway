@@ -36,7 +36,7 @@ const mutations = {
 
 // actions
 const actions = {
-  [GET_DASHBOARD_GRAPH] ({ state, commit, rootGetters }, {
+  [GET_DASHBOARD_GRAPH] ({ state, commit, rootGetters, rootState }, {
     cache = true
   } = {}) {
     var params = state.dashboard.filters
@@ -49,11 +49,18 @@ const actions = {
         token: rootGetters.token
       }).then((response) => {
         commit(SET_DASHBOARD_GRAPH_STATE, 'DATA')
+        rootState.user.pageLoading = false
         commit(SET_DASHBOARD_GRAPH, response.data.response.data)
-        resolve()
+        console.log('response headers', response.status)
+        resolve(response)
       }).catch((error) => {
         commit(SET_DASHBOARD_GRAPH_STATE, 'ERROR')
         console.log(error)
+        console.log(error.headers)
+        // fix this
+        // if (error.status === 401) {
+        //   this.$router.push('/login')
+        // }
         reject(error)
       })
     })

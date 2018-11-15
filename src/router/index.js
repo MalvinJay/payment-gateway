@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store/store'
+import Utils from '../utils/services'
 import Client from '@/pages/Client'
 import Login from '@/pages/Login'
 import NotFound from '@/pages/NotFound'
@@ -19,8 +20,10 @@ import NewProduct from '@/pages/client/transactions/NewProduct'
 const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
+const Disputes = () => import('../transactions/pages/Disputes')
 const JobDetails = () => import('../transactions/pages/JobDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
+const FoneMessenger = () => import('../fonemessenger/pages/FoneMessenger')
 
 import Account from '../settings/pages/bs_settings'
 import Tax from '../settings/pages/taxation'
@@ -115,31 +118,6 @@ let router = new Router({
           path: '/account',
           name: 'Account',
           component: Account,
-          meta: {
-            requiresAuth: true
-          }
-          // children: [
-            // {
-            //   path: '/account/taxation',
-            //   name: 'Taxation',
-            //   component: Tax
-            // },
-            // {
-            //   path: '/account/team',
-            //   name: 'Team',
-            //   component: Team
-            // },         
-            // {
-            //   path: '/account/roles',
-            //   name: 'Roles',
-            //   component: Roles
-            // },
-            // {
-            //   path: '/account/reports',
-            //   name: 'Reports',
-            //   component: Reports
-            // }
-          // ]
         },
         {
           path: '/account/taxation',
@@ -160,7 +138,19 @@ let router = new Router({
           path: '/account/reports',
           name: 'Reports',
           component: Reports
-        }            
+        },     
+        // disputes
+        {
+          path: '/disputes',
+          name: 'Disputes',
+          component: Disputes
+        },
+        // fone messenger
+        {
+          path: '/fonemessenger',
+          name: 'FoneMessenger',
+          component: FoneMessenger
+        }
       ]
     },
     {
@@ -184,9 +174,29 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-    //   console.log('app stat', !this.a.app.$session.exists())
-      store.dispatch('getToken')
-      next()
+      if (this.a.app.$session.exists()) {
+        store.dispatch('getToken')
+        next()
+      } else {
+        store.client = {}
+        store.user = {
+          data: {},
+          client_id: '',
+          client_secret: ''
+        }
+        store.userdata = {}
+        store.permissions = {
+          data: []
+        }
+        store.logIn = false
+        store.user.token = null
+        localStorage.removeItem('token')
+        next({
+          path: '/login',
+          params: { nextUrl: to.fullPath }
+        })
+      }
+      console.log('app stat', this.a.app.$session.exists())
     }
   } else if (to.matched.some(record => record.meta.guest)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {

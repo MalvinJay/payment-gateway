@@ -10,7 +10,7 @@
                 <the-header></the-header>
             </el-header>
             <!-- Main Container -->
-            <el-main class="px-20">
+            <el-main v-loading="pageLoading" class="px-20">
                 <router-view></router-view>
             </el-main>
         </el-container>
@@ -19,6 +19,7 @@
 
 <script>
 import EventBus from '../event-bus.js'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Client',
   created () {
@@ -34,6 +35,10 @@ export default {
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getQueues')
     this.$store.dispatch('getPayouts')
+    this.$store.commit('setPageLoading', true)
+  },
+  computed: {
+    ...mapGetters(['pageLoading'])  
   },
 //   mounted () {
 //     window.addEventListener('unload', this.leaving(), false)
@@ -51,6 +56,7 @@ export default {
   },
   onActive() {
     setInterval(() => {
+        console.log('active')
         this.$store.dispatch('setClient', JSON.parse(this.$session.get('client')))
         this.$store.dispatch('getToken')
     }, 3300000)

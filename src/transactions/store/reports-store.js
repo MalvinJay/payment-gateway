@@ -1,18 +1,19 @@
-import { GET_FIELDS, SET_FIELDS, SET_FIELDS_STATE, GET_BASE_URI, SUBMIT_REPORT, DOWNLOAD_REPORT } from './transactions-store-constants'
+import { GET_FIELDS, SET_FIELDS, SET_DOWNLOAD_LINK, SET_FIELDS_STATE, GET_BASE_URI, SUBMIT_REPORT, DOWNLOAD_REPORT } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
-import Utils from '../../utils/services'
 
 // state
 const state = {
   fields: {
     data: [],
     state: 'DATA'
-  }
+  },
+  link: ''
 }
 
 // getters
 const getters = {
-  fields: state => state.fields.data
+  fields: state => state.fields.data,
+  downloadLink: state => state.link
 }
 
 // mutations
@@ -22,6 +23,9 @@ const mutations = {
   },
   [SET_FIELDS_STATE] (state, payload) {
     state.fields.state = payload
+  },
+  [SET_DOWNLOAD_LINK] (state, payload) {
+    state.link = payload
   }
 }
 
@@ -51,7 +55,6 @@ const actions = {
     }
   },
   [SUBMIT_REPORT] ({ state, commit, rootGetters, dispatch }, report) {
-    console.log('report', report)
     commit(SET_FIELDS_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
       apiCall({
@@ -67,7 +70,8 @@ const actions = {
             token: rootGetters.token
           }).then((response) => {
             console.log('status', response)
-            dispatch(DOWNLOAD_REPORT, response.data.response.data.file_name)
+            commit(SET_DOWNLOAD_LINK, response.data.response.data.file_name)
+            // dispatch(DOWNLOAD_REPORT, response.data.response.data.file_name)
             resolve(response)
           }).catch((error) => {
             reject(error)
@@ -81,7 +85,6 @@ const actions = {
     })
   },
   [DOWNLOAD_REPORT] ({ state, commit, rootGetters }, report) {
-    console.log('report', report)
     return new Promise((resolve, reject) => {
       apiCall({
         url: `${GET_BASE_URI}v1/clients/reports/download?file_name=${report}`,
@@ -89,6 +92,7 @@ const actions = {
         token: rootGetters.token
       }).then((response) => {
         console.log('download', response)
+        state.link = ''
       }).catch((error) => {
         commit(SET_FIELDS_STATE, 'ERROR')
         console.log(error)

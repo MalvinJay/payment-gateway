@@ -52,11 +52,13 @@ export default {
     }
 }
 .success{
-    background: #d6ecff;
-    color: #484bad;
+    // background: #d6ecff;
+    // color: #484bad;
 
-    i{
-        color: #6f8eef;
-    }
+    // i{
+    //     color: #6f8eef;
+    // }
+    background: #F44753;
+    color: white;
 }
 </style>
