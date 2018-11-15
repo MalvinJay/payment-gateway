@@ -17,12 +17,12 @@ import Logs from '@/pages/client/transactions/Logs'
 import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
 
-const Account = () => import(/* webpackChunkName: "group-foo" */ '../settings/pages/BsSettings')
-const Tax = () => import(/* webpackChunkName: "group-foo" */ '../settings/pages/Taxation')
-const Team = () => import(/* webpackChunkName: "group-foo" */ '../settings/pages/Team')
-const Roles = () => import(/* webpackChunkName: "group-foo" */ '../settings/pages/Roles')
-const Reports = () => import(/* webpackChunkName: "group-foo" */ '../settings/pages/Reports')
-const Customers = () => import(/* webpackChunkName: "group-foo" */ '../contacts/pages/Customers')
+const Account = () => import('../settings/pages/BsSettings')
+const Tax = () => import('../settings/pages/Taxation')
+const Team = () => import('../settings/pages/Team')
+const Roles = () => import('../settings/pages/Roles')
+const Reports = () => import('../settings/pages/Reports')
+const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
 const Disputes = () => import('../transactions/pages/Disputes')
