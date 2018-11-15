@@ -101,7 +101,7 @@
 <script>
 export default {
     name: 'Account',
-data () {
+  data () {
     return {
       isTest: true,
       summary: {

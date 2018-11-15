@@ -81,15 +81,15 @@
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/business-settings.svg" alt=""> Business Settings
                 </template>
-                <el-menu-item route="/account" index="9-1">Account Set-up</el-menu-item>
+                <el-menu-item route="/account" index="account">Account Set-up</el-menu-item>
                 <!-- <el-menu-item index="9-2">Verifications</el-menu-item> -->
-                <el-menu-item route="/account/taxation" index="9-2">Tax details</el-menu-item>
-                <el-menu-item route="/account/team" index="9-3">Team</el-menu-item>
-                <el-menu-item route="/account/roles" index="9-4">Roles</el-menu-item>   
+                <el-menu-item route="/account/taxation" index="taxation">Tax details</el-menu-item>
+                <el-menu-item route="/account/team" index="team">Team</el-menu-item>
+                <el-menu-item route="/account/roles" index="roles">Roles</el-menu-item>   
                 <!-- <el-menu-item index="9-6">Integration</el-menu-item>     -->
                 <!-- <el-menu-item index="9-7">Relay</el-menu-item>     -->
                 <!-- <el-menu-item index="9-8">Authorized apps</el-menu-item> -->
-                <el-menu-item route="/account/reports" index="9-5">Data Reports</el-menu-item>
+                <el-menu-item route="/account/reports" index="reports">Data Reports</el-menu-item>
                 <!-- <el-menu-item index="9-10">Customer emails</el-menu-item> -->
                 <!-- <el-menu-item index="9-11">Documents</el-menu-item> -->
                 <!-- <el-menu-item index="9-12">Security history</el-menu-item> -->

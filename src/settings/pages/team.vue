@@ -104,7 +104,7 @@ import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'Teams',
+    name: 'Team',
     data (){
         return {
             multiemail: '',

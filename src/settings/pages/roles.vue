@@ -6,7 +6,7 @@
                 <p class="s-13">Roles define what permissions are granted to team members in your Flopay account.</p>
             </div>
             <div>
-                <el-table class="no-header" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="no-header-table" :data="roles">
+                <el-table :show-header="false" class="no-header" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" :data="roles">
                     <el-table-column v-for="(column, index) in columns" :key="index" :prop="column" :formatter="formatter" width="300"></el-table-column>
                     <el-table-column align="right">
                         <template slot-scope="scope">
