@@ -1,18 +1,18 @@
-image: node:6.4
+#image: node:6.4
 
-stages:
-    - build
+#stages:
+#    - build
     - deploy
 
-build site:
-  stage: build
-  script:
-    - npm install --progress=false
-    - npm run build
-  artifacts:
-    expire_in: 1h
-    paths:
-      - dist
+#build site:
+#  stage: build
+#  script:
+#    - npm install --progress=false
+#    - npm run build
+#  artifacts:
+#    expire_in: 1h
+#    paths:
+#      - dist
 
 deploy:
   image: alpine
