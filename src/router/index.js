@@ -16,11 +16,11 @@ import Logs from '@/pages/client/transactions/Logs'
 import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
 
-import BsSettings from '@/settings/pages/BsSettings'
-import Taxation from '@/settings/pages/Taxation'
-import Team from '@/settings/pages/Team'
-import Roles from '@/settings/pages/Roles'
-import Reports from '@/settings/pages/Reports'
+import BsSettings from '@/business/pages/BsSettings'
+import Taxation from '@/business/pages/Taxation'
+import Team from '@/business/pages/Team'
+import Roles from '@/business/pages/Roles'
+import Reports from '@/business/pages/Reports'
 const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')

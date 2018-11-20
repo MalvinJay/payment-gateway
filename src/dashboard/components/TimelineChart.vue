@@ -9,7 +9,7 @@ import Chart from 'chart.js'
 
 export default {
   name: 'TimeLineChart',
-  props: ['data', 'labels', 'dashboard'],
+  props: ['dashboard'],
   mounted () {
     var time = this.$refs.time
     var ctx = time.getContext('2d')
@@ -108,6 +108,18 @@ export default {
         options: options
     })
     myLineChart.resize()
+  },
+  computed: {
+    labels () {
+        return this.dashboard.map((el) => {
+            return el.label
+        }) 
+    },
+    data () {
+        return this.dashboard.map((el) => {
+           return `${el.count}`
+        })
+    }
   }
 }
 </script>

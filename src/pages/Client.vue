@@ -31,6 +31,7 @@ export default {
         EventBus.$emit('updateGraph')
     })
     this.$store.dispatch('getTransactions', {cache: false})
+    this.$store.dispatch('getTodayGraph', {cache: false})
     this.$store.dispatch('setClient', JSON.parse(this.$session.get('client')))
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getQueues')

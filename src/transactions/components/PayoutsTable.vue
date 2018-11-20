@@ -140,7 +140,7 @@ export default {
   props: ['type'],
   data () {
     return {
-      test: true,
+    //   test: true,
       createLoading: false,
       columns: [
         // {label: 'Method', dataField: 'method', width: '100px'},
