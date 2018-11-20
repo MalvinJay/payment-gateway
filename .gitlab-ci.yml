@@ -24,7 +24,6 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_dsa
     - chmod 600 ~/.ssh/id_dsa
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - pwd
-    - rsync -rav --delete  /builds/nfortics/web/frontend/flopay-frontend/dist $USER@$SERVER_IP:/var/www/frontend/dashboard.flopay.io
+    - rsync -rav --delete  /builds/nfortics/web/frontend/flopay-frontend/dist/* $USER@$SERVER_IP:/var/www/frontend/dashboard.flopay.io
   only:
     - master
