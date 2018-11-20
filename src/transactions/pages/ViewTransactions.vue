@@ -40,7 +40,6 @@ export default {
   mounted () {
     EventBus.$emit('sideNavClick', 'payments')
     EventBus.$on('tabNumber', (val) => {
-        console.log('valtab', val)
         this.activeName = val
     })
     this.$store.dispatch('getTransactions')

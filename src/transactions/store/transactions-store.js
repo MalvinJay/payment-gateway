@@ -189,7 +189,6 @@ const actions = {
     // var filters = state.queues.filters
     var filters = {...state.queues.filters, search_value: 'queued'}
     // var fill = Utils.createQueryParams(filters)
-    console.log('filters queue', filters)
     var query = Utils.createQueryParams(filters, page)
     // query += '&all=true'
     commit(SET_QUEUE_STATE, 'LOADING')
@@ -254,7 +253,6 @@ const actions = {
   },
   [GET_CURRENT_TRANSACTION] ({ state, commit, rootGetters }, id) {
     // var trans = state.transactions.data.find(el => el.reference === id)
-    // console.log('trans', trans)
     // commit(SET_CURRENT_TRANSACTION, trans)
     commit(SET_CURRENT_TRANSACTION_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
@@ -263,7 +261,6 @@ const actions = {
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
-        console.log('trans', response)
         commit(SET_CURRENT_TRANSACTION_STATE, 'DATA')
         commit(SET_CURRENT_TRANSACTION, response.data.response.data)
         resolve()
@@ -282,15 +279,12 @@ const actions = {
     // query = query + `search_value=${search}`
     var filters = {...state.transactions.filters, search_value: search}
     var fill = Utils.createQueryParams(filters)
-    console.log('filetr', fill)
-    console.log('search value', search)
     return new Promise((resolve, reject) => {
       apiCall({
         url: `${GET_TRANSACTIONS_URI}${fill}`,
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
-        console.log('trans', response)
         commit(SET_TRANSACTIONS_STATE, 'DATA')
         commit(SET_TRANSACTIONS_META, response.data.response.data)
         commit(SET_TRANSACTIONS, response.data.response.data.transactions)
@@ -303,7 +297,6 @@ const actions = {
     })
   },
   [CREATE_TICKET] ({ commit, rootGetters }, ticket) {
-    console.log('ticket', ticket)
     return new Promise((resolve, reject) => {
       apiCall({
         url: `${GET_BASE_URI}v1/clients/tickets/via/support`,
@@ -311,7 +304,6 @@ const actions = {
         token: rootGetters.token,
         data: ticket
       }).then((response) => {
-        console.log('trans', response)
         resolve(response)
       }).catch((error) => {
         console.log(error)

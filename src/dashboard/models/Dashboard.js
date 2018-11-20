@@ -49,7 +49,6 @@ let Dashboard = function (obj, isDetailed) {
 //     // check for empty phones
 //     this.phone_numbers.forEach((element, index) => {
 //       if (element.number == null) {
-//         console.log('To be cut out', element)
 //         this.phone_numbers.splice(index, 1)
 //       }
 //         element.is_mobile_money = element.number_type == 'mobile_money'

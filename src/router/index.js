@@ -181,7 +181,7 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
   console.log('app', store)
   console.log('app', store.state.user)
-  console.log('app', store.state.user.logIn)
+  console.log('login', localStorage.getItem('login'))
   console.log('store', store)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
@@ -190,7 +190,7 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-      if (store.state.user.logIn) {
+      if (localStorage.getItem('login')) {
         store.dispatch('getToken')
         next()
       } else {
@@ -207,6 +207,9 @@ router.beforeEach((to, from, next) => {
         store.logIn = false
         store.user.token = null
         localStorage.removeItem('token')
+        localStorage.setItem('login', false) // clear your user's token from localstorage
+        localStorage.removeItem('client_id')
+        localStorage.removeItem('client_secret')
         next({
           path: '/login',
           params: { nextUrl: to.fullPath }

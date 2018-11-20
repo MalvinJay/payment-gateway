@@ -6,6 +6,7 @@
 
 <script>
 import Chart from 'chart.js'
+import EventBus from '../../event-bus.js'
 
 export default {
   name: 'TimeLineChart',
@@ -107,7 +108,18 @@ export default {
         data: data,
         options: options
     })
-    myLineChart.resize()
+    EventBus.$on('updateTimeGraph', () => {
+        this.changeGraph(myLineChart)
+    })
+  },
+  methods: {
+    changeGraph (myChart) {
+      myChart.config.data = this.data
+      myChart.update()
+    },
+    destroyGraph (myChart) {
+        myChart.destroy()
+    }
   },
   computed: {
     labels () {

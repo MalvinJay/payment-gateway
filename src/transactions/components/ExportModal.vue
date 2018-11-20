@@ -100,13 +100,11 @@ export default {
         this.loading = true
         this.form.fields = this.column === 'all' ? this.fieldSet.map(el => el.key).join(',') : this.form.fields
         var query = Utils.createExportQuery(this.form)
-        console.log('query', query)
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$store.dispatch('submitReport', query)
             .then((response) => {
                 if (response.data.success) {
-                    console.log('success', response)
                     this.ready = true
                     this.$message({
                         type: 'success',
@@ -161,7 +159,6 @@ export default {
                 return this.form.fields.split(',')
             },
             set (value) {
-                console.log('selected', value.join(','))
                 this.form.fields = value.join(',')
             }
         },

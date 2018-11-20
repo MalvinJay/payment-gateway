@@ -209,7 +209,6 @@ export default {
             tooltips: {
                 // callbacks: {
                 //     label: function(tooltipItem, data) {
-                //         console.log(tooltipItem)
                 //         var label = data.datasets[tooltipItem.datasetIndex].label[tooltipItem.index] || ''
                 //         if (label) {
                 //             label += ': '
@@ -241,6 +240,7 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'dashboard')
+    // EventBus.$emit('updateTimeGraph')
   },
   methods: {
     handleChange (val) {
@@ -325,7 +325,6 @@ export default {
         }
     },
     pageLoading () {
-        console.log('state', this.state)
         return this.state === 'LOADING'
     },
     days () {

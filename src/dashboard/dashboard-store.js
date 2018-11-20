@@ -68,7 +68,6 @@ const actions = {
         commit(SET_DASHBOARD_GRAPH_STATE, 'DATA')
         rootState.user.pageLoading = false
         commit(SET_DASHBOARD_GRAPH, response.data.response.data)
-        console.log('response headers', response.status)
         resolve(response)
       }).catch((error) => {
         commit(SET_DASHBOARD_GRAPH_STATE, 'ERROR')
@@ -98,7 +97,6 @@ const actions = {
           commit(SET_TODAY_GRAPH_STATE, 'DATA')
           rootState.user.pageLoading = false
           commit(SET_TODAY_GRAPH, response.data.response.data)
-          console.log('response headers', response.status)
           resolve(response)
         }).catch((error) => {
           commit(SET_TODAY_GRAPH_STATE, 'ERROR')

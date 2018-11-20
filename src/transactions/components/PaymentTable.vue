@@ -177,7 +177,6 @@ export default {
   },
   methods: {
     clickRow (row, event, column) {
-        console.log('row', column)
         if (column.property) {
             this.$router.push(`/payments/${row.reference}`)
         }

@@ -69,7 +69,6 @@ export default {
             this.$store.dispatch('getRoles', {cache: false})
         },
         formatter(row, column) {
-            console.log('row', row)
             var value = row[column.property] ? row[column.property] : '-'
             return value
         }

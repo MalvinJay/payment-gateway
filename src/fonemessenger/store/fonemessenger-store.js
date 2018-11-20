@@ -45,7 +45,6 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('sms logs', response)
           commit(SET_FONE_MESSENGERS_STATE, 'DATA')
           commit(SET_FONE_MESSENGERS, response.data.response.data)
           resolve(response)
@@ -65,7 +64,6 @@ const actions = {
         token: rootGetters.token,
         data: log
       }).then((response) => {
-        console.log('sms response', response)
         resolve(response)
       }).catch((error) => {
         console.log(error)

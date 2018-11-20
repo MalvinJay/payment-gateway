@@ -14,7 +14,7 @@ const user = {
     },
     userdata: {},
     client: {},
-    logIn: true,
+    logIn: localStorage.getItem('login'),
     test: false,
     permissions: {
       data: []
@@ -36,10 +36,10 @@ const user = {
   // mutations
   mutations: {
     [SET_TOKEN] (state, data) {
-      state.logIn = true
+      state.logIn = localStorage.getItem('login')
       state.user.token = data
     },
-    //   client data
+    // client data
     [SET_CLIENT] (state, data) {
       state.permissions.data = data.client.privileges
       state.user.data = data
@@ -85,7 +85,7 @@ const user = {
         localStorage.setItem('password', password)
         axios.post(url)
           .then((response) => {
-            console.log('response', response)
+            localStorage.setItem('login', true)
             resolve(response)
             // commit(SET_CLIENT, response.data.response.data.client)
             // localStorage.setItem('name', response.data.response.data.client.full_name)
@@ -93,8 +93,8 @@ const user = {
             // localStorage.setItem('email', response.data.response.data.client.email)
             // localStorage.setItem('balance', response.data.response.data.available_balance)
             // commit(SET_CLIENT_CRED, response.data.response.data.access_key)
-            // localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
-            // localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
+            localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
+            localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
           }).catch((error) => {
             console.log(error)
             reject(error)
@@ -104,18 +104,17 @@ const user = {
     [AUTH_REQUEST] ({ state, commit }) {
       return new Promise((resolve, reject) => {
         var url = `${GET_BASE_URI}/v1/login.json`
-        // var params = {
+        var params = {
         //   ...state.client,
-        //   grant_type: 'client_credentials'
-        // }
-        var params = {}
-        params.client_id = 'defb88495e0eb3f9b625716ed4470b574097a88812d1b6ac49f6580a16f7e492'
-        params.client_secret = '5246712000ae13015390fcc740ae35afbf6ac4f5dcd9cdcf47710c22b2351c01'
-        params.grant_type = 'client_credentials'
-        console.log('params', params)
+          grant_type: 'client_credentials'
+        }
+        localStorage.setItem('login', true)
+        console.log('params', state.client.client_id)
+        params.client_id = localStorage.getItem('client_id')
+        params.client_secret = localStorage.getItem('client_secret')
+        // params.grant_type = 'client_credentials'
         axios.post(url, params)
           .then((response) => {
-            console.log('user token', response)
             localStorage.setItem('token', response.data.access_token)
             resolve(response)
             commit(SET_TOKEN, response.data.access_token)
@@ -129,8 +128,9 @@ const user = {
       return new Promise((resolve, reject) => {
         commit(LOGOUT)
         localStorage.removeItem('token') // clear your user's token from localstorage
-        // localStorage.removeItem('client_id')
-        // localStorage.removeItem('client_secret')
+        localStorage.setItem('login', false) // clear your user's token from localstorage
+        localStorage.removeItem('client_id')
+        localStorage.removeItem('client_secret')
         resolve()
       })
     },

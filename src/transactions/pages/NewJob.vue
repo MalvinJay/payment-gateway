@@ -284,7 +284,6 @@ export default {
             this.files = fileList
             let fileInput = this.$el.querySelector(".upload-demo input[type='file']")
             let filess = fileInput.files[0]
-            console.log('file', filess)
             this.$store.dispatch('sendToBucket', filess)
         }
     },
