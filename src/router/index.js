@@ -215,7 +215,7 @@ router.beforeEach((to, from, next) => {
           params: { nextUrl: to.fullPath }
         })
       }
-      console.log('app stat', this.a.app.$session.exists())
+    //   console.log('app stat', this.a.app.$session.exists())
     }
   } else if (to.matched.some(record => record.meta.guest)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
