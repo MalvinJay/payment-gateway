@@ -45,7 +45,6 @@ const mutations = {
     //   })
     // })
     // var contacts = Object.values(payload.reduce((acc, cur) => Object.assign(acc, {[cur.name]: cur}), {}))
-    // console.log('payload contact', contacts)
     state.contacts.count = payload.length
     state.contacts.data = payload
   },

@@ -82,7 +82,6 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('transactions for fees', response)
           commit(SET_FEES_STATE, 'DATA')
           commit(SET_FEES_META, response.data.response.data)
           commit(SET_FEES, response.data.response.data.transactions)

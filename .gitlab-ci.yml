@@ -1,9 +1,9 @@
-#image: node:6.4
-
+#image: node:10.2.0
+#
 #stages:
 #    - build
 #    - deploy
-
+#
 #build site:
 #  stage: build
 #  script:
@@ -13,16 +13,17 @@
 #    expire_in: 1h
 #    paths:
 #      - dist
+#
+
+image: alpine
 
 deploy:
-  image: alpine
-  stage: deploy
   script:
     - apk add --no-cache rsync openssh
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_dsa
     - chmod 600 ~/.ssh/id_dsa
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - rsync -rav --delete dist/ $USER@$SERVER_IP:/var/www/frontend/dashboard.flopay.io
+    - rsync -rav --delete  /builds/nfortics/web/frontend/flopay-frontend/dist/* $USER@$SERVER_IP:/var/www/frontend/dashboard.flopay.io
   only:
     - master

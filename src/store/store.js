@@ -13,8 +13,8 @@ import disputes from '../transactions/store/disputes-store'
 import contacts from '../contacts/contacts-store'
 import fonemessenger from '../fonemessenger/store/fonemessenger-store'
 import user from './modules/user'
-import teams from '../settings/store/team-store'
-import roles from '../settings/store/role-store'
+import teams from '../business/store/team-store'
+import roles from '../business/store/role-store'
 
 // axios.defaults.baseURL = 'https://api.flopay.io/'
 

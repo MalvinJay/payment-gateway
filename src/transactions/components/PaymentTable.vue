@@ -34,14 +34,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
-                    <el-table-column prop="created_at" label="Date" width="120">
+                    <el-table-column prop="created_at" label="Date" width="auto">
                         <template slot-scope="scope">
-                            {{scope.row.created_at | moment("MMM Do, YYYY")}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="created_at" label="Time" width="80">
-                        <template slot-scope="scope">
-                            {{scope.row.created_at | moment("HH:mm A")}}
+                            {{scope.row.created_at | moment("MMM Do, YYYY HH:mm A")}}
                         </template>
                     </el-table-column>
                     <el-table-column width="80px">
@@ -182,7 +177,6 @@ export default {
   },
   methods: {
     clickRow (row, event, column) {
-        console.log('row', column)
         if (column.property) {
             this.$router.push(`/payments/${row.reference}`)
         }

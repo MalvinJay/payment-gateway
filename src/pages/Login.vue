@@ -15,7 +15,7 @@
                     </el-input>
                 </el-form-item>
                 <div v-if="false" class="flex justify-content-between align-items-center s-12 my-2">
-                    <el-checkbox size="mini" v-model="remember" label="Remember me?"></el-checkbox>
+                    <el-checkbox size="mini" v-model="isAdmin" label="Admin?"></el-checkbox>
                     <el-button size="mini" type="text">Forgot password?</el-button>
                 </div>
                 <el-form-item class="my-2">
@@ -37,7 +37,7 @@ export default {
     return {
       form: {},
       loading: false,
-      remember: false,
+      isAdmin: false,
       type: 'password',
       rules: {
         email: [
@@ -55,9 +55,10 @@ export default {
         // if (this.remember) {
         //     localStorage.setItem('email')
         // }
+        var url = this.isAdmin ? 'adminLogin' : 'login'
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$store.dispatch('login', {email: this.form.email, password: this.form.password})
+            this.$store.dispatch(url, {email: this.form.email, password: this.form.password})
             .then((response) => {
                 if (response.data.success) {
 

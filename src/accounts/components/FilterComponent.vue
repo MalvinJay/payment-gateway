@@ -137,7 +137,6 @@ export default {
             this.createFilters()
         },
         keepVisible () {
-            console.log('now')
             this.$refs.messageDrop.show()
         },
         statusClick (val) {

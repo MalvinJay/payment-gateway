@@ -16,11 +16,11 @@ import Logs from '@/pages/client/transactions/Logs'
 import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
 
-import BsSettings from '@/settings/pages/BsSettings'
-import Taxation from '@/settings/pages/Taxation'
-import Team from '@/settings/pages/Team'
-import Roles from '@/settings/pages/Roles'
-import Reports from '@/settings/pages/Reports'
+import BsSettings from '@/business/pages/BsSettings'
+import Taxation from '@/business/pages/Taxation'
+import Team from '@/business/pages/Team'
+import Roles from '@/business/pages/Roles'
+import Reports from '@/business/pages/Reports'
 const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
@@ -181,7 +181,7 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
   console.log('to route', to)
   console.log('app', store.state.user)
-  console.log('app', store.state.user.logIn)
+  console.log('login', localStorage.getItem('login'))
   console.log('store', store)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
@@ -190,7 +190,7 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-      if (store.state.user.logIn) {
+      if (localStorage.getItem('login')) {
         store.dispatch('getToken')
         next()
       } else {
@@ -207,12 +207,15 @@ router.beforeEach((to, from, next) => {
         store.logIn = false
         store.user.token = null
         localStorage.removeItem('token')
+        localStorage.setItem('login', false) // clear your user's token from localstorage
+        localStorage.removeItem('client_id')
+        localStorage.removeItem('client_secret')
         next({
           path: '/login',
           params: { nextUrl: to.fullPath }
         })
       }
-      console.log('app stat', this.a.app.$session.exists())
+    //   console.log('app stat', this.a.app.$session.exists())
     }
   } else if (to.matched.some(record => record.meta.guest)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
