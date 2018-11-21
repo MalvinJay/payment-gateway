@@ -1,7 +1,15 @@
-import axios from axios
+import store from '../store/store'
 
-export default {
-    getToken (cred) {
+var Auth = {
+  loggedIn: false,
 
-    }
+  login: function () {
+    store.getters.logIn = true
+  },
+
+  logout: function () {
+    store.getters.logIn = true
+  }
 }
+
+export default Auth

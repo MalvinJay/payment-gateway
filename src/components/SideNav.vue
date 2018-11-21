@@ -7,8 +7,8 @@
                 <el-popover
                     placement="top-start"
                     trigger="hover"
-                    :content="user.client.company_name">
-                    <p slot="reference" class="text-uppercase s-16 p-0 m-0 bold-500 client_name">{{user.client.company_name}}</p>                
+                    :content="client">
+                    <p slot="reference" class="text-uppercase s-16 p-0 m-0 bold-500 client_name">{{client}}</p>                
                 </el-popover>
             </div>
         </div>
@@ -123,7 +123,11 @@ export default {
   computed: {
     ...mapGetters({
         user: 'user'
-    })
+    }),
+    client () {
+        var client = Object.keys(this.user).length !== 0 ? this.user.client.company_name : ''
+        return client
+    }
   }
 }
 </script>

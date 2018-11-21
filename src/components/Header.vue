@@ -56,6 +56,11 @@ export default {
         loading: 'el-icon-search'
     }
   },
+  created () {
+    if (Object.keys(this.user).length === 0) {
+      this.logout()
+    }  
+  },
   methods: {
     searchButton () {
         this.loading = 'el-icon-loading'
@@ -96,8 +101,8 @@ export default {
     },
     client () {
         return {
-            full_name: this.user.client.full_name,
-            company_name: this.user.client.company_name
+            full_name: Object.keys(this.user).length !== 0 ? this.user.client.full_name : '',
+            company_name: Object.keys(this.user).length !== 0 ? this.user.client.company_name : ''
         }
     }
   }

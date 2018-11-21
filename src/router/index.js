@@ -179,7 +179,7 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log('app', store)
+  console.log('to route', to)
   console.log('app', store.state.user)
   console.log('app', store.state.user.logIn)
   console.log('store', store)
