@@ -14,7 +14,7 @@
                                 placement="left"
                                 width="400"
                                 popper-class="no-padding-popover"
-                                trigger="click">
+                                trigger="hover">
                                 <div>
                                     <div class="flex justify-content-between p-10 border-bottom">
                                         <p class="blue-text bold-600 s-14 m-0 p-0">Role Type</p>

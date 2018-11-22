@@ -474,6 +474,19 @@ $border: #dcdfe6;
     .el-dialog__body {
         padding: 0;
     }
+    .el-dialog__footer {
+        padding: 20px;
+    }
+
+    .custom {
+        .el-table__header-wrapper {
+            display: none;
+        }
+
+        .el-table__body-wrapper {
+            border-top: 1px solid #ebeef5;
+        }
+    }
 }
 
 .no-header-table{

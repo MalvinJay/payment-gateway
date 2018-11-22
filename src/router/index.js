@@ -13,6 +13,7 @@ import PaymentDetail from '../transactions/pages/PaymentDetail'
 import ContactDetails from '../contacts/pages/ContactDetails'
 // import NewJob from '../transactions/pages/NewJob'
 import Logs from '@/pages/client/transactions/Logs'
+import LogsDetails from '@/pages/client/transactions/Logs'
 import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
 
@@ -27,6 +28,13 @@ const NewJob = () => import('../transactions/pages/NewJob')
 const Disputes = () => import('../transactions/pages/Disputes')
 const JobDetails = () => import('../transactions/pages/JobDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
+
+const connect_overview = () => import('../connect/pages/overview')
+const connect_accounts = () => import('../connect/pages/accounts')
+const connect_transfers = () => import('../connect/pages/transfers')
+const connect_fees = () => import('../connect/pages/collected_fees')
+const connect_settings = () => import('../connect/pages/settings')
+
 const FoneMessenger = () => import('../fonemessenger/pages/FoneMessenger')
 const Fees = () => import('../accounts/pages/Fees')
 const FeesDetail = () => import('../accounts/pages/FeesDetail')
@@ -96,11 +104,17 @@ let router = new Router({
           name: 'Settlements',
           component: Settlements
         },
+        // Developers
         {
           path: '/logs',
           name: 'Logs',
           component: Logs
         },
+        {
+          path: '/logs/:id',
+          name: 'LogsDetails',
+          component: LogsDetails
+        },        
         {
           path: '/fees/:id',
           name: 'FeesDetails',
@@ -126,6 +140,33 @@ let router = new Router({
           name: 'ContactDetails',
           component: ContactDetails
         },
+        // Connect
+        {
+          path: '/connect/overview',
+          name: 'ConnectOverview',
+          component: connect_overview
+        },
+        {
+          path: '/connect/accounts',
+          name: 'ConnectAccounts',
+          component: connect_accounts
+        },
+        {
+          path: '/connect/transfers',
+          name: 'ConnectTransfers',
+          component: connect_transfers
+        },
+        {
+          path: '/connect/application_fees',
+          name: 'ConnectFees',
+          component: connect_fees
+        },
+        {
+          path: '/connect/settings',
+          name: 'ConnectSettings',
+          component: connect_settings
+        },
+        // Business Settings
         {
           path: '/account',
           name: 'BsSettings',
