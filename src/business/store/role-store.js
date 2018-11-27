@@ -66,7 +66,7 @@ const actions = {
     var filters = state.roles.filters
     var query = ''
     if (Utils.empty(filters)) {
-      query = `?all=true&page=${page}&limit=10`
+      query = `?all=true&page=${page}&limit=12`
     } else {
       // filters.search_value = 'cashin'
       query = Utils.createQueryParams(filters, page)

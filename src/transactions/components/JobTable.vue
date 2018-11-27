@@ -67,6 +67,7 @@
                     </div>
                     <el-pagination class="my-2 flex justify-content-end"
                         @current-change="handleCurrentChange"
+                        :page-size="pageSize"
                         layout="prev, pager, next"
                         :total="total">
                     </el-pagination>
@@ -206,7 +207,8 @@ export default {
     ...mapGetters({
       jobs: 'jobs',
       state: 'jobsState',
-      providers: 'providers'
+      providers: 'providers',
+      pageSize: 'pageSize'
     }),
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'

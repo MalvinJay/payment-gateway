@@ -71,6 +71,7 @@
                     </div>
                     <el-pagination class="my-2 flex justify-content-end"
                         @current-change="handleCurrentChange"
+                        :page-size="pageSize"
                         layout="prev, pager, next"
                         :total="total">
                     </el-pagination>
@@ -175,6 +176,14 @@ export default {
         this.ticketVisible = false
     })
   },
+  beforeDestroy () {
+    EventBus.$off('exportModal', (val) => {
+        this.exportVisible = false
+    })
+    EventBus.$off('ticketModal', (val) => {
+        this.ticketVisible = false
+    })  
+  },
   methods: {
     clickRow (row, event, column) {
         if (column.property) {
@@ -256,6 +265,7 @@ export default {
       providers: 'providers',
       test: 'test',
       contacts: 'contacts',
+      pageSize: 'pageSize',
       permissions: 'permissions'
     }),
     canGenerateReports () {

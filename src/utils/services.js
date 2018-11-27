@@ -1,5 +1,13 @@
 import equal from 'fast-deep-equal'
 export default {
+//   create query out of object
+  createQueryFromObject (obj) {
+    var query = ''
+    Object.keys(obj).forEach(function (key) {
+      query = typeof obj[key] === 'undefined' ? '' : query + `&${key}=${obj[key]}`
+    })
+    return query.substring(1)
+  },
   createExportQuery (form) {
     var query = 'file_type=csv'
     if (this.present(form.from)) {
@@ -34,7 +42,7 @@ export default {
     return query
   },
   createQueryParams (filters, page = 1) {
-    var query = `?page=${page}&limit=10`
+    var query = `?page=${page}&limit=12`
     if (this.present(filters)) {
       if (this.present(filters.from) && this.present(filters.to)) {
         query = query + `&from=${filters.from}&to=${filters.to}`
@@ -63,7 +71,7 @@ export default {
     return query
   },
   createPendingParams (filters, page = 1) {
-    var query = `?page=${page}&limit=10`
+    var query = `?page=${page}&limit=12`
     if (this.present(filters)) {
       if (this.present(filters.from) && this.present(filters.to)) {
         query = query + `&from=${filters.from}&to=${filters.to}`
@@ -122,7 +130,12 @@ export default {
     return !this.present(value)
   },
   sum (arr) {
-    return arr.reduce((sum, x) => sum + x)
+    console.log('arr', arr)
+    if (arr.length === 0) {
+      return 0
+    } else {
+      return arr.reduce((sum, x) => sum + x)
+    }
   },
   addContactToJobQuery (batch) {
     var query = `batch_details[Key]=${batch.Key}&batch_details[Bucket]=flopay-batchstore`
@@ -161,5 +174,12 @@ export default {
       text += charList.charAt(Math.floor(Math.random() * charList.length))
     }
     return text
+  },
+  returnBool (value) {
+    if (value === 'true') {
+      return true
+    } else {
+      return false
+    }
   }
 }

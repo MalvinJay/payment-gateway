@@ -2,9 +2,17 @@ import { TRANSACTION_CREATE, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SE
   TRANSACTIONS_FETCH, SET_CURRENT_TRANSACTION_STATE, GET_BASE_URI,
   SET_TRANSACTIONS_STATE, GET_QUEUE, SET_QUEUE, SET_QUEUE_STATE, SET_QUEUE_FILTERS, SET_QUEUE_META, SET_CURRENT_TRANSACTION,
   SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, SET_PENDING_STATE, SET_PENDING_META, GET_CURRENT_TRANSACTION,
-  GET_TRANSACTIONS_URI, CREATE_TICKET } from './transactions-store-constants'
+  CREATE_TICKET } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
+
+// const url = localStorage.getItem('isAdmin') === true ? 'v2/accounts/transactions' : 'v2/transactions.json'
+// var url = ''
+// if (Utils.returnBool(localStorage.getItem('isAdmin'))) {
+//   url = 'v2/accounts/transactions'
+// } else {
+//   url = 'v2/transactions.json'
+// }
 
 // state
 const state = {
@@ -132,22 +140,28 @@ const actions = {
     cache = true,
     page = 1
   } = {}) {
+    //   url for admin or client
+    var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
+
+    // filters
     var filters = state.transactions.filters
     var query = ''
     if (Utils.empty(filters)) {
-      query = `?all=true&search_value=cashout&page=${page}&limit=10`
+      query = `?all=true&search_value=cashout&page=${page}&limit=12`
     } else {
       filters.search_value = 'cashout'
       query = Utils.createQueryParams(filters, page)
     }
+    // state
     commit(SET_TRANSACTIONS_STATE, 'LOADING')
     commit(SET_TRANSACTIONS_FILTERS, filters)
+
     if (cache && state.transactions.data.length !== 0) {
       commit(SET_TRANSACTIONS_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_TRANSACTIONS_URI}${query}`,
+          url: `${GET_BASE_URI}${url}${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
@@ -170,7 +184,7 @@ const actions = {
   [TRANSACTION_CREATE] ({commit, state, rootGetters}, transaction) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `https://api.flopay.io/v1/receive.json`,
+        url: `${GET_BASE_URI}/v1/receive.json`,
         method: 'POST',
         data: transaction,
         token: rootGetters.token
@@ -186,6 +200,7 @@ const actions = {
     page = 1,
     cache = true
   } = {}) {
+    var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
     // var filters = state.queues.filters
     var filters = {...state.queues.filters, search_value: 'queued'}
     // var fill = Utils.createQueryParams(filters)
@@ -198,7 +213,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_TRANSACTIONS_URI}${query}`,
+          url: `${GET_BASE_URI}${url}${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
@@ -222,6 +237,7 @@ const actions = {
     page = 1,
     cache = true
   } = {}) {
+    var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
     var filters = state.pending.filters
     var query = Utils.createPendingParams(filters, page)
     commit(SET_PENDING_STATE, 'LOADING')
@@ -231,7 +247,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_TRANSACTIONS_URI}${query}&statuses[]=pending`,
+          url: `${GET_BASE_URI}${url}${query}&statuses[]=pending`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
@@ -272,6 +288,7 @@ const actions = {
     })
   },
   [SEARCH_TRANSACTIONS] ({ state, commit, rootGetters }, {search}) {
+    var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
     // var query = ''
     // // if (type) {
     // //   query = query + `statuses[]=${type}`
@@ -281,7 +298,7 @@ const actions = {
     var fill = Utils.createQueryParams(filters)
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_TRANSACTIONS_URI}${fill}`,
+        url: `${GET_BASE_URI}${url}${fill}`,
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {

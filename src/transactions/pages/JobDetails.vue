@@ -226,6 +226,7 @@
                         </div>
                         <el-pagination class="my-2 flex justify-content-end"
                             @current-change="handleCurrentChange"
+                            :page-size="pageSize"
                             layout="prev, pager, next"
                             :total="totalRuns">
                         </el-pagination>
@@ -496,7 +497,8 @@ export default {
             totalRunsStore: 'currentJobRuns',
             runState: 'currentJobRunsState',
             file: 'file',
-            fileState: 'fileState'
+            fileState: 'fileState',
+            pageSize: 'pageSize'
         }),
         error () {
             return this.state === 'ERROR'

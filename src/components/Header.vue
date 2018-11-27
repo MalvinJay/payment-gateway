@@ -57,9 +57,10 @@ export default {
     }
   },
   created () {
-    if (Object.keys(this.user).length === 0) {
-      this.logout()
-    }  
+    console.log('length', Object.keys(this.user).length)
+    // if (Object.keys(this.user).length === 0) {
+    //   this.logout()
+    // }  
   },
   methods: {
     searchButton () {
@@ -90,7 +91,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['user', 'test']),
+    ...mapGetters(['user', 'test', 'isAdmin']),
     testData: {
         get () {
             return this.test
@@ -100,10 +101,16 @@ export default {
         }
     },
     client () {
-        return {
-            full_name: Object.keys(this.user).length !== 0 ? this.user.client.full_name : '',
-            company_name: Object.keys(this.user).length !== 0 ? this.user.client.company_name : ''
+        var client = {}
+        // localStorage.getItem('isAdmin')
+        if (this.isAdmin) {
+            client.full_name = Object.keys(this.user).length !== 0 ? `${this.user.firstname} ${this.user.lastname}` : '',
+            client.company_name = Object.keys(this.user).length !== 0 ? this.user.company : ''
+        } else {
+            client.full_name = Object.keys(this.user).length !== 0 ? this.user.client.full_name : '',
+            client.company_name = Object.keys(this.user).length !== 0 ? this.user.client.company_name : ''
         }
+        return client
     }
   }
 }

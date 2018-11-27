@@ -41,6 +41,7 @@ const actions = {
     page = 1,
     cache = true
   } = {}) {
+    var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
     var query = 'search_value=topup'
     commit(SET_TOPUPS_STATE, 'LOADING')
     if (cache && state.topups.data.length !== 0) {
@@ -48,7 +49,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_BASE_URI}v2/transactions.json?${query}`,
+          url: `${GET_BASE_URI}${url}?${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {

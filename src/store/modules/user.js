@@ -1,7 +1,9 @@
-import { AUTH_REQUEST, ADMIN_LOGIN, IS_ADMIN, SET_PAGE_LOADING, SET_TEST, SET_TOKEN, SET_CLIENT, SET_PERMISSIONS, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
+import { AUTH_REQUEST, ADMIN_LOGIN, IS_ADMIN, SET_PAGE_LOADING, SET_TEST, SET_TOKEN, SET_CLIENT,
+  SET_PERMISSIONS, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../apiCall'
 import axios from 'axios'
+import Utils from '../../utils/services'
 
 const user = {
 // state
@@ -20,7 +22,8 @@ const user = {
       data: []
     },
     pageLoading: false,
-    isAdmin: false
+    isAdmin: Utils.returnBool(localStorage.getItem('isAdmin')),
+    pageSize: 12
   },
 
   // getters
@@ -32,7 +35,8 @@ const user = {
     permissions: state => state.permissions.data,
     pageLoading: state => state.pageLoading,
     logIn: state => state.logIn,
-    isAdmin: state => state.isAdmin
+    isAdmin: state => state.isAdmin,
+    pageSize: state => state.pageSize
   },
 
   // mutations
@@ -43,7 +47,9 @@ const user = {
     },
     // client data
     [SET_CLIENT] (state, data) {
-      state.permissions.data = data.client.privileges
+      if (!localStorage.getItem('isAdmin')) {
+        state.permissions.data = data.client.privileges
+      }
       state.user.data = data
       state.userdata = data
     },
@@ -68,7 +74,7 @@ const user = {
       }
       state.logIn = false
       state.user.token = null
-      state.isAdmin = false
+      localStorage.setItem('isAdmin', false)
     },
     // PERMISSIONs
     [SET_PERMISSIONS] (state, data) {
@@ -93,6 +99,7 @@ const user = {
         axios.post(url)
           .then((response) => {
             localStorage.setItem('login', true)
+            // localStorage.setItem('isAdmin', false)
             resolve(response)
             // commit(SET_CLIENT, response.data.response.data.client)
             // localStorage.setItem('name', response.data.response.data.client.full_name)
@@ -111,11 +118,12 @@ const user = {
     [ADMIN_LOGIN] ({ state, commit }, {email, password}) {
       return new Promise((resolve, reject) => {
         var url = `${GET_BASE_URI}v1/flopay_platform/login.json?email=${email}&password=${password}`
-        localStorage.setItem('password', password)
+        // localStorage.setItem('password', password)
         axios.post(url)
           .then((response) => {
             localStorage.setItem('login', true)
-            state.isAdmin = true
+            // localStorage.setItem('isAdmin', true)
+            // state.isAdmin = true
             // commit(SET_CLIENT, response.data.response.data.client)
             // localStorage.setItem('name', response.data.response.data.client.full_name)
             // localStorage.setItem('company', response.data.response.data.client.company_name)
@@ -156,6 +164,7 @@ const user = {
         commit(LOGOUT)
         localStorage.removeItem('token') // clear your user's token from localstorage
         localStorage.setItem('login', false) // clear your user's token from localstorage
+        localStorage.removeItem('isAdmin') // clear your user's token from localstorage
         localStorage.removeItem('client_id')
         localStorage.removeItem('client_secret')
         resolve()

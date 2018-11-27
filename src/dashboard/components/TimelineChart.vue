@@ -21,7 +21,7 @@ export default {
             data: this.data,
             backgroundColor: 'transparent',
             borderColor: '#E8EBF8',
-            borderWidth: 1,
+            borderWidth: 2,
             pointRadius: 0,
             pointHitRadius: 20,
             lineTension: 0

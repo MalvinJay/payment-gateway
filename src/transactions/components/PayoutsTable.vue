@@ -85,6 +85,7 @@
                     <el-pagination class="my-2 flex justify-content-end"
                         @current-change="handleCurrentChange"
                         layout="prev, pager, next"
+                        :page-size="pageSize"
                         :total="total">
                     </el-pagination>
                 </div>
@@ -241,7 +242,8 @@ export default {
       meta: 'payoutsMeta',
       providers: 'providers',
       test: 'test',
-      permissions: 'permissions'
+      permissions: 'permissions',
+      pageSize: 'pageSize'
     }),
     total () {
       return this.meta.trans

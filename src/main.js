@@ -19,6 +19,7 @@ import VueLocalStorage from 'vue-localstorage'
 import VueSession from 'vue-session'
 
 Vue.use(VueSession)
+Vue.use(require('vue-chartist'))
 Vue.use(VueLocalStorage)
 Vue.use(ElementUI, {locale})
 Vue.use(VueMoment)
@@ -42,13 +43,19 @@ Vue.filter('money', function (value, currency, options) {
   currency = currency || 'GHS'
   if (currency === 'GHS') {
     // symbol = '\u20B5'
-    symbol = 'GHs'
+    symbol = 'GHS'
   }
   if (options.symbol === 'text') {
     symbol = 'GHS'
   }
   value = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   return `${symbol} ${value}`
+})
+
+Vue.filter('capitalize', function (value) {
+  if (!value) return ''
+  value = value.toString()
+  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
 })
 
 // Vue.component('payment-table', (resolve, reject) => {

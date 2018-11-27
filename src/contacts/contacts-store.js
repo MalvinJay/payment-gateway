@@ -52,7 +52,7 @@ const mutations = {
     page = 1,
     payload
   } = {}) {
-    var items = payload.slice((page * 10) - 10, page * 10).map(i => {
+    var items = payload.slice((page * 12) - 12, page * 12).map(i => {
       return i
     })
     state.currentContacts.data = items
@@ -101,9 +101,6 @@ const actions = {
     }
   },
   [SET_CURRENT_CONTACTS] ({commit, state}, page = 1) {
-    // var items = state.contacts.data.slice((page * 10) - 10, page * 10).map(i => {
-    //   return i
-    // })
     commit(SET_CURRENT_CONTACTS, {payload: state.contacts.data, page: page})
   },
   [CREATE_CONTACT] ({ state, commit, rootGetters, dispatch }, form) {
@@ -149,13 +146,13 @@ const actions = {
     })
   },
   [SET_CURRENT_CONTACT_SCHEDULES] ({ state, commit }, { page = 1, contacts = state.currentContact.data.schedules } = {}) {
-    var items = contacts.slice((page * 10) - 10, page * 10).map(i => {
+    var items = contacts.slice((page * 12) - 12, page * 12).map(i => {
       return i
     })
     commit(SET_CURRENT_CONTACT_SCHEDULES, items)
   },
   [SET_CURRENT_CONTACT_TRANSACTIONS] ({ state, commit }, { page = 1, contacts = state.currentContact.data.executed_transactions } = {}) {
-    var items = contacts.slice((page * 10) - 10, page * 10).map(i => {
+    var items = contacts.slice((page * 12) - 12, page * 12).map(i => {
       return i
     })
     commit(SET_CURRENT_CONTACT_TRANSACTIONS, items)

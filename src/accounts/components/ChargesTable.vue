@@ -71,6 +71,7 @@
                         {{fees.length}} results
                     </div>
                     <el-pagination class="my-2 flex justify-content-end"
+                        :page-size="pageSize"
                         @current-change="handleCurrentChange"
                         layout="prev, pager, next"
                         :total="total">
@@ -136,7 +137,8 @@ computed: {
     // 1. what you want to call the getter here on the component : 2. The name of the getter from the vuex store    
         fees: 'fees',
         state: 'feesState',
-        meta: 'feesMeta'  
+        meta: 'feesMeta',
+        pageSize: 'pageSize'
     }),
     error () {
         return this.state === 'ERROR' && this.state !== 'LOADING'

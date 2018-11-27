@@ -15,6 +15,7 @@ import fonemessenger from '../fonemessenger/store/fonemessenger-store'
 import user from './modules/user'
 import teams from '../business/store/team-store'
 import roles from '../business/store/role-store'
+import accounts from '../connect/store/accounts-store'
 
 // axios.defaults.baseURL = 'https://api.flopay.io/'
 
@@ -36,6 +37,7 @@ export default new Vuex.Store({
     fonemessenger,
     disputes,
     topups,
-    settlements
+    settlements,
+    accounts
   }
 })

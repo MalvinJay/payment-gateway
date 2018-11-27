@@ -5,7 +5,7 @@
         :visible="ticketVisible"
         width="25%">
         <div class="flex new-ticket-bg">
-            <el-form ref="ticketForm" size="mini" class="w-80 m-auto">
+            <el-form label-width="80px" ref="ticketForm" size="mini" class="w-80 m-auto">
                 <el-form-item label="Issue">
                     <el-select class="w-100" placeholder="Please select reason" v-model="form.description">
                         <el-option
@@ -16,16 +16,19 @@
                             </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="Email">
+                    <el-input v-model="form.email" type="email"></el-input>
+                </el-form-item>
                 <el-form-item v-if="form.description === 'other'" label="Subject">
                     <el-input v-model="form.subject" type="text"></el-input>
                 </el-form-item>
                 <el-form-item v-if="form.description === 'other'" label="Other">
                     <el-input v-model="other" autosize type="textarea"></el-input>
                 </el-form-item>
-                <el-form-item class="flex justify-content-end">
-                    <el-button @click="close">Cancel</el-button>
-                    <el-button :loading="loading" type="primary" @click="submitTicket('ticketForm')">Submit</el-button>
-                </el-form-item>
+                <div class="flex justify-content-end my-2">
+                    <el-button size="mini" @click="close">Cancel</el-button>
+                    <el-button size="mini" :loading="loading" type="primary" @click="submitTicket('ticketForm')">Submit</el-button>
+                </div>
             </el-form>
         </div>
     </el-dialog>

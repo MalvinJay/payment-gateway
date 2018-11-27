@@ -58,6 +58,7 @@
                         </div>
                         <el-pagination class="my-2 flex justify-content-end"
                             @current-change="handleCurrentChange"
+                            :page-size="pageSize"
                             layout="prev, pager, next"
                             :total="total">
                         </el-pagination>
@@ -234,7 +235,8 @@ export default {
       contacts: 'currentContacts',
       state: 'contactsState',
       count: 'contactsCount',
-      providers: 'providers'
+      providers: 'providers',
+      pageSize: 'pageSize'
     }),
     total () {
       return this.count

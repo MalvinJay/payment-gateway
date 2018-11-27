@@ -2,7 +2,7 @@
     <el-card class="transactions">
         <div class="trans-div">
             <div class="flex align-items-baseline">
-                <p class="header-text">TopUps</p>
+                <p class="header-text">Topups</p>
             </div>
         </div>
         <div>
@@ -12,56 +12,17 @@
                     <el-button @click.prevent="fetchTopUps" icon="sync icon" type="text">Retry</el-button>
                 </div>
             </div>
-            <div v-else>
+            <div v-else class="breathe">
                 <el-table @row-click="clickRow" empty-text="No Topups" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="topups">
-                    <el-table-column type="selection" width="55"></el-table-column>
-                    <el-table-column prop="amount" label="Amount" width="100">
+                    <el-table-column prop="amount" label="Amount">
                         <template slot-scope="scope">
                             <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.receiver_amount | money}}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="status" label="" width="auto">
-                        <template slot-scope="scope">
-                            <div class="flex">
-                                <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
-                                <the-tag v-else-if="scope.row.status.toLowerCase() === 'failed'" status="success" :title="scope.row.status" icon="close icon"></the-tag>
-                                <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                    <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                     <el-table-column prop="created_at" label="Date">
                         <template slot-scope="scope">
-                            {{scope.row.created_at | moment("MMM Do, YYYY")}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="created_at" label="Time" width="80">
-                        <template slot-scope="scope">
-                            {{scope.row.created_at | moment("HH:mm A")}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column width="80px">
-                        <template slot-scope="scope">
-                            <div class="mini-menu">
-                                <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i>
-                                <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
-                                    <i class="ellipsis horizontal icon mr-0 cursor"></i>
-                                    <el-dropdown-menu class="w-200" slot="dropdown">
-                                        <el-dropdown-item v-if="scope.row.status.toLowerCase() ==='failed'" disabled>
-                                            <div class="table-dropdown-header bold-600 text-uppercase">
-                                                action
-                                            </div>
-                                        </el-dropdown-item>
-                                        <el-dropdown-item command="open" v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Open Ticket</el-dropdown-item>
-                                        <el-dropdown-item v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Retry</el-dropdown-item>
-                                        <el-dropdown-item :divided="scope.row.status.toLowerCase() ==='failed'" disabled>
-                                            <div class="table-dropdown-header bold-600 text-uppercase">
-                                                connection
-                                            </div></el-dropdown-item>
-                                        <el-dropdown-item command="edit" class="s-12">View Payment Details</el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </el-dropdown>
-                            </div>
+                            {{scope.row.created_at | moment("Do MMM, YYYY HH:mm A")}}
                         </template>
                     </el-table-column>
                 </el-table>
@@ -72,6 +33,7 @@
                     </div>
                     <el-pagination class="my-2 flex justify-content-end"
                         @current-change="handleCurrentChange"
+                        :page-size="pageSize"
                         layout="prev, pager, next"
                         :total="total">
                     </el-pagination>
@@ -91,9 +53,9 @@ export default {
     return {
       test: true,
       columns: [
-        {label: 'Customer', dataField: 'customer', width: 'auto'},
+        {label: 'Customer', dataField: 'receiver_name', width: 'auto'},
         {label: 'Reference', dataField: 'reference', width: 'auto'},
-        {label: 'type', dataField: 'transaction_type', width: '100px'}
+        {label: 'type', dataField: 'remarks', width: '150px'}
       ],
       styleObject: {
         fontSize: '12px'
@@ -134,7 +96,8 @@ export default {
   computed: {
     ...mapGetters({
       topups: 'topups',
-      state: 'topupsState'
+      state: 'topupsState',
+      pageSize: 'pageSize'
     }),
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'

@@ -144,6 +144,7 @@
                     </div>
                     <el-pagination class="my-2 flex justify-content-end"
                         @current-change="handleScheduleChange"
+                        :page-size="pageSize"
                         layout="prev, pager, next"
                         :total="schedulesTotal">
                     </el-pagination>
@@ -201,6 +202,7 @@
                     </div>
                     <el-pagination class="my-2 flex justify-content-end"
                         @current-change="handleTransactionsChange"
+                        :page-size="pageSize"
                         layout="prev, pager, next"
                         :total="transactionsTotal">
                     </el-pagination>
@@ -257,7 +259,8 @@ export default {
             form: 'currentContact',
             state: 'currentContactState',
             schedules: 'currentContactSchedules',
-            transactions: 'currentContactTransactions'
+            transactions: 'currentContactTransactions',
+            pageSize: 'pageSize'
         }),
         loadingPage () {
             return this.state === 'LOADING'

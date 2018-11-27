@@ -17,12 +17,11 @@
                        <el-button @click.prevent="fetchFees" icon="sync icon" type="text">Retry</el-button>
                     </div>
                 </div>
-                <div v-else>
+                <div v-else class="breathe">
                     <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredFees">
-                        <el-table-column type="selection" width="55"></el-table-column>
                         <el-table-column prop="type" label="Type">
                             <template slot-scope="scope">
-                                <p>Charge</p>
+                                <p>Fee</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="Net">
@@ -39,48 +38,10 @@
                             <template slot-scope="scope">
                                 <p class="m-0 p-0 mr-10 s-13">{{scope.row.charged_amount | money}}</p>
                             </template>
-                        </el-table-column>
-                        <!-- <el-table-column label="">
+                        </el-table-column>                                                                                               
+                        <el-table-column prop="created_at" label="Date">
                             <template slot-scope="scope">
-                                <p class="m-0 p-0 mr-10 s-13 text-left">GHS</p>
-                            </template>
-                        </el-table-column>                         -->
-                        <el-table-column label="Description" width="auto">
-                            <template slot-scope="scope">
-                                <p class="m-0 p-0 mr-10">Charge taken</p>
-                            </template>
-                        </el-table-column>                                                                                                
-                        <el-table-column prop="created_at" label="Date" width="150">
-                            <template slot-scope="scope">
-                                {{scope.row.created_at | moment("MMM Do, YYYY")}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="created_at" label="Time" width="80">
-                            <template slot-scope="scope">
-                                {{scope.row.created_at | moment("HH:mm A")}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="80px">
-                            <template slot-scope="scope">
-                                <div class="mini-menu">
-                                    <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i>
-                                    <el-dropdown trigger="click">
-                                        <i class="ellipsis horizontal icon mr-0 cursor"></i>
-                                        <el-dropdown-menu class="w-200" slot="dropdown">
-                                            <el-dropdown-item disabled>
-                                                <div class="table-dropdown-header bold-600 text-uppercase">
-                                                    action
-                                                </div>
-                                            </el-dropdown-item>
-                                            <el-dropdown-item class="s-12">Open Ticket</el-dropdown-item>
-                                            <el-dropdown-item divided disabled>
-                                                <div class="table-dropdown-header bold-600 text-uppercase">
-                                                    connection
-                                                </div></el-dropdown-item>
-                                            <el-dropdown-item class="s-12">View Payment Details</el-dropdown-item>
-                                        </el-dropdown-menu>
-                                    </el-dropdown>
-                                </div>
+                                {{scope.row.created_at | moment("Do MMM, YYYY HH:mm A")}}
                             </template>
                         </el-table-column>
                     </el-table>
@@ -91,6 +52,7 @@
                         </div>
                         <el-pagination class="my-2 flex justify-content-end"
                             @current-change="handleCurrentChange"
+                            :page-size="pageSize"
                             layout="prev, pager, next"
                             :total="total">
                         </el-pagination>
@@ -146,7 +108,8 @@ export default {
     computed: {
         ...mapGetters({
             fees: 'fees',
-            state: 'feesState'
+            state: 'feesState',
+            pageSize: 'pageSize'
         }),  
         error () {
             return this.state === 'ERROR' && this.state !== 'LOADING'
@@ -158,7 +121,10 @@ export default {
             return this.state === 'LOADING'
         },
         filteredFees () {
-            return this.fees
+            return this.fees.map(el => {
+                el.net_amount = el.receiver_amount - el.charged_amount
+                return el
+            })
         }                
     }
 }

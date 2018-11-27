@@ -1,7 +1,11 @@
 import { GET_DASHBOARD_GRAPH, GET_TODAY_GRAPH, SET_TODAY_GRAPH, SET_TODAY_GRAPH_STATE, SET_DASHBOARD_FILTERS, SET_DASHBOARD_GRAPH, SET_DASHBOARD_GRAPH_STATE, GET_DASHBOARD_URI } from './dashboard-store-constants'
+import { GET_BASE_URI } from '../transactions/store/transactions-store-constants'
 import { apiCall } from '../store/apiCall'
 import Utils from '../utils/services'
 import Dashboard from './models/Dashboard'
+
+// const url = Utils.returnBool(localStorage.getItem('isAdmin')) ? 'v2/accounts/dashboard/graph.json' : 'v1/clients/dashboard/graph'
+// console.log('admin steeze', Utils.returnBool(localStorage.getItem('isAdmin')))
 
 // state
 const state = {
@@ -56,12 +60,13 @@ const actions = {
   [GET_DASHBOARD_GRAPH] ({ state, commit, rootGetters, rootState }, {
     cache = true
   } = {}) {
+    var url = rootGetters.isAdmin ? 'v2/accounts/dashboard/graph.json' : 'v1/clients/dashboard/graph'
     var params = state.dashboard.filters
     var query = Utils.createQueryParams(params)
     commit(SET_DASHBOARD_GRAPH_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_DASHBOARD_URI}${query}`,
+        url: `${GET_BASE_URI}${url}${query}`,
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
@@ -71,6 +76,7 @@ const actions = {
         resolve(response)
       }).catch((error) => {
         commit(SET_DASHBOARD_GRAPH_STATE, 'ERROR')
+        rootState.user.pageLoading = false
         console.log(error)
         console.log(error.headers)
         // fix this
@@ -84,13 +90,14 @@ const actions = {
   [GET_TODAY_GRAPH] ({ state, commit, rootGetters, rootState }, {
     cache = true
   } = {}) {
+    var url = rootGetters.isAdmin ? 'v2/accounts/dashboard/graph.json' : 'v1/clients/dashboard/graph'
     commit(SET_TODAY_GRAPH_STATE, 'LOADING')
     if (cache && state.today.data.length !== 0) {
       commit(SET_TODAY_GRAPH_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_DASHBOARD_URI}?time_interval=day`,
+          url: `${GET_BASE_URI}${url}?time_interval=day`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
@@ -102,6 +109,7 @@ const actions = {
           commit(SET_TODAY_GRAPH_STATE, 'ERROR')
           console.log(error)
           console.log(error.headers)
+          rootState.user.pageLoading = false
           // fix this
           // if (error.status === 401) {
           //   this.$router.push('/login')
@@ -115,8 +123,8 @@ const actions = {
     commit(SET_DASHBOARD_FILTERS, filters)
     return new Promise((resolve, reject) => {
       dispatch('getDashboardGraph', {cache: false})
-        .then(() => {
-          resolve()
+        .then((response) => {
+          resolve(response)
         }).catch((error) => {
           reject(error)
         })

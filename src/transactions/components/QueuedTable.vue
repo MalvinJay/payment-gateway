@@ -79,6 +79,7 @@
                     </div>
                     <el-pagination class="my-2 flex justify-content-end"
                         @current-change="handleCurrentChange"
+                        :page-size="pageSize"
                         layout="prev, pager, next"
                         :total="total">
                     </el-pagination>
@@ -130,7 +131,8 @@ export default {
     ...mapGetters({
       transactions: 'queues',
       meta: 'queuesMeta',
-      state: 'queuesState'
+      state: 'queuesState',
+      pageSize: 'pageSize'
     }),
     total () {
       return this.meta.trans

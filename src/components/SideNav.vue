@@ -44,7 +44,7 @@
                     Customers
                 </template>
             </el-menu-item>
-            <el-submenu ref="sideMenu" index="5">
+            <el-submenu index="5">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/billing.svg" alt="">Billing
                 </template>
@@ -53,22 +53,22 @@
                 <el-menu-item index="3-3">Products</el-menu-item>
                 <el-menu-item index="3-4">Orders</el-menu-item>
             </el-submenu>
-            <el-submenu index="6">
+            <el-submenu v-if="isAdmin" index="6">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">Connect
                 </template>
-                <el-menu-item index="6-1">Accounts</el-menu-item>
+                <el-menu-item route="/accounts" index="accounts">Accounts</el-menu-item>
                 <el-menu-item index="6-2">Settlements</el-menu-item>
                 <el-menu-item index="6-3">Fees</el-menu-item>
                 <el-menu-item index="6-4">Settings</el-menu-item>
             </el-submenu>
-            <el-menu-item route="/fonemessenger" index="fonemessenger">
+            <el-menu-item v-if="!isAdmin" route="/fonemessenger" index="fonemessenger">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/radar.svg" alt="">
                     FoneMessenger
                 </template>
             </el-menu-item>
-            <el-submenu ref="sideMenu" index="8">
+            <el-submenu index="8">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/developer.svg" alt="">Developers
                 </template>
@@ -77,22 +77,15 @@
                 <el-menu-item route="/logs" index="8-3">Logs</el-menu-item>
                 <el-menu-item index="8-4">Settings</el-menu-item>
             </el-submenu>
-            <el-submenu ref="sideMenu" route="/account" index="9">
+            <el-submenu index="9">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/business-settings.svg" alt=""> Business Settings
                 </template>
                 <el-menu-item route="/account" index="account">Account Set-up</el-menu-item>
-                <!-- <el-menu-item index="9-2">Verifications</el-menu-item> -->
                 <el-menu-item route="/taxation" index="taxation">Tax details</el-menu-item>
                 <el-menu-item route="/team" index="team">Team</el-menu-item>
-                <el-menu-item route="/roles" index="roles">Roles</el-menu-item>   
-                <!-- <el-menu-item index="9-6">Integration</el-menu-item>     -->
-                <!-- <el-menu-item index="9-7">Relay</el-menu-item>     -->
-                <!-- <el-menu-item index="9-8">Authorized apps</el-menu-item> -->
+                <el-menu-item route="/roles" index="roles">Roles</el-menu-item>
                 <el-menu-item route="/reports" index="reports">Data Reports</el-menu-item>
-                <!-- <el-menu-item index="9-10">Customer emails</el-menu-item> -->
-                <!-- <el-menu-item index="9-11">Documents</el-menu-item> -->
-                <!-- <el-menu-item index="9-12">Security history</el-menu-item> -->
             </el-submenu>
         </el-menu>
     </div>
@@ -122,10 +115,21 @@ export default {
   },
   computed: {
     ...mapGetters({
-        user: 'user'
+        user: 'user',
+        isAdmin: 'isAdmin'
     }),
+    // isAdmin () {
+    //     return localStorage.getItem('isAdmin')
+    // },
     client () {
-        var client = Object.keys(this.user).length !== 0 ? this.user.client.company_name : ''
+        var client = ''
+        // localStorage.getItem('isAdmin')
+        if (this.isAdmin) {
+           client = Object.keys(this.user).length !== 0 ? this.user.company : '' 
+        } else {
+           client = Object.keys(this.user).length !== 0 ? this.user.client.company_name : '' 
+        }
+        // var client = Object.keys(this.user).length !== 0 ? this.user.client.company_name : ''
         return client
     }
   }

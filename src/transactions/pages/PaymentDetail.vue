@@ -20,7 +20,18 @@
                     </div>
                     <div>
                         <el-button v-if="status === 'failed'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Refund</el-button>
-                        <el-button size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Note</el-button>
+                        <el-button @click="ticketVisible = true" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Open Ticket</el-button>
+                        <el-dropdown @command="command => handleTableCommand(command, form)" trigger="click">
+                            <i class="ellipsis vertical icon mr-0 cursor"></i>
+                            <el-dropdown-menu class="w-200" slot="dropdown">
+                                <el-dropdown-item disabled>
+                                    <div class="table-dropdown-header bold-600 text-uppercase">
+                                        action
+                                    </div>
+                                </el-dropdown-item>
+                                <el-dropdown-item class="s-12">Retry</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
                     </div>
                 </div>
                 <!-- :class="[{success ? 'green': 'gray' }]" -->
@@ -84,9 +95,9 @@
                         </div>
                     </div>
                 </div>
-
             </el-card>
         </div>
+        <ticket-modal :transaction="form" :ticketVisible.sync="ticketVisible"></ticket-modal>
     </div>
 </template>
 
@@ -101,26 +112,37 @@ export default {
             status: 'failed',
             edit: false,
             remarks: '',
-            page: this.$route.path
+            page: this.$route.path,
+            ticketVisible: false
         }
     },
-    watch: {
-
+    mounted () {
+        EventBus.$on('ticketModal', (val) => {
+            this.ticketVisible = val
+        })
     },
     created () {
         // EventBus.$emit('sideNavClick', 'payments')
     },
     methods: {
+        handleTableCommand (command, row) {
+            switch (command) {
+                case 'edit':
+                    this.$router.push(`payments/${row.id}`)
+                    break
+                case 'open':
+                    this.ticketVisible = true
+                    this.transaction = row
+                    break
+                default:
+                    break
+            }
+        },
         fetchTransactions () {
            this.$store.dispatch('getCurrentTransaction', this.$route.params.id) 
         }
     },
     mounted () {
-        if (this.header === 'Payout') {
-            EventBus.$emit('sideNavClick', 'payouts')
-        } else {
-            EventBus.$emit('sideNavClick', 'payments')
-        }
         this.$store.dispatch('getCurrentTransaction', this.$route.params.id)
     },
     computed: {
@@ -166,6 +188,11 @@ export default {
             return typeof this.form === 'undefined'
         },
         header () {
+            if (this.form.trans_type === 'cashin') {
+                EventBus.$emit('sideNavClick', 'payouts')
+            } else {
+                EventBus.$emit('sideNavClick', 'payments')
+            }
             var header = this.form.trans_type === 'cashout' ? 'Payment' : 'Payout'
             return header
         }

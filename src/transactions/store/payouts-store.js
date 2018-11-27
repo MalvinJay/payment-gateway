@@ -2,9 +2,18 @@ import { PAYOUT_CREATE, SET_PAYOUTS_META, SET_PAYOUTS_FILTERS,
   PAYOUTS_FETCH,
   SET_PAYOUTS_STATE,
   SET_PAYOUTS,
-  GET_TRANSACTIONS_URI } from './transactions-store-constants'
+  GET_BASE_URI } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
+
+// const url = localStorage.getItem('isAdmin') === true ? 'v2/accounts/transactions' : 'v2/transactions.json'
+
+// var url = ''
+// if (localStorage.getItem('isAdmin') === true) {
+//   url = 'v2/accounts/transactions'
+// } else {
+//   url = 'v2/transactions.json'
+// }
 
 // state
 const state = {
@@ -61,14 +70,20 @@ const actions = {
     page = 1,
     cache = true
   } = {}) {
+    //   url
+    var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
+
+    // filters
     var filters = state.payouts.filters
     var query = ''
     if (Utils.empty(filters)) {
-      query = `?all=true&search_value=cashin&page=${page}&limit=10`
+      query = `?all=true&search_value=cashin&page=${page}&limit=12`
     } else {
       filters.search_value = 'cashin'
       query = Utils.createQueryParams(filters, page)
     }
+    console.log('is admin', rootGetters.isAdmin)
+    console.log('url', url)
     commit(SET_PAYOUTS_STATE, 'LOADING')
     commit(SET_PAYOUTS_FILTERS, filters)
     if (cache && state.payouts.data.length !== 0) {
@@ -76,7 +91,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_TRANSACTIONS_URI}${query}`,
+          url: `${GET_BASE_URI}${url}${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {

@@ -368,6 +368,10 @@ button{
     color: white !important;
 }
 
+.menu-gray-text{
+    color: rgb(153, 153, 153);
+}
+
 .black-text{
     color: black !important;
 }
@@ -426,7 +430,7 @@ button{
     width: 4px!important;
 
     &::hover {
-        width: 10px!important;
+        width: 10px !important;
     }
 }
 

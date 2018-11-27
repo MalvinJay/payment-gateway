@@ -10,7 +10,8 @@
                 <the-header></the-header>
             </el-header>
             <!-- Main Container -->
-            <el-main v-loading="pageLoading" class="px-20">
+            <!-- v-loading="pageLoading" -->
+            <el-main class="px-20">
                 <router-view></router-view>
             </el-main>
         </el-container>
@@ -27,20 +28,29 @@ export default {
         time_interval: 'month'
     }
     this.$store.dispatch('setDashboardFilters', time)
-    .then(() => {
+    .then((response) => {
+        console.log('header', response.data)
+        console.log('header data', response)
         EventBus.$emit('updateGraph')
+    }).catch((error) => {
+        // if (error.response.status === 401) {
+        //     console.log('erro', error.response)
+        //     console.log('erro status', error.response.status)
+        //     console.log('erro data', error.response.data)
+        //     this.logout()
+        // }
         
     })
     this.$store.dispatch('getTransactions', {cache: false})
     this.$store.dispatch('getTodayGraph', {cache: false})
     .then(() => {
-        EventBus.$emit('updateTimeGraph')
+        EventBus.$emit('updateGraph')
     })
     this.$store.dispatch('setClient', JSON.parse(this.$session.get('client')))
-    this.$store.dispatch('getJobs')
-    this.$store.dispatch('getQueues')
-    this.$store.dispatch('getPayouts')
-    this.$store.commit('setPageLoading', true)
+    this.$store.dispatch('getJobs', {cache: false})
+    this.$store.dispatch('getQueues', {cache: false})
+    this.$store.dispatch('getPayouts', {cache: false})
+    // this.$store.commit('setPageLoading', true)
   },
   computed: {
     ...mapGetters(['pageLoading'])  
@@ -48,11 +58,20 @@ export default {
 //   mounted () {
 //     window.addEventListener('unload', this.leaving(), false)
 //   },
-//   methods: {
-//     leaving () {
-//         this.$store.dispatch('getToken')
-//     }
-//   },
+  methods: {
+    leaving () {
+        this.$store.dispatch('getToken')
+    },
+    logout () {
+        this.$store.dispatch('logout')
+        .then(() => {
+            this.$session.remove('client')
+            this.$session.remove('token')
+            this.$session.destroy()
+            this.$router.push('/login')
+        })
+    }
+  },
   onIdle() {
     this.$store.dispatch('logout')
     .then(() => {

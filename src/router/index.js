@@ -32,6 +32,8 @@ const Fees = () => import('../accounts/pages/Fees')
 const FeesDetail = () => import('../accounts/pages/FeesDetail')
 const TopUps = () => import('../accounts/pages/TopUps')
 const Settlements = () => import('../accounts/pages/Settlements')
+const Account = () => import('../connect/pages/Account')
+const AccountDetail = () => import('../connect/pages/AccountDetail')
 
 Vue.use(Router)
 
@@ -162,6 +164,17 @@ let router = new Router({
           path: '/fonemessenger',
           name: 'FoneMessenger',
           component: FoneMessenger
+        },
+        // connect
+        {
+          path: '/accounts',
+          name: 'Account',
+          component: Account
+        },
+        {
+          path: '/accounts/:id',
+          name: 'AccountDetail',
+          component: AccountDetail
         }
       ]
     },
@@ -190,31 +203,33 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-      if (localStorage.getItem('login')) {
-        store.dispatch('getToken')
-        next()
-      } else {
-        store.client = {}
-        store.user = {
-          data: {},
-          client_id: '',
-          client_secret: ''
-        }
-        store.userdata = {}
-        store.permissions = {
-          data: []
-        }
-        store.logIn = false
-        store.user.token = null
-        localStorage.removeItem('token')
-        localStorage.setItem('login', false) // clear your user's token from localstorage
-        localStorage.removeItem('client_id')
-        localStorage.removeItem('client_secret')
-        next({
-          path: '/login',
-          params: { nextUrl: to.fullPath }
-        })
-      }
+      store.dispatch('getToken')
+      next()
+    //   if (localStorage.getItem('login')) {
+    //     store.dispatch('getToken')
+    //     next()
+    //   } else {
+    //     store.client = {}
+    //     store.user = {
+    //       data: {},
+    //       client_id: '',
+    //       client_secret: ''
+    //     }
+    //     store.userdata = {}
+    //     store.permissions = {
+    //       data: []
+    //     }
+    //     store.logIn = false
+    //     store.user.token = null
+    //     localStorage.removeItem('token')
+    //     localStorage.setItem('login', false) // clear your user's token from localstorage
+    //     localStorage.removeItem('client_id')
+    //     localStorage.removeItem('client_secret')
+    //     next({
+    //       path: '/login',
+    //       params: { nextUrl: to.fullPath }
+    //     })
+    //   }
     //   console.log('app stat', this.a.app.$session.exists())
     }
   } else if (to.matched.some(record => record.meta.guest)) {

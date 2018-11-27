@@ -135,7 +135,7 @@ const actions = {
     // }
   },
   [GET_CURRENT_JOB_RUNS] ({ state, commit }, { page = 1, runs = state.currentJob.runs } = {}) {
-    var items = runs.slice((page * 10) - 10, page * 10).map(i => {
+    var items = runs.slice((page * 12) - 12, page * 12).map(i => {
       return i
     })
     commit(SET_CURRENT_JOB_RUNS, items)

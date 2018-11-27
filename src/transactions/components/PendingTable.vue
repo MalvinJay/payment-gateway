@@ -72,6 +72,7 @@
                 </div>
                 <el-pagination class="my-2 flex justify-content-end"
                     @current-change="handleCurrentChange"
+                    :page-size="pageSize"
                     layout="prev, pager, next"
                     :total="total">
                 </el-pagination>
@@ -124,7 +125,8 @@ export default {
       transactions: 'pending',
       meta: 'pendingMeta',
       state: 'pendingState',
-      permissions: 'permissions'
+      permissions: 'permissions',
+      pageSize: 'pageSize'
     }),
     canApproveTransactions () {
         return this.permissions.some(el => el.code === 'approve_transaction')

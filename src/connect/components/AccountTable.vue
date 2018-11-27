@@ -3,44 +3,38 @@
         <div class="transactions">
             <div class="trans-div flex justify-content-between">
                 <div>
-                    <p class="blue-text bold-600 s-16 m-0 p-0">Disputes</p>
+                    <p class="blue-text bold-600 s-16 m-0 p-0">Account</p>
                 </div>
                 <div>
-                    <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button> -->
-                    <!-- <el-button v-if="canGenerateReports" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
+                    <el-button @click="accountVisible = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
                 </div>
             </div>
             <div>
                 <div class="center h-80" v-if="error">
                     <div class="center flex-column">
                         <p class="m-0 p-0">Unable to load this page</p>
-                        <el-button @click.prevent="fetchDisputes" icon="sync icon" type="text">Retry</el-button>
+                        <el-button @click.prevent="fetchAccounts" icon="sync icon" type="text">Retry</el-button>
                     </div>
                 </div>
                 <div v-else>
-                    <el-table empty-text="No disputes" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="disputes">
+                    <el-table @row-click="clickRow" empty-text="No Accounts" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="accounts">
                         <el-table-column type="selection" width="55"></el-table-column>
-                        <el-table-column prop="amount" label="Amount" width="100">
+                        <el-table-column :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label">
                             <template slot-scope="scope">
-                                <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.receiver_amount | money}}</p>
+                                {{ scope.row[column.dataField] | capitalize }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="status" label="" width="auto">
+                        <el-table-column prop="balance" label="Balance">
                             <template slot-scope="scope">
-                                <div class="flex">
-                                    <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
-                                    <the-tag v-else-if="scope.row.status === 'failed'" status="success" :title="scope.row.status" icon="close icon"></the-tag>
-                                    <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
-                                </div>
+                                {{scope.row.balance | money}}
                             </template>
                         </el-table-column>
-                        <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
-                        <el-table-column prop="created_at" label="Date">
+                        <el-table-column prop="created_at" label="On-board Date">
                             <template slot-scope="scope">
-                                {{scope.row.created_at | moment("MMM Do, YYYY")}}
+                                {{scope.row.created_at | moment("MMM Do, YYYY HH:mm A")}}
                             </template>
                         </el-table-column>
-                        <el-table-column width="80px">
+                        <!-- <el-table-column>
                             <template slot-scope="scope">
                                 <div class="mini-menu">
                                     <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i>
@@ -63,12 +57,12 @@
                                     </el-dropdown>
                                 </div>
                             </template>
-                        </el-table-column>
+                        </el-table-column> -->
                     </el-table>
                     <!-- FOOTER -->
                     <div class="flex justify-content-between align-items-center px-10">
                         <div class="s-12">
-                            {{disputes.length}} results
+                            {{accounts.length}} results
                         </div>
                         <el-pagination class="my-2 flex justify-content-end"
                             @current-change="handleCurrentChange"
@@ -81,24 +75,29 @@
                 </div>
             </div>
         </div>
+        <new-account :accountVisible.sync="accountVisible"></new-account>
     </el-card>
 </template>
 
 <script>
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
+import NewAccount from './NewAccount'
 
 export default {
-  name: 'DisputesTable',
+  name: 'AccountsTable',
+  components: {
+    NewAccount
+  },
   data () {
     return {
+      accountVisible: false,  
       columns: [
-        // {label: 'Method', dataField: 'method', width: '100px'},
-        {label: 'Customer', dataField: 'customer', width: 'auto'},
-        {label: 'Reference', dataField: 'reference', width: 'auto'},
-        {label: 'type', dataField: 'transaction_type', width: '100px'}
+        {label: 'code', dataField: 'account_code'},
+        {label: 'Client', dataField: 'company'},
+        {label: 'till number', dataField: 'code'},
+        {label: 'account number', dataField: 'bank_account_no'}
       ],
-      disputes: [],
       styleObject: {
         fontSize: '12px'
       },
@@ -106,42 +105,49 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('getDisputes')
+    this.$store.dispatch('getAccounts', {cache: false})
   },
   mounted () {
-    EventBus.$emit('sideNavClick', 'disputes')
+    EventBus.$emit('sideNavClick', 'accounts')
+    EventBus.$on('accountModal', () => { this.accountVisible = false })
   },
   methods: {
     handleCurrentChange (val) {
-        this.$store.dispatch('getDisputes', {page: val, cache: false})
+        this.$store.dispatch('getCurrentAccounts', val)
     },
-    fetchDisputes () {
-      this.$store.dispatch('getDisputes', {cache: false})
+    fetchAccounts () {
+      this.$store.dispatch('getAccounts', {cache: false})
     },
     handleTableCommand (command, row) {
         switch (command) {
             case 'edit':
-                this.$router.push(`disputes/${row.id}`)
+                this.$router.push(`accounts/${row.id}`)
                 break
             case 'open':
                 break
             default:
                 break
         }
+    },
+    clickRow (row, event, column) {
+        if (column.property) {
+            this.$router.push(`/accounts/${row.code}`)
+        }
     }
   },
   computed: {
     ...mapGetters({
     // 1. what you want to call the getter here : 2. the name of the getter from the vuex store
-    //   disputes: 'disputes',
-      state: 'disputesState',
+      accounts: 'currentAccounts',
+      state: 'accountsState',
+      totalAccount: 'accounts',
       pageSize: 'pageSize'
     }),
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'
     },
     total () {
-      return this.disputes.length
+      return this.totalAccount.length
     },
     count () {
         // return this.transactions.length
@@ -149,12 +155,18 @@ export default {
     loading () {
       return this.state === 'LOADING'
     }
+  },
+  filters: {
+    capitalize: function (value) {
+        if (!value) return ''
+        value = value.toString()
+        return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .mini-menu{
     position: absolute;
     top: 8px;

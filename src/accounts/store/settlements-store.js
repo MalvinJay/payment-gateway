@@ -42,13 +42,14 @@ const actions = {
     cache = true
   } = {}) {
     var query = 'search_value=cash_transfer'
+    var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
     commit(SET_SETTLEMENTS_STATE, 'LOADING')
     if (cache && state.settlements.data.length !== 0) {
       commit(SET_SETTLEMENTS_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_BASE_URI}v2/transactions.json?${query}`,
+          url: `${GET_BASE_URI}${url}?${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {

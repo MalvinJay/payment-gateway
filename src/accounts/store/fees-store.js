@@ -6,6 +6,7 @@ import {
   SET_FEES_FILTERS,
   GET_FEES_URI
 } from './store-constants'
+import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 
@@ -63,6 +64,8 @@ const actions = {
     page = 1,
     cache = true
   } = {}) {
+    //   url for admin or client
+    var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
     var filters = state.fees.filters
     var query = ''
     if (Utils.empty(filters)) {
@@ -78,7 +81,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_FEES_URI}${query}`,
+          url: `${GET_BASE_URI}${url}${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
