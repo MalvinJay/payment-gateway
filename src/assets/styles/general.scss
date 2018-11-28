@@ -59,7 +59,7 @@ button{
     flex-direction: column
 }
 
-.align-items-center{
+.align-items-center {
     align-items: center
 }
 
@@ -217,9 +217,19 @@ button{
     padding-left: 20px;
     padding-right: 20px;
 }
+
+.px-5 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .px-10{
     padding-left: 10px;
     padding-right: 10px;
+}
+.py-5 {
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 .py-10{
     padding-top: 10px;
@@ -285,7 +295,7 @@ button{
     border: 0px !important;
 }
 
-.border{
+.border {
     border: 1px solid #dcdfe6;
 }
 .border-top{
@@ -327,6 +337,9 @@ button{
 }
 .text-capitalize{
     text-transform: capitalize
+}
+.text-lowercase {
+    text-transform: lowercase;
 }
 .text-center{
     text-align: center

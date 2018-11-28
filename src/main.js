@@ -17,7 +17,9 @@ import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 import IdleVue from 'idle-vue'
 import VueLocalStorage from 'vue-localstorage'
 import VueSession from 'vue-session'
+import highlightJs from 'highlight.js'
 
+Vue.use(highlightJs)
 Vue.use(VueSession)
 Vue.use(require('vue-chartist'))
 Vue.use(VueLocalStorage)

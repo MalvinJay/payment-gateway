@@ -40,18 +40,17 @@
             </el-submenu>
             <el-menu-item route="/contacts" index="contacts">
                 <template slot="title">
-                    <img class="mr-10" src="../assets/images/icons/customer.svg" alt="">
-                    Customers
+                    <img class="mr-10" src="../assets/images/icons/customer.svg" alt="">Customers
                 </template>
             </el-menu-item>
             <el-submenu index="5">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/billing.svg" alt="">Billing
                 </template>
-                <el-menu-item index="3-1">Invoices</el-menu-item>
-                <el-menu-item index="3-2">Subscriptions</el-menu-item>
-                <el-menu-item index="3-3">Products</el-menu-item>
-                <el-menu-item index="3-4">Orders</el-menu-item>
+                <el-menu-item index="6-1">Invoices</el-menu-item>
+                <el-menu-item index="6-2">Subscriptions</el-menu-item>
+                <el-menu-item index="6-3">Products</el-menu-item>
+                <el-menu-item index="6-4">Orders</el-menu-item>
             </el-submenu>
             <el-submenu v-if="isAdmin" index="6">
                 <template slot="title">
@@ -64,28 +63,28 @@
             </el-submenu>
             <el-menu-item v-if="!isAdmin" route="/fonemessenger" index="fonemessenger">
                 <template slot="title">
-                    <img class="mr-10" src="../assets/images/icons/radar.svg" alt="">
-                    FoneMessenger
+                    <img class="mr-10" src="../assets/images/icons/radar.svg" alt="">FoneMessenger
                 </template>
             </el-menu-item>
             <el-submenu index="8">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/developer.svg" alt="">Developers
                 </template>
-                <el-menu-item index="8-1">Apps</el-menu-item>
-                <el-menu-item index="8-2">Events</el-menu-item>
-                <el-menu-item route="/logs" index="8-3">Logs</el-menu-item>
-                <el-menu-item index="8-4">Settings</el-menu-item>
+                <!-- <el-menu-item index="9-1">Apps</el-menu-item> -->
+                <el-menu-item route="/events" index="events">Events</el-menu-item>
+                <el-menu-item route="/logs" index="logs">Logs</el-menu-item>
+                <el-menu-item route="/webhooks" index="webhooks">Webhooks</el-menu-item>
+                <el-menu-item index="9-5">Settings</el-menu-item>
             </el-submenu>
             <el-submenu index="9">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/business-settings.svg" alt=""> Business Settings
                 </template>
                 <el-menu-item route="/account" index="account">Account Set-up</el-menu-item>
-                <el-menu-item route="/taxation" index="taxation">Tax details</el-menu-item>
+                <!-- <el-menu-item route="/taxation" index="taxation">Tax details</el-menu-item> -->
                 <el-menu-item route="/team" index="team">Team</el-menu-item>
                 <el-menu-item route="/roles" index="roles">Roles</el-menu-item>
-                <el-menu-item route="/reports" index="reports">Data Reports</el-menu-item>
+                <!-- <el-menu-item route="/reports" index="reports">Data Reports</el-menu-item> -->
             </el-submenu>
         </el-menu>
     </div>

@@ -19,10 +19,10 @@
                     </div>
                     </div>
                     <div>
-                        <el-button v-if="status === 'failed'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Refund</el-button>
+                        <el-button :disabled="error" @click="refund" :loading="loading" v-if="status === 'failed'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Refund</el-button>
                         <el-button @click="ticketVisible = true" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Open Ticket</el-button>
-                        <el-dropdown @command="command => handleTableCommand(command, form)" trigger="click">
-                            <i class="ellipsis vertical icon mr-0 cursor"></i>
+                        <el-dropdown class="ml-10" @command="command => handleTableCommand(command, form)" trigger="click">
+                            <el-button size="mini" class="mr-0 cursor z-depth-button bold-600 s-13 open-sans mini-button b-0 icon-only-button" plain icon="ellipsis horizontal icon"></el-button>
                             <el-dropdown-menu class="w-200" slot="dropdown">
                                 <el-dropdown-item disabled>
                                     <div class="table-dropdown-header bold-600 text-uppercase">
@@ -38,11 +38,11 @@
                 <div class="border-top px-20 py-10">
                     <div class="flex">
                         <div>
-                            <i v-if="form.status == 'paid'" class="check circle s-12 icon green" ></i>
+                            <i v-if="form.payment_status == 'paid'" class="check circle s-12 icon green" ></i>
                             <i v-else class="exclamation circle s-12 icon gray" ></i>
                         </div>
                         <div class="flex flex-column ml-1">
-                            <p v-if="form.status == 'paid'" class="light mb-1 s-13">{{header}} succeeded</p>
+                            <p v-if="form.payment_status == 'paid'" class="light mb-1 s-13">{{header}} succeeded</p>
                             <p v-else class="light mb-1 s-13">{{header}} failed</p>
                             <p class="light mb-1 s-12 gray">{{form.date | moment("MMM Do, HH:mm A")}}</p>
                         </div>
@@ -66,7 +66,7 @@
                                     </el-col>
                                     <el-col :span="16">
                                     <p v-if="key === 'date'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
-                                    <div v-else-if="key === 'description'">
+                                    <div v-else-if="key === 'message'">
                                         <div v-if="!edit" class="flex align-items-center">
                                             <p class="s-13 mono m-0 mr-6">{{value}}</p>
                                             <el-button @click="edit = true" class="blue-text p-0" type="text" icon="pencil alternate icon">Edit</el-button>
@@ -113,7 +113,8 @@ export default {
             edit: false,
             remarks: '',
             page: this.$route.path,
-            ticketVisible: false
+            ticketVisible: false,
+            loading: false
         }
     },
     mounted () {
@@ -140,6 +141,33 @@ export default {
         },
         fetchTransactions () {
            this.$store.dispatch('getCurrentTransaction', this.$route.params.id) 
+        },
+        refund () {
+            this.loading = true
+            this.$store.dispatch('createRefund', this.form.reference)
+            .then((response) => {
+                if (response.data.success) {
+                    this.$message({
+                        type: 'success',
+                        message: 'Payment Refunded',
+                    })
+                    // EventBus.$emit('tabNumber', '3')
+                    // this.$router.push('/payments')
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.response.message
+                    })
+                }
+                this.loading = false
+            }).catch((error) => {
+                this.loading = false
+                const response = error.response
+                this.$message({
+                    message: response.data.response.error_message,
+                    type: 'error'
+                })
+            })            
         }
     },
     mounted () {
@@ -173,7 +201,7 @@ export default {
                 fee: `${symbol}${this.form.charged_amount}`,
                 date: this.form.date,
                 time: this.form.time,
-                description: this.form.remarks ? this.form.remarks : '-'
+                message: this.form.remarks ? this.form.remarks : '-'
             }
             return nForm
         },
@@ -203,6 +231,9 @@ export default {
 <style lang="scss" scoped>
 .payment-div{
     height: 80px;
+}
+.ml-10{
+    margin-left: 10px;
 }
 .green{
     color: #1ea672;

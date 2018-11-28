@@ -35,9 +35,9 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="created_at" label="Date">
+                    <el-table-column prop="created_at" label="Date" width="170px">
                         <template slot-scope="scope">
-                            {{scope.row.created_at | moment("MMM Do, YYYY")}}
+                            {{scope.row.created_at | moment("Do MMM, YYYY HH:mm A")}}
                         </template>
                     </el-table-column>
                     <el-table-column width="100px">

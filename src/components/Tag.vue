@@ -1,7 +1,6 @@
 <template>
-  <div :class="[{success: isSuccess}, 'tag-success', 'flex']">
+  <div :class="[{success: isSuccess}, 'tag-success', 'flex', 'justify-content-center']">
     <p class="p-0 m-0">{{title}}</p>
-    <!-- <i :class="icon"></i> -->
   </div>
 </template>
 

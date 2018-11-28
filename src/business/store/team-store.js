@@ -66,9 +66,8 @@ const actions = {
     var filters = state.teams.filters
     var query = ''
     if (Utils.empty(filters)) {
-      query = `?all=true&page=${page}&limit=12`
+      query = `?page=${page}&limit=12`
     } else {
-      // filters.search_value = 'cashin'
       query = Utils.createQueryParams(filters, page)
     }
     commit(SET_TEAMS_STATE, 'LOADING')

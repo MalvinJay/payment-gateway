@@ -1,11 +1,15 @@
 <template>
     
 </template>
+
 <script>
 export default {
-    name: 'Invite_User'
+    name: 'Radar'
+    
 }
 </script>
+
 <style lang="scss" scoped>
 
 </style>
+
