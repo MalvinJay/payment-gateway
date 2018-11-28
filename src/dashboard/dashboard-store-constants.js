@@ -6,4 +6,5 @@ export const SET_TODAY_GRAPH = 'setTodayGraph'
 export const SET_TODAY_GRAPH_STATE = 'setTodayGraphState'
 export const SET_DASHBOARD_FILTERS = 'setDashboardFilters'
 
-export const GET_DASHBOARD_URI = 'https://api.flopay.io/v1/clients/dashboard/graph'
+export const GET_BASE_URI = 'https://api.flopay.io'
+export const GET_DASHBOARD_URI = `${GET_BASE_URI}/v1/clients/dashboard/graph`

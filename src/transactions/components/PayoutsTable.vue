@@ -22,7 +22,7 @@
                     <el-table-column prop="amount" label="Amount" width="100">
                         <template slot-scope="scope">
                             <div class="flex align-items-center cursor">
-                                <p style="color: #2b2d50;" class="m-0 p-0 mr-10 bold-500 s-13">GHc{{scope.row.receiver_amount}}</p>
+                                <p style="color: #2b2d50;" class="m-0 p-0 mr-10 bold-500 s-13">GHS {{scope.row.receiver_amount}}</p>
                                 <!-- <p class="m-0 p-0 mr-10">{{scope.row.receiver_currency}}</p>
                                 <div>
                                     <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
@@ -42,16 +42,16 @@
                         </template>
                     </el-table-column>
                     <el-table-column :show-overflow-tooltip="true" :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
-                    <el-table-column prop="created_at" label="Date" width="120">
+                    <el-table-column prop="created_at" label="Date" width="auto">
                         <template slot-scope="scope">
-                            {{scope.row.created_at | moment("MMM Do, YYYY")}}
+                            {{scope.row.created_at | moment("MMM Do, YYYY h:mm A")}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="created_at" label="Time" width="80">
+                    <!-- <el-table-column prop="created_at" label="Time" width="80">
                         <template slot-scope="scope">
                             {{scope.row.created_at | moment("HH:mm A")}}
                         </template>
-                    </el-table-column>
+                    </el-table-column> -->
                     <el-table-column width="80px">
                         <template slot-scope="scope">
                             <div class="mini-menu">

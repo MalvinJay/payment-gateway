@@ -28,23 +28,23 @@
                         </el-table-column>
                         <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                         <!-- <el-table-column show-overflow-tooltip label="Message text" prop="message"></el-table-column> -->
-                        <el-table-column width="80px">
+                        <el-table-column width="80">
                             <template slot-scope="scope">
                                 <div class="flex">
                                     <the-tag status="failed" :title="scope.row.post_type"></the-tag>
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="updated_at" label="Date">
+                        <el-table-column prop="updated_at" label="Date" width="auto">
                             <template slot-scope="scope">
-                                {{scope.row.updated_at | moment("MMM Do, YYYY")}}
+                                {{scope.row.updated_at | moment("MMM Do, YYYY h:mm A")}}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="created_at" label="Time" width="80">
+                        <!-- <el-table-column prop="created_at" label="Time" width="80">
                             <template slot-scope="scope">
                                 {{scope.row.created_at | moment("HH:mm A")}}
                             </template>
-                        </el-table-column>
+                        </el-table-column> -->
                     </el-table>
                     <!-- FOOTER -->
                     <div class="flex justify-content-between align-items-center px-10">
@@ -80,7 +80,7 @@ export default {
       test: true,
       columns: [
         {label: 'message id', dataField: 'response_id', align: 'center'},
-        {label: 'delivery report', dataField: 'response_message', align: 'left'},
+        {label: 'delivery status', dataField: 'response_message', align: 'left'},
         {label: 'recipient', dataField: 'recipient_no', align: 'left'}
       ],
       logDialog: false,

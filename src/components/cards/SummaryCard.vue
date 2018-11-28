@@ -8,8 +8,8 @@
                 {{noData}}
             </div>
             <div v-if="!hasNoData" v-for="(value, key, index) in data" :key="index">
-                <div class="flex align-items-center mb-2">
-                    <p class="m-0 mr-2 w-100">{{key}}</p>
+                <div class="flex align-items-center mb-1">
+                    <p class="m-0 mr-2 w-150">{{key}}</p>
                     <p class="s-13 mono">{{value}}</p>
                 </div>
             </div>
@@ -46,6 +46,10 @@ export default {
 <style lang="scss" scoped>
 .w-100{
     width: 100px;
+    color: #697386;
+}
+.w-150{
+    width: 150px;
 }
 .mb-2{
     margin-bottom: 1em

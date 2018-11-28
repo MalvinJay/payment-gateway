@@ -9,4 +9,5 @@ export const SET_CURRENT_CONTACT_SCHEDULES = 'setCurrentContactSchedules'
 export const SET_CURRENT_CONTACT_TRANSACTIONS = 'setCurrentContactTransactions'
 export const SET_CURRENT_CONTACT_STATE = 'setCurrentContactState'
 
-export const GET_CONTACTS_URI = 'https://api.flopay.io/v1/clients/contacts/all'
+export const GET_BASE_URI = 'https://api.flopay.io'
+export const GET_CONTACTS_URI = `${GET_BASE_URI}/v1/clients/contacts/all`

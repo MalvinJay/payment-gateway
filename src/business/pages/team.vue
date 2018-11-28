@@ -10,7 +10,7 @@
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>                    
                     </div>
-                </div>                    
+                </div>            
                 <div>
                     <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New user</el-button>
                 </div>
@@ -76,17 +76,46 @@
                 <div class="flex justify-content-center">
                   <div class="custom">
                     <el-table empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
-                        <el-table-column width="55"><el-radio v-model="value"></el-radio></el-table-column>
-                        <el-table-column prop="name" label="USER">
+                        <el-table-column width="50">
+                            <template slot-scope="scope">
+                                <el-radio v-model="scope.row.id"></el-radio>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="200" class="bold-600">
                             <template slot-scope="scope">
                                 {{scope.row.name || 'N/A'}}
                             </template>                            
                         </el-table-column>
-                        <el-table-column prop="role" label="ROLE" width="300">
+                        <el-table-column>
                             <template slot-scope="scope">
-                                {{scope.row.user_group || 'N/A'}}
+                                {{scope.row.description || 'N/A'}}
                             </template>                            
-                        </el-table-column>                      
+                        </el-table-column>
+                        <el-table-column align="right">
+                            <template slot-scope="scope">
+                                <el-popover
+                                    placement="left"
+                                    width="400"
+                                    popper-class="no-padding-popover"
+                                    trigger="hover">
+                                    <div>
+                                        <div class="flex justify-content-between p-10 border-bottom">
+                                            <p class="blue-text bold-600 s-14 m-0 p-0">Role Type</p>
+                                            <the-tag status="failed" :title="scope.row.name" icon="reply icon"></the-tag>
+                                        </div>
+                                        <div class="p-10">
+                                            <div v-for="(item, index) in scope.row.privileges" :key="index">
+                                                <p class="s-12 py-5">{{item.action}}</p>
+                                            </div>
+                                        </div>
+                                        <!-- <el-table row-class-name="roles-table-body" header-row-class-name="no-header-table" :data="scope.row.privileges">
+                                            <el-table-column prop="action" label="action"></el-table-column>
+                                        </el-table> -->
+                                    </div>
+                                    <el-button icon="info circle icon" type="text" slot="reference"></el-button>
+                                </el-popover>
+                            </template>
+                        </el-table-column>                                          
                     </el-table>                      
                   </div>
                 </div>
@@ -209,6 +238,10 @@ export default {
 <style lang="scss" scoped>
 .custom {
     width: 100%;
+    
+    .transactions-table-header {
+        display: none;
+    }
 }
 
 .mini-button{
