@@ -6,6 +6,7 @@ import {
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
+import moment from 'moment'
 
 // state
 const state = {
@@ -39,10 +40,18 @@ const mutations = {
 const actions = {
   [GET_SETTLEMENTS] ({ state, commit, rootGetters }, {
     page = 1,
-    cache = true
+    cache = true,
+    filters = {
+      from: moment().startOf('month').format('YYYY-MM-DD'),
+      to: moment().endOf('month').format('YYYY-MM-DD')
+    }
   } = {}) {
-    var query = 'search_value=cash_transfer'
+    // var query = 'search_value=cash_transfer'
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
+
+    var query = Utils.createQueryParams(filters, page)
+    query = `search_value=cash_transfer&${query}`
+
     commit(SET_SETTLEMENTS_STATE, 'LOADING')
     if (cache && state.settlements.data.length !== 0) {
       commit(SET_SETTLEMENTS_STATE, 'DATA')

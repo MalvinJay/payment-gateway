@@ -21,7 +21,7 @@ import highlightJs from 'highlight.js'
 
 Vue.use(highlightJs)
 Vue.use(VueSession)
-Vue.use(require('vue-chartist'))
+// Vue.use(require('vue-chartist'))
 Vue.use(VueLocalStorage)
 Vue.use(ElementUI, {locale})
 Vue.use(VueMoment)

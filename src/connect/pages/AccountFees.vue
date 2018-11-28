@@ -7,7 +7,7 @@
                 </div>
                 <div>
                     <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button> -->
-                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+                    <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
                 </div>
             </div>
             <div>
@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div v-else class="breathe">
-                    <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredFees">
+                    <el-table @row-click="clickRow" empty-text="No fees" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredFees">
                         <el-table-column prop="type" label="Type">
                             <template slot-scope="scope">
                                 <p>Fee</p>
@@ -59,7 +59,6 @@
                     </div>
                 </div>   
             </div>
-            <export-modal :modalVisible.sync="exportVisible"></export-modal>
         </div>
     </el-card>
 </template>
@@ -69,7 +68,7 @@ import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'Fees',
+    name: 'AccountFees',
     data () {
         return {
             test: true,
@@ -84,39 +83,30 @@ export default {
         }
     },
     created () {
-        this.$store.dispatch('getFees')
+        this.$store.dispatch('getAccountFees')
     },
     mounted () {
-        EventBus.$emit('sideNavClick', 'fees')
-        EventBus.$on('exportModal', (val) => {
-            this.exportVisible = false
-        })
+        EventBus.$emit('sideNavClick', 'account-fees')
     },
-    methods: {
-        clickRow (row, event, column) {
-            if (column.property) {
-                this.$router.push(`/fees/${row.reference}`)
-            }        
-        },   
+    methods: {  
         handleCurrentChange (val) {
-            this.$store.dispatch('getFees', {page: val, cache: false })
+            this.$store.dispatch('getAccountFees', {page: val, cached: false })
         },             
         fetchFees () {
-            this.$store.dispatch('getFees', {cache: false})
+            this.$store.dispatch('getAccountFees', {cache: false})
         }
     }, 
     computed: {
         ...mapGetters({
-            fees: 'fees',
-            meta: 'feesMeta',
-            state: 'feesState',
+            fees: 'currentAccountFees',
+            state: 'accountsFeesState',
             pageSize: 'pageSize'
         }),  
         error () {
             return this.state === 'ERROR' && this.state !== 'LOADING'
         },              
         total () {
-            return this.meta.totalCount
+            return this.fees.length
         },    
         loading () {
             return this.state === 'LOADING'

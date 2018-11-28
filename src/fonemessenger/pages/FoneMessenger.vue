@@ -181,10 +181,6 @@ export default {
 .new-transaction-bg{
     background: #F7FAFC;
 }
-.trans-div{
-    height: 60px;
-    padding: 20px 20px 0 20px
-}
 .transactions-table-header{
     background-color: #F7FAFC !important;
     height: 36px !important;

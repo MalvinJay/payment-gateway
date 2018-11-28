@@ -666,3 +666,35 @@ td.hljs-ln-code {
         }
     }
 }
+
+// daashboard
+.dashboard-line-chart{
+    .ct-line{
+        stroke: #586ADA;
+        stroke-width: 2px;
+        // fill: #E8EBF8;
+    }
+
+    .ct-area{
+        fill: #586ada;
+        fill-opacity: 0.1;
+    }
+
+    .ct-horizontal{
+        stroke-dasharray: 0;
+        opacity: 0.4;
+    }
+}
+
+.blue-graph{
+    .el-loading-mask{
+        background: #586ADA;
+
+    }
+    .el-loading-spinner .path{
+        stroke: white;
+    }
+    .el-loading-spinner{
+        color: white;
+    }
+}

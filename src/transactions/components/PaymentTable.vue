@@ -19,7 +19,7 @@
             <div v-else>
                 <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
                     <el-table-column type="selection" width="55"></el-table-column>
-                    <el-table-column prop="amount" label="Amount" width="100">
+                    <el-table-column prop="amount" label="Amount" width="150">
                         <template slot-scope="scope">
                             <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.receiver_amount | money}}</p>
                         </template>
@@ -33,7 +33,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                    <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                     <el-table-column prop="created_at" label="Date" width="auto">
                         <template slot-scope="scope">
                             {{scope.row.created_at | moment("Do MMM, YYYY HH:mm A")}}
@@ -345,10 +345,6 @@ export default {
     i{
         margin-right: 5px;
     }
-}
-.trans-div{
-    height: 60px;
-    padding: 20px 20px 0 20px
 }
 .transactions-table-header{
     background-color: #F7FAFC !important;

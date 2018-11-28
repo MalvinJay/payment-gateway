@@ -196,7 +196,7 @@ button{
     margin-top: 1.25rem;
 }
 .p-0{
-    padding: 0
+    padding: 0 !important
 }
 .p-10{
     padding: 10px;
@@ -454,4 +454,12 @@ button{
     font-weight: 600;
     color: $blue;
     font-size: 16px;
+}
+
+// card header
+.trans-div{
+    height: 60px;
+    padding: 0 20px;
+    align-items: center;
+    display: flex;
 }

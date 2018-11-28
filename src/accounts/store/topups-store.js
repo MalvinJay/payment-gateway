@@ -6,6 +6,7 @@ import {
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
+import moment from 'moment'
 
 // state
 const state = {
@@ -39,10 +40,16 @@ const mutations = {
 const actions = {
   [GET_TOPUPS] ({ state, commit, rootGetters }, {
     page = 1,
-    cache = true
+    cache = true,
+    filters = {
+      from: moment().startOf('month').format('YYYY-MM-DD'),
+      to: moment().endOf('month').format('YYYY-MM-DD')
+    }
   } = {}) {
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
-    var query = 'search_value=topup'
+    var query = Utils.createQueryParams(filters, page)
+    query = `search_value=topup&${query}`
+
     commit(SET_TOPUPS_STATE, 'LOADING')
     if (cache && state.topups.data.length !== 0) {
       commit(SET_TOPUPS_STATE, 'DATA')

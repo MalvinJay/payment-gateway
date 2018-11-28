@@ -62,33 +62,33 @@
                             <div class="w-50">
                                 <el-row v-for="(value, key, index) in data" :key="index" class="mb-1">
                                     <el-col :span="8">
-                                        <p class="m-0 text-capitalize lightgray s-14">{{key}}</p>
+                                        <p class="m-0 text-capitalize menu-gray-text s-14">{{key}}</p>
                                     </el-col>
                                     <el-col :span="16">
-                                    <p v-if="key === 'date'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
-                                    <div v-else-if="key === 'message'">
-                                        <div v-if="!edit" class="flex align-items-center">
-                                            <p class="s-13 mono m-0 mr-6">{{value}}</p>
-                                            <el-button @click="edit = true" class="blue-text p-0" type="text" icon="pencil alternate icon">Edit</el-button>
+                                        <p v-if="key === 'date'" class="">{{value | moment("MMM Do, YYYY")}}</p>
+                                        <div v-else-if="key === 'message'">
+                                            <div v-if="!edit" class="flex align-items-center">
+                                                <p class=" m-0 mr-6">{{value}}</p>
+                                                <el-button @click="edit = true" class="blue-text p-0" type="text" icon="pencil alternate icon">Edit</el-button>
+                                            </div>
+                                            <div class="flex" v-else>
+                                                <el-input size="mini" class="mr-2 no-padding-input" v-model="form.remarks"></el-input>
+                                                <el-button @click="edit = false" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain>Cancel</el-button>
+                                                <el-button size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain>Save</el-button>
+                                            </div>
                                         </div>
-                                        <div class="flex" v-else>
-                                            <el-input size="mini" class="mr-2 no-padding-input" v-model="form.remarks"></el-input>
-                                            <el-button @click="edit = false" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain>Cancel</el-button>
-                                            <el-button size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain>Save</el-button>
-                                        </div>
-                                    </div>
-                                    <p v-else class="s-13 mono">{{value}}</p>
+                                        <p v-else class="">{{value}}</p>
                                     </el-col>
                                 </el-row>
                             </div>
                             <div class="w-50">
                                 <el-row v-for="(value, key, index) in data2" :key="index" class="mb-1">
                                     <el-col :span="8">
-                                        <p class="m-0 text-capitalize lightgray s-14">{{key}}</p>
+                                        <p class="m-0 text-capitalize menu-gray-text s-14">{{key}}</p>
                                     </el-col>
                                     <el-col :span="6">
-                                    <p v-if="key === 'date'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
-                                    <p v-else class="s-13 mono">{{value}}</p>
+                                    <p v-if="key === 'date'" class="">{{value | moment("MMM Do, YYYY")}}</p>
+                                    <p v-else class="">{{value}}</p>
                                     </el-col>
                                 </el-row>
                             </div>
@@ -193,7 +193,7 @@ export default {
                symbol = '\u20B5'
             }
             var nForm = {
-                name: this.form.receiver_name,
+                name: this.form.company,
                 'phone number': this.form.customer_no,
                 email: this.form.emails[0],
                 reference: this.form.reference,

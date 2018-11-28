@@ -42,7 +42,7 @@
                 <!-- Account Details -->
                 <el-card class="my-2">
                     <div slot="header">
-                        <span class="blue-text bold-600 s-16">{{header}} details</span>
+                        <span class="blue-text bold-600 s-16">{{header}} Details</span>
                     </div>
                     <div>
                         <div v-if="hasNoData" class="center h-80">
@@ -75,6 +75,40 @@
                     </div>
                 </el-card>
                 <!-- Settings -->
+                <el-card class="my-2">
+                    <div slot="header">
+                        <span class="blue-text bold-600 s-16">{{header}} Settings</span>
+                    </div>
+                    <div>
+                        <div v-if="hasNoData" class="center h-80">
+                            {{noData}}
+                        </div>
+                        <div v-if="!hasNoData">
+                            <div class="flex">
+                                <div class="w-50">
+                                    <el-row type="flex" align="middle" v-for="(value, key, index) in settings.slice(0, settings.length / 2)" :key="index" class="mb-1">
+                                        <el-col :span="12">
+                                            <p class="m-0 text-capitalize menu-gray-text s-12">{{value.name}}</p>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <!-- <el-switch :active-value="value.value" v-model="value.value"></el-switch> -->
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                                <div class="w-50">
+                                    <el-row type="flex" align="middle" v-for="(value, key, index) in settings.slice(settings.length / 2, settings.length)" :key="index" class="mb-1">
+                                        <el-col :span="12">
+                                            <p class="m-0 text-capitalize menu-gray-text s-12">{{value.name}}</p>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <!-- <el-switch :active-value="value.value" v-model="value.value"></el-switch> -->
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </el-card>
                 <!-- Services -->
                 <el-card class="my-2 card-0">
                     <div class="flex align-items-baseline justify-content-between" slot="header">
@@ -86,7 +120,7 @@
                             :row-style="styleObject"
                             row-class-name="transactions-table-body"
                             header-row-class-name="transactions-table-header"
-                            :data="services">
+                            :data="services.slice((page * 5) - 5, page * 5)">
                             <el-table-column type="index"></el-table-column>
                             <el-table-column
                                 v-for="(item, index) in servicesColumns" :key="index"
@@ -102,6 +136,18 @@
                                 </template>
                             </el-table-column>
                         </el-table>
+                        <!-- FOOTER -->
+                        <div class="flex justify-content-between align-items-center px-20">
+                            <div class="s-12">
+                                {{ services.slice((page * 5) - 5, page * 5).length }} results
+                            </div>
+                            <el-pagination class="my-2 p-0 flex justify-content-end"
+                                @current-change="handleCurrentChange"
+                                :page-size="5"
+                                layout="prev, pager, next"
+                                :total="total">
+                            </el-pagination>
+                        </div>
                     </div>
                 </el-card>
                 <!-- Branches -->
@@ -123,6 +169,7 @@ import NewGroup from '../components/NewGroup'
 import UsersTable from '../components/UsersTable'
 import BranchesTable from '../components/BranchesTable'
 import EventBus from '../../event-bus.js'
+import Utils from '../../utils/services.js'
 
 export default {
   name: 'AccountDetail',
@@ -141,7 +188,9 @@ export default {
         styleObject: {
             fontSize: '12px'
         },
-        hasNoData: false
+        hasNoData: false,
+        page: 1,
+        countPerPage: 5,
     }
   },
   mounted () {
@@ -157,6 +206,10 @@ export default {
         this.$store.dispatch('getSingleAccountUsers', this.$route.params.id)
         this.$store.dispatch('getSingleAccountBranches', this.$route.params.id)
         this.$store.dispatch('getPrivileges', this.$route.params.id)
+    },
+    handleCurrentChange (page) {
+        this.page = page
+        this.countPerPage = this.services.slice((page * 5) - 5, page * 5).length
     },
     viewTransactions () {
         this.$router.push('/payments')
@@ -186,7 +239,8 @@ export default {
       usersState: 'currentAccountUsersState',
       branchesState: 'currentAccountBranchesState',
       privileges: 'currentAccountPrivileges',
-      settings: 'currentAccountSettings'
+      settings: 'currentAccountSettings',
+      pageSize: 'pageSize'
     }),
     services () {
       return this.form.services
@@ -218,7 +272,10 @@ export default {
         return this.branchesState === 'LOADING'
     },
     header () {
-        return this.form.company
+        return Utils.capitalize(this.form.company)
+    },
+    total () {
+        return this.services.length
     },
     data () {
         // var symbol = '\u20B5'

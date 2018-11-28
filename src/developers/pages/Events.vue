@@ -103,10 +103,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  // .trans-div {
-  //   text-transform: lowercase;
-  // }
-
   .status {
     background: #e3e8ee;
     text-align: center;

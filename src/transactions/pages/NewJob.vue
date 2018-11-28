@@ -36,6 +36,14 @@
                             <el-option label="Manual" :value="false"></el-option>
                         </el-select>
                     </el-form-item>
+                    <!-- JOB SERVICE CODE -->
+                    <el-form-item label="Service Code">
+                        <el-select v-model="form.service_code">
+                            <el-option label="Cash In" value="cash_in"></el-option>
+                            <el-option label="Cash Out" value="cash_out"></el-option>
+                            <el-option label="Direct Payment" value="direct_payment"></el-option>
+                        </el-select>
+                    </el-form-item>
                     <!-- JOB AUTOMATIC SCHEDULED -->
                     <div v-if="form.scheduled">
                         <el-form-item label="Frequency">
@@ -146,7 +154,7 @@
                     </el-form-item>
                 </el-form>
                 <div class="flex justify-content-end">
-                    <p class="s-12">NB: Vodafone numbers not supported</p>
+                    <p class="s-12">NB: Vodafone numbers are not supported</p>
                 </div>
             </div>
         </el-card>
@@ -175,8 +183,7 @@ export default {
                 timezone: "Africa/Accra",
                 country_code: "GH",
                 live: !this.testData,
-                test: this.testData,
-                service_code: 'cashin'
+                test: this.testData
             },
             beneficiaries: 'upload',
             contactData: [],
