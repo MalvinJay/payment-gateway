@@ -94,7 +94,7 @@ const user = {
   actions: {
     [LOGIN] ({ state, commit }, {email, password}) {
       return new Promise((resolve, reject) => {
-        var url = `${GET_BASE_URI}/v1/flopay_client_login.json?email=${email}&password=${password}`
+        var url = `${GET_BASE_URI}v1/flopay_client_login.json?email=${email}&password=${password}`
         localStorage.setItem('password', password)
         axios.post(url)
           .then((response) => {
@@ -141,7 +141,7 @@ const user = {
     },
     [AUTH_REQUEST] ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        var url = `${GET_BASE_URI}/v1/login.json`
+        var url = `${GET_BASE_URI}v1/login.json`
         var params = {
           grant_type: 'client_credentials'
         }

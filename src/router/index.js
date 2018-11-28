@@ -6,27 +6,23 @@ import Login from '@/pages/Login'
 import NotFound from '@/pages/NotFound'
 import Dashboard from '@/dashboard/pages/Dashboard'
 import ViewTransactions from '../transactions/pages/ViewTransactions'
-
-// import Payouts from '../transactions/pages/Payouts'
 import PaymentDetail from '../transactions/pages/PaymentDetail'
-// import Customers from '../contacts/pages/Customers'
 import ContactDetails from '../contacts/pages/ContactDetails'
-// import NewJob from '../transactions/pages/NewJob'
-import Logs from '@/pages/client/transactions/Logs'
 import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
-
 import BsSettings from '@/business/pages/BsSettings'
 import Taxation from '@/business/pages/Taxation'
 import Team from '@/business/pages/Team'
 import Roles from '@/business/pages/Roles'
 import Reports from '@/business/pages/Reports'
+
 const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
 const Disputes = () => import('../transactions/pages/Disputes')
 const JobDetails = () => import('../transactions/pages/JobDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
+
 const FoneMessenger = () => import('../fonemessenger/pages/FoneMessenger')
 const Fees = () => import('../accounts/pages/Fees')
 const FeesDetail = () => import('../accounts/pages/FeesDetail')
@@ -34,6 +30,13 @@ const TopUps = () => import('../accounts/pages/TopUps')
 const Settlements = () => import('../accounts/pages/Settlements')
 const Account = () => import('../connect/pages/Account')
 const AccountDetail = () => import('../connect/pages/AccountDetail')
+
+const Logs = () => import('../developers/pages/Logs')
+const LogsDetails = () => import('../developers/pages/LogsDetails')
+const Events = () => import('../developers/pages/events')
+const EventsDetails = () => import('../developers/pages/EventsDetails')
+const Webhooks = () => import('../developers/pages/Webhooks')
+const WebhookDetails = () => import('../developers/pages/WebhookDetails')
 
 Vue.use(Router)
 
@@ -98,11 +101,37 @@ let router = new Router({
           name: 'Settlements',
           component: Settlements
         },
+        // Developers
         {
           path: '/logs',
           name: 'Logs',
           component: Logs
         },
+        {
+          path: '/logs/:id',
+          name: 'LogsDetails',
+          component: LogsDetails
+        },
+        {
+          path: '/events',
+          name: 'Events',
+          component: Events
+        },
+        {
+          path: '/events/:id',
+          name: 'EventsDetails',
+          component: EventsDetails
+        },
+        {
+          path: '/webhooks',
+          name: 'Webhooks',
+          component: Webhooks
+        },
+        {
+          path: '/webhooks/:id',
+          name: 'WebhookDetails',
+          component: WebhookDetails
+        },                        
         {
           path: '/fees/:id',
           name: 'FeesDetails',
@@ -128,6 +157,7 @@ let router = new Router({
           name: 'ContactDetails',
           component: ContactDetails
         },
+        // Business Settings
         {
           path: '/account',
           name: 'BsSettings',
