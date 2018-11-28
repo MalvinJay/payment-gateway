@@ -15,11 +15,6 @@ export default {
        graph: {}
     }
   },
-//   watch: {
-//     data: {
-//         handler: ''
-//     }
-//   },
   methods: {
     changeGraph (myChart) {
       myChart.config.data = this.data

@@ -99,7 +99,6 @@ export default {
     var newQuery = ''
     fields.forEach(element => {
       newQuery = newQuery + `&${element}=${form[element]}`
-      console.log('formsdlfh', newQuery)
     })
     return newQuery.substring(1)
   },

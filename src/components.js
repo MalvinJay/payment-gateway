@@ -13,6 +13,7 @@ import JobTable from '@/transactions/components/JobTable'
 import FilterComponent from '@/transactions/components/FilterComponent'
 import ExportModal from './transactions/components/ExportModal'
 import Avatar from '@/components/Avatar'
+import EventWebhook from '@/developers/components/EventWebhook'
 const TicketModal = () => import('./transactions/components/TicketModal')
 
 Vue.component('side-nav', SideNav)
@@ -30,6 +31,7 @@ Vue.component('filter-component', FilterComponent)
 Vue.component('export-modal', ExportModal)
 Vue.component('ticket-modal', TicketModal)
 Vue.component('avatar', Avatar)
+Vue.component('event-webhook', EventWebhook)
 
 export default {
   SideNav: SideNav,
@@ -46,5 +48,6 @@ export default {
   JobTable: JobTable,
   QueuedTable: QueuedTable,
   PayoutsTable: PayoutsTable,
-  Avatar: Avatar
+  Avatar: Avatar,
+  EventWebhook: EventWebhook
 }

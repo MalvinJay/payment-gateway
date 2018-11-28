@@ -26,7 +26,7 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                        <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                         <!-- <el-table-column show-overflow-tooltip label="Message text" prop="message"></el-table-column> -->
                         <el-table-column width="80px">
                             <template slot-scope="scope">

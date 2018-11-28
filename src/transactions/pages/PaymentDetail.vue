@@ -19,8 +19,8 @@
                     </div>
                     </div>
                     <div>
-                        <el-button v-if="status === 'failed'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Refund</el-button>
-                        <el-button size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Note</el-button>
+                        <el-button :disabled="error" @click="refund" :loading="loading" v-if="status === 'failed'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Refund</el-button>
+                        <!-- <el-button size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Note</el-button> -->
                     </div>
                 </div>
                 <!-- :class="[{success ? 'green': 'gray' }]" -->
@@ -55,7 +55,7 @@
                                     </el-col>
                                     <el-col :span="16">
                                     <p v-if="key === 'date'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
-                                    <div v-else-if="key === 'description'">
+                                    <div v-else-if="key === 'message'">
                                         <div v-if="!edit" class="flex align-items-center">
                                             <p class="s-13 mono m-0 mr-6">{{value}}</p>
                                             <el-button @click="edit = true" class="blue-text p-0" type="text" icon="pencil alternate icon">Edit</el-button>
@@ -101,7 +101,8 @@ export default {
             status: 'failed',
             edit: false,
             remarks: '',
-            page: this.$route.path
+            page: this.$route.path,
+            loading: false
         }
     },
     watch: {
@@ -113,6 +114,33 @@ export default {
     methods: {
         fetchTransactions () {
            this.$store.dispatch('getCurrentTransaction', this.$route.params.id) 
+        },
+        refund () {
+            this.loading = true
+            this.$store.dispatch('createRefund', this.form.reference)
+            .then((response) => {
+                if (response.data.success) {
+                    this.$message({
+                        type: 'success',
+                        message: 'Payment Refunded',
+                    })
+                    // EventBus.$emit('tabNumber', '3')
+                    // this.$router.push('/payments')
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.response.message
+                    })
+                }
+                this.loading = false
+            }).catch((error) => {
+                this.loading = false
+                const response = error.response
+                this.$message({
+                    message: response.data.response.error_message,
+                    type: 'error'
+                })
+            })            
         }
     },
     mounted () {
@@ -151,7 +179,7 @@ export default {
                 fee: `${symbol}${this.form.charged_amount}`,
                 date: this.form.date,
                 time: this.form.time,
-                description: this.form.remarks ? this.form.remarks : '-'
+                message: this.form.remarks ? this.form.remarks : '-'
             }
             return nForm
         },

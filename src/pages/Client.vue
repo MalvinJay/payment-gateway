@@ -29,8 +29,13 @@ export default {
     this.$store.dispatch('setDashboardFilters', time)
     .then(() => {
         EventBus.$emit('updateGraph')
+        
     })
     this.$store.dispatch('getTransactions', {cache: false})
+    this.$store.dispatch('getTodayGraph', {cache: false})
+    .then(() => {
+        EventBus.$emit('updateTimeGraph')
+    })
     this.$store.dispatch('setClient', JSON.parse(this.$session.get('client')))
     this.$store.dispatch('getJobs')
     this.$store.dispatch('getQueues')

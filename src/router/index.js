@@ -6,22 +6,16 @@ import Login from '@/pages/Login'
 import NotFound from '@/pages/NotFound'
 import Dashboard from '@/dashboard/pages/Dashboard'
 import ViewTransactions from '../transactions/pages/ViewTransactions'
-
-// import Payouts from '../transactions/pages/Payouts'
 import PaymentDetail from '../transactions/pages/PaymentDetail'
-// import Customers from '../contacts/pages/Customers'
 import ContactDetails from '../contacts/pages/ContactDetails'
-// import NewJob from '../transactions/pages/NewJob'
-import Logs from '@/pages/client/transactions/Logs'
-import LogsDetails from '@/pages/client/transactions/Logs'
 import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
+import BsSettings from '@/business/pages/BsSettings'
+import Taxation from '@/business/pages/Taxation'
+import Team from '@/business/pages/Team'
+import Roles from '@/business/pages/Roles'
+import Reports from '@/business/pages/Reports'
 
-import BsSettings from '@/settings/pages/BsSettings'
-import Taxation from '@/settings/pages/Taxation'
-import Team from '@/settings/pages/Team'
-import Roles from '@/settings/pages/Roles'
-import Reports from '@/settings/pages/Reports'
 const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
@@ -29,17 +23,18 @@ const Disputes = () => import('../transactions/pages/Disputes')
 const JobDetails = () => import('../transactions/pages/JobDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
 
-const connect_overview = () => import('../connect/pages/overview')
-const connect_accounts = () => import('../connect/pages/accounts')
-const connect_transfers = () => import('../connect/pages/transfers')
-const connect_fees = () => import('../connect/pages/collected_fees')
-const connect_settings = () => import('../connect/pages/settings')
-
 const FoneMessenger = () => import('../fonemessenger/pages/FoneMessenger')
 const Fees = () => import('../accounts/pages/Fees')
 const FeesDetail = () => import('../accounts/pages/FeesDetail')
 const TopUps = () => import('../accounts/pages/TopUps')
 const Settlements = () => import('../accounts/pages/Settlements')
+
+const Logs = () => import('../developers/pages/Logs')
+const LogsDetails = () => import('../developers/pages/LogsDetails')
+const Events = () => import('../developers/pages/events')
+const EventsDetails = () => import('../developers/pages/EventsDetails')
+const Webhooks = () => import('../developers/pages/Webhooks')
+const WebhookDetails = () => import('../developers/pages/WebhookDetails')
 
 Vue.use(Router)
 
@@ -114,7 +109,27 @@ let router = new Router({
           path: '/logs/:id',
           name: 'LogsDetails',
           component: LogsDetails
-        },        
+        },
+        {
+          path: '/events',
+          name: 'Events',
+          component: Events
+        },
+        {
+          path: '/events/:id',
+          name: 'EventsDetails',
+          component: EventsDetails
+        },
+        {
+          path: '/webhooks',
+          name: 'Webhooks',
+          component: Webhooks
+        },
+        {
+          path: '/webhooks/:id',
+          name: 'WebhookDetails',
+          component: WebhookDetails
+        },                        
         {
           path: '/fees/:id',
           name: 'FeesDetails',
@@ -139,32 +154,6 @@ let router = new Router({
           path: '/contacts/:id',
           name: 'ContactDetails',
           component: ContactDetails
-        },
-        // Connect
-        {
-          path: '/connect/overview',
-          name: 'ConnectOverview',
-          component: connect_overview
-        },
-        {
-          path: '/connect/accounts',
-          name: 'ConnectAccounts',
-          component: connect_accounts
-        },
-        {
-          path: '/connect/transfers',
-          name: 'ConnectTransfers',
-          component: connect_transfers
-        },
-        {
-          path: '/connect/application_fees',
-          name: 'ConnectFees',
-          component: connect_fees
-        },
-        {
-          path: '/connect/settings',
-          name: 'ConnectSettings',
-          component: connect_settings
         },
         // Business Settings
         {
@@ -222,7 +211,7 @@ let router = new Router({
 router.beforeEach((to, from, next) => {
   console.log('app', store)
   console.log('app', store.state.user)
-  console.log('app', store.state.user.logIn)
+  console.log('login', localStorage.getItem('login'))
   console.log('store', store)
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
@@ -231,7 +220,7 @@ router.beforeEach((to, from, next) => {
         params: { nextUrl: to.fullPath }
       })
     } else {
-      if (store.state.user.logIn) {
+      if (localStorage.getItem('login')) {
         store.dispatch('getToken')
         next()
       } else {
@@ -248,6 +237,9 @@ router.beforeEach((to, from, next) => {
         store.logIn = false
         store.user.token = null
         localStorage.removeItem('token')
+        localStorage.setItem('login', false) // clear your user's token from localstorage
+        localStorage.removeItem('client_id')
+        localStorage.removeItem('client_secret')
         next({
           path: '/login',
           params: { nextUrl: to.fullPath }

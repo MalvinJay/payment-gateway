@@ -172,14 +172,11 @@ export default {
                     message: response.data.response.message
                 })
             }  
-            
-            console.log('job delete', response.data)
           }).catch((error) => {
             this.$message({
                 type: 'error',
                 message: 'Job not deleted'
             })
-            console.log('job delete error', error.response)
           })
         }).catch(() => {
                   

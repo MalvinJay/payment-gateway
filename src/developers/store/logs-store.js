@@ -4,6 +4,9 @@ import {
     SET_LOGS_STATE,
     SET_LOGS_META,
     SET_LOGS_FILTERS,
+    GET_CURRENT_LOG,
+    SET_CURRENT_LOG,
+    SET_CURRENT_LOGS_STATE,
     GET_LOGS_URI
   } from './logs-store-constants'
   import { apiCall } from '../../store/apiCall'
@@ -17,7 +20,7 @@ import {
       errors: [],
       state: 'DATA',
       filters: {},
-      sortParams: {param: 'updated_at', order: 'DESC'}
+      sortParams: { param: 'updated_at', order: 'DESC' }
     },
     currentLog: {
       data: {},
@@ -31,7 +34,9 @@ import {
     logsFilters: state => state.logs.filters,
     logsMeta: state => state.logs.meta,
     logsSortParams: state => state.logs.sortParams,
-    logsState: state => state.logs.state
+    logsState: state => state.logs.state,
+    currentLog: state => state.currentLog.data,
+    currentLogState: state => state.currentLog.state,    
   }
   
   // mutations
@@ -45,16 +50,22 @@ import {
     },
     [SET_LOGS_META] (state, data) {
       var meta = {
-        totalCount: data.total_transactions,
+        totalCount: data.length,
         limit: data.limit,
         page: data.page,
-        logs: data.total_page_transactions
+        logs: data
       }
       state.logs.meta = meta
     },
     [SET_LOGS_FILTERS] (state, data) {
       state.logs.filters = data
-    }
+    },
+    [SET_CURRENT_LOG] (state, data) {
+      state.currentLog.data = data
+    },
+    [SET_CURRENT_LOGS_STATE] (state, data) {
+      state.currentLog.state = data
+    }    
   }
   
   // actions
@@ -65,8 +76,9 @@ import {
     } = {}) {
       var filters = state.logs.filters
       var query = ''
+      
       if (Utils.empty(filters)) {
-        query = `?all=true&page=${page}&limit=10`
+        query = `?page=${page}&limit=20`
       } else {
         query = Utils.createQueryParams(filters, page)
       }
@@ -81,10 +93,10 @@ import {
             method: 'GET',
             token: rootGetters.token
           }).then((response) => {
-            console.log('logs', response)
+            // console.log('logs', response)
             commit(SET_LOGS_STATE, 'DATA')
-            commit(SET_LOGS_META, response.data.response.data)
-            commit(SET_LOGS, response.data.response.data.users)
+            commit(SET_LOGS_META, response.data)
+            commit(SET_LOGS, response.data)
             resolve(response)
           }).catch((error) => {
             commit(SET_LOGS_STATE, 'ERROR')
@@ -97,7 +109,28 @@ import {
     [SET_LOGS_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
       commit(SET_LOGS_FILTERS, filters)
       dispatch('getlogs', {page: 1, cache: false})
-    }
+    },
+    [GET_CURRENT_LOG] ({ state, commit, rootGetters }, id) {
+      var query = ''
+      query = `?id=${id}`
+      commit(SET_CURRENT_LOGS_STATE, 'LOADING')
+      return new Promise((resolve, reject) => {
+        apiCall({
+          url: `https://api.flopay.io/v1/accounts/logs${query}`,
+          method: 'GET',
+          token: rootGetters.token
+        }).then((response) => {
+          // console.log('Single Log', response)
+          commit(SET_CURRENT_LOGS_STATE, 'DATA')
+          commit(SET_CURRENT_LOG, response.data)
+          resolve()
+        }).catch((error) => {
+          commit(SET_CURRENT_LOGS_STATE, 'ERROR')
+          console.log('Single Log', error)
+          reject(error)
+        })
+      })
+    },    
   }
   
   export default {

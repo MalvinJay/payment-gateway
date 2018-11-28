@@ -240,7 +240,6 @@ const actions = {
           reject(err)
           return
         }
-        console.log('DATA RESPONSE', data)
         let admin = {
           s3_object_key: data.key,
           file_type: fileExtension
@@ -258,10 +257,8 @@ const actions = {
         method: 'DELETE',
         token: rootGetters.token
       }).then((response) => {
-        console.log('errors dkfnb', response)
         resolve(response)
       }).catch(error => {
-        console.log('errors dkfnb', error.response)
         reject(error)
         return error
       })
@@ -282,7 +279,6 @@ const actions = {
     })
   },
   [GET_SINGLE_JOB] ({ state, commit, rootGetters }, { id, cache = true } = {}) {
-    console.log('id', id)
     commit(SET_SINGLE_JOB_STATE, 'LOADING')
     // commit(SET_SINGLE_JOB, rootGetters.jobs.find(el => el.name === id))
     // commit(SET_SINGLE_JOB_STATE, 'DATA')
@@ -296,7 +292,6 @@ const actions = {
         token: rootGetters.token
       }).then((response) => {
         if (response.data.success) {
-          console.log('currentJob', response)
           commit(SET_SINGLE_JOB_STATE, 'DATA')
           commit(SET_SINGLE_JOB, response.data.response.data.job)
           // commit(SET_JOB_RUNS, response.data.response.data.executed_transactions)
@@ -324,7 +319,6 @@ const actions = {
 //           method: 'GET',
 //           token: rootGetters.token
 //         }).then((response) => {
-//           console.log('currentJob', response)
 //           commit(SET_SINGLE_JOB_STATE, 'DATA')
 //           commit(SET_SINGLE_JOB, response.data.response.data.job)
 //           commit(SET_JOB_RUNS, response.data.response.data.executed_transactions)
@@ -342,6 +336,6 @@ const actions = {
 export default {
   state,
   getters,
-  actions,
-  mutations
+  mutations,
+  actions
 }

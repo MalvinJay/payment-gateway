@@ -420,8 +420,42 @@ $border: #dcdfe6;
     table th {
         font-weight: 600!important;
         color: initial;
-        font-size: 13px;
+        font-size: 12px;
     }  
+}
+
+.logs_custom_headers {
+    table {
+        td {
+            padding: 2px!important;
+        }
+        th:nth-child(3), td:nth-child(3) {
+            .cell {
+                padding: 8px;
+                padding-right: 20px;
+            }
+        }
+        th:nth-child(1), th:nth-child(3), td:nth-child(3){
+            text-align: right;
+        }        
+    }
+}
+
+.events_custom_headers {
+    table {
+        td {
+            padding: 2px!important;
+        }
+        th:nth-child(3), td:nth-child(3) {
+            .cell {
+                padding: 8px;
+                padding-right: 20px;
+            }
+        }
+        // th:nth-child(2), th:nth-child(3), td:nth-child(3){
+        //   text-align: right;
+        // }        
+    }    
 }
 
 .no-padding {
@@ -478,7 +512,7 @@ $border: #dcdfe6;
         padding: 20px;
     }
 
-    .custom {
+    .custom, {
         .el-table__header-wrapper {
             display: none;
         }
@@ -489,7 +523,29 @@ $border: #dcdfe6;
     }
 }
 
-.no-header-table{
+.events-hooks {
+    .flex {
+        .callbacks {
+            .el-table__header-wrapper {
+                display: none;
+            }
+            .el-table__body-wrapper {
+                border: none;
+            }
+            .el-table__empty-block {
+                width: initial!important;
+            }
+            .el-table__expanded-cell {
+                padding: 10px 20px;
+            }            
+        }
+    }
+    .el-card__body {
+        padding: 0;
+    }
+}
+
+.no-header-table {
     display: none;
 }
 
@@ -499,4 +555,54 @@ $border: #dcdfe6;
 
 .roles-table-body{
     font-size: 12px !important;
+}
+
+.hljs {
+    background: #fff;
+}
+
+/* for block of numbers */
+td.hljs-ln-numbers {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    text-align: center;
+    color: #a3acb9;
+    vertical-align: top;
+    padding-right: 5px;
+
+    /* your custom style here */
+}
+
+/* for block of code */
+td.hljs-ln-code {
+    padding-left: 10px;
+}
+
+.hljs-ln tr {
+    line-height: 25px;
+}
+
+.hljs-ln-line {
+    .key     {color: #586ada;}
+    .boolean {color: #067ab8;font-weight: 600;}
+    .number  {color: #ed5f74;}
+    .string  {color: #09825d;}
+}
+
+.bsProperty {
+    .hljs-ln {
+        width: 100%; 
+        tr {
+            line-height: 0;
+
+            td {
+                border: none;
+            }
+        }
+    }
 }

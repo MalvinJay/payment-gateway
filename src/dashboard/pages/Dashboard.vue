@@ -6,21 +6,22 @@
                 <div class="flex flex-column">
                     <div class="flex">
                         <p class="p-0 m-0">Account Balance</p>
-                        <p class="p-0 m-0 bold-600" style="padding-left: 16px">{{balance | money}}</p>
+                        <p class="p-0 m-0 bold-600" style="padding-left: 16px">{{ balance | money }}</p>
                     </div>
                     <div class="flex align-items-center">
                         <el-date-picker class="transparent-input"
-                            v-model="value2"
+                            v-model="currentDate"
                             type="date"
+                            :picker-options="pickerOptions"
                             placeholder="Today">
                             </el-date-picker>
-                        <p class="p-0 m-0 bold-600 little-money" style="padding-left: 16px">GHc0.00</p>
+                        <p class="p-0 m-0 bold-600 little-money" style="padding-left: 16px">{{ sum | money }}</p>
                     </div>
                 </div>
             </div>
-            <!-- <div class="blue-graph">
-                <time-line-chart :dashboard="sData" :data="count" :labels="days"></time-line-chart>
-            </div> -->
+            <div class="blue-graph">
+                <time-line-chart :dashboard="today" :data="count" :labels="days"></time-line-chart>
+            </div>
         </el-card>
         <!-- Summary Div -->
         <el-card class="b-0 analytics my-2">
@@ -129,6 +130,32 @@ export default {
         {label: 'Qtd', value: 'quarter'},
         {label: 'Ytd', value: 'year'}
       ],
+      pickerOptions: {
+        disabledDate(time) {
+            return time.getTime() > Date.now();
+        },
+        shortcuts: [{
+        text: 'Today',
+        onClick(picker) {
+            picker.$emit('pick', new Date());
+        }
+        }, {
+        text: 'Yesterday',
+        onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24);
+            picker.$emit('pick', date);
+        }
+        }, {
+        text: 'A week ago',
+        onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', date);
+        }
+        }]
+      },
+      currentDate: '',
       payment: ['wallet', 'card','bank'],
       status: ['Succeeded', 'pending','failed'],
       statue: [],
@@ -182,7 +209,6 @@ export default {
             tooltips: {
                 // callbacks: {
                 //     label: function(tooltipItem, data) {
-                //         console.log(tooltipItem)
                 //         var label = data.datasets[tooltipItem.datasetIndex].label[tooltipItem.index] || ''
                 //         if (label) {
                 //             label += ': '
@@ -214,6 +240,7 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'dashboard')
+    // EventBus.$emit('updateTimeGraph')
   },
   methods: {
     handleChange (val) {
@@ -230,7 +257,9 @@ export default {
     ...mapGetters({
         dashboard: 'dashboard',
         state: 'dashboardState',
-        user: 'user'
+        user: 'user',
+        today: 'today',
+        sum: 'todaySum'
     }),
     balance () {
         return this.user.available_balance
@@ -296,7 +325,6 @@ export default {
         }
     },
     pageLoading () {
-        console.log('state', this.state)
         return this.state === 'LOADING'
     },
     days () {

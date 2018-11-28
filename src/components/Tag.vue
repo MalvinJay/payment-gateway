@@ -1,7 +1,6 @@
 <template>
-  <div :class="[{success: isSuccess}, 'tag-success', 'flex']">
+  <div :class="[{success: isSuccess}, 'tag-success', 'flex', 'justify-content-center']">
     <p class="p-0 m-0">{{title}}</p>
-    <!-- <i :class="icon"></i> -->
   </div>
 </template>
 
@@ -58,7 +57,10 @@ export default {
     // i{
     //     color: #6f8eef;
     // }
-    background: #F44753;
-    color: white;
+    // background: #F44753;
+    // color: white;
+
+    background: #f8e5b9;
+    color: #983705;
 }
 </style>

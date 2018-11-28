@@ -80,7 +80,6 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('payouts', response)
           commit(SET_PAYOUTS_STATE, 'DATA')
           commit(SET_PAYOUTS_META, response.data.response.data)
           commit(SET_PAYOUTS, response.data.response.data.transactions)

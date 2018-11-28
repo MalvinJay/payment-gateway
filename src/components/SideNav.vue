@@ -43,14 +43,14 @@
                     <img class="mr-10" src="../assets/images/icons/customer.svg" alt="">Customers
                 </template>
             </el-menu-item>
-            <el-submenu ref="sideMenu" index="5">
+            <!-- <el-submenu ref="sideMenu" index="5">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/billing.svg" alt="">Radar
                 </template>
                 <el-menu-item index="5-1">Tickets</el-menu-item>
                 <el-menu-item index="5-2">List</el-menu-item>
                 <el-menu-item index="5-3">Rules</el-menu-item>
-            </el-submenu>            
+            </el-submenu> -->
             <el-submenu ref="sideMenu" index="6">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/billing.svg" alt="">Billing
@@ -60,7 +60,7 @@
                 <el-menu-item index="6-3">Products</el-menu-item>
                 <el-menu-item index="6-4">Orders</el-menu-item>
             </el-submenu>
-            <el-submenu index="connect">
+            <!-- <el-submenu index="connect">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">Connect
                 </template>
@@ -69,7 +69,7 @@
                 <el-menu-item route="/connect/transfers" index="transfers">Settlements</el-menu-item>
                 <el-menu-item route="/connect/application_fees" index="fees">Fees</el-menu-item>
                 <el-menu-item route="/connect/settings" index="settings">Settings</el-menu-item>
-            </el-submenu>
+            </el-submenu> -->
             <el-menu-item route="/fonemessenger" index="fonemessenger">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/radar.svg" alt="">FoneMessenger
@@ -80,23 +80,24 @@
                     <img class="mr-10" src="../assets/images/icons/developer.svg" alt="">Developers
                 </template>
                 <el-menu-item index="9-1">Apps</el-menu-item>
-                <el-menu-item index="9-2">Events</el-menu-item>
+                <el-menu-item route="/events" index="events">Events</el-menu-item>
                 <el-menu-item route="/logs" index="logs">Logs</el-menu-item>
-                <el-menu-item index="9-4">Settings</el-menu-item>
+                <el-menu-item route="/webhooks" index="webhooks">Webhooks</el-menu-item>
+                <el-menu-item index="9-5">Settings</el-menu-item>
             </el-submenu>
             <el-submenu ref="sideMenu" route="/account" index="10">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/business-settings.svg" alt=""> Business Settings
                 </template>
-                <el-menu-item route="/account" index="account">Account Set-up</el-menu-item>
+                <el-menu-item route="/account" index="bs_account">Account Set-up</el-menu-item>
                 <!-- <el-menu-item index="10-2">Verifications</el-menu-item> -->
-                <el-menu-item route="/taxation" index="taxation">Tax details</el-menu-item>
+                <!-- <el-menu-item route="/taxation" index="taxation">Tax details</el-menu-item> -->
                 <el-menu-item route="/team" index="team">Team</el-menu-item>
                 <el-menu-item route="/roles" index="roles">Roles</el-menu-item>   
                 <!-- <el-menu-item index="10-6">Integration</el-menu-item>     -->
                 <!-- <el-menu-item index="10-7">Relay</el-menu-item>     -->
                 <!-- <el-menu-item index="10-8">Authorized apps</el-menu-item> -->
-                <el-menu-item route="/reports" index="reports">Data Reports</el-menu-item>
+                <!-- <el-menu-item route="/reports" index="reports">Data Reports</el-menu-item> -->
                 <!-- <el-menu-item index="10-10">Customer emails</el-menu-item> -->
                 <!-- <el-menu-item index="10-11">Documents</el-menu-item> -->
                 <!-- <el-menu-item index="10-12">Security history</el-menu-item> -->

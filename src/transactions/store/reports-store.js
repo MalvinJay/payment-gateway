@@ -42,7 +42,6 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('payouts', response)
           commit(SET_FIELDS_STATE, 'DATA')
           commit(SET_FIELDS, response.data.response.data.fields)
           resolve(response)
@@ -62,14 +61,12 @@ const actions = {
         method: 'POST',
         token: rootGetters.token
       }).then((response) => {
-        console.log('report', response)
         if (response.data.success) {
           apiCall({
             url: `${GET_BASE_URI}v1/clients/reports/${response.data.response.data.job_id}`,
             method: 'GET',
             token: rootGetters.token
           }).then((response) => {
-            console.log('status', response)
             commit(SET_DOWNLOAD_LINK, response.data.response.data.file_name)
             // dispatch(DOWNLOAD_REPORT, response.data.response.data.file_name)
             resolve(response)
@@ -91,7 +88,6 @@ const actions = {
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
-        console.log('download', response)
         state.link = ''
       }).catch((error) => {
         commit(SET_FIELDS_STATE, 'ERROR')

@@ -2,7 +2,7 @@ import { TRANSACTION_CREATE, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SE
   TRANSACTIONS_FETCH, SET_CURRENT_TRANSACTION_STATE, GET_BASE_URI,
   SET_TRANSACTIONS_STATE, GET_QUEUE, SET_QUEUE, SET_QUEUE_STATE, SET_QUEUE_FILTERS, SET_QUEUE_META, SET_CURRENT_TRANSACTION,
   SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, SET_PENDING_STATE, SET_PENDING_META, GET_CURRENT_TRANSACTION,
-  GET_TRANSACTIONS_URI, CREATE_TICKET } from './transactions-store-constants'
+  GET_TRANSACTIONS_URI, CREATE_TICKET, REFUND_TRANSACTION, GET_REFUND_TRANSACTION_URI } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 
@@ -56,7 +56,8 @@ const getters = {
   pendingFilters: state => state.pending.state,
   pendingMeta: state => state.pending.meta,
   currentTransaction: state => state.currentTransaction.data,
-  currentTransactionState: state => state.currentTransaction.state
+  currentTransactionState: state => state.currentTransaction.state,
+  
 }
 
 // mutations
@@ -189,7 +190,6 @@ const actions = {
     // var filters = state.queues.filters
     var filters = {...state.queues.filters, search_value: 'queued'}
     // var fill = Utils.createQueryParams(filters)
-    console.log('filters queue', filters)
     var query = Utils.createQueryParams(filters, page)
     // query += '&all=true'
     commit(SET_QUEUE_STATE, 'LOADING')
@@ -254,7 +254,6 @@ const actions = {
   },
   [GET_CURRENT_TRANSACTION] ({ state, commit, rootGetters }, id) {
     // var trans = state.transactions.data.find(el => el.reference === id)
-    // console.log('trans', trans)
     // commit(SET_CURRENT_TRANSACTION, trans)
     commit(SET_CURRENT_TRANSACTION_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
@@ -263,7 +262,6 @@ const actions = {
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
-        console.log('trans', response)
         commit(SET_CURRENT_TRANSACTION_STATE, 'DATA')
         commit(SET_CURRENT_TRANSACTION, response.data.response.data)
         resolve()
@@ -282,15 +280,12 @@ const actions = {
     // query = query + `search_value=${search}`
     var filters = {...state.transactions.filters, search_value: search}
     var fill = Utils.createQueryParams(filters)
-    console.log('filetr', fill)
-    console.log('search value', search)
     return new Promise((resolve, reject) => {
       apiCall({
         url: `${GET_TRANSACTIONS_URI}${fill}`,
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
-        console.log('trans', response)
         commit(SET_TRANSACTIONS_STATE, 'DATA')
         commit(SET_TRANSACTIONS_META, response.data.response.data)
         commit(SET_TRANSACTIONS, response.data.response.data.transactions)
@@ -303,7 +298,6 @@ const actions = {
     })
   },
   [CREATE_TICKET] ({ commit, rootGetters }, ticket) {
-    console.log('ticket', ticket)
     return new Promise((resolve, reject) => {
       apiCall({
         url: `${GET_BASE_URI}v1/clients/tickets/via/support`,
@@ -311,7 +305,20 @@ const actions = {
         token: rootGetters.token,
         data: ticket
       }).then((response) => {
-        console.log('trans', response)
+        resolve(response)
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  [REFUND_TRANSACTION] ({ state, commit, rootGetters }, reference) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_REFUND_TRANSACTION_URI}?transaction_ref=${reference}`,
+        method: 'POST',
+        token: rootGetters.token
+      }).then((response) => {
         resolve(response)
       }).catch((error) => {
         console.log(error)
@@ -319,7 +326,6 @@ const actions = {
       })
     })
   }
-
 }
 
 export default {

@@ -179,12 +179,9 @@
                                 <el-table empty-text="No transactions" tooltip-effect="light" header-row-class-name="transactions-table-header" row-class-name="transactions-table-body" :data="props.row.executed_transctions">
                                     <el-table-column prop="receiver_name" label="Name"></el-table-column>
                                     <el-table-column prop="receiver_no" label="Number"></el-table-column>
-                                    <el-table-column prop="type" label="Type">
+                                    <el-table-column prop="reference" label="Reference">
                                         <template slot-scope="scope">
-                                            <div class="flex">
-                                                <p v-if="scope.row.service_code === 'cashin'">Payout</p>
-                                                <p v-else>Payment</p>
-                                            </div>
+                                            {{scope.row.reference}}
                                         </template>
                                     </el-table-column>
                                     <el-table-column prop="sender_amount" label="Amount">
