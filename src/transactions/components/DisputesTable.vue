@@ -18,8 +18,15 @@
                     </div>
                 </div>
                 <div v-else>
-                    <el-table empty-text="No disputes" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="disputes">
-                        <el-table-column type="selection" width="55"></el-table-column>
+                    <el-table ref="dispute" empty-text="No disputes" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="disputes">
+                        <el-table-column type="expand" width="55">
+                            <template slot-scope="props">
+                                <div class="pl-15">
+                                    <p class="blue-text s-13 bold-600">Message: </p>
+                                    <p class="s-12 gray">{{ props.row.message }}</p>
+                                </div>
+                            </template>                            
+                        </el-table-column>
                         <el-table-column prop="amount" label="Amount" width="100">
                             <template slot-scope="scope">
                                 <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.receiver_amount | money}}</p>
@@ -28,7 +35,7 @@
                         <el-table-column prop="status" label="" width="auto">
                             <template slot-scope="scope">
                                 <div class="flex">
-                                    <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-if="scope.row.status === 'paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
                                     <the-tag v-else-if="scope.row.status === 'failed'" status="success" :title="scope.row.status" icon="close icon"></the-tag>
                                     <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
                                 </div>
@@ -94,11 +101,11 @@ export default {
     return {
       columns: [
         // {label: 'Method', dataField: 'method', width: '100px'},
-        {label: 'Customer', dataField: 'customer', width: 'auto'},
-        {label: 'Reference', dataField: 'reference', width: 'auto'},
+        {label: 'Customer', dataField: 'name', width: 'auto'},
+        {label: 'Reference', dataField: 'ref', width: 'auto'},
         {label: 'type', dataField: 'transaction_type', width: '100px'}
       ],
-      disputes: [],
+    //   disputes: [],
       styleObject: {
         fontSize: '12px'
       },
@@ -132,8 +139,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-    // 1. what you want to call the getter here : 2. the name of the getter from the vuex store
-    //   disputes: 'disputes',
+      disputes: 'disputes',
       state: 'disputesState',
       pageSize: 'pageSize'
     }),

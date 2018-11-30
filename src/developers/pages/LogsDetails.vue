@@ -28,7 +28,7 @@
             </div>
             <div>
                 <pre class="m-0">
-                  <code class="html hljs s-13" v-html="requestBody"></code>
+                  <code class="html hljs s-13" v-html="responseBody"></code>
                 </pre>
             </div>
         </el-card>        
@@ -128,7 +128,7 @@ export default {
     },
 
     responseBody () {
-      return this.syntaxHighlight(this.log.response)     
+      return this.syntaxHighlight(this.log.response.response)     
     }
   }
 }

@@ -1,10 +1,5 @@
 import {
-  FEES_FETCH,
-  SET_FEES,
-  SET_FEES_STATE,
-  SET_FEES_META,
-  SET_FEES_FILTERS,
-  GET_FEES_URI
+  FEES_FETCH, SET_FEES, SET_FEES_STATE, SET_FEES_META, SET_FEES_FILTERS
 } from './store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
@@ -69,7 +64,7 @@ const actions = {
     var filters = state.fees.filters
     var query = ''
     if (Utils.empty(filters)) {
-      query = `?all=true&page=${page}&limit=10`
+      query = `?all=true&page=${page}&limit=12`
     } else {
       // filters.search_value = 'cashin'
       query = Utils.createQueryParams(filters, page)

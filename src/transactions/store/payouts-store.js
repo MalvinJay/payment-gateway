@@ -114,7 +114,7 @@ const actions = {
   [PAYOUT_CREATE] ({commit, state, rootGetters}, transaction) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `https://api.flopay.io/v1/transfer.json`,
+        url: `${GET_BASE_URI}v1/transfer.json`,
         method: 'POST',
         data: transaction,
         token: rootGetters.token

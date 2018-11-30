@@ -38,7 +38,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `https://api.flopay.io/v1/clients/reports/fields`,
+          url: `${GET_BASE_URI}v1/clients/reports/fields`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {

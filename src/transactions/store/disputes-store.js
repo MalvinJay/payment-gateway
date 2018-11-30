@@ -32,18 +32,32 @@ const mutations = {
 // actions
 const actions = {
   [GET_DISPUTES] ({ state, commit, rootGetters }, { page = 1, cache = true } = {}) {
+    // filters
+    // var filters = state.transactions.filters
+    var query = `?page=${page}&limit=12`
+
+    // if (Utils.empty(filters)) {
+    //   query = `?all=true&search_value=cashout&page=${page}&limit=12`
+    // } else {
+    //   filters.search_value = 'cashout'
+    //   query = Utils.createQueryParams(filters, page)
+    // }  
+
+    // state
     commit(SET_DISPUTES_STATE, 'LOADING')
+
     if (cache && Utils.present(state.disputes.data)) {
       commit(SET_DISPUTES_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_BASE_URI}/v1/clients/jobs/files/all.json`,
+          url: `${GET_BASE_URI}v1/clients/tickets.json${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
+          console.log('Disputes:', response.data)
           commit(SET_DISPUTES_STATE, 'DATA')
-          commit(SET_DISPUTES, response.data.response.data.jobs)
+          commit(SET_DISPUTES, response.data.response.data)
           resolve(response)
         }).catch((error) => {
           commit(SET_DISPUTES_STATE, 'ERROR')
@@ -56,7 +70,7 @@ const actions = {
   [CREATE_DISPUTE] ({ state, commit, rootGetters }, job) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}/v1/clients/jobs/files.json`,
+        url: `${GET_BASE_URI}v1/clients/jobs/files.json`,
         method: 'POST',
         token: rootGetters.token,
         data: job

@@ -1,14 +1,7 @@
 import {
-    EVENTS_FETCH,
-    SET_EVENTS,
-    SET_EVENTS_STATE,
-    SET_EVENTS_META,
-    SET_EVENTS_FILTERS,
-    GET_CURRENT_EVENT,
-    SET_CURRENT_EVENT,
-    SET_CURRENT_EVENTS_STATE,
-    GET_EVENTS_URI
+    EVENTS_FETCH, SET_EVENTS, SET_EVENTS_STATE, SET_EVENTS_META, SET_EVENTS_FILTERS, GET_CURRENT_EVENT, SET_CURRENT_EVENT, SET_CURRENT_EVENTS_STATE 
 } from './events-store-constants'
+import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 
@@ -89,7 +82,7 @@ const actions = {
         } else {
             return new Promise((resolve, reject) => {
                 apiCall({
-                    url: `${GET_EVENTS_URI}${query}`,
+                    url: `${GET_BASE_URI}/accounts/logs.json${query}`,
                     method: 'GET',
                     token: rootGetters.token
                 }).then((response) => {
@@ -116,7 +109,7 @@ const actions = {
         commit(SET_CURRENT_EVENTS_STATE, 'LOADING')
         return new Promise((resolve, reject) => {
           apiCall({
-            url: `https://api.flopay.io/v1/accounts/logs${query}`,
+            url: `${GET_BASE_URI}/accounts/logs.json${query}`,
             method: 'GET',
             token: rootGetters.token
           }).then((response) => {

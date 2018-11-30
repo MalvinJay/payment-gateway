@@ -1,7 +1,5 @@
 import {
-  SET_SETTLEMENTS,
-  SET_SETTLEMENTS_STATE,
-  GET_SETTLEMENTS
+  SET_SETTLEMENTS, SET_SETTLEMENTS_STATE, GET_SETTLEMENTS 
 } from './store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'

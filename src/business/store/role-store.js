@@ -1,11 +1,7 @@
 import {
-  ROLES_FETCH,
-  SET_ROLES,
-  SET_ROLES_STATE,
-  SET_ROLES_META,
-  SET_ROLES_FILTERS,
-  GET_ROLES_URI
+  ROLES_FETCH, SET_ROLES, SET_ROLES_STATE, SET_ROLES_META, SET_ROLES_FILTERS,
 } from './role-store-constants'
+import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 
@@ -78,7 +74,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_ROLES_URI}${query}`,
+          url: `${GET_BASE_URI}user_groups/all.json${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
