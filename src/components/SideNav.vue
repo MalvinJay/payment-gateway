@@ -83,8 +83,9 @@
                 <el-menu-item route="/account" index="bs_account">Account Set-up</el-menu-item>
                 <!-- <el-menu-item index="10-2">Verifications</el-menu-item> -->
                 <!-- <el-menu-item route="/taxation" index="taxation">Tax details</el-menu-item> -->
-                <el-menu-item route="/team" index="team">Team</el-menu-item>
+                <el-menu-item route="/teams" index="teams">Teams</el-menu-item>
                 <el-menu-item route="/roles" index="roles">Roles</el-menu-item>   
+                <el-menu-item route="/branches" index="branches">Branches</el-menu-item>
                 <!-- <el-menu-item index="10-6">Integration</el-menu-item>     -->
                 <!-- <el-menu-item index="10-7">Relay</el-menu-item>     -->
                 <!-- <el-menu-item index="10-8">Authorized apps</el-menu-item> -->

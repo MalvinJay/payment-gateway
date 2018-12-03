@@ -1,8 +1,8 @@
 import { TRANSACTION_CREATE, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SEARCH_TRANSACTIONS,
   TRANSACTIONS_FETCH, SET_CURRENT_TRANSACTION_STATE, GET_BASE_URI,
   SET_TRANSACTIONS_STATE, GET_QUEUE, SET_QUEUE, SET_QUEUE_STATE, SET_QUEUE_FILTERS, SET_QUEUE_META, SET_CURRENT_TRANSACTION,
-  SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, SET_PENDING_STATE, SET_PENDING_META, GET_CURRENT_TRANSACTION,
-  GET_TRANSACTIONS_URI, CREATE_TICKET, REFUND_TRANSACTION, GET_REFUND_TRANSACTION_URI } from './transactions-store-constants'
+  SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, SET_PENDING_STATE, SET_PENDING_META, GET_CURRENT_TRANSACTION, CREATE_TICKET, REFUND_TRANSACTION, GET_REFUND_TRANSACTION_URI 
+} from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 
@@ -65,7 +65,6 @@ const getters = {
   pendingMeta: state => state.pending.meta,
   currentTransaction: state => state.currentTransaction.data,
   currentTransactionState: state => state.currentTransaction.state,
-  
 }
 
 // mutations
@@ -230,10 +229,7 @@ const actions = {
     commit(SET_QUEUE_FILTERS, filters)
     dispatch('getQueues', {page: 1, cache: false})
   },
-  [GET_PENDING] ({ state, commit, rootGetters }, {
-    page = 1,
-    cache = true
-  } = {}) {
+  [GET_PENDING] ({ state, commit, rootGetters }, {page = 1,cache = true} = {}) {
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
     var filters = state.pending.filters
     var query = Utils.createPendingParams(filters, page)
@@ -313,7 +309,8 @@ const actions = {
   [CREATE_TICKET] ({ commit, rootGetters }, ticket) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}v1/clients/tickets/via/support`,
+        // url: `${GET_BASE_URI}v1/clients/tickets/via/support`,
+        url: `${GET_BASE_URI}v1/clients/tickets.json`,
         method: 'POST',
         token: rootGetters.token,
         data: ticket

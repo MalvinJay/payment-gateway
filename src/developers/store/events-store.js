@@ -82,18 +82,16 @@ const actions = {
         } else {
             return new Promise((resolve, reject) => {
                 apiCall({
-                    url: `${GET_BASE_URI}/accounts/logs.json${query}`,
+                    url: `${GET_BASE_URI}v1/accounts/logs.json${query}`,
                     method: 'GET',
                     token: rootGetters.token
                 }).then((response) => {
-                    console.log('Events:', response.data)
                     commit(SET_EVENTS_STATE, 'DATA')
                     commit(SET_EVENTS_META, response.data)
                     commit(SET_EVENTS, response.data)
                 resolve(response)
                 }).catch((error) => {
                     commit(SET_EVENTS_STATE, 'ERROR')
-                    console.log(error)
                     reject(error)
                 })
             })
@@ -109,7 +107,7 @@ const actions = {
         commit(SET_CURRENT_EVENTS_STATE, 'LOADING')
         return new Promise((resolve, reject) => {
           apiCall({
-            url: `${GET_BASE_URI}/accounts/logs.json${query}`,
+            url: `${GET_BASE_URI}v1/accounts/logs.json${query}`,
             method: 'GET',
             token: rootGetters.token
           }).then((response) => {

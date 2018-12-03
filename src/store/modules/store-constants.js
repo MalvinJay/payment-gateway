@@ -1,5 +1,4 @@
 // user
-// export const GET_BASE_URI = 'https://d2983c74.ngrok.io/api/'
 export const AUTH_REQUEST = 'getToken'
 export const SET_TOKEN = 'setToken'
 export const GET_CLIENT = 'getClient'

@@ -12,8 +12,9 @@ import Settings from '@/pages/client/transactions/Settings'
 import NewProduct from '@/pages/client/transactions/NewProduct'
 import BsSettings from '@/business/pages/BsSettings'
 import Taxation from '@/business/pages/Taxation'
-import Team from '@/business/pages/Team'
+import Teams from '@/business/pages/Teams'
 import Roles from '@/business/pages/Roles'
+import Branches from '@/business/pages/Branches'
 import Reports from '@/business/pages/Reports'
 
 const Customers = () => import('../contacts/pages/Customers')
@@ -169,15 +170,20 @@ let router = new Router({
           component: Taxation
         },
         {
-          path: '/team',
-          name: 'Team',
-          component: Team
+          path: '/teams',
+          name: 'Teams',
+          component: Teams
         },
         {
           path: '/roles',
           name: 'Roles',
           component: Roles
         },
+        {
+          path: '/branches',
+          name: 'Branches',
+          component: Branches
+        },        
         {
           path: '/reports',
           name: 'Reports',

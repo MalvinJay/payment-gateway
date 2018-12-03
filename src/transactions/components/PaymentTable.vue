@@ -76,7 +76,6 @@
                         :total="total">
                     </el-pagination>
                 </div>
-                
             </div>
         </div>
 

@@ -63,10 +63,7 @@
   
   // actions
   const actions = {
-    [LOGS_FETCH] ({ state, commit, rootGetters }, {
-      page = 1,
-      cache = true
-    } = {}) {
+    [LOGS_FETCH] ({ state, commit, rootGetters }, {page = 1,cache = true} = {}) {
       var filters = state.logs.filters
       var query = ''
       
@@ -82,18 +79,16 @@
       } else {
         return new Promise((resolve, reject) => {
           apiCall({
-            url: `${GET_BASE_URI}/accounts/logs.json${query}`,
+            url: `${GET_BASE_URI}v1/accounts/logs${query}`,
             method: 'GET',
             token: rootGetters.token
           }).then((response) => {
-            console.log('logs', response)
             commit(SET_LOGS_STATE, 'DATA')
             commit(SET_LOGS_META, response.data)
             commit(SET_LOGS, response.data)
             resolve(response)
           }).catch((error) => {
             commit(SET_LOGS_STATE, 'ERROR')
-            console.log(error)
             reject(error)
           })
         })
@@ -109,17 +104,15 @@
       commit(SET_CURRENT_LOGS_STATE, 'LOADING')
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_BASE_URI}accounts/logs.json${query}`,
+          url: `${GET_BASE_URI}v1/accounts/logs${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('Single Log', response)
-          commit(SET_CURRENT_LOGS_STATE, 'DATA')
           commit(SET_CURRENT_LOG, response.data)
+          commit(SET_CURRENT_LOGS_STATE, 'DATA')
           resolve()
         }).catch((error) => {
           commit(SET_CURRENT_LOGS_STATE, 'ERROR')
-          console.log('Single Log', error)
           reject(error)
         })
       })

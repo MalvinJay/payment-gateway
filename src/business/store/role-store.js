@@ -1,5 +1,5 @@
 import {
-  ROLES_FETCH, SET_ROLES, SET_ROLES_STATE, SET_ROLES_META, SET_ROLES_FILTERS,
+  ROLES_FETCH, SET_ROLES, SET_ROLES_STATE, SET_ROLES_META, SET_ROLES_FILTERS,GET_BRANCHES,SET_BRANCHES,SET_BRANCHES_STATE,GET_CURRENT_BRANCH,SET_CURRENT_BRANCH
 } from './role-store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
@@ -18,6 +18,16 @@ const state = {
   currentRole: {
     data: {},
     state: 'LOADING'
+  },
+  branches: {
+    data: [],
+    state: 'DATA',
+    errors: [],
+    filters: {}
+  },
+  currentBranch: {
+    data: {},
+    state: 'LOADING'
   }
 }
 
@@ -27,7 +37,9 @@ const getters = {
   rolesFilters: state => state.roles.filters,
   rolesMeta: state => state.roles.meta,
   rolesSortParams: state => state.roles.sortParams,
-  rolesState: state => state.roles.state
+  rolesState: state => state.roles.state,
+  branches: state => state.branches.data,
+  branchesState: state => state.branches.state
 }
 
 // mutations
@@ -50,7 +62,14 @@ const mutations = {
   },
   [SET_ROLES_FILTERS] (state, data) {
     state.roles.filters = data
-  }
+  },
+  [SET_BRANCHES] (state, payload) {
+    state.branches.state = 'DATA'
+    state.branches.data = payload
+  },
+  [SET_BRANCHES_STATE] (state, data) {
+    state.branches.state = data
+  },
 }
 
 // actions
@@ -64,7 +83,6 @@ const actions = {
     if (Utils.empty(filters)) {
       query = `?all=true&page=${page}&limit=12`
     } else {
-      // filters.search_value = 'cashin'
       query = Utils.createQueryParams(filters, page)
     }
     commit(SET_ROLES_STATE, 'LOADING')
@@ -74,7 +92,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_BASE_URI}user_groups/all.json${query}`,
+          url: `${GET_BASE_URI}v1/user_groups/all.json${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
@@ -94,6 +112,36 @@ const actions = {
   [SET_ROLES_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_ROLES_FILTERS, filters)
     dispatch('getroles', {page: 1, cache: false})
+  },
+  [GET_BRANCHES] ({ state, commit, rootGetters }, {page = 1,cache = true} = {}) {
+    var filters = state.branches.filters
+    var query = ''
+    if (Utils.empty(filters)) {
+      query = `?all=true&page=${page}&limit=12`
+    } else {
+      query = Utils.createQueryParams(filters, page)
+    }
+    commit(SET_BRANCHES_STATE, 'LOADING')
+    // commit(SET_BRANCHES_FILTERS, filters)
+    if (cache && state.branches.data.length !== 0) {
+      commit(SET_BRANCHES_STATE, 'DATA')
+    } else {
+      return new Promise((resolve, reject) => {
+        apiCall({
+          url: `${GET_BASE_URI}v1/branch.json${query}`,
+          method: 'GET',
+          token: rootGetters.token
+        }).then((response) => {
+          console.log('branches for roles', response)
+          commit(SET_BRANCHES_STATE, 'DATA')
+          commit(SET_BRANCHES, response.data.response.data.branches)
+          resolve(response)
+        }).catch((error) => {
+          commit(SET_ROLES_STATE, 'ERROR')
+          reject(error)
+        })
+      })
+    }
   }
 }
 

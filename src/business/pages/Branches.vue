@@ -2,51 +2,55 @@
     <el-card class="card-0">
         <div class="transactions">
             <div class="flex justify-content-between align-items-center px-20 py-16">
-                <div class="search_n_ roles flex justify-content-between">
-                    <el-input @keyup.enter.native="searchButton" v-model="search" class="border-rounded search-div mr-2" size="mini" placeholder="Filter by name or email"></el-input>
+                <div class="search_n_roles flex justify-content-between w-50">
+                    <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" size="mini" placeholder="Filter by name or code"></el-input>
                     
-                    <div class="roles">
+                    <!-- <div class="roles">
                         <el-select v-model="value" size="mini" filterable placeholder="Select">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>                    
-                    </div>
+                    </div> -->
                 </div>            
                 <div>
-                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New user</el-button>
+                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New branch</el-button>
                 </div>
             </div>
             <div>
                 <div class="center h-80" v-if="error">
                     <div class="center flex-column">
                        <p class="m-0 p-0">Unable to load this page</p>
-                       <el-button @click.prevent="fetchTeams" icon="sync icon" type="text">Retry</el-button>
+                       <el-button @click.prevent="fetchBranches" icon="sync icon" type="text">Retry</el-button>
                     </div>
                 </div>
                 <div v-else class="breathe">
-                    <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTeams">
-                        <el-table-column prop="name" label="USER">
+                    <el-table @row-click="clickRow" empty-text="No branches found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredBranches">
+                        <el-table-column prop="name" label="NAME">
                             <template slot-scope="scope">
                                 <div class="flex flex-column justify-content-center">
-                                    <span class="bold-600">{{scope.row.name || 'N/A'}}</span>
-                                    <span>{{scope.row.email || 'N/A'}}</span>
+                                    <span>{{scope.row.name}}</span>
                                 </div>
                             </template>                            
                         </el-table-column>
-                        <el-table-column prop="role" label="ROLE">
+                        <el-table-column prop="branch_code" label="CODE">
                             <template slot-scope="scope">
-                                {{scope.row.user_group || 'N/A'}}
+                                {{scope.row.branch_code || 'N/A'}}
                             </template>                            
                         </el-table-column>
-                        <el-table-column prop="login" label="LAST LOGIN">
+                        <el-table-column prop="location" label="CODE">
+                            <template slot-scope="scope">
+                                {{scope.row.location || 'N/A'}}
+                            </template>                            
+                        </el-table-column>                        
+                        <!-- <el-table-column prop="location" label="LAST LOGIN">
                             <template slot-scope="scope">
                                 {{scope.row.date_registered | moment("MMM Do, YYYY") || 'N/A'}}
                             </template>                            
-                        </el-table-column>                        
+                        </el-table-column> -->
                     </el-table>
                     <!-- FOOTER -->
                     <div class="flex justify-content-between align-items-center px-20">
                         <div class="s-12">
-                            <span class="bold-600">{{teams.length}}</span> users
+                            <span class="bold-600">{{teams.length}}</span> branches
                         </div>
                         <el-pagination class="my-2 flex justify-content-end"
                             @current-change="handleCurrentChange"
@@ -75,7 +79,7 @@
                 </div>
                 <div class="flex justify-content-center">
                   <div class="custom">
-                    <el-table empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
+                    <el-table @row-click="checkRole" ref="team" empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredBranches">
                         <el-table-column width="50">
                             <template slot-scope="scope">
                                 <el-radio v-model="scope.row.id"></el-radio>
@@ -108,9 +112,6 @@
                                                 <p class="s-12 py-5">{{item.action}}</p>
                                             </div>
                                         </div>
-                                        <!-- <el-table row-class-name="roles-table-body" header-row-class-name="no-header-table" :data="scope.row.privileges">
-                                            <el-table-column prop="action" label="action"></el-table-column>
-                                        </el-table> -->
                                     </div>
                                     <el-button icon="info circle icon" type="text" slot="reference"></el-button>
                                 </el-popover>
@@ -121,10 +122,9 @@
                 </div>
                 <span slot="footer" class="dialog-footer">
                     <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
-                    <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="inviteUser">Invite</el-button>
+                    <el-button size="mini" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="saveBranch('form')">Save Branch</el-button>
                 </span>
-            </el-dialog>
-
+            </el-dialog>        
         </div>
     </el-card>
 </template>
@@ -134,12 +134,13 @@ import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'Team',
+    name: 'Branches',
     data (){
         return {
             multiemail: '',
             isTest: true,
             dialogVisible: false,
+            dialogVisible1: false,
             exportVisible: false, 
             styleObject: {
                 fontSize: '12px'
@@ -184,28 +185,39 @@ export default {
         EventBus.$on('exportModal', (val) => {
             this.exportVisible = false
         })
-        this.$store.dispatch('getTeams');
-        this.$store.dispatch('getRoles');
+        this.$store.dispatch('getBranches');
     },
 
     methods: {
         clickRow (row, event, column) {
             if (column.property) {
-                this.$router.push(`/teams/${row.reference}`)
+                this.$router.push(`/branches/${row.reference}`)
             }        
         },  
+        checkRole (row, event, column){
+            this.$refs.team.toggleRowSelection(row)
+        },
         handleCurrentChange (val) {
-            this.$store.dispatch('getTeams', {page: val, cached: false })
+            this.$store.dispatch('getBranches', {page: val, cached: false })
         },             
-        fetchTeams () {
-            this.$store.dispatch('getTeams', {cache: false})
+        fetchBranches () {
+            this.$store.dispatch('getBranches', {cache: false})
         },        
         searchButton (){
 
         },
-        inviteUser() {
+        saveBranch() {
 
-        }
+        },
+        goForward(val){
+            if(val == true){
+                this.dialogVisible = false
+                this.dialogVisible1 = true
+            } else {
+                this.dialogVisible = true
+                this.dialogVisible1 = false            
+            }
+        }        
     },
 
     computed: {
@@ -214,7 +226,9 @@ export default {
             state: 'teamsState',
             roles: 'roles',
             rolesState: 'rolesState',
-            pageSize: 'pageSize'
+            pageSize: 'pageSize',
+            branches: 'branches',
+            branchesState: 'branchesState'
         }),  
         error () {
             return this.state === 'ERROR' && this.state !== 'LOADING'
@@ -230,6 +244,9 @@ export default {
         },   
         filteredRoles (){
             return this.roles;
+        },
+        filteredBranches (){
+            return this.branches
         }
     }
 }
