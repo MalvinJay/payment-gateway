@@ -1,7 +1,7 @@
 import { TRANSACTION_CREATE, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SEARCH_TRANSACTIONS,
   TRANSACTIONS_FETCH, SET_CURRENT_TRANSACTION_STATE, GET_BASE_URI,
   SET_TRANSACTIONS_STATE, GET_QUEUE, SET_QUEUE, SET_QUEUE_STATE, SET_QUEUE_FILTERS, SET_QUEUE_META, SET_CURRENT_TRANSACTION,
-  SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, SET_PENDING_STATE, SET_PENDING_META, GET_CURRENT_TRANSACTION,
+  SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, SET_PENDING_STATE, SET_PENDING_META, APPROVE_TRANSACTIONS, GET_CURRENT_TRANSACTION,
   CREATE_TICKET, REFUND_TRANSACTION } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
@@ -64,8 +64,8 @@ const getters = {
   pendingFilters: state => state.pending.state,
   pendingMeta: state => state.pending.meta,
   currentTransaction: state => state.currentTransaction.data,
-  currentTransactionState: state => state.currentTransaction.state,
-  
+  currentTransactionState: state => state.currentTransaction.state
+
 }
 
 // mutations
@@ -234,6 +234,7 @@ const actions = {
     commit(SET_QUEUE_FILTERS, filters)
     dispatch('getQueues', {page: 1, cache: false})
   },
+  //   pending
   [GET_PENDING] ({ state, commit, rootGetters }, {
     page = 1,
     cache = true
@@ -267,6 +268,22 @@ const actions = {
   [SET_PENDING_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_PENDING_FILTERS, filters)
     dispatch('getPending', {page: 1, cache: false})
+  },
+  [APPROVE_TRANSACTIONS] ({ state, commit, rootGetters }, transactions) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v2/transactions/approve.json`,
+        method: 'POST',
+        token: rootGetters.token,
+        data: transactions
+      }).then((response) => {
+        resolve(response)
+      }).catch((error) => {
+        commit(SET_CURRENT_TRANSACTION_STATE, 'ERROR')
+        console.log(error)
+        reject(error)
+      })
+    })
   },
   [GET_CURRENT_TRANSACTION] ({ state, commit, rootGetters }, id) {
     // var trans = state.transactions.data.find(el => el.reference === id)
@@ -332,7 +349,7 @@ const actions = {
   [REFUND_TRANSACTION] ({ state, commit, rootGetters }, reference) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_REFUND_TRANSACTION_URI}?transaction_ref=${reference}`,
+        url: `${GET_BASE_URI}v1/reverse.json?transaction_ref=${reference}`,
         method: 'POST',
         token: rootGetters.token
       }).then((response) => {

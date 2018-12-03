@@ -2,7 +2,9 @@
     <div class="bg pt-20 nav-container">
         <div class="navigation-card card-0">
             <div class="flex align-items-center">
-                <el-button class="side-button" icon="bars icon" style="padding: 5px;margin-right: 5px"></el-button>
+                <el-button class="side-button" style="padding: 5px;margin-right: 5px">
+                    <img style="width: 1em" src="../assets/images/icons/header.png" alt="">
+                </el-button>
                 <!-- <avatar :size="25" username="Flopay" backgroundColor="#f7921e"></avatar> -->
                 <el-popover
                     placement="top-start"
@@ -27,7 +29,7 @@
                 <el-menu-item route="/payments" index="payments">Payments</el-menu-item>
                 <el-menu-item route="/payouts" index="payouts">Payouts</el-menu-item>
                 <el-menu-item route="/disputes" index="disputes">Disputes</el-menu-item>
-                <el-menu-item index="2-4">Settings</el-menu-item>
+                <el-menu-item class="v-step-1" index="2-4">Settings</el-menu-item>
             </el-submenu>
             <el-submenu ref="sideMenu" index="3">
                 <template slot="title">

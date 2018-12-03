@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div v-loading="loadingPage">
         <div class="center h-80" v-if="error">
             <div class="center flex-column">
                 <p class="m-0 p-0">Unable to load this page</p>
                 <el-button @click.prevent="fetchTransactions" icon="sync icon" type="text">Retry</el-button>
             </div>
         </div>
-        <div v-else v-loading="loadingPage">
+        <div v-else >
             <el-card :class="{'test-data': test}" class="card-0 position-relative">
                 <div class="flex flex-column p-20">
                     <div class="flex justify-content-between align-items-baseline mb-1">
@@ -44,7 +44,7 @@
                         <div class="flex flex-column ml-1">
                             <p v-if="form.payment_status == 'paid'" class="light mb-1 s-13">{{header}} succeeded</p>
                             <p v-else class="light mb-1 s-13">{{header}} failed</p>
-                            <p class="light mb-1 s-12 gray">{{form.date | moment("MMM Do, HH:mm A")}}</p>
+                            <p class="light mb-1 s-12 gray">{{form.date | moment("MMM Do, hh:mm A")}}</p>
                         </div>
                     </div>
                 </div>
@@ -69,7 +69,7 @@
                                         <div v-else-if="key === 'message'">
                                             <div v-if="!edit" class="flex align-items-center">
                                                 <p class=" m-0 mr-6">{{value}}</p>
-                                                <el-button @click="edit = true" class="blue-text p-0" type="text" icon="pencil alternate icon">Edit</el-button>
+                                                <!-- <el-button @click="edit = true" class="blue-text p-0" type="text" icon="pencil alternate icon">Edit</el-button> -->
                                             </div>
                                             <div class="flex" v-else>
                                                 <el-input size="mini" class="mr-2 no-padding-input" v-model="form.remarks"></el-input>
@@ -180,6 +180,7 @@ export default {
         }),
         loadingPage () {
             return this.state === 'LOADING'
+            // return true
         },
         error () {
             return this.state === 'ERROR'

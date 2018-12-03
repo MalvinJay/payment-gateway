@@ -1,5 +1,5 @@
 import { AUTH_REQUEST, ADMIN_LOGIN, IS_ADMIN, SET_PAGE_LOADING, SET_TEST, SET_TOKEN, SET_CLIENT,
-  SET_PERMISSIONS, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
+  SET_PERMISSIONS, LOGIN, LOGOUT, SET_CLIENT_CRED, SET_BALANCE, GET_BALANCE, RESET_PASSWORD } from './store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../apiCall'
 import axios from 'axios'
@@ -23,7 +23,8 @@ const user = {
     },
     pageLoading: false,
     isAdmin: Utils.returnBool(localStorage.getItem('isAdmin')),
-    pageSize: 12
+    pageSize: 12,
+    balance: {}
   },
 
   // getters
@@ -36,7 +37,8 @@ const user = {
     pageLoading: state => state.pageLoading,
     logIn: state => state.logIn,
     isAdmin: state => state.isAdmin,
-    pageSize: state => state.pageSize
+    pageSize: state => state.pageSize,
+    balance: state => state.balance
   },
 
   // mutations
@@ -47,7 +49,7 @@ const user = {
     },
     // client data
     [SET_CLIENT] (state, data) {
-      if (!localStorage.getItem('isAdmin')) {
+      if (!state.isAdmin) {
         state.permissions.data = data.client.privileges
       }
       state.user.data = data
@@ -87,6 +89,10 @@ const user = {
     // is admin
     [IS_ADMIN] (state, data) {
       state.isAdmin = data
+    },
+    // available balance
+    [SET_BALANCE] (state, data) {
+      state.balance = data
     }
   },
 
@@ -95,7 +101,6 @@ const user = {
     [LOGIN] ({ state, commit }, {email, password}) {
       return new Promise((resolve, reject) => {
         var url = `${GET_BASE_URI}v1/flopay_client_login.json?email=${email}&password=${password}`
-        localStorage.setItem('password', password)
         axios.post(url)
           .then((response) => {
             localStorage.setItem('login', true)
@@ -118,7 +123,6 @@ const user = {
     [ADMIN_LOGIN] ({ state, commit }, {email, password}) {
       return new Promise((resolve, reject) => {
         var url = `${GET_BASE_URI}v1/flopay_platform/login.json?email=${email}&password=${password}`
-        // localStorage.setItem('password', password)
         axios.post(url)
           .then((response) => {
             localStorage.setItem('login', true)
@@ -168,6 +172,40 @@ const user = {
         localStorage.removeItem('client_id')
         localStorage.removeItem('client_secret')
         resolve()
+      })
+    },
+    [GET_BALANCE] ({ state, commit, rootGetters }) {
+      return new Promise((resolve, reject) => {
+        var url = `${GET_BASE_URI}v1/balance.json`
+        apiCall({
+          url: url,
+          method: 'GET',
+          token: rootGetters.token
+        }).then((response) => {
+          commit(SET_BALANCE, response.data)
+          resolve(response)
+        }).catch((error) => {
+          console.log(error)
+          reject(error)
+        })
+      })
+    },
+    // RESET PASSWORD
+    [RESET_PASSWORD] ({ state, commit, rootGetters }, form) {
+      return new Promise((resolve, reject) => {
+        var url = `${GET_BASE_URI}v1/users/pass_reset.json`
+        apiCall({
+          url: url,
+          method: 'POST',
+          token: rootGetters.token,
+          data: form
+        }).then((response) => {
+          commit(SET_BALANCE, response.data)
+          resolve(response)
+        }).catch((error) => {
+          console.log(error)
+          reject(error)
+        })
       })
     },
     [SET_TEST] ({ commit }, data) {

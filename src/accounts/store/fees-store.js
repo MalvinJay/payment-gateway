@@ -100,7 +100,7 @@ const actions = {
   },
   [SET_FEES_FILTERS] ({ commit, dispatch }, filters) {
     commit(SET_FEES_FILTERS, filters)
-    dispatch('getfees', {page: 1, cache: false})
+    dispatch('getFees', {page: 1, cache: false})
   }
 }
 
@@ -110,4 +110,3 @@ export default {
   mutations,
   actions
 }
-

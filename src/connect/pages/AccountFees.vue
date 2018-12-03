@@ -41,7 +41,7 @@
                         </el-table-column>                                                                                               
                         <el-table-column prop="created_at" label="Date">
                             <template slot-scope="scope">
-                                {{scope.row.created_at | moment("Do MMM, YYYY HH:mm A")}}
+                                {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
                             </template>
                         </el-table-column>
                     </el-table>
@@ -83,30 +83,31 @@ export default {
         }
     },
     created () {
-        this.$store.dispatch('getAccountFees')
+        this.$store.dispatch('getFees')
     },
     mounted () {
         EventBus.$emit('sideNavClick', 'account-fees')
     },
     methods: {  
         handleCurrentChange (val) {
-            this.$store.dispatch('getAccountFees', {page: val, cached: false })
+            this.$store.dispatch('getFees', {page: val, cached: false })
         },             
         fetchFees () {
-            this.$store.dispatch('getAccountFees', {cache: false})
+            this.$store.dispatch('getFees', {cache: false})
         }
     }, 
     computed: {
         ...mapGetters({
-            fees: 'currentAccountFees',
-            state: 'accountsFeesState',
+            fees: 'fees',
+            state: 'feesState',
+            meta: 'feesMeta',
             pageSize: 'pageSize'
         }),  
         error () {
             return this.state === 'ERROR' && this.state !== 'LOADING'
         },              
         total () {
-            return this.fees.length
+            return this.meta.trans
         },    
         loading () {
             return this.state === 'LOADING'
