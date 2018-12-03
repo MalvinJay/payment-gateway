@@ -38,7 +38,9 @@
                 <el-table-column prop="method" label="" width="100">
                     <template slot-scope="scope">
                         <div class="flex">
-                          <the-tag status="success" :title="scope.row.status" icon="detail check icon" class="w-75"></the-tag>
+                          <the-tag status="success" v-if="scope.row.status === 'success'" :title="scope.row.status" icon="detail check icon"></the-tag>
+                          <the-tag status="pending" v-else-if="scope.row.status === 'pending'" :title="scope.row.status" icon="detail check icon"></the-tag>
+                          <the-tag status="failed" v-else :title="scope.row.status" icon="detail check icon"></the-tag>
                         </div>
                     </template>
                 </el-table-column>                    
