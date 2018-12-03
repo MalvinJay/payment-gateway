@@ -7,7 +7,8 @@
                 <!-- <filter-component filterType="pending"></filter-component> -->
             </div>
             <div>
-                <el-button :disabled="selectedCount === 0" v-if="canApproveTransactions" :loading="loading" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Approve</el-button>
+                <!-- <div id="hook-arguments-example" v-can:foo.a.b="message"></div> -->
+                <el-button v-can="'Approve Transactions'" :disabled="selectedCount === 0" v-if="canApproveTransactions" :loading="loading" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Approve</el-button>
                 <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
             </div>
         </div>
@@ -86,6 +87,7 @@ export default {
   data () {
     return {
       test: true,
+      message: 'hello',
       columns: [
         // {label: 'Method', dataField: 'method', width: '100px'},
         {label: 'Customer', dataField: 'customer', width: 'auto'},
@@ -172,7 +174,20 @@ export default {
     selectedCount () {
       return this.multipleSelection.transactions.length
     }
-  }
+  },
+//   directives: {
+//     can: function (el, bindings, vnode) {
+//         const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
+//         const ok = acl.can(user, binding.arg, binding.value)
+//         if (!ok) {
+//             if (behaviour === 'hide') {
+//             commentNode(el, vnode)
+//             } else if (behaviour === 'disable') {
+//             el.disabled = true
+//             }
+//         }
+//     }
+//   }
 }
 </script>
 

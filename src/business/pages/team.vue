@@ -75,10 +75,10 @@
                 </div>
                 <div class="flex justify-content-center">
                   <div class="custom">
-                    <el-table empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
+                    <el-table highlight-current-row ref="newUser" @row-click="selectRow" empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
                         <el-table-column width="50">
                             <template slot-scope="scope">
-                                <el-radio v-model="scope.row.id"></el-radio>
+                                <el-radio class="no-label-radio" v-model="selected" :label="scope.row.code"></el-radio>
                             </template>
                         </el-table-column>
                         <el-table-column width="200" class="bold-600">
@@ -140,7 +140,8 @@ export default {
             multiemail: '',
             isTest: true,
             dialogVisible: false,
-            exportVisible: false, 
+            exportVisible: false,
+            selected: '',
             styleObject: {
                 fontSize: '12px'
             },        
@@ -184,8 +185,8 @@ export default {
         EventBus.$on('exportModal', (val) => {
             this.exportVisible = false
         })
-        this.$store.dispatch('getTeams');
-        this.$store.dispatch('getRoles');
+        this.$store.dispatch('getTeams')
+        this.$store.dispatch('getRoles')
     },
 
     methods: {
@@ -194,16 +195,20 @@ export default {
                 this.$router.push(`/teams/${row.reference}`)
             }        
         },  
+        selectRow (row, event, column) {
+            this.$refs.newUser.setCurrentRow(row)
+            this.selected = row.code
+        },  
         handleCurrentChange (val) {
             this.$store.dispatch('getTeams', {page: val, cached: false })
         },             
         fetchTeams () {
             this.$store.dispatch('getTeams', {cache: false})
         },        
-        searchButton (){
+        searchButton () {
 
         },
-        inviteUser() {
+        inviteUser () {
 
         }
     },
@@ -226,10 +231,10 @@ export default {
             return this.state === 'LOADING'
         },
         filteredTeams () {
-            return this.teams;
+            return this.teams
         },   
         filteredRoles (){
-            return this.roles;
+            return this.roles
         }
     }
 }

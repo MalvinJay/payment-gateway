@@ -64,6 +64,19 @@ Vue.filter('capitalize', function (value) {
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
 })
 
+Vue.directive('can', {
+  bind: function (el, binding, vnode) {
+    // var s = JSON.stringify
+    // console.log('loho', binding.value)
+    // console.log('loho', store.getters.permissions)
+    if (store.getters.permissions.find(el => el.action.toLowerCase() === binding.value.toLowerCase())) {
+      return true
+    } else {
+      return false
+    }
+  }
+})
+
 // Vue.component('payment-table', (resolve, reject) => {
 //   setTimeout(function () {
 //     resolve(require('@/transactions/components/PaymentTable.vue'))
