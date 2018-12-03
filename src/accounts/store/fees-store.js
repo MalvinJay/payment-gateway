@@ -71,6 +71,7 @@ const actions = {
     }
     commit(SET_FEES_STATE, 'LOADING')
     commit(SET_FEES_FILTERS, filters)
+
     if (cache && state.fees.data.length !== 0) {
       commit(SET_FEES_STATE, 'DATA')
     } else {

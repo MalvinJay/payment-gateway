@@ -78,7 +78,7 @@ import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Settlements',
+  name: 'AccountSettlements',
   data () {
     return {
       test: true,
@@ -92,14 +92,14 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('getSettlements')
+    this.$store.dispatch('getAccountSettlements')
   },
   mounted () {
-    EventBus.$emit('sideNavClick', 'settlements')
+    EventBus.$emit('sideNavClick', 'account-settlements')
   },
   methods: {
     handleCurrentChange (val) {
-        this.$store.dispatch('getSettlements', {page: val, cache: false})
+        this.$store.dispatch('getAccountSettlements', {page: val, cache: false})
     },
     clickRow (row, event, column) {
         // if (column.property) {
@@ -107,7 +107,7 @@ export default {
         // }
     },
     fetchSettlements () {
-      this.$store.dispatch('getSettlements')
+      this.$store.dispatch('getAccountSettlements')
     },
     handleCommand (command, row) {
         switch (command) {
@@ -124,8 +124,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      settlements: 'settlements',
-      state: 'settlementsState',
+      settlements: 'currentAccountSettlements',
+      state: 'accountsSettlementsState',
       pageSize: 'pageSize'
     }),
     error () {
@@ -218,4 +218,3 @@ export default {
     margin-right: 10px;
 }
 </style>
-

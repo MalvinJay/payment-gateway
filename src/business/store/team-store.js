@@ -62,7 +62,7 @@ const actions = {
     var filters = state.teams.filters
     var query = ''
     if (Utils.empty(filters)) {
-      query = `?page=${page}&limit=10`
+      query = `?page=${page}&limit=12`
     } else {
       query = Utils.createQueryParams(filters, page)
     }

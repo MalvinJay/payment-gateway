@@ -37,12 +37,7 @@
                         </el-table-column>
                         <el-table-column prop="updated_at" label="Date" width="auto">
                             <template slot-scope="scope">
-                                {{scope.row.updated_at | moment("MMM Do, YYYY h:mm A")}}
-                            </template>
-                        </el-table-column>
-                        <!-- <el-table-column prop="created_at" label="Time" width="80">
-                            <template slot-scope="scope">
-                                {{scope.row.created_at | moment("HH:mm A")}}
+                                {{scope.row.updated_at | moment("Do MMM, YYYY HH:mm A")}}
                             </template>
                         </el-table-column> -->
                     </el-table>
@@ -185,10 +180,6 @@ export default {
 }
 .new-transaction-bg{
     background: #F7FAFC;
-}
-.trans-div{
-    height: 60px;
-    padding: 20px 20px 0 20px
 }
 .transactions-table-header{
     background-color: #F7FAFC !important;

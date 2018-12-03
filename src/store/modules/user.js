@@ -1,5 +1,5 @@
-import { ADMIN_LOGIN, IS_ADMIN, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
-import { AUTH_REQUEST, SET_PAGE_LOADING, SET_TEST, SET_TOKEN, GET_CLIENT, SET_CLIENT, SET_PERMISSIONS } from './store-constants'
+import { AUTH_REQUEST, ADMIN_LOGIN, IS_ADMIN, SET_PAGE_LOADING, SET_TEST, SET_TOKEN, SET_CLIENT,
+  SET_PERMISSIONS, LOGIN, LOGOUT, SET_CLIENT_CRED } from './store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../apiCall'
 import axios from 'axios'
@@ -132,16 +132,6 @@ const user = {
             // commit(SET_CLIENT_CRED, response.data.response.data.access_key)
             localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
             localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
-          })
-        })
-    },  
-    [GET_CLIENT] ({ state, commit },{email, password}) {
-      return new Promise((resolve, reject) => {
-        var url = `${GET_BASE_URI}v1/flopay_client_login.json?email=${email}&password=${password}`
-        localStorage.setItem('password', password)
-        axios.post(url)
-          .then((response) => {
-            console.log('Client Fetched')
             resolve(response)
           }).catch((error) => {
             console.log(error)

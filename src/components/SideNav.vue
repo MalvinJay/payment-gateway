@@ -57,8 +57,8 @@
                     <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">Connect
                 </template>
                 <el-menu-item route="/accounts" index="accounts">Accounts</el-menu-item>
-                <el-menu-item index="6-2">Settlements</el-menu-item>
-                <el-menu-item index="6-3">Fees</el-menu-item>
+                <el-menu-item route="/account-settlements" index="account-settlements">Settlements</el-menu-item>
+                <el-menu-item route="/account-fees" index="account-fees">Fees</el-menu-item>
                 <el-menu-item index="6-4">Settings</el-menu-item>
             </el-submenu>
             <el-menu-item v-if="!isAdmin" route="/fonemessenger" index="fonemessenger">

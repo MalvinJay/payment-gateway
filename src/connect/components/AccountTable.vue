@@ -3,7 +3,7 @@
         <div class="transactions">
             <div class="trans-div flex justify-content-between">
                 <div>
-                    <p class="blue-text bold-600 s-16 m-0 p-0">Account</p>
+                    <p class="blue-text bold-600 s-16 m-0 p-0">Accounts</p>
                 </div>
                 <div>
                     <el-button @click="accountVisible = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
@@ -19,7 +19,7 @@
                 <div v-else>
                     <el-table @row-click="clickRow" empty-text="No Accounts" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="accounts">
                         <el-table-column type="selection" width="55"></el-table-column>
-                        <el-table-column :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label">
+                        <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label">
                             <template slot-scope="scope">
                                 {{ scope.row[column.dataField] | capitalize }}
                             </template>
@@ -31,7 +31,7 @@
                         </el-table-column>
                         <el-table-column prop="created_at" label="On-board Date">
                             <template slot-scope="scope">
-                                {{scope.row.created_at | moment("MMM Do, YYYY HH:mm A")}}
+                                {{scope.row.created_at | moment("Do MMM, YYYY HH:mm A")}}
                             </template>
                         </el-table-column>
                         <!-- <el-table-column>
@@ -218,10 +218,7 @@ export default {
         margin-right: 5px;
     }
 }
-.trans-div{
-    height: 60px;
-    padding: 20px 20px 0 20px
-}
+
 .transactions-table-header{
     background-color: #F7FAFC !important;
     height: 36px !important;

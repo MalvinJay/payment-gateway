@@ -14,7 +14,7 @@
                     :row-style="styleObject"
                     row-class-name="transactions-table-body"
                     header-row-class-name="transactions-table-header"
-                    v-loading="usersLoading" :data="newUsers">
+                    v-loading="usersLoading" :data="newUsers.slice((page * 12) - 12, page * 12)">
                     <el-table-column type="expand">
                         <template slot-scope="props">
                             <el-table 
@@ -83,7 +83,7 @@
                     </el-table-column>
                     <el-table-column label="Created At">
                         <template slot-scope="scope">
-                            {{ scope.row.created_at | moment("MMM Do, YYYY") }}
+                            {{ scope.row.created_at | moment("Do MMM, YYYY HH:mm A") }}
                         </template>
                     </el-table-column>
                     <el-table-column align="right">
@@ -130,6 +130,18 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <!-- FOOTER -->
+                <div class="flex justify-content-between align-items-center px-20">
+                    <div class="s-12">
+                        {{users.slice((page * 12) - 12, page * 12).length}} results
+                    </div>
+                    <el-pagination class="my-2 p-0 flex justify-content-end"
+                        @current-change="handleCurrentChange"
+                        :page-size="pageSize"
+                        layout="prev, pager, next"
+                        :total="total">
+                    </el-pagination>
+                </div>
             </div>
         </el-card>
         <new-group
@@ -158,6 +170,7 @@ export default {
     return {
       groupVisible: false,
       userVisible: false,
+      page: 1,
       usersColumns: [
         {label: 'User Name', prop: 'name'},
         {label: 'email', prop: 'email'},
@@ -197,6 +210,9 @@ export default {
     }
   },
   methods: {
+    handleCurrentChange (page) {
+        this.page = page
+    },
     handleCommand (command, row) {
         switch (command) {
             case 'add':
@@ -348,22 +364,17 @@ export default {
       branches: 'currentAccountBranches',
       users: 'currentAccountUsers',
       usersState: 'currentAccountUsersState',
-      privileges: 'currentAccountPrivileges'
+      privileges: 'currentAccountPrivileges',
+      pageSize: 'pageSize'
     }),
     noBranches () {
         return this.branches.length === 0
     },
+    total () {
+        return this.users.length
+    },
     newUsers () {
         return this.users
-        // .map(el => {
-        //     el.name = el.name.toLowerCase()
-        //     el.users.map(element => {
-        //         element.name = element.name.toLowerCase()
-        //         element.branch_name = element.branch_name.toLowerCase()
-        //         return element
-        //     })
-        //     return el
-        // })
     },
     usersLoading () {
         return this.usersState === 'LOADING'

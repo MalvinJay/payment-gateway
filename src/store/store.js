@@ -15,6 +15,8 @@ import fonemessenger from '../fonemessenger/store/fonemessenger-store'
 import teams from '../business/store/team-store'
 import roles from '../business/store/role-store'
 import accounts from '../connect/store/accounts-store'
+import accountsSettlements from '../connect/store/connect-settlements-store'
+import accountFees from '../connect/store/connect-fees-store'
 import logs from '../developers/store/logs-store'
 import events from '../developers/store/events-store'
 
@@ -40,6 +42,8 @@ export default new Vuex.Store({
     topups,
     settlements,
     accounts,
+    accountsSettlements,
+    accountFees,
     logs,
     events
   }

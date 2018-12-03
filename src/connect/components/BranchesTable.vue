@@ -11,7 +11,7 @@
                     :row-style="styleObject"
                     row-class-name="transactions-table-body"
                     header-row-class-name="transactions-table-header"
-                    :data="branches">
+                    :data="branches.slice((page * 12) - 12, page * 12)">
                     <el-table-column type="index"></el-table-column>
                     <el-table-column
                         v-for="(item, index) in branchesColumns" :key="index"
@@ -40,6 +40,18 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <!-- FOOTER -->
+                <div class="flex justify-content-between align-items-center px-20">
+                    <div class="s-12">
+                        {{branches.slice((page * 12) - 12, page * 12).length}} results
+                    </div>
+                    <el-pagination class="my-2 p-0 flex justify-content-end"
+                        @current-change="handleCurrentChange"
+                        :page-size="pageSize"
+                        layout="prev, pager, next"
+                        :total="total">
+                    </el-pagination>
+                </div>
             </div>
         </el-card>
         <new-branch
@@ -76,6 +88,7 @@ export default {
         phone_numbers: [ ],
         email: ''
       },
+      page: 1,
       title: 'New Branch',
       branchVisible: false,
       styleObject: {
@@ -106,10 +119,14 @@ export default {
   computed: {
     ...mapGetters({
       branches: 'currentAccountBranches',
-      branchesState: 'currentAccountBranchesState'
+      branchesState: 'currentAccountBranchesState',
+      pageSize: 'pageSize'
     }),
     branchesLoading () {
         return this.branchesState === 'LOADING'
+    },
+    total () {
+        return this.branches.length
     }
   },
   methods: {
@@ -124,6 +141,9 @@ export default {
         default:
           break
       }
+    },
+    handleCurrentChange (page) {
+        this.page = page
     },
     addBranch () {
         this.branchVisible = true

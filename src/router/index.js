@@ -31,6 +31,8 @@ const TopUps = () => import('../accounts/pages/TopUps')
 const Settlements = () => import('../accounts/pages/Settlements')
 const Account = () => import('../connect/pages/Account')
 const AccountDetail = () => import('../connect/pages/AccountDetail')
+const AccountSettlements = () => import('../connect/pages/AccountSettlements')
+const AccountFees = () => import('../connect/pages/AccountFees')
 
 const Logs = () => import('../developers/pages/Logs')
 const LogsDetails = () => import('../developers/pages/LogsDetails')
@@ -211,6 +213,18 @@ let router = new Router({
           path: '/accounts/:id',
           name: 'AccountDetail',
           component: AccountDetail
+        },
+        // connect settlements
+        {
+          path: '/account-settlements',
+          name: 'AccountSettlements',
+          component: AccountSettlements
+        },
+        // connect settlements
+        {
+          path: '/account-fees',
+          name: 'AccountFees',
+          component: AccountFees
         }
       ]
     },

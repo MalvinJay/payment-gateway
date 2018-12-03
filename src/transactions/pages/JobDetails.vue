@@ -56,19 +56,19 @@
                             <div class="w-50">
                                 <el-row v-for="(value, key, index) in data" :key="index" class="mb-1">
                                     <el-col :span="8">
-                                        <p class="m-0 text-capitalize lightgray s-14">{{key}}</p>
+                                        <p class="m-0 text-capitalize menu-gray-text s-14">{{key}}</p>
                                     </el-col>
                                     <el-col :span="16">
                                         <div v-if="readonly">
-                                            <p v-if="key === 'time'" class="s-13 mono">{{value | moment("hh:mm a")}}</p>
-                                            <p v-else-if="key === 'date'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
+                                            <p v-if="key === 'time'" class="">{{value | moment("hh:mm a")}}</p>
+                                            <p v-else-if="key === 'date'" class="">{{value | moment("MMM Do, YYYY")}}</p>
                                             <el-switch disabled v-else-if="key === 'scheduled'" class="w-50" v-model="form.scheduled"></el-switch>
-                                            <p v-else class="s-13 mono">{{value}}</p>
+                                            <p v-else class="">{{value}}</p>
                                         </div>
                                         <div v-else>
-                                            <p v-if="key === 'number of runs' || key === 'owner'" class="s-13 mono">{{value}}</p>
-                                            <p v-else-if="key === 'time'" class="s-13 mono">{{value | moment("hh:mm a")}}</p>
-                                            <p v-else-if="key === 'date'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
+                                            <p v-if="key === 'number of runs' || key === 'owner'" class="">{{value}}</p>
+                                            <p v-else-if="key === 'time'" class="">{{value | moment("hh:mm a")}}</p>
+                                            <p v-else-if="key === 'date'" class="">{{value | moment("MMM Do, YYYY")}}</p>
                                             <el-input v-else-if="key === 'name'" style="width: 80%" size="mini" v-model="form.description"></el-input>
                                             <el-switch v-else-if="key === 'scheduled'" class="w-50" v-model="form.scheduled"></el-switch>
                                             <div v-else-if="key === 'schedule' && form.scheduled">
@@ -144,16 +144,16 @@
                             <div class="w-50">
                                 <el-row type="flex" align="middle" v-for="(value, key, index) in data2" :key="index" class="mb-1">
                                     <el-col :span="8">
-                                        <p class="m-0 text-capitalize lightgray s-14">{{key}}</p>
+                                        <p class="m-0 text-capitalize menu-gray-text s-14">{{key}}</p>
                                     </el-col>
                                     <el-col :span="16">
                                         <div v-if="readonly">
                                             <el-switch disabled v-model="data2[key]" v-if="key === 'active'"></el-switch>
                                             <el-switch disabled v-model="data2[key]" v-else-if="key === 'test'"></el-switch>
-                                            <p v-else class="s-13 mono">{{value}}</p>
+                                            <p v-else class="">{{value}}</p>
                                         </div>
                                         <div v-else>
-                                            <p v-if="key === 'last run' || key === 'next run'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
+                                            <p v-if="key === 'last run' || key === 'next run'" class="">{{value | moment("MMM Do, YYYY")}}</p>
                                             <el-switch v-model="form.active" v-else-if="key === 'active'"></el-switch>
                                             <el-switch v-model="form.test" v-else-if="key === 'test'"></el-switch>
                                             <el-input v-else-if="key === 'retry limit'" v-model="form.retry_limit" style="width: 80%;" size="mini"></el-input>
