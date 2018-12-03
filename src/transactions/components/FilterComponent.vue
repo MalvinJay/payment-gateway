@@ -1,7 +1,10 @@
 <template>
     <el-dropdown ref="messageDrop" placement="bottom-start" trigger="click" :hide-on-click="false">
-        <el-button class="z-depth-button bold-600 el-dropdown-link s-13 open-sans mini-button" type="text"><i class="filter icon"></i> Filter </el-button>
-        <!-- <span v-if="count != 0" class="border-left pl-6">2</span> -->
+        <el-button class="z-depth-button bold-600 el-dropdown-link s-13 open-sans mini-button" type="text">
+            <i class="filter icon"></i> 
+            Filter 
+            <!-- <span v-if="count != 0" class="border-left pl-6">{{filterCount}}</span> -->
+        </el-button>
         <el-dropdown-menu class="filter-dropdown" slot="dropdown">
             <div class="dropdown-header flex justify-content-between align-items-center">
                 <el-button size="mini" @click="resetFilters" class="s-13 open-sans filter-button b-0">Clear</el-button>
@@ -37,9 +40,25 @@
                         </el-date-picker>
                     </div>
                 </div>
-            </el-collapse-transition>
+            </el-collapse-transition>            
 
-            <el-dropdown-item v-if="showStatus" divided>
+            <el-dropdown-item v-if="showDispute" divided>
+                <el-checkbox class="mr-10" v-model="reason"></el-checkbox> Reason
+            </el-dropdown-item>
+            <el-collapse-transition>
+                <div class="filter-bg" v-show="reason">
+                    <el-select size="mini" v-model="filters.reasons" @remove-tag="removeAllTypes" @change="reasonClick" multiple collapse-tags placeholder="Select A Reason">
+                        <el-option
+                        v-for="item in reasons"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+            </el-collapse-transition>            
+
+            <el-dropdown-item v-if="showStatus || showDispute" divided>
                 <el-checkbox class="mr-10" v-model="status"></el-checkbox> Status
             </el-dropdown-item>
             <el-collapse-transition>
@@ -69,8 +88,8 @@
                         </el-option>
                     </el-select>
                 </div>
-            </el-collapse-transition>
-
+            </el-collapse-transition>                     
+            
         </el-dropdown-menu>
     </el-dropdown>
 </template>
@@ -82,9 +101,12 @@ export default {
     props: ['filterType', 'dispatch'],
     data () {
         return {
+            count: 0,
             date: false,
             status: false,
             type: false,
+            reason: false,
+            amount: false,
             stati: [
                 // {label: 'All', value: 'all'},
                 {label: 'Success', value: 'succeeded'},
@@ -102,16 +124,30 @@ export default {
                 to: '',
                 from: '',
                 statuses: [],
-                payment_types: []
+                payment_types: [],
+                reasons: []
             },
-            count: 0
+            reasons: [
+                {label: 'Duplicate', value: 'duplicate'},
+                {label: 'Fraudulent', value: 'fraudulent'},
+                {label: 'Subscription canceled', value: 'subscription_canceled'},
+                {label: 'Product unacceptable', value: 'product_unacceptable'},
+                {label: 'Product not received', value: 'product_not_received'},
+                {label: 'Unrecognized', value: 'unrecognized'},
+                {label: 'Credit not processed', value: 'credit_not_processed'},
+                {label: 'Incorrect account details', value: 'incorrect_account_details'},
+                {label: 'Insufficient funds', value: 'insufficient_funds'},
+                {label: 'Bank cannot process', value: 'bank_cannot_process'},
+                {label: 'Debit not authorized', value: 'debit_not_authorized'}
+            ]
         }
     },
     methods: {
         createFilters () {
             this.$refs.messageDrop.hide()
-            this.count = this.size(this.filterType)
+            this.count = this.size(this.filters)
             this.$store.dispatch(this.dispatch, this.filters)
+
             // if (this.filterType === 'queue') {
             //     // this.filters.statuses = 'queued'
             //     this.$store.dispatch('setQueueFilters', this.filters)
@@ -134,16 +170,18 @@ export default {
             return size
         },
         resetFilters () {
+            this.count = 0
             this.filters = {
                 to: '',
                 from: '',
                 statuses: [],
-                payment_types: []
+                payment_types: [],
+                reasons: []
             }
             this.date = false
             this.status = false
             this.type = false
-            this.count = 0
+            this.reason = false
             this.createFilters()
         },
         keepVisible () {
@@ -177,7 +215,16 @@ export default {
             // if (val === 'all') {
             //     this.filters.payment_types = []
             // }
-        }
+        },
+        reasonClick (val) {
+            this.$refs.messageDrop.show()
+            if (val[0] === 'all') {
+                var all = ['Duplicate','Fraudulent', 'Subscription', 'Product','Product','Unrecognized','Credit','Incorrect','Insufficient','Bank','Debit']
+                all.forEach(element => {
+                    this.filters.reasons.push(element)
+                })
+            }
+        },        
     },
     mounted () {
         EventBus.$on('blur', this.keepVisible)
@@ -186,6 +233,12 @@ export default {
     computed: {
         showStatus () {
             return this.filterType === 'payment' || this.filterType === 'payouts'
+        },
+        showDispute (){
+            return this.filterType === 'dispute'
+        },
+        filterCount() {
+            return this.count
         }
     }
 }

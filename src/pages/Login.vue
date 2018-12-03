@@ -67,6 +67,7 @@ export default {
                 if (response.data.success) {
                     this.$session.start()
                     this.$session.set('client', JSON.stringify(response.data.response.data))
+                    this.$session.set('email', JSON.stringify(response.data.response.data.client.email))
                     // this.$store.dispatch('setClient', response.data.response.data)
 
                     if (!response.data.response.data.is_login_before) {

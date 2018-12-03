@@ -3,7 +3,7 @@
       <div :class="[{'test-data': isTest}]" class="transactions bg-white border-right border-left">
           <div class="flex justify-content-between px-20 py-16">
               <div>
-                  <filter-component dispatch="setLogsFilters" filterType="logs"></filter-component>
+                  <!-- <filter-component dispatch="setLogsFilters" filterType="logs"></filter-component> -->
               </div>
           </div>
           <div>

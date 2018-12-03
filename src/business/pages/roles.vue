@@ -2,7 +2,7 @@
     <div class="no-padding">
         <el-card :class="['flex', 'flex-column', 'custom']">
             <div slot="header">
-                <h4 class="header-text mb-1">User roles</h4>
+                <h4 class="header-text pb-5">User roles</h4>
                 <p class="s-13">Roles define what permissions are granted to team members in your Flopay account.</p>
             </div>
             <div>

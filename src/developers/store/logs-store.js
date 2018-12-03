@@ -1,14 +1,7 @@
-import {
-    LOGS_FETCH,
-    SET_LOGS,
-    SET_LOGS_STATE,
-    SET_LOGS_META,
-    SET_LOGS_FILTERS,
-    GET_CURRENT_LOG,
-    SET_CURRENT_LOG,
-    SET_CURRENT_LOGS_STATE,
-    GET_LOGS_URI
+  import {
+    LOGS_FETCH, SET_LOGS, SET_LOGS_STATE, SET_LOGS_META, SET_LOGS_FILTERS, GET_CURRENT_LOG, SET_CURRENT_LOG, SET_CURRENT_LOGS_STATE 
   } from './logs-store-constants'
+  import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
   import { apiCall } from '../../store/apiCall'
   import Utils from '../../utils/services'
   
@@ -70,10 +63,7 @@ import {
   
   // actions
   const actions = {
-    [LOGS_FETCH] ({ state, commit, rootGetters }, {
-      page = 1,
-      cache = true
-    } = {}) {
+    [LOGS_FETCH] ({ state, commit, rootGetters }, {page = 1,cache = true} = {}) {
       var filters = state.logs.filters
       var query = ''
       
@@ -89,18 +79,16 @@ import {
       } else {
         return new Promise((resolve, reject) => {
           apiCall({
-            url: `${GET_LOGS_URI}${query}`,
+            url: `${GET_BASE_URI}v1/accounts/logs${query}`,
             method: 'GET',
             token: rootGetters.token
           }).then((response) => {
-            // console.log('logs', response)
             commit(SET_LOGS_STATE, 'DATA')
             commit(SET_LOGS_META, response.data)
             commit(SET_LOGS, response.data)
             resolve(response)
           }).catch((error) => {
             commit(SET_LOGS_STATE, 'ERROR')
-            console.log(error)
             reject(error)
           })
         })
@@ -116,17 +104,15 @@ import {
       commit(SET_CURRENT_LOGS_STATE, 'LOADING')
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `https://api.flopay.io/v1/accounts/logs${query}`,
+          url: `${GET_BASE_URI}v1/accounts/logs${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          // console.log('Single Log', response)
-          commit(SET_CURRENT_LOGS_STATE, 'DATA')
           commit(SET_CURRENT_LOG, response.data)
+          commit(SET_CURRENT_LOGS_STATE, 'DATA')
           resolve()
         }).catch((error) => {
           commit(SET_CURRENT_LOGS_STATE, 'ERROR')
-          console.log('Single Log', error)
           reject(error)
         })
       })

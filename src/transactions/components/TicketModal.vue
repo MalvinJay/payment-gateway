@@ -59,14 +59,14 @@ export default {
         this.form.description = this.form.description === 'other' ? this.other : this.form.description
         var form = {
             ...this.form,
-            wallet_number: this.transaction.receiver_no,
-            amount: this.transaction.receiver_amount,
+            wallet_number: this.transaction.customer_no,
+            amount: this.transaction.amount,
             reference: this.transaction.reference,
-            date_of_transaction: this.transaction.created_at,
-            email: [this.$session.getItem('email')],
+            date_of_transaction: this.transaction.date,
+            email: [this.$session.get('email')],
             customer_name: this.transaction.receiver_name,
-            provider_reference: this.transaction.provider_ref,
-            from: this.$session.getItem('email')
+            provider_reference: this.transaction.provider_reference,
+            from: this.$session.get('email')
         }
         this.$store.dispatch('createTicket', form)
         .then((response) => {
@@ -79,6 +79,7 @@ export default {
                 this.close()
             }
         }).catch((error) => {
+            this.loading = false
             const response = error.response
             this.$message({
                 type: 'error',

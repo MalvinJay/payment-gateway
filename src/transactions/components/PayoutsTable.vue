@@ -22,7 +22,7 @@
                     <el-table-column prop="amount" label="Amount" width="100">
                         <template slot-scope="scope">
                             <div class="flex align-items-center cursor">
-                                <p style="color: #2b2d50;" class="m-0 p-0 mr-10 bold-500 s-13">GHc{{scope.row.receiver_amount}}</p>
+                                <p style="color: #2b2d50;" class="m-0 p-0 mr-10 bold-500 s-13">GHS {{scope.row.receiver_amount}}</p>
                                 <!-- <p class="m-0 p-0 mr-10">{{scope.row.receiver_currency}}</p>
                                 <div>
                                     <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
@@ -46,7 +46,7 @@
                         <template slot-scope="scope">
                             {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
                         </template>
-                    </el-table-column>
+                    </el-table-column> -->
                     <el-table-column width="80px">
                         <template slot-scope="scope">
                             <div class="mini-menu">
