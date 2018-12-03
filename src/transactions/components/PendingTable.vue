@@ -2,11 +2,12 @@
     <div class="transactions">
         <div class="trans-div flex justify-content-between">
             <div class="flex align-items-baseline">
-                <p class="blue-text bold-600 s-16 m-0 p-0">Pending Transactions</p>
+                <p v-if="selectedCount === 0" class="blue-text bold-600 s-16 m-0 p-0">Pending Transactions</p>
+                <p v-else class="blue-text bold-600 s-16 m-0 p-0"> {{multipleSelection}} selected </p>
                 <!-- <filter-component filterType="pending"></filter-component> -->
             </div>
             <div>
-                <!-- <el-button v-if="canApproveTransactions" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Approve</el-button> -->
+                <el-button :disabled="selectedCount === 0" v-if="canApproveTransactions" :loading="loading" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Approve</el-button>
                 <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
             </div>
         </div>
@@ -33,7 +34,7 @@
                 <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                 <el-table-column prop="created_at" label="Date">
                     <template slot-scope="scope">
-                        {{scope.row.created_at | moment("Do MMM, YYYY HH:mm A")}}
+                        {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
                     </template>
                 </el-table-column>
                 <el-table-column width="80px">
@@ -96,7 +97,10 @@ export default {
       activeName: '1',
       date: false,
       dialogVisible: false,
-      multipleSelection: []
+      loading: false,
+      multipleSelection: {
+        transactions: []
+      }
     }
   },
   mounted () {
@@ -111,8 +115,33 @@ export default {
     handleCurrentChange (val) {
         this.$store.dispatch('getPending', {page: val})
     },
-    handleSelectionChange(val) {
-        this.multipleSelection = val;
+    handleSelectionChange (val) {
+        this.multipleSelection.transactions = val
+    },
+    approve () {
+        this.loading = true
+        this.$store.dispatch('approveTransactions', this.multipleSelection)
+        .then((response) => {
+            if (response.data.success) {
+                this.$message({
+                    message: 'Transactions Approved',
+                    type: 'success'
+                })
+                this.$store.dispatch('getPending', {cache: false})
+            } else {
+                this.$message({
+                    type: 'error',
+                    message: response.data.response.message
+                })
+            }
+            this.loading = false
+        }).catch(() => {
+            this.loading = false
+            this.$message({
+                message: 'Error',
+                type: 'error'
+            })
+        }) 
     }
   },
   computed: {
@@ -139,6 +168,9 @@ export default {
     },
     loading () {
       return this.state === 'LOADING'
+    },
+    selectedCount () {
+      return this.multipleSelection.transactions.length
     }
   }
 }
@@ -197,10 +229,7 @@ export default {
         margin-right: 5px;
     }
 }
-.trans-div{
-    height: 60px;
-    padding: 20px 20px 0 20px
-}
+
 .transactions-table-header{
     background-color: #F7FAFC !important;
     height: 36px !important;

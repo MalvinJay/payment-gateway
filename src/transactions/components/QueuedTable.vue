@@ -38,7 +38,7 @@
                     <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                     <el-table-column prop="created_at" label="Date">
                         <template slot-scope="scope">
-                            {{scope.row.created_at | moment("Do MMM, YYYY HH:mm A")}}
+                            {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
                         </template>
                     </el-table-column>
                     <el-table-column width="80">
@@ -203,10 +203,7 @@ export default {
         margin-right: 5px;
     }
 }
-.trans-div{
-    height: 60px;
-    padding: 20px 20px 0 20px
-}
+
 .transactions-table-header{
     background-color: #F7FAFC !important;
     height: 36px !important;

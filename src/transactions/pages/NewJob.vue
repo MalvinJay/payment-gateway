@@ -29,6 +29,18 @@
                     <el-form-item label="Retry Limit">
                         <el-input class="w-25" v-model.number="form.retry_limit"></el-input>
                     </el-form-item>
+                    <!-- JOB SERVICE CODE -->
+                    <el-form-item label="Service Code">
+                        <el-select v-model="form.service_code">
+                            <el-option label="Cash In" value="cash_in"></el-option>
+                            <el-option label="Cash Out" value="cash_out"></el-option>
+                            <el-option label="Direct Payment" value="direct_payment"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <!-- START TO END DATE -->
+                    <el-form-item label="Start to End Date">
+                        <el-date-picker v-model="daterange" type="daterange"></el-date-picker>
+                    </el-form-item>
                     <!-- JOB MODE -->
                     <el-form-item label="Mode">
                         <el-select v-model="form.scheduled">
@@ -63,7 +75,7 @@
                                 placeholder="Select time">
                                 </el-time-select>
                             </el-form-item>
-                            <el-form-item v-else-if="form.schedule === 'weekly'" label="date & time of trasactions postings">
+                            <el-form-item class="flex" v-else-if="form.schedule === 'weekly'" label="date & time of trasactions postings">
                                 <el-select placeholder="select day" v-model="schedule.date">
                                     <el-option v-for="(item, index) in days" :key="index" :label="item" :value="item"></el-option>
                                 </el-select>
@@ -138,15 +150,10 @@
                     </div> -->
                     <el-form-item label="Download File Format">
                         <a download href="../../../static/Batch_file_format.csv">Download file format</a>
-                        <!-- <el-switch
-                        v-model="form.approval"
-                        active-text="Require Approval"
-                        inactive-text="Deny Approval">
-                        </el-switch> -->
                     </el-form-item>
                 </el-form>
                 <div class="flex justify-content-end">
-                    <p class="s-12">NB: Vodafone numbers not supported</p>
+                    <p class="s-12">NB: Vodafone numbers are not supported</p>
                 </div>
             </div>
         </el-card>
@@ -159,6 +166,7 @@ import { mapGetters } from 'vuex'
 var S3 = require('aws-sdk/clients/s3')
 import { AWS_BUCKET } from '../store/transactions-store-constants.js'
 import Utils from '../../utils/services'
+import moment from 'moment'
 
 export default {
     name: 'NewJob',
@@ -172,11 +180,12 @@ export default {
                 // beneficiaries: 'upload',
                 // times: [],
                 // contacts: [],
+                start_date: '',
+                termination_date: '',
                 timezone: "Africa/Accra",
                 country_code: "GH",
                 live: !this.testData,
-                test: this.testData,
-                service_code: 'cashin'
+                test: this.testData
             },
             beneficiaries: 'upload',
             contactData: [],
@@ -206,6 +215,17 @@ export default {
             test: 'test',
             state: 'fileState'
         }),
+        daterange: {
+            get () {
+                var range = [this.form.start_date, this.form.termination_date]
+                console.log('range', range)
+                return range
+            },
+            set (val) {
+                this.form.start_date = moment(val[0]).format("YYYY-MM-DD")
+                this.form.termination_date = moment(val[1]).format("YYYY-MM-DD")
+            }
+        },
         testData () {
             return this.test
         },
@@ -243,8 +263,13 @@ export default {
                     this.form.test = this.test
                     this.form.dummy = this.test
                     this.form.live = !this.test
-                    var schedule = Utils.createJobQuery (this.form.schedule, this.schedule)
+                    this.form.frequency_type = this.form.schedule
+                    
+                    this.form.debit_day = Utils.createDebitFreq(this.form.schedule, this.schedule)
+                    this.form.frequency = Utils.createFreq(this.form.schedule, this.schedule)
+                    var schedule = Utils.createJobQuery(this.form.schedule, this.schedule)
                     this.form.schedule = schedule
+                    
 
                     this.$store.dispatch(job, this.form)
                     .then((response) => {

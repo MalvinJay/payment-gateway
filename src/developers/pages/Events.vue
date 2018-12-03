@@ -27,7 +27,7 @@
                   </el-table-column>
                   <el-table-column label="date" prop="created_at" width="200">
                         <template slot-scope="scope">
-                            <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("MMM Do, YYYY HH:mm A")}}</p>
+                            <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("MMM Do, YYYY hh:mm A")}}</p>
                         </template>      
                   </el-table-column>                                    
                 </el-table>
@@ -103,10 +103,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  // .trans-div {
-  //   text-transform: lowercase;
-  // }
-
   .status {
     background: #e3e8ee;
     text-align: center;

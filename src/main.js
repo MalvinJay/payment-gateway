@@ -18,10 +18,14 @@ import IdleVue from 'idle-vue'
 import VueLocalStorage from 'vue-localstorage'
 import VueSession from 'vue-session'
 import highlightJs from 'highlight.js'
+import VueTour from 'vue-tour'
+
+require('vue-tour/dist/vue-tour.css')
+
+Vue.use(VueTour)
 
 Vue.use(highlightJs)
 Vue.use(VueSession)
-Vue.use(require('vue-chartist'))
 Vue.use(VueLocalStorage)
 Vue.use(ElementUI, {locale})
 Vue.use(VueMoment)

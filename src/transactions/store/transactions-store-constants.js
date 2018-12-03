@@ -83,6 +83,7 @@ export const SET_PENDING = 'setPending'
 export const SET_PENDING_STATE = 'setPendingState'
 export const SET_PENDING_FILTERS = 'setPendingFilters'
 export const SET_PENDING_META = 'setPendingMeta'
+export const APPROVE_TRANSACTIONS = 'approveTransactions'
 
 // SEARCH
 export const SEARCH_TRANSACTIONS = 'searchTransactions'

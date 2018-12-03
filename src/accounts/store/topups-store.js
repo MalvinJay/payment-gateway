@@ -1,11 +1,13 @@
 import {
   SET_TOPUPS,
   SET_TOPUPS_STATE,
-  GET_TOPUPS
+  GET_TOPUPS,
+  SET_TOPUPS_FILTERS
 } from './store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
+import moment from 'moment'
 
 // state
 const state = {
@@ -14,7 +16,10 @@ const state = {
     meta: {page: 1},
     errors: [],
     state: 'DATA',
-    filters: {}
+    filters: {
+      from: moment().startOf('month').format('YYYY-MM-DD'),
+      to: moment().endOf('month').format('YYYY-MM-DD')
+    }
   }
 }
 
@@ -32,6 +37,9 @@ const mutations = {
   },
   [SET_TOPUPS_STATE] (state, data) {
     state.topups.state = data
+  },
+  [SET_TOPUPS_FILTERS] (state, data) {
+    state.topups.filters = data
   }
 }
 
@@ -42,7 +50,11 @@ const actions = {
     cache = true
   } = {}) {
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
-    var query = 'search_value=topup'
+
+    var filters = state.topups.filters
+    var query = Utils.createQueryParams(filters, page)
+    query = `search_value=topup&${query}`
+
     commit(SET_TOPUPS_STATE, 'LOADING')
     if (cache && state.topups.data.length !== 0) {
       commit(SET_TOPUPS_STATE, 'DATA')
@@ -63,6 +75,10 @@ const actions = {
         })
       })
     }
+  },
+  [SET_TOPUPS_FILTERS] ({ commit, dispatch }, filters) {
+    commit(SET_TOPUPS_FILTERS, filters)
+    dispatch('getTopUps', {page: 1, cache: false})
   }
 }
 

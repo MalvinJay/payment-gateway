@@ -15,13 +15,15 @@ import Taxation from '@/business/pages/Taxation'
 import Team from '@/business/pages/Team'
 import Roles from '@/business/pages/Roles'
 import Reports from '@/business/pages/Reports'
+import JobDetails from '../transactions/pages/JobDetails'
 
 const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
 const Disputes = () => import('../transactions/pages/Disputes')
-const JobDetails = () => import('../transactions/pages/JobDetails')
+// const JobDetails = () => import('../transactions/pages/JobDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
+const FirstTimeLogin = () => import('../pages/FirstTimeLogin')
 
 const FoneMessenger = () => import('../fonemessenger/pages/FoneMessenger')
 const Fees = () => import('../accounts/pages/Fees')
@@ -30,6 +32,8 @@ const TopUps = () => import('../accounts/pages/TopUps')
 const Settlements = () => import('../accounts/pages/Settlements')
 const Account = () => import('../connect/pages/Account')
 const AccountDetail = () => import('../connect/pages/AccountDetail')
+const AccountSettlements = () => import('../connect/pages/AccountSettlements')
+const AccountFees = () => import('../connect/pages/AccountFees')
 
 const Logs = () => import('../developers/pages/Logs')
 const LogsDetails = () => import('../developers/pages/LogsDetails')
@@ -205,6 +209,18 @@ let router = new Router({
           path: '/accounts/:id',
           name: 'AccountDetail',
           component: AccountDetail
+        },
+        // connect settlements
+        {
+          path: '/account-settlements',
+          name: 'AccountSettlements',
+          component: AccountSettlements
+        },
+        // connect settlements
+        {
+          path: '/account-fees',
+          name: 'AccountFees',
+          component: AccountFees
         }
       ]
     },
@@ -215,6 +231,11 @@ let router = new Router({
       meta: {
         guest: true
       }
+    },
+    {
+      path: '/change_password',
+      name: 'FirstTimeLogin',
+      component: FirstTimeLogin
     },
     { path: '/404', component: NotFound },
     { path: '*', redirect: '/' }

@@ -69,13 +69,14 @@ const actions = {
     var filters = state.fees.filters
     var query = ''
     if (Utils.empty(filters)) {
-      query = `?all=true&page=${page}&limit=10`
+      query = `?all=true&page=${page}&limit=12`
     } else {
       // filters.search_value = 'cashin'
       query = Utils.createQueryParams(filters, page)
     }
     commit(SET_FEES_STATE, 'LOADING')
     commit(SET_FEES_FILTERS, filters)
+
     if (cache && state.fees.data.length !== 0) {
       commit(SET_FEES_STATE, 'DATA')
     } else {
@@ -99,7 +100,7 @@ const actions = {
   },
   [SET_FEES_FILTERS] ({ commit, dispatch }, filters) {
     commit(SET_FEES_FILTERS, filters)
-    dispatch('getfees', {page: 1, cache: false})
+    dispatch('getFees', {page: 1, cache: false})
   }
 }
 
@@ -109,4 +110,3 @@ export default {
   mutations,
   actions
 }
-

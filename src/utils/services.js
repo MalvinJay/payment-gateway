@@ -1,6 +1,81 @@
 import equal from 'fast-deep-equal'
+import moment from 'moment'
 export default {
-//   create query out of object
+  // debit payment
+  createDebitFreq (schedule, job) {
+    var newString = schedule
+    console.log(schedule, job)
+    switch (schedule) {
+      case 'daily':
+        newString = 1
+        break
+      case 'weekly':
+        newString = this.returnDay(job.date)
+        break
+      case 'monthly':
+        newString = moment(job.date).date()
+        break
+      case 'bimonthly':
+        newString = moment(job.date).date()
+        break
+      case 'quarterly':
+        newString = moment(job.date).date()
+        break
+      case 'yearly':
+        newString = moment(job.date).date()
+        break
+      default:
+        break
+    }
+    return newString
+  },
+  // debit payment
+  createFreq (schedule, job) {
+    var newString = schedule
+    console.log(schedule, job)
+    switch (schedule) {
+      case 'daily':
+        newString = 1
+        break
+      case 'weekly':
+        newString = 1
+        break
+      case 'monthly':
+        newString = 1
+        break
+      case 'bimonthly':
+        newString = 2
+        break
+      case 'quarterly':
+        newString = 4
+        break
+      case 'yearly':
+        newString = 1
+        break
+      default:
+        break
+    }
+    return newString
+  },
+  returnDay (value) {
+    switch (value.toLowerCase()) {
+      case 'monday':
+        return 1
+      case 'tuesday':
+        return 2
+      case 'wednesday':
+        return 3
+      case 'thursday':
+        return 4
+      case 'friday':
+        return 5
+      case 'saturday':
+        return 6
+      default:
+        return 7
+    }
+  },
+  //   create query out of object
   createQueryFromObject (obj) {
     var query = ''
     Object.keys(obj).forEach(function (key) {
@@ -181,5 +256,10 @@ export default {
     } else {
       return false
     }
+  },
+  capitalize (value) {
+    if (!value) return ''
+    value = value.toString()
+    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
   }
 }

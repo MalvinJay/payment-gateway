@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-loading="loadingPage" class="h-80">
         <!-- ERROR -->
         <div class="center h-80" v-if="error">
             <div class="center flex-column">
@@ -7,7 +7,8 @@
                 <el-button @click.prevent="fetchTransactions" icon="sync icon" type="text">Retry</el-button>
             </div>
         </div>
-        <div v-else v-loading="loadingPage">
+        <!--  v-loading="loadingPage" -->
+        <div v-else>
             <!-- BRIEF INFO -->
             <el-card class="card-0 position-relative">
                 <div class="flex flex-column p-20">
@@ -31,7 +32,7 @@
                         </div>
                         <div class="flex flex-column ml-1">
                             <p class="light mb-1 s-13">{{header}} was created</p>
-                            <p class="light mb-1 s-12 gray">{{form.created_at | moment("MMM Do, HH:mm A")}}</p>
+                            <p class="light mb-1 s-12 gray">{{form.created_at | moment("MMM Do, hh:mm A")}}</p>
                         </div>
                     </div>
                 </div>
@@ -56,19 +57,19 @@
                             <div class="w-50">
                                 <el-row v-for="(value, key, index) in data" :key="index" class="mb-1">
                                     <el-col :span="8">
-                                        <p class="m-0 text-capitalize lightgray s-14">{{key}}</p>
+                                        <p class="m-0 text-capitalize menu-gray-text s-14">{{key}}</p>
                                     </el-col>
                                     <el-col :span="16">
                                         <div v-if="readonly">
-                                            <p v-if="key === 'time'" class="s-13 mono">{{value | moment("hh:mm a")}}</p>
-                                            <p v-else-if="key === 'date'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
+                                            <p v-if="key === 'time'" class="">{{value | moment("hh:mm a")}}</p>
+                                            <p v-else-if="key === 'date'" class="">{{value | moment("MMM Do, YYYY")}}</p>
                                             <el-switch disabled v-else-if="key === 'scheduled'" class="w-50" v-model="form.scheduled"></el-switch>
-                                            <p v-else class="s-13 mono">{{value}}</p>
+                                            <p v-else class="">{{value}}</p>
                                         </div>
                                         <div v-else>
-                                            <p v-if="key === 'number of runs' || key === 'owner'" class="s-13 mono">{{value}}</p>
-                                            <p v-else-if="key === 'time'" class="s-13 mono">{{value | moment("hh:mm a")}}</p>
-                                            <p v-else-if="key === 'date'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
+                                            <p v-if="key === 'number of runs' || key === 'owner'" class="">{{value}}</p>
+                                            <p v-else-if="key === 'time'" class="">{{value | moment("hh:mm a")}}</p>
+                                            <p v-else-if="key === 'date'" class="">{{value | moment("MMM Do, YYYY")}}</p>
                                             <el-input v-else-if="key === 'name'" style="width: 80%" size="mini" v-model="form.description"></el-input>
                                             <el-switch v-else-if="key === 'scheduled'" class="w-50" v-model="form.scheduled"></el-switch>
                                             <div v-else-if="key === 'schedule' && form.scheduled">
@@ -144,16 +145,16 @@
                             <div class="w-50">
                                 <el-row type="flex" align="middle" v-for="(value, key, index) in data2" :key="index" class="mb-1">
                                     <el-col :span="8">
-                                        <p class="m-0 text-capitalize lightgray s-14">{{key}}</p>
+                                        <p class="m-0 text-capitalize menu-gray-text s-14">{{key}}</p>
                                     </el-col>
                                     <el-col :span="16">
                                         <div v-if="readonly">
                                             <el-switch disabled v-model="data2[key]" v-if="key === 'active'"></el-switch>
                                             <el-switch disabled v-model="data2[key]" v-else-if="key === 'test'"></el-switch>
-                                            <p v-else class="s-13 mono">{{value}}</p>
+                                            <p v-else class="">{{value}}</p>
                                         </div>
                                         <div v-else>
-                                            <p v-if="key === 'last run' || key === 'next run'" class="s-13 mono">{{value | moment("MMM Do, YYYY")}}</p>
+                                            <p v-if="key === 'last run' || key === 'next run'" class="">{{value | moment("MMM Do, YYYY")}}</p>
                                             <el-switch v-model="form.active" v-else-if="key === 'active'"></el-switch>
                                             <el-switch v-model="form.test" v-else-if="key === 'test'"></el-switch>
                                             <el-input v-else-if="key === 'retry limit'" v-model="form.retry_limit" style="width: 80%;" size="mini"></el-input>
@@ -217,7 +218,7 @@
                         </el-table-column>
                     </el-table>
                     <!-- FOOTER -->
-                    <div class="flex justify-content-between align-items-center px-10">
+                    <div class="flex justify-content-between align-items-center px-20">
                         <div class="s-12">
                             {{runs.length}} results
                         </div>
@@ -232,7 +233,7 @@
             </el-card>
 
             <!-- JOB CONTACTS -->
-            <el-card class="my-2">
+            <el-card class="my-2 card-0">
                 <div class="flex align-items-baseline justify-content-between" slot="header">
                     <span class="blue-text bold-600 s-16">Subscribers</span>
                     <el-upload
@@ -245,8 +246,13 @@
                         <el-button :loading="addLoading" type="primary" class="z-depth-button s-13 open-sans mini-button b-0" size="mini" icon="plus icon">Upload Contacts</el-button>
                     </el-upload>
                 </div>
-                <div>
-                    <el-table empty-text="No job customers" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="form.contacts">
+                <div class="breathe">
+                    <el-table
+                    empty-text="No job customers"
+                    v-loading="loading"
+                    row-class-name="transactions-table-body"
+                    header-row-class-name="transactions-table-header"
+                    :data="form.contacts.slice((page * 12) - 12, page * 12)">
                         <el-table-column type="index"></el-table-column>
                         <el-table-column prop="name" label="name"></el-table-column>
                         <el-table-column prop="msisdn" label="Phone Number"></el-table-column>
@@ -266,6 +272,18 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <!-- FOOTER -->
+                    <div class="flex justify-content-between align-items-center px-20">
+                        <div class="s-12">
+                            {{form.contacts.slice((page * 12) - 12, page * 12).length}} results
+                        </div>
+                        <el-pagination class="my-2 flex justify-content-end"
+                            @current-change="handleCurrentCustomerChange"
+                            :page-size="pageSize"
+                            layout="prev, pager, next"
+                            :total="totalRuns">
+                        </el-pagination>
+                    </div>
                 </div>
             </el-card>
         </div>
@@ -293,7 +311,8 @@ export default {
             days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
             field: {},
             changedFields: {},
-            deleteLoading: false
+            deleteLoading: false,
+            page: 1,
         }
     },
     // watch: {
@@ -484,6 +503,9 @@ export default {
         },
         handleCurrentChange (val) {
             this.$store.dispatch('getCurrentJobRuns', {page: val})
+        },
+        handleCurrentCustomerChange (page) {
+            this.page = page
         }
     },
     computed: {
@@ -495,7 +517,8 @@ export default {
             runState: 'currentJobRunsState',
             file: 'file',
             fileState: 'fileState',
-            pageSize: 'pageSize'
+            pageSize: 'pageSize',
+            pageLoading: 'pageLoading'
         }),
         error () {
             return this.state === 'ERROR'

@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="blue-graph">
-                <time-line-chart :dashboard="today" :data="count" :labels="days"></time-line-chart>
+                <!-- <time-line-chart :dashboard="today" :data="count" :labels="days"></time-line-chart> -->
             </div>
         </el-card>
         <!-- Summary Div -->
@@ -72,7 +72,7 @@
                     <p class="light-blue-text s-16 bold-600">{{grossVolume | money}}</p>
                 </div>
                 <div style="height: 88px" class="w-50">
-                    <line-chart id="line-chart" :data="chartData" :labels="chartOptions"></line-chart>
+                    <!-- <line-chart id="line-chart" :data="chartData" :labels="chartOptions"></line-chart> -->
                 </div>
             </div>
             <div class="light-background analytics-div h-76 border-top flex justify-content-between align-items-center">
@@ -89,7 +89,7 @@
                     <p class="light-blue-text s-16 bold-600">{{depositVolume | money}}</p>
                 </div>
                 <div style="height: 88px" class="w-50">
-                    <line-chart id="deposit" :data="chartDataDep" :labels="chartOptions"></line-chart>
+                    <!-- <line-chart id="deposit" :data="chartDataDep" :labels="chartOptions"></line-chart> -->
                 </div>
             </div>
             <div class="light-background analytics-div h-76 border-top flex justify-content-between align-items-center">
@@ -106,7 +106,7 @@
                     <p class="light-blue-text s-16 bold-600">{{withVolume | money}}</p>
                 </div>
                 <div style="height: 88px" class="w-50">
-                    <line-chart id="with" :data="chartDataWith" :labels="chartOptions"></line-chart>
+                    <!-- <line-chart id="with" :data="chartDataWith" :labels="chartOptions"></line-chart> -->
                 </div>
             </div>
         </el-card>

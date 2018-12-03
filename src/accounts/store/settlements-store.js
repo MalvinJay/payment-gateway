@@ -1,11 +1,13 @@
 import {
   SET_SETTLEMENTS,
   SET_SETTLEMENTS_STATE,
-  GET_SETTLEMENTS
+  GET_SETTLEMENTS,
+  SET_SETTLEMENTS_FILTERS
 } from './store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
+import moment from 'moment'
 
 // state
 const state = {
@@ -14,7 +16,10 @@ const state = {
     meta: {page: 1},
     errors: [],
     state: 'DATA',
-    filters: {}
+    filters: {
+      from: moment().startOf('month').format('YYYY-MM-DD'),
+      to: moment().endOf('month').format('YYYY-MM-DD')
+    }
   }
 }
 
@@ -32,6 +37,9 @@ const mutations = {
   },
   [SET_SETTLEMENTS_STATE] (state, data) {
     state.settlements.state = data
+  },
+  [SET_SETTLEMENTS_FILTERS] (state, data) {
+    state.settlements.filters = data
   }
 }
 
@@ -41,8 +49,12 @@ const actions = {
     page = 1,
     cache = true
   } = {}) {
-    var query = 'search_value=cash_transfer'
+    // var query = 'search_value=cash_transfer'
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
+    var filters = state.settlements.filters
+    var query = Utils.createQueryParams(filters, page)
+    query = `search_value=cash_transfer&${query}`
+
     commit(SET_SETTLEMENTS_STATE, 'LOADING')
     if (cache && state.settlements.data.length !== 0) {
       commit(SET_SETTLEMENTS_STATE, 'DATA')
@@ -63,6 +75,10 @@ const actions = {
         })
       })
     }
+  },
+  [SET_SETTLEMENTS_FILTERS] ({ commit, dispatch }, filters) {
+    commit(SET_SETTLEMENTS_FILTERS, filters)
+    dispatch('getSettlements', {page: 1, cache: false})
   }
 }
 
