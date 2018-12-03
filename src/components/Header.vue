@@ -27,7 +27,7 @@
                     <el-dropdown-item divided>Lorem</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown> -->
-            <el-dropdown class="logout-dropdown" @command="handleCommand" trigger="click">
+            <el-dropdown id="v-step-0" class="logout-dropdown" @command="handleCommand" trigger="click">
                 <span class="el-dropdown-link">
                     <img class="img-big circle" src="../assets/images/profile/profile.jpg" alt="">
                 </span>

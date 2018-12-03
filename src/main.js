@@ -18,10 +18,14 @@ import IdleVue from 'idle-vue'
 import VueLocalStorage from 'vue-localstorage'
 import VueSession from 'vue-session'
 import highlightJs from 'highlight.js'
+import VueTour from 'vue-tour'
+
+require('vue-tour/dist/vue-tour.css')
+
+Vue.use(VueTour)
 
 Vue.use(highlightJs)
 Vue.use(VueSession)
-// Vue.use(require('vue-chartist'))
 Vue.use(VueLocalStorage)
 Vue.use(ElementUI, {locale})
 Vue.use(VueMoment)
@@ -58,6 +62,19 @@ Vue.filter('capitalize', function (value) {
   if (!value) return ''
   value = value.toString()
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+})
+
+Vue.directive('can', {
+  bind: function (el, binding, vnode) {
+    // var s = JSON.stringify
+    // console.log('loho', binding.value)
+    // console.log('loho', store.getters.permissions)
+    if (store.getters.permissions.find(el => el.action.toLowerCase() === binding.value.toLowerCase())) {
+      return true
+    } else {
+      return false
+    }
+  }
 })
 
 // Vue.component('payment-table', (resolve, reject) => {

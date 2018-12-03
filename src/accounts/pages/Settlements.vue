@@ -2,7 +2,8 @@
     <el-card class="transactions">
         <div class="trans-div">
             <div class="flex align-items-baseline">
-                <p class="header-text">Settlements</p>
+                <!-- <p class="header-text">Settlements</p> -->
+                <filter-component dispatch="setSettlementsFilters" filterType="payment"></filter-component>
             </div>
         </div>
         <div>
@@ -32,7 +33,7 @@
                     <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                     <el-table-column prop="created_at" label="Date">
                         <template slot-scope="scope">
-                            {{scope.row.created_at | moment("Do MMM, YYYY HH:mm A")}}
+                            {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
                         </template>
                     </el-table-column>
                     <el-table-column width="80px">

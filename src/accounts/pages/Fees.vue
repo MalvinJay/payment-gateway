@@ -3,7 +3,7 @@
         <div class="transactions">
             <div class="trans-div flex justify-content-between">
                 <div>
-                    <filter-component filterType="all"></filter-component>
+                    <filter-component dispatch="setFeesFilters" filterType="payment"></filter-component>
                 </div>
                 <div>
                     <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button> -->
@@ -41,7 +41,7 @@
                         </el-table-column>                                                                                               
                         <el-table-column prop="created_at" label="Date">
                             <template slot-scope="scope">
-                                {{scope.row.created_at | moment("Do MMM, YYYY HH:mm A")}}
+                                {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
                             </template>
                         </el-table-column>
                     </el-table>
@@ -116,7 +116,7 @@ export default {
             return this.state === 'ERROR' && this.state !== 'LOADING'
         },              
         total () {
-            return this.meta.totalCount
+            return this.meta.trans
         },    
         loading () {
             return this.state === 'LOADING'

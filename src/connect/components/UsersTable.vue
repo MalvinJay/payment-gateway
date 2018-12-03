@@ -41,7 +41,7 @@
                                 </el-table-column>
                                 <el-table-column label="Created at" width="170">
                                     <template slot-scope="scope">
-                                        {{ scope.row.created_at | moment("Do MMM, YYYY HH:mm A") }}
+                                        {{ scope.row.created_at | moment("Do MMM, YYYY hh:mm A") }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column width="50px" align="right">
@@ -83,7 +83,7 @@
                     </el-table-column>
                     <el-table-column label="Created At">
                         <template slot-scope="scope">
-                            {{ scope.row.created_at | moment("Do MMM, YYYY HH:mm A") }}
+                            {{ scope.row.created_at | moment("Do MMM, YYYY hh:mm A") }}
                         </template>
                     </el-table-column>
                     <el-table-column align="right">

@@ -52,9 +52,6 @@ export default {
   methods: {
     login (formName) {
         this.loading = true
-        // if (this.remember) {
-        //     localStorage.setItem('email')
-        // }
         if (this.isAdmin) {
             localStorage.setItem('isAdmin', true)
             this.$store.commit('isAdmin', true)
@@ -72,24 +69,27 @@ export default {
                     this.$session.set('client', JSON.stringify(response.data.response.data))
                     this.$session.set('email', JSON.stringify(response.data.response.data.client.email))
                     // this.$store.dispatch('setClient', response.data.response.data)
-                    
-                    if (this.$session.has('client')) {
-                        // login suucessful
-                        this.$store.dispatch('getToken')
-                        .then((response) => {
-                            // SETTING TOKEN
-                            this.$session.set('token', response.data.access_token)
-                            this.$store.dispatch('setToken', response.data.access_token)
-                            // this.$message({
-                            //     message: 'Login successful',
-                            //     type: 'success'
-                            // })
-                            this.$router.push('/')
-                        })
+
+                    if (!response.data.response.data.is_login_before) {
+                        this.$router.push('/change_password')
                     } else {
-                        this.$store.dispatch('setClient', response.data.response.data)
+                        if (this.$session.has('client')) {
+                            // login sucessful
+                            this.$store.dispatch('getToken')
+                            .then((response) => {
+                                // SETTING TOKEN
+                                this.$session.set('token', response.data.access_token)
+                                this.$store.dispatch('setToken', response.data.access_token)
+                                // this.$message({
+                                //     message: 'Login successful',
+                                //     type: 'success'
+                                // })
+                                this.$router.push('/')
+                            })
+                        } else {
+                            this.$store.dispatch('setClient', response.data.response.data)
+                        }
                     }
-                    
                 } else {
                     this.$message({
                         message: response.data.response.message,

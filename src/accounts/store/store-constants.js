@@ -12,8 +12,10 @@ export const SET_CURRENT_FEES_STATE = 'setCurrentFeesState'
 export const GET_TOPUPS = 'getTopUps'
 export const SET_TOPUPS = 'setTopUps'
 export const SET_TOPUPS_STATE = 'setTopUpsState'
+export const SET_TOPUPS_FILTERS = 'setTopUpsFilters'
 
 // topups
 export const GET_SETTLEMENTS = 'getSettlements'
 export const SET_SETTLEMENTS = 'setSettlements'
 export const SET_SETTLEMENTS_STATE = 'setSettlementsState'
+export const SET_SETTLEMENTS_FILTERS = 'setSettlementsFilters'

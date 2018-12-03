@@ -38,9 +38,10 @@ export const SET_ACCOUNT_SETTLEMENTS_STATE = 'setAccountSettlementsState'
 export const GET_CURRENT_ACCOUNT_SETTLEMENTS = 'getCurrentAccountsSettlements'
 export const SET_CURRENT_ACCOUNT_SETTLEMENTS = 'setCurrentAccountsSettlements'
 
-// ACCOUNT SETTLEMENTS
+// ACCOUNT FEES
 export const GET_ACCOUNT_FEES = 'getAccountFees'
 export const SET_ACCOUNT_FEES = 'setAccountFees'
 export const SET_ACCOUNT_FEES_STATE = 'setAccountFeesState'
 export const GET_CURRENT_ACCOUNT_FEES = 'getCurrentAccountsFees'
 export const SET_CURRENT_ACCOUNT_FEES = 'setCurrentAccountsFees'
+export const SET_ACCOUNT_FEES_FILTERS = 'setAccountFeesFilters'

@@ -79,10 +79,10 @@
                 </div>
                 <div class="flex justify-content-center">
                   <div class="custom">
-                    <el-table @row-click="checkRole" ref="team" empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredBranches">
+                    <el-table highlight-current-row ref="newUser" @row-click="selectRow" empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
                         <el-table-column width="50">
                             <template slot-scope="scope">
-                                <el-radio v-model="scope.row.id"></el-radio>
+                                <el-radio class="no-label-radio" v-model="selected" :label="scope.row.code"></el-radio>
                             </template>
                         </el-table-column>
                         <el-table-column width="200" class="bold-600">
@@ -140,8 +140,9 @@ export default {
             multiemail: '',
             isTest: true,
             dialogVisible: false,
+            exportVisible: false,
+            selected: '',
             dialogVisible1: false,
-            exportVisible: false, 
             styleObject: {
                 fontSize: '12px'
             },        
@@ -185,7 +186,9 @@ export default {
         EventBus.$on('exportModal', (val) => {
             this.exportVisible = false
         })
-        this.$store.dispatch('getBranches');
+        this.$store.dispatch('getTeams')
+        this.$store.dispatch('getRoles')
+        this.$store.dispatch('getBranches')
     },
 
     methods: {
@@ -194,16 +197,17 @@ export default {
                 this.$router.push(`/branches/${row.reference}`)
             }        
         },  
-        checkRole (row, event, column){
-            this.$refs.team.toggleRowSelection(row)
-        },
+        selectRow (row, event, column) {
+            this.$refs.newUser.setCurrentRow(row)
+            this.selected = row.code
+        },  
         handleCurrentChange (val) {
             this.$store.dispatch('getBranches', {page: val, cached: false })
         },             
         fetchBranches () {
             this.$store.dispatch('getBranches', {cache: false})
         },        
-        searchButton (){
+        searchButton () {
 
         },
         saveBranch() {
@@ -240,9 +244,10 @@ export default {
             return this.state === 'LOADING'
         },
         filteredTeams () {
-            return this.teams;
+            return this.teams
         },   
         filteredRoles (){
+            return this.roles
             return this.roles;
         },
         filteredBranches (){

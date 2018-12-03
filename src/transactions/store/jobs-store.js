@@ -277,8 +277,9 @@ const actions = {
       })
     })
   },
-  [GET_SINGLE_JOB] ({ state, commit, rootGetters }, { id, cache = true } = {}) {
+  [GET_SINGLE_JOB] ({ state, commit, rootGetters, rootState }, { id, cache = true } = {}) {
     commit(SET_SINGLE_JOB_STATE, 'LOADING')
+    // rootState.user.pageLoading = true
     // commit(SET_SINGLE_JOB, rootGetters.jobs.find(el => el.name === id))
     // commit(SET_SINGLE_JOB_STATE, 'DATA')
     // if (Utils.present(state.currentJob.data.id === id) && cache) {

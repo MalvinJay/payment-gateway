@@ -5,7 +5,7 @@
                 <div class="flex flex-column">
                     <div class="flex">
                         <p class="p-0 m-0">Account Balance</p>
-                        <p class="p-0 m-0 bold-600" style="padding-left: 16px">{{ balance | money }}</p>
+                        <p class="p-0 m-0 bold-600 ml-16">{{ balance | money }}</p>
                     </div>
                     <div class="flex align-items-center">
                         <el-date-picker class="transparent-input"
@@ -164,10 +164,11 @@ export default {
         user: 'user',
         today: 'today',
         sum: 'todaySum',
-        todayState: 'todayState'
+        todayState: 'todayState',
+        amount: 'balance'
     }),
     balance () {
-        return this.user.available_balance
+        return this.amount.available_balance
     },
     chartData () {
         var count = ''
@@ -232,7 +233,9 @@ export default {
         padding: 10px 20px !important;
     }
 }
-
+.ml-16{
+    margin-left: 16px !important;
+}
 .blue-graph{
     height: 70px;
 }

@@ -318,7 +318,7 @@ export default {
     filteredevent (){
       var event = {
         ID: this.event.id,
-        Date: moment(this.created_at).format("YYYY/MM/DD, HH:mm a"),
+        Date: moment(this.created_at).format("YYYY/MM/DD, hh:mm a"),
         Method: this.event.method? this.event.method.toUpperCase(): 'N/A',
         URL: `/${this.event.url? this.event.url: 'n/a'}`,
         Version: '2018/2019',

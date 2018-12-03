@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-loading="loadingPage">
         <div class="center h-80" v-if="error">
             <div class="center flex-column">
                 <p class="m-0 p-0">Unable to load this page</p>
@@ -7,7 +7,7 @@
             </div>
         </div>
         <div v-else>
-            <div v-loading="loadingPage">
+            <div >
                 <el-card class="card-0 position-relative">
                     <div class="flex flex-column p-20">
                         <div class="flex justify-content-between align-items-baseline mb-1">
@@ -34,7 +34,7 @@
                             <div class="flex flex-column ml-1">
                                 <!-- <p v-if="form.status == 'paid'" class="light mb-1 s-13">{{header}} succeeded</p>
                                 <p v-else class="light mb-1 s-13">{{header}} failed</p>
-                                <p class="light mb-1 s-12 gray">{{form.date | moment("MMM Do, HH:mm A")}}</p> -->
+                                <p class="light mb-1 s-12 gray">{{form.date | moment("MMM Do, hh:mm A")}}</p> -->
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                             </el-table-column>
                             <el-table-column label="Date">
                                 <template slot-scope="scope">
-                                    {{ scope.row.created_at | moment("Do MMM, YYYY HH:mm A") }}
+                                    {{ scope.row.created_at | moment("Do MMM, YYYY hh:mm A") }}
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -289,7 +289,7 @@ export default {
             'phone number': this.form.msisdn,
             email: this.form.email,
             date: moment(this.form.created_at).format('MMM Do, YYYY'),
-            time: moment(this.form.created_at).format('HH:mm a'),
+            time: moment(this.form.created_at).format('hh:mm a'),
         }
         return nForm
     },

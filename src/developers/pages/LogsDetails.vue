@@ -121,7 +121,7 @@ export default {
     filteredlog (){
       var log = {
         ID: this.log.id,
-        Date: moment(this.created_at).format("YYYY/MM/DD, HH:mm a"),
+        Date: moment(this.created_at).format("YYYY/MM/DD, hh:mm a"),
         Method: this.log.method? this.log.method.toUpperCase(): 'N/A',
         URL: `/${this.log.url? this.log.url: 'n/a'}`,
         Status: '200',

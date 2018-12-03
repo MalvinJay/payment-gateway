@@ -75,10 +75,10 @@
                 </div>
                 <div class="flex justify-content-center">
                   <div class="custom">
-                    <el-table @row-click="checkRole" ref="role" empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
+                    <el-table highlight-current-row @row-click="checkRole" ref="role" empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
                         <el-table-column width="50">
                             <template slot-scope="scope">
-                                <el-radio v-model="scope.row.id" :label="scope.row.id"></el-radio>
+                                <el-radio v-model="selected" :label="scope.row.code"></el-radio>
                             </template>
                         </el-table-column>
                         <el-table-column width="200" class="bold-600">
@@ -178,6 +178,7 @@ export default {
             roleId: '',
             multiemail: '',
             isTest: true,
+            selected: '',
             dialogVisible: false,
             dialogVisible1: false,
             exportVisible: false, 
@@ -237,7 +238,8 @@ export default {
         },  
         checkRole (row, event, column){
             console.log('Role Clicked')
-            this.$refs.role.toggleRowSelection(row)
+            this.$refs.role.setCurrentRow(row)
+            this.selected = row.code
         },
         handleCurrentChange (val) {
             this.$store.dispatch('getTeams', {page: val, cached: false })

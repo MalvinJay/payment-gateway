@@ -16,13 +16,15 @@ import Teams from '@/business/pages/Teams'
 import Roles from '@/business/pages/Roles'
 import Branches from '@/business/pages/Branches'
 import Reports from '@/business/pages/Reports'
+import JobDetails from '../transactions/pages/JobDetails'
 
 const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
 const Disputes = () => import('../transactions/pages/Disputes')
-const JobDetails = () => import('../transactions/pages/JobDetails')
+// const JobDetails = () => import('../transactions/pages/JobDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
+const FirstTimeLogin = () => import('../pages/FirstTimeLogin')
 
 const FoneMessenger = () => import('../fonemessenger/pages/FoneMessenger')
 const Fees = () => import('../accounts/pages/Fees')
@@ -235,6 +237,11 @@ let router = new Router({
       meta: {
         guest: true
       }
+    },
+    {
+      path: '/change_password',
+      name: 'FirstTimeLogin',
+      component: FirstTimeLogin
     },
     { path: '/404', component: NotFound },
     { path: '*', redirect: '/' }

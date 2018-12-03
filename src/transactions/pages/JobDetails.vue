@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-loading="loadingPage" class="h-80">
         <!-- ERROR -->
         <div class="center h-80" v-if="error">
             <div class="center flex-column">
@@ -7,7 +7,8 @@
                 <el-button @click.prevent="fetchTransactions" icon="sync icon" type="text">Retry</el-button>
             </div>
         </div>
-        <div v-else v-loading="loadingPage">
+        <!--  v-loading="loadingPage" -->
+        <div v-else>
             <!-- BRIEF INFO -->
             <el-card class="card-0 position-relative">
                 <div class="flex flex-column p-20">
@@ -31,7 +32,7 @@
                         </div>
                         <div class="flex flex-column ml-1">
                             <p class="light mb-1 s-13">{{header}} was created</p>
-                            <p class="light mb-1 s-12 gray">{{form.created_at | moment("MMM Do, HH:mm A")}}</p>
+                            <p class="light mb-1 s-12 gray">{{form.created_at | moment("MMM Do, hh:mm A")}}</p>
                         </div>
                     </div>
                 </div>
@@ -217,7 +218,7 @@
                         </el-table-column>
                     </el-table>
                     <!-- FOOTER -->
-                    <div class="flex justify-content-between align-items-center px-10">
+                    <div class="flex justify-content-between align-items-center px-20">
                         <div class="s-12">
                             {{runs.length}} results
                         </div>
@@ -232,7 +233,7 @@
             </el-card>
 
             <!-- JOB CONTACTS -->
-            <el-card class="my-2">
+            <el-card class="my-2 card-0">
                 <div class="flex align-items-baseline justify-content-between" slot="header">
                     <span class="blue-text bold-600 s-16">Subscribers</span>
                     <el-upload
@@ -245,8 +246,13 @@
                         <el-button :loading="addLoading" type="primary" class="z-depth-button s-13 open-sans mini-button b-0" size="mini" icon="plus icon">Upload Contacts</el-button>
                     </el-upload>
                 </div>
-                <div>
-                    <el-table empty-text="No job customers" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="form.contacts">
+                <div class="breathe">
+                    <el-table
+                    empty-text="No job customers"
+                    v-loading="loading"
+                    row-class-name="transactions-table-body"
+                    header-row-class-name="transactions-table-header"
+                    :data="form.contacts.slice((page * 12) - 12, page * 12)">
                         <el-table-column type="index"></el-table-column>
                         <el-table-column prop="name" label="name"></el-table-column>
                         <el-table-column prop="msisdn" label="Phone Number"></el-table-column>
@@ -266,6 +272,18 @@
                             </template>
                         </el-table-column>
                     </el-table>
+                    <!-- FOOTER -->
+                    <div class="flex justify-content-between align-items-center px-20">
+                        <div class="s-12">
+                            {{form.contacts.slice((page * 12) - 12, page * 12).length}} results
+                        </div>
+                        <el-pagination class="my-2 flex justify-content-end"
+                            @current-change="handleCurrentCustomerChange"
+                            :page-size="pageSize"
+                            layout="prev, pager, next"
+                            :total="totalRuns">
+                        </el-pagination>
+                    </div>
                 </div>
             </el-card>
         </div>
@@ -293,7 +311,8 @@ export default {
             days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
             field: {},
             changedFields: {},
-            deleteLoading: false
+            deleteLoading: false,
+            page: 1,
         }
     },
     // watch: {
@@ -484,6 +503,9 @@ export default {
         },
         handleCurrentChange (val) {
             this.$store.dispatch('getCurrentJobRuns', {page: val})
+        },
+        handleCurrentCustomerChange (page) {
+            this.page = page
         }
     },
     computed: {
@@ -495,7 +517,8 @@ export default {
             runState: 'currentJobRunsState',
             file: 'file',
             fileState: 'fileState',
-            pageSize: 'pageSize'
+            pageSize: 'pageSize',
+            pageLoading: 'pageLoading'
         }),
         error () {
             return this.state === 'ERROR'
