@@ -19,7 +19,7 @@
             <div v-else>
                 <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
                     <el-table-column type="selection" width="55"></el-table-column>
-                    <el-table-column prop="amount" label="Amount" width="100">
+                    <el-table-column prop="amount" label="Amount">
                         <template slot-scope="scope">
                             <div class="flex align-items-center cursor">
                                 <p style="color: #2b2d50" class="m-0 p-0 mr-10 bold-500 s-13">GHc{{scope.row.receiver_amount}}</p>
@@ -35,7 +35,7 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                    <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                     <el-table-column prop="created_at" label="Date">
                         <template slot-scope="scope">
                             {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}

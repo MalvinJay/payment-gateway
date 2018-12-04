@@ -266,7 +266,7 @@
                                 {{scope.row.updated_at | moment("MMM Do, YYYY")}}
                             </template>
                         </el-table-column>
-                        <el-table-column align="center">
+                        <el-table-column width="80" align="center">
                             <template slot-scope="scope">
                                 <el-button :loading="deleteLoading" class="p-0 m-0" @click.native.prevent="deleteJobContact(scope.$index, scope.row)" icon="trash alternate outline icon" type="text"></el-button>
                             </template>

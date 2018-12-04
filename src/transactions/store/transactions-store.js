@@ -43,7 +43,8 @@ const state = {
   providers: [
     {label: 'MTN', value: 'mtn'},
     {label: 'Vodafone', value: 'vodafone'},
-    {label: 'AirtelTigo', value: 'airtelTigo'}
+    {label: 'Tigo', value: 'tigo'},
+    {label: 'Airtel', value: 'airtel'}
   ]
 }
 

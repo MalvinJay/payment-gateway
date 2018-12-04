@@ -35,7 +35,7 @@
                       <event-webhook :code="scope.row.statusCode" :status="scope.row.status" :Retry_history="scope.row.Retry_history" :request="scope.row.request"></event-webhook>
                     </template>                            
                 </el-table-column>
-                <el-table-column prop="method" label="" width="100">
+                <el-table-column prop="method" label="" width="120">
                     <template slot-scope="scope">
                         <div class="flex">
                           <the-tag status="success" :title="scope.row.status" icon="detail check icon" class="w-75"></the-tag>
@@ -60,7 +60,7 @@ import EventBus from '../../event-bus.js'
 import moment from 'moment'
 
 export default {
-  name: 'eventsDetails',
+  name: 'EventsDetails',
   data () {
     return {
       isTest: true,

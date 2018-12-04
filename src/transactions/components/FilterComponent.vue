@@ -16,7 +16,7 @@
                 <el-checkbox class="mr-10" v-model="date"></el-checkbox> Date
             </el-dropdown-item>
             <el-collapse-transition>
-                <div class="filter-bg" v-show="date">
+                <div id="filter-from" class="filter-bg" v-show="date">
                     <div class="flex align-items-center">
                         <el-date-picker class="filter-input blue-text mr-10"
                             v-model="filters.from"
@@ -229,6 +229,20 @@ export default {
     mounted () {
         EventBus.$on('blur', this.keepVisible)
         EventBus.$on('focus', this.keepVisible)
+        this.$on('blur', this.keepVisible)
+        this.$on('focus', this.keepVisible)
+        // let ref = this.$refs
+        // let button = document.querySelectorAll('button')
+        // button.forEach((elem) => {
+        //     elem.addEventListener('click', () => {
+        //         console.log('root', event)
+        //         ref.messageDrop.show()
+        //     })
+        // })
+        // button.addEventListener('click', event => {
+        //     console.log('root', event)
+        //     this.keepVisible()
+        // })
     },
     computed: {
         showStatus () {
