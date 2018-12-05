@@ -7,6 +7,7 @@ import {
   GET_ROLES_URI
 } from './role-store-constants'
 import { apiCall } from '../../store/apiCall'
+import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import Utils from '../../utils/services'
 
 // state
@@ -78,7 +79,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_ROLES_URI}${query}`,
+          url: `${GET_BASE_URI}v1/user_groups/all.json${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
@@ -107,4 +108,3 @@ export default {
   mutations,
   actions
 }
-

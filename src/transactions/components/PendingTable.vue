@@ -3,7 +3,7 @@
         <div class="trans-div flex justify-content-between">
             <div class="flex align-items-baseline">
                 <p v-if="selectedCount === 0" class="blue-text bold-600 s-16 m-0 p-0">Pending Transactions</p>
-                <p v-else class="blue-text bold-600 s-16 m-0 p-0"> {{multipleSelection}} selected </p>
+                <p v-else class="blue-text bold-600 s-16 m-0 p-0"> {{selectedCount}} selected </p>
                 <!-- <filter-component filterType="pending"></filter-component> -->
             </div>
             <div>

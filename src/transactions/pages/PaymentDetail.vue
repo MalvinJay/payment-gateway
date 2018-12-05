@@ -44,7 +44,7 @@
                         <div class="flex flex-column ml-1">
                             <p v-if="form.payment_status == 'paid'" class="light mb-1 s-13">{{header}} succeeded</p>
                             <p v-else class="light mb-1 s-13">{{header}} failed</p>
-                            <p class="light mb-1 s-12 gray">{{form.date | moment("MMM Do, hh:mm A")}}</p>
+                            <p class="light mb-1 s-12 gray">{{form.date | moment("MMM Do, yyyy hh:mm A")}}</p>
                         </div>
                     </div>
                 </div>

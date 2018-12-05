@@ -337,7 +337,7 @@ export default {
         })
     },
     clickGroup (row, event, column) {
-        if (column.property) {
+        if (column.label) {
             this.$refs.group.toggleRowExpansion(row)
         }
     }

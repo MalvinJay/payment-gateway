@@ -38,7 +38,7 @@
                             <p class="s-8">{{client.company_name}}</p>
                         </div>
                     </el-dropdown-item>
-                    <!-- <el-dropdown-item class="header-user-dropdown">Profile</el-dropdown-item> -->
+                    <el-dropdown-item class="header-user-dropdown" command="profile">Profile</el-dropdown-item>
                     <el-dropdown-item class="header-user-dropdown" command="logout">Sign Out</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -84,6 +84,9 @@ export default {
         switch (command) {
             case 'logout':
                 this.logout()
+                break
+            case 'profile':
+                this.$router.push('/profile')
                 break
             default:
                 break

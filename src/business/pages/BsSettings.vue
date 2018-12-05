@@ -103,7 +103,7 @@ import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'Account',
+    name: 'BsSettings',
     data () {
         return {
             isTest: true,

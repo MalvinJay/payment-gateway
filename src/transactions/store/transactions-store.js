@@ -137,7 +137,7 @@ const mutations = {
 
 // actions
 const actions = {
-  [TRANSACTIONS_FETCH] ({ state, commit, rootGetters }, {
+  [TRANSACTIONS_FETCH] ({ state, commit, rootGetters, dispatch }, {
     cache = true,
     page = 1
   } = {}) {
@@ -169,6 +169,7 @@ const actions = {
           commit(SET_TRANSACTIONS_STATE, 'DATA')
           commit(SET_TRANSACTIONS_META, response.data.response.data)
           commit(SET_TRANSACTIONS, response.data.response.data.transactions)
+          dispatch(GET_CURRENT_TRANSACTION, response.data.response.data.transactions[0].reference)
           resolve()
         }).catch((error) => {
           commit(SET_TRANSACTIONS_STATE, 'ERROR')

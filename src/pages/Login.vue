@@ -16,7 +16,7 @@
                 </el-form-item>
                 <div class="flex justify-content-between align-items-center s-12 my-2">
                     <el-checkbox size="mini" v-model="isAdmin" label="Admin?"></el-checkbox>
-                    <el-button v-if="false" size="mini" type="text">Forgot password?</el-button>
+                    <el-button @click="forgotPassword" size="mini" type="text">Forgot password?</el-button>
                 </div>
                 <el-form-item class="my-2">
                     <el-button class="w-100" :loading="loading" type="warning" @click="login('form')">Sign In</el-button>
@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'Login',
   data () {
@@ -48,6 +50,11 @@ export default {
         ]
       }
     }
+  },
+  computed: {
+    ...mapGetters({
+        admin: 'isAdmin'
+    })
   },
   methods: {
     login (formName) {
@@ -69,7 +76,7 @@ export default {
                     this.$session.set('client', JSON.stringify(response.data.response.data))
                     // this.$store.dispatch('setClient', response.data.response.data)
 
-                    if (!response.data.response.data.is_login_before) {
+                    if (!response.data.response.data.is_login_before && !this.admin) {
                         this.$router.push('/change_password')
                     } else {
                         if (this.$session.has('client')) {
@@ -116,6 +123,9 @@ export default {
     },
     showPassword () {
         this.type = this.type === 'password' ? 'text' : 'password'
+    },
+    forgotPassword () {
+        this.$router.push('/forgot-password')
     }
     // login () {
     //   const { username, password } = this.form
