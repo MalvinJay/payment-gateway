@@ -252,7 +252,7 @@ export default {
     
     retryHooks(){
       this.loading = true
-      // this.$store.dispatch('createRefund', this.form.reference)
+      // this.$store.dispatch('retryHook', this.form.reference)
       // .then((response) => {
       //     if (response.data.success) {
       //         this.$message({

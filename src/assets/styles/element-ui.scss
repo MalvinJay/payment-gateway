@@ -539,7 +539,7 @@ $border: #dcdfe6;
     }
 
     .custom, {
-        .el-table__header-wrapper {
+        .el-table__header-wrapper, .el-radio__label {
             display: none;
         }
 
@@ -553,7 +553,10 @@ $border: #dcdfe6;
     .branches {
         .el-table__header-wrapper {
             display: block!important;
-        }        
+        }     
+        .el-radio__label {
+            display: none;
+        }   
         .el-table__body-wrapper {
             border-top: 1px solid #ebeef5;
         }

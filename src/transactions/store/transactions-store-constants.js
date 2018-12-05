@@ -11,7 +11,7 @@ export const SET_CURRENT_TRANSACTION_STATE = 'setCurrentTransactionState'
 export const REFUND_TRANSACTION = 'createRefund'
 
 export const GET_BASE_URI = 'https://api.flopay.io/'
-// export const GET_BASE_URI = 'https://0ca201fb.ngrok.io/api/'
+// export const GET_BASE_URI = 'https://ace4256a.ngrok.io/api/'
 export const GET_TRANSACTIONS_URI = `${GET_BASE_URI}v2/transactions.json`
 export const GET_REFUND_TRANSACTION_URI = `${GET_BASE_URI}v1/reverse.json`
 

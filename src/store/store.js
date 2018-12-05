@@ -14,6 +14,7 @@ import contacts from '../contacts/contacts-store'
 import fonemessenger from '../fonemessenger/store/fonemessenger-store'
 import teams from '../business/store/team-store'
 import roles from '../business/store/role-store'
+import branches from '../business/store/branch-store'
 import accounts from '../connect/store/accounts-store'
 import accountsSettlements from '../connect/store/connect-settlements-store'
 import accountFees from '../connect/store/connect-fees-store'
@@ -37,6 +38,7 @@ export default new Vuex.Store({
     reports,
     teams,
     roles,
+    branches,
     fonemessenger,
     disputes,
     topups,

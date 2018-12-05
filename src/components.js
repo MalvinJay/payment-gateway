@@ -15,6 +15,7 @@ import ExportModal from './transactions/components/ExportModal'
 import Avatar from '@/components/Avatar'
 import EventWebhook from '@/developers/components/EventWebhook'
 const TicketModal = () => import('./transactions/components/TicketModal')
+const AddGroup = () => import('./business/components/AddGroup')
 
 Vue.component('side-nav', SideNav)
 Vue.component('the-header', Header)
@@ -32,6 +33,7 @@ Vue.component('export-modal', ExportModal)
 Vue.component('ticket-modal', TicketModal)
 Vue.component('avatar', Avatar)
 Vue.component('event-webhook', EventWebhook)
+Vue.component('add-group', AddGroup)
 
 export default {
   SideNav: SideNav,
@@ -49,5 +51,6 @@ export default {
   QueuedTable: QueuedTable,
   PayoutsTable: PayoutsTable,
   Avatar: Avatar,
-  EventWebhook: EventWebhook
+  EventWebhook: EventWebhook,
+  AddGroup: AddGroup
 }

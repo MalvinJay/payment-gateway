@@ -9,7 +9,7 @@ import Utils from '../../utils/services'
 const state = {
     events: {
         data: [],
-        meta: {page: 1},
+        meta: {},
         error: [],
         state: 'DATA',
         filters: {},
@@ -82,13 +82,13 @@ const actions = {
         } else {
             return new Promise((resolve, reject) => {
                 apiCall({
-                    url: `${GET_BASE_URI}v1/accounts/logs.json${query}`,
+                    url: `${GET_BASE_URI}v2/events/logs.json${query}`,
                     method: 'GET',
                     token: rootGetters.token
                 }).then((response) => {
                     commit(SET_EVENTS_STATE, 'DATA')
-                    commit(SET_EVENTS_META, response.data)
-                    commit(SET_EVENTS, response.data)
+                    commit(SET_EVENTS_META, response.data.response.data)
+                    commit(SET_EVENTS, response.data.response.data)
                 resolve(response)
                 }).catch((error) => {
                     commit(SET_EVENTS_STATE, 'ERROR')
@@ -101,19 +101,19 @@ const actions = {
         commit(SET_EVENTS_FILTERS, filters)
         dispatch('getEvents', {page: 1, cache: false})
     },
-    [GET_CURRENT_EVENT] ({ commit, rootGetters }, id) {
+    [GET_CURRENT_EVENT] ({commit, rootGetters }, id) {
         var query = ''
         query = `?id=${id}`
         commit(SET_CURRENT_EVENTS_STATE, 'LOADING')
         return new Promise((resolve, reject) => {
           apiCall({
-            url: `${GET_BASE_URI}v1/accounts/logs.json${query}`,
+            url: `${GET_BASE_URI}v2/events/logs.json${query}`,
             method: 'GET',
             token: rootGetters.token
           }).then((response) => {
             console.log('Single Event', response.data)
             commit(SET_CURRENT_EVENTS_STATE, 'DATA')
-            commit(SET_CURRENT_EVENT, response.data)
+            commit(SET_CURRENT_EVENT, response.data.response.data)
             resolve()
           }).catch((error) => {
             commit(SET_CURRENT_EVENTS_STATE, 'ERROR')
