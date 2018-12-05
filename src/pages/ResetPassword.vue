@@ -39,7 +39,7 @@ export default {
         this.loading = true
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$store.dispatch('sendPassword', email)
+            this.$store.dispatch('sendEmail', email)
             .then((response) => {
                 if (response.data.success) {
                    this.$message({
