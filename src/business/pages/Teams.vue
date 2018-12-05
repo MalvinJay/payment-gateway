@@ -41,7 +41,20 @@
                             <template slot-scope="scope">
                                 {{scope.row.date_registered | moment("MMM Do, YYYY") || 'N/A'}}
                             </template>                            
-                        </el-table-column>                        
+                        </el-table-column>  
+                        <el-table-column width="80px">
+                            <template slot-scope="scope">
+                                <div class="mini-menu">
+                                    <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                                        <i class="ellipsis horizontal icon mr-0 cursor"></i>
+                                        <el-dropdown-menu class="w-200" slot="dropdown">
+                                            <el-dropdown-item command="edit" class="s-12">View User Details</el-dropdown-item>
+                                            <el-dropdown-item command="edit" class="s-12">Delete User</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </div>
+                            </template>
+                        </el-table-column>                                              
                     </el-table>
                     <!-- FOOTER -->
                     <div class="flex justify-content-between align-items-center px-20">
@@ -66,11 +79,19 @@
                             <span>Invite new users</span>
                         </span>
                         <span class="text-lineHeight--20 s-13">
-                            <span>Enter the email addresses of the users you'd like to invite, and choose the role they should have.</span>
+                            <span>Enter the name and email addresses of the user you'd like to invite, and choose the role they should have.</span>
                         </span>
                     </div>
-                    <div class="MultiEmailInput pt-10">
-                        <el-input placeholder="toni@flopay.com, seddie@flopay.com..." size="mini" v-model="multiemail" clearable></el-input>                
+                    <div class="pt-10">
+                        <el-input v-model="form.email" placeholder="toni@flopay.com, seddie@flopay.com..." size="mini" clearable></el-input>                
+                    </div>
+                    <div class="flex justify-content-center">
+                        <div class="pt-10 pr-10 w-50">
+                            <el-input v-model="form.name" placeholder="username..." size="mini" clearable></el-input>                
+                        </div>
+                        <div class="pt-10 w-50">
+                            <el-input v-model="form.msisdn" placeholder="phone number.." size="mini" clearable></el-input>                
+                        </div>
                     </div>
                 </div>
                 <div class="flex justify-content-center">
@@ -78,7 +99,7 @@
                     <el-table highlight-current-row @row-click="checkRole" ref="role" empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
                         <el-table-column width="50">
                             <template slot-scope="scope">
-                                <el-radio v-model="selected" :label="scope.row.code"></el-radio>
+                                <el-radio v-model="form.branch_code" :label="scope.row.code"></el-radio>
                             </template>
                         </el-table-column>
                         <el-table-column width="200" class="bold-600">
@@ -133,23 +154,23 @@
                 </div>
                 <div class="flex justify-content-center">
                   <div class="branches w-100">
-                    <el-table empty-text="No Branches Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredBranches">
-                        <el-table-column prop="id" width="50">
+                    <el-table highlight-current-row @row-click="checkBranch" ref="branch" empty-text="No Branches Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredBranches">
+                        <el-table-column width="50">
                             <template slot-scope="scope">
-                                <el-radio v-model="scope.row.id"></el-radio>
+                                <el-radio v-model="form.branch_code" :label="scope.row.branch_code"></el-radio>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="name" label="NAME" width="auto" class="bold-600">
+                        <el-table-column label="NAME" width="auto" class="bold-600">
                             <template slot-scope="scope">
                                 {{scope.row.name || 'N/A'}}
                             </template>                            
                         </el-table-column>
-                        <el-table-column prop="branch_code" label="CODE" width="80">
+                        <el-table-column label="CODE" width="80">
                             <template slot-scope="scope">
                                 {{scope.row.branch_code || 'N/A'}}
                             </template>                            
                         </el-table-column>
-                        <el-table-column prop="location" label="LOCATION" width="170">
+                        <el-table-column label="LOCATION" width="170">
                             <template slot-scope="scope">
                                 {{scope.row.location || 'N/A'}}
                             </template>                            
@@ -162,7 +183,6 @@
                     <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="inviteUser">Invite</el-button>
                 </span>
             </el-dialog>            
-
         </div>
     </el-card>
 </template>
@@ -177,6 +197,16 @@ export default {
         return {
             roleId: '',
             multiemail: '',
+            form: {
+                name: '',
+                email: '',
+                branch_code: '',
+                msisdn: '',
+                role: 'admin',
+                user_group_id: '',
+                // bank_account_no: '',
+                // use_branch_account: ''
+            },            
             isTest: true,
             selected: '',
             dialogVisible: false,
@@ -190,13 +220,16 @@ export default {
             {
                 value: 'all',
                 label: 'All Roles'
-            }, {
+            }, 
+            {
                 value: 'administrator',
                 label: 'Administrator'
-            }, {
+            }, 
+            {
                 value: 'developer',
                 label: 'Developer'
-            }, {
+            }, 
+            {
                 value: 'analyst',
                 label: 'Analyst'
             },
@@ -217,11 +250,12 @@ export default {
                 amount: [
                     { required: true, message: 'This field is required', trigger: 'blur' }
                 ]
-            }                           
+            }
         }
     },
 
     mounted () {
+        EventBus.$emit('sideNavClick', 'teams')
         EventBus.$on('exportModal', (val) => {
             this.exportVisible = false
         })
@@ -231,19 +265,34 @@ export default {
     },
 
     methods: {
+        close () {
+            EventBus.$emit('branchModal', false)
+        },        
         clickRow (row, event, column) {
             if (column.property) {
                 // this.$router.push(`/teams/${row.reference}`)
             }        
         },  
         checkRole (row, event, column){
-            console.log('Role Clicked')
             this.$refs.role.setCurrentRow(row)
-            this.selected = row.code
+            this.form.user_group_id = row.id
         },
+        checkBranch (row, event, column){
+            this.$refs.branch.setCurrentRow(row)
+            this.form.branch_code = row.branch_code
+        },        
         handleCurrentChange (val) {
             this.$store.dispatch('getTeams', {page: val, cached: false })
-        },             
+        },  
+        handleTableCommand (command, row) {
+            switch (command) {
+                case 'edit':
+                    // this.$router.push(`/teams/${row.reference}`)
+                    break
+                default:
+                    break
+            }
+        },                   
         fetchTeams () {
             this.$store.dispatch('getTeams', {cache: false})
         },        
@@ -251,7 +300,27 @@ export default {
 
         },
         inviteUser() {
-
+            this.createLoading = true         
+            console.log('Form to Sent:', this.form)
+            this.$store.dispatch('createUser', this.form)
+            .then((response) => {
+                this.createLoading = false
+                this.$message({
+                    type: 'success',
+                    message: response.data.response.message,
+                })
+                this.$store.dispatch('getTeams');
+                if (response.data.success) {
+                    this.close()
+                }
+            }).catch((error) => {
+                this.createLoading = false
+                const response = error.response
+                this.$message({
+                    type: 'error',
+                    message: response.data.error,
+                })
+            })
         },
         goForward(val){
             if(val == true){
@@ -284,12 +353,9 @@ export default {
             return this.state === 'LOADING'
         },
         filteredTeams () {
-            return this.teams;
+            return this.teams
         },   
         filteredRoles (){
-            // for (let i = 0; i < this.roles; i++) {
-            //     this.roleId = this.roles[i].id
-            // }
             return this.roles;
         },
         filteredBranches (){
@@ -300,6 +366,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.mini-menu {
+    position: absolute;
+    // top: 8px;
+    top: 31%;
+    padding: 2px 7px;
+    border-radius: 4px;
+    transition: all ease;
+    line-height: normal;
+    right: 20px;
+
+    &:hover{
+        // background: red;
+    }
+    .first-icon{
+        opacity: 0;
+    }
+    i{
+        // &:first-child{
+        //     opacity: 0;
+        // }
+        font-size: 12px;
+    }
+}
+
 .custom {
     width: 100%;
     
@@ -309,9 +399,7 @@ export default {
 }
 
 .mini-button{
-    // height: 30px;
     line-height: 1em;
-    // padding: 0 10px;
     padding: 7px 10px !important;
     color: rgba(0,0,0,.6);
 

@@ -55,7 +55,7 @@
                                 {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
                             </template>
                         </el-table-column>
-                        <el-table-column width="80px">
+                        <!-- <el-table-column width="80px">
                             <template slot-scope="scope">
                                 <div class="mini-menu">
                                     <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i>
@@ -67,19 +67,19 @@
                                                     action
                                                 </div>
                                             </el-dropdown-item>
-                                            <!-- <el-dropdown-item command="open" v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Open Ticket</el-dropdown-item> -->
-                                            <!-- <el-dropdown-item v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Retry</el-dropdown-item> -->
-                                            <!-- <el-dropdown-item :divided="scope.row.status.toLowerCase() ==='failed'" disabled>
+                                            <el-dropdown-item command="open" v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Open Ticket</el-dropdown-item>
+                                            <el-dropdown-item v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Retry</el-dropdown-item>
+                                            <el-dropdown-item :divided="scope.row.status.toLowerCase() ==='failed'" disabled>
                                                 <div class="table-dropdown-header bold-600 text-uppercase">
                                                     connection
                                                 </div>
-                                            </el-dropdown-item> -->
+                                            </el-dropdown-item>
                                             <el-dropdown-item command="edit" class="s-12">View Dispute Details</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </div>
                             </template>
-                        </el-table-column>
+                        </el-table-column> -->
                     </el-table>
                     
                     <!-- FOOTER -->

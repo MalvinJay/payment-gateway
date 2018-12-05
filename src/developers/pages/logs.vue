@@ -3,7 +3,7 @@
       <div :class="[{'test-data': isTest}]" class="transactions bg-white border-right border-left">
           <div class="flex justify-content-between px-20 py-16">
               <div>
-                  <!-- <filter-component dispatch="setLogsFilters" filterType="logs"></filter-component> -->
+                  <filter-component dispatch="setLogsFilters" filterType="logs"></filter-component>
               </div>
           </div>
           <div>
@@ -22,7 +22,7 @@
                   </el-table-column>
                   <el-table-column label="description" prop="method">
                         <template slot-scope="scope">
-                            <div class="trans-div flex justify-content-start">
+                            <div class="flex justify-content-start">
                               <p class="m-0 p-0 mr-10 bold-500 s-12 text-uppercase">{{scope.row.method || 'N/A'}}</p>
                               <p class="m-0 p-0 mr-10 bold-500 s-12 text-lowercase">{{scope.row.url || 'n/a'}}</p>
                             </div>

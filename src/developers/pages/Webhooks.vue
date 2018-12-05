@@ -80,26 +80,27 @@
             <div class="flex justify-content-center new-transaction-bg">
                 <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :model="form" label-width="120px">
                     <el-form-item label="URL to be called">
-                        <el-input v-model="form.url"></el-input>
+                        <el-input v-model="form.url" clearable></el-input>
                     </el-form-item>
                     <el-form-item class="h-auto" label="Webhook version" prop="version">
-                        <div class="flex justify-content-center" v-for="(item, index) in form.webhook_versions" :key="index">
+                        <div class="flex align-items-center w-100" v-for="(item, index) in form.webhook_versions" :key="index">
                             <el-radio v-model="form.name"></el-radio>
-                            <div>
-                                <span v-model="item.date"></span>
-                                <div>
-                                    <span v-model="item.tag"></span>
+                            <div class="flex align-items-center w-100   ">
+                                <span class="pr-6">{{item.date}}</span>
+                                <div class="flex align-items-center">
+                                    <the-tag v-if="item.tag === 'default'" status="pending" :title="item.tag" icon="detail check icon"></the-tag>
+                                    <the-tag v-if="item.tag === 'latest'" status="success" :title="item.tag" icon="detail check icon"></the-tag>
                                 </div>
                             </div>
                         </div>
                     </el-form-item>
                     <el-form-item label="Filter event" prop="event">
-                        <div class="flex justify-content-center" v-for="(item, index) in form.subscribed_event" :key="index">
+                        <div class="flex align-items-center" v-for="(item, index) in form.subscribed_event" :key="index">
                             <el-radio v-model="form.name"></el-radio>
                             <div>
-                                <span v-model="item.type"></span>
+                                <span>{{item.type}}</span>
                                 <div>
-                                    <span v-model="item.type"></span>
+                                    <span>{{item.tag}}</span>
                                 </div>
                             </div>
                         </div>                        
@@ -342,3 +343,9 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+.transaction-form {
+    width: 100%;
+}
+</style>
