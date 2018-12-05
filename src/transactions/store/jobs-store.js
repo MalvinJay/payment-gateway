@@ -117,8 +117,7 @@ const actions = {
     }
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}/v1/clients/jobs/groups?job_id=${id}&all=true`,
-        // url: `https://785af3e3.ngrok.io/api/v1/clients/jobs/groups?job_id=55&all=true`,
+        url: `${GET_BASE_URI}v1/clients/jobs/groups?job_id=${id}&all=true`,
         method: 'GET',
         token: rootGetters.token,
         data: data
@@ -148,7 +147,7 @@ const actions = {
     }
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}/v1/clients/jobs/files/${id}/run`,
+        url: `${GET_BASE_URI}v1/clients/jobs/files/${id}/run`,
         method: 'POST',
         token: rootGetters.token,
         data: data
@@ -166,7 +165,7 @@ const actions = {
   [CREATE_JOB] ({ state, commit, rootGetters }, job) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}/v1/clients/jobs/files.json`,
+        url: `${GET_BASE_URI}v1/clients/jobs/files.json`,
         method: 'POST',
         token: rootGetters.token,
         data: job
@@ -182,7 +181,7 @@ const actions = {
     console.log(job)
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}/v1/clients/jobs/files/${id}/data?${job}`,
+        url: `${GET_BASE_URI}v1/clients/jobs/files/${id}/data?${job}`,
         method: 'POST',
         token: rootGetters.token
       }).then((response) => {
@@ -196,7 +195,7 @@ const actions = {
   [DELETE_JOB_CONTACT] ({ state, commit, rootGetters }, {id, job}) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}/v1/clients/jobs/files/${job}/contact`,
+        url: `${GET_BASE_URI}v1/clients/jobs/files/${job}/contact`,
         method: 'DELETE',
         token: rootGetters.token,
         data: {
@@ -254,7 +253,7 @@ const actions = {
   [DELETE_JOB] ({ rootGetters }, id) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}/v1/clients/jobs/files/${id}`,
+        url: `${GET_BASE_URI}v1/clients/jobs/files/${id}`,
         method: 'DELETE',
         token: rootGetters.token
       }).then((response) => {
@@ -268,7 +267,7 @@ const actions = {
   [UPDATE_JOB] ({ rootGetters }, {id, data}) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}v1/clients/jobs/files/${id}?${data}&is_sub_user=false`,
+        url: `${GET_BASE_URI}v1clients/jobs/files/${id}?${data}&is_sub_user=false`,
         method: 'PUT',
         token: rootGetters.token
       }).then((response) => {
@@ -289,7 +288,7 @@ const actions = {
     // } else {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}/v1/clients/jobs/files/${id}`,
+        url: `${GET_BASE_URI}v1/clients/jobs/files/${id}`,
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {

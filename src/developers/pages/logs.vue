@@ -22,7 +22,7 @@
                   </el-table-column>
                   <el-table-column label="description" prop="method">
                         <template slot-scope="scope">
-                            <div class="trans-div flex justify-content-start">
+                            <div class="flex justify-content-start">
                               <p class="m-0 p-0 mr-10 bold-500 s-12 text-uppercase">{{scope.row.method || 'N/A'}}</p>
                               <p class="m-0 p-0 mr-10 bold-500 s-12 text-lowercase">{{scope.row.url || 'n/a'}}</p>
                             </div>

@@ -71,9 +71,12 @@ export default {
           if (valid) {
             this.$store.dispatch(url, {email: this.form.email, password: this.form.password})
             .then((response) => {
+                console.log('i got here')
                 if (response.data.success) {
+                    console.log('here too')
                     this.$session.start()
                     this.$session.set('client', JSON.stringify(response.data.response.data))
+                    this.$session.set('email', this.form.email)
                     // this.$store.dispatch('setClient', response.data.response.data)
 
                     if (!response.data.response.data.is_login_before && !this.admin) {

@@ -10,14 +10,14 @@
             <div class="center h-80" v-if="error">
                 <div class="center flex-column">
                     <p class="m-0 p-0">Unable to load this page</p>
-                    <el-button @click.prevent="fetchLogs" icon="sync icon" type="text">Retry</el-button>
+                    <el-button @click.prevent="fetchEvents" icon="sync icon" type="text">Retry</el-button>
                 </div>
             </div>
             <div v-else class="breathe events_custom_headers">
-                <el-table @row-click="clickRow" empty-text="No events found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredLogs">
-                  <el-table-column label="event" prop="event">
+                <el-table @row-click="clickRow" empty-text="No events found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredEvents">
+                  <el-table-column show-overflow-tooltip label="event" prop="event">
                         <template slot-scope="scope">
-                            <p class="m-0 p-0 bold-500 s-12">An Event Occured on ....</p>
+                            <p class="m-0 p-0 bold-500 s-12">{{scope.row.code || 'N/A'}}</p>
                         </template>
                   </el-table-column>
                   <el-table-column label="id" prop="id" width="200">
@@ -35,7 +35,7 @@
                 <!-- FOOTER -->
                 <div class="flex justify-content-between align-items-center px-20">
                     <div class="s-12">
-                        {{logs.length}} results
+                        {{events.length}} results
                     </div>
                     <el-pagination class="my-2 flex justify-content-end" @current-change="handleCurrentChange" layout="prev, pager, next" :total="total">
                     </el-pagination>
@@ -62,7 +62,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch('getLogs')
+    this.$store.dispatch('getEvents')
   },
   mounted() {
     EventBus.$emit('sideNavClick', 'events')
@@ -74,20 +74,20 @@ export default {
         }
     },   
     handleCurrentChange (val) {
-        this.$store.dispatch('getLogs', {page: val, cache: false})
+        this.$store.dispatch('getEvents', {page: val, cache: false})
     },     
-    fetchLogs (){
-      this.$store.dispatch('getLogs', {cache: false})
+    fetchEvents (){
+      this.$store.dispatch('getEvents', {cache: false})
     }
   },
   computed: {
     ...mapGetters({
-      logs: 'logs',
-      state: 'logsState',
-      meta: 'logsMeta',
+      events: 'events',
+      state: 'eventsState',
+      meta: 'eventsMeta',
     }),    
-    filteredLogs () {
-        return this.logs
+    filteredEvents () {
+        return this.events
     },  
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'

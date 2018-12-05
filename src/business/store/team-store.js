@@ -1,13 +1,9 @@
 import {
-  TEAMS_FETCH,
-  SET_TEAMS,
-  SET_TEAMS_STATE,
-  SET_TEAMS_META,
-  SET_TEAMS_FILTERS,
-  GET_TEAMS_URI
+  TEAMS_FETCH, SET_TEAMS, SET_TEAMS_STATE, SET_TEAMS_META, SET_TEAMS_FILTERS, CREATE_USER
 } from './team-store-constants'
-import { apiCall } from '../../store/apiCall'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { apiCall } from '../../store/apiCall'
+// import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import Utils from '../../utils/services'
 
 // state
@@ -98,6 +94,22 @@ const actions = {
   [SET_TEAMS_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_TEAMS_FILTERS, filters)
     dispatch('getteams', {page: 1, cache: false})
+  },
+  [CREATE_USER] ({ state, commit, rootGetters }, user) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/users/create_new.json`,
+        method: 'POST',
+        token: rootGetters.token,
+        data: user
+      }).then((response) => {
+        console.log('User Created', response)
+        resolve(response)
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
   }
 }
 

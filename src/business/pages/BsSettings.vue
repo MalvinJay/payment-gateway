@@ -25,7 +25,7 @@
             <div class="el-card__footer flex justify-content-end">
                 <span slot="footer" class="dialog-footer">
                     <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
-                    <el-button size="mini" @click="save" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary">Save</el-button>
+                    <el-button size="mini" @click="saveAccountChanges" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary">Save</el-button>
                 </span>
             </div>
         </el-card>
@@ -64,26 +64,26 @@
                     </div>                    
                     <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form py-20" :model="info" label-width="200px">
                         <el-form-item label="Legal Business name" class="flex">
-                            <el-input v-model="client.client.company_name  || 'N/A'" placeholder="Business Name"></el-input>
+                            <el-input v-model="client.client.company_name||'N/A'" placeholder="Business Name"></el-input>
                         </el-form-item>
                         <el-form-item label="Business website" class="flex">
                             <el-input v-model="info.bs_website"></el-input>
                         </el-form-item>
                         <el-form-item label="Support website" class="flex">
-                            <el-input v-model="client.client.sp_website || 'N/A'"></el-input>
+                            <el-input v-model="client.client.sp_website||'N/A'"></el-input>
                         </el-form-item>
                         <el-form-item label="Email" class="flex">
-                            <el-input v-model="client.client.email || 'N/A'" placeholder="business@email.com"></el-input>
+                            <el-input v-model="client.client.email||'N/A'" placeholder="business@email.com"></el-input>
                         </el-form-item>
                         <el-form-item label="Address" class="flex">
-                            <el-input v-model="client.client.address || 'Accra'" placeholder="Business Address"></el-input>
+                            <el-input v-model="client.client.address||'Accra'" placeholder="Business Address"></el-input>
                             <div class="mt-3">
-                                <el-input v-model="client.client.address_1 || 'N/A'" placeholder="Address Line 1"></el-input>
-                                <el-input v-model="client.client.address_2 || 'N/A'" class="mt-1" placeholder="Address Line 2"></el-input>
+                                <el-input v-model="client.client.address_1||'N/A'" placeholder="Address Line 1"></el-input>
+                                <el-input v-model="client.client.address_2||'N/A'" class="mt-1" placeholder="Address Line 2"></el-input>
                             </div>
-                            <el-input v-model="client.client.city || 'N/A'" class="mt-1" placeholder="City"></el-input>
-                            <el-input v-model="client.client.state || 'N/A'" class="mt-1" placeholder="State"></el-input>
-                            <el-input v-model="client.client.postal_code || 'N/A'" class="mt-1" placeholder="ZIP"></el-input>
+                            <el-input v-model="client.client.city||'N/A'" class="mt-1" placeholder="City"></el-input>
+                            <el-input v-model="client.client.state||'N/A'" class="mt-1" placeholder="State"></el-input>
+                            <el-input v-model="client.client.postal_code||'N/A'" class="mt-1" placeholder="ZIP"></el-input>
                         </el-form-item>                                                                                               
                     </el-form>
                 </div>  
@@ -91,7 +91,7 @@
             <div class="el-card__footer flex justify-content-end">
                 <span slot="footer" class="dialog-footer">
                     <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
-                    <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Save</el-button>
+                    <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="save">Save</el-button>
                 </span>
             </div>
         </el-card>        
@@ -129,6 +129,9 @@ export default {
         },
         save () {
 
+        },
+        saveAccountChanges(){
+            
         }
     },
 
@@ -153,13 +156,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .w-100{
-        width: 100px
-    }
-    .mb-2{
+    .mb-2 {
         margin-bottom: 1em
     }
-    pre{
+    pre {
         &:nth-child(2){
             &::before{
                 content: '1'

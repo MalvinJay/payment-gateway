@@ -43,7 +43,8 @@ const state = {
   providers: [
     {label: 'MTN', value: 'mtn'},
     {label: 'Vodafone', value: 'vodafone'},
-    {label: 'AirtelTigo', value: 'airtelTigo'}
+    {label: 'Tigo', value: 'tigo'},
+    {label: 'Airtel', value: 'airtel'}
   ]
 }
 
@@ -143,7 +144,6 @@ const actions = {
   } = {}) {
     //   url for admin or client
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
-
     // filters
     var filters = state.transactions.filters
     var query = ''
@@ -292,7 +292,7 @@ const actions = {
     commit(SET_CURRENT_TRANSACTION_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `https://api.flopay.io/v1/rekt_transacts/${id}`,
+        url: `${GET_BASE_URI}/v1/rekt_transacts/${id}`,
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
@@ -335,7 +335,8 @@ const actions = {
   [CREATE_TICKET] ({ commit, rootGetters }, ticket) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}v1/clients/tickets/via/support`,
+        // url: `${GET_BASE_URI}v1/clients/tickets/via/support`,
+        url: `${GET_BASE_URI}v1/clients/tickets.json`,
         method: 'POST',
         token: rootGetters.token,
         data: ticket

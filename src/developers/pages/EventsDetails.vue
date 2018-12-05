@@ -29,16 +29,18 @@
         </div>
         <div class="flex justify-content-center">
           <div class="callbacks w-100 s-13">
-            <el-table empty-text="No Webhooks Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="webhooks">
+            <el-table ref="events" @row-click="clickRow" empty-text="No Webhooks Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="webhooks">
                 <el-table-column prop="message" type="expand">
                     <template slot-scope="scope">   
                       <event-webhook :code="scope.row.statusCode" :status="scope.row.status" :Retry_history="scope.row.Retry_history" :request="scope.row.request"></event-webhook>
                     </template>                            
                 </el-table-column>
-                <el-table-column prop="method" label="" width="100">
+                <el-table-column prop="method" label="" width="120">
                     <template slot-scope="scope">
                         <div class="flex">
-                          <the-tag status="success" :title="scope.row.status" icon="detail check icon" class="w-75"></the-tag>
+                          <the-tag status="success" v-if="scope.row.status === 'success'" :title="scope.row.status" icon="detail check icon"></the-tag>
+                          <the-tag status="pending" v-else-if="scope.row.status === 'pending'" :title="scope.row.status" icon="detail check icon"></the-tag>
+                          <the-tag status="failed" v-else :title="scope.row.status" icon="detail check icon"></the-tag>
                         </div>
                     </template>
                 </el-table-column>                    
@@ -60,7 +62,7 @@ import EventBus from '../../event-bus.js'
 import moment from 'moment'
 
 export default {
-  name: 'eventsDetails',
+  name: 'EventsDetails',
   data () {
     return {
       isTest: true,
@@ -224,31 +226,33 @@ export default {
 
   methods: {
     syntaxHighlight (json) {
-      if (typeof json !== 'string') {
-        console.log('TypeOF:', typeof json)
-        json = JSON.stringify(json, undefined, 2)
-      }
-      json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        var cls = 'number'
-        if (/^"/.test(match)) {
-          if (/:$/.test(match)) {
-            cls = 'key'
-          } else {
-            cls = 'string'
-          }
-        } else if (/true|false/.test(match)) {
-          cls = 'boolean'
-        } else if (/null/.test(match)) {
-          cls = 'null'
+      if(json) {
+        if (typeof json !== 'string') {
+          json = JSON.stringify(json, undefined, 2)
         }
-        return '<span class="' + cls + '">' + match + '</span>'
-      })
+
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+          var cls = 'number'
+          if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+              cls = 'key'
+            } else {
+              cls = 'string'
+            }
+          } else if (/true|false/.test(match)) {
+            cls = 'boolean'
+          } else if (/null/.test(match)) {
+            cls = 'null'
+          }
+          return '<span class="' + cls + '">' + match + '</span>'
+        })
+      }
     },
     
     retryHooks(){
       this.loading = true
-      // this.$store.dispatch('createRefund', this.form.reference)
+      // this.$store.dispatch('retryHook', this.form.reference)
       // .then((response) => {
       //     if (response.data.success) {
       //         this.$message({
@@ -274,6 +278,10 @@ export default {
     
     fetchEvent () {
       this.$store.dispatch('getCurrentEvent', this.$route.params.id) 
+    },
+
+    clickRow(row, event, column){
+      this.$refs.events.toggleRowExpansion(row)
     }
   },
 

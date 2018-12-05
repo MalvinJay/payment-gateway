@@ -137,7 +137,10 @@ export default {
       if (this.present(filters.cash_flow)) {
         query = query + `&cash_flow=${filters.cash_flow}`
       }
-      if (this.empty(filters.from) && this.empty(filters.to) && this.empty(filters.payment_types) && this.empty(filters.statuses)) {
+      if (this.present(filters.reasons)) {
+        query = query + `&reasons[]=${filters.reasons}`
+      }      
+      if (this.empty(filters.from) && this.empty(filters.to) && this.empty(filters.payment_types) && this.empty(filters.statuses) && this.empty(filters.reasons)) {
         query = query + '&all=true'
       }
     } else {

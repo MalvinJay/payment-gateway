@@ -1,6 +1,7 @@
 import { GET_CONTACTS, SET_CONTACTS_STATE, GET_CURRENT_CONTACT, SET_CURRENT_CONTACT, SET_CURRENT_CONTACT_STATE,
   CREATE_CONTACT, SET_CURRENT_CONTACTS, SET_CURRENT_CONTACT_SCHEDULES, SET_CURRENT_CONTACT_TRANSACTIONS, GET_CONTACTS_URI, SET_CONTACTS } from './contacts-store-constants'
-import { apiCall } from '../store/apiCall'
+  import { GET_BASE_URI } from '../transactions/store/transactions-store-constants'
+  import { apiCall } from '../store/apiCall'
 // import Utils from '../utils/Utils'
 
 // state
@@ -83,7 +84,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_CONTACTS_URI}`,
+          url: `${GET_BASE_URI}/v1/clients/contacts/all`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
@@ -106,7 +107,7 @@ const actions = {
   [CREATE_CONTACT] ({ state, commit, rootGetters, dispatch }, form) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_CONTACTS_URI}`,
+        url: `${GET_BASE_URI}/v1/clients/contacts/all`,
         method: 'POST',
         data: form,
         token: rootGetters.token
@@ -129,7 +130,7 @@ const actions = {
     // commit(SET_CURRENT_CONTACT_STATE, 'DATA')
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `https://api.flopay.io/v1/clients/contacts/${id}`,
+        url: `${GET_BASE_URI}v1/clients/contacts/${id}`,
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {

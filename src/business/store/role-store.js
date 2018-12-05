@@ -1,13 +1,9 @@
 import {
-  ROLES_FETCH,
-  SET_ROLES,
-  SET_ROLES_STATE,
-  SET_ROLES_META,
-  SET_ROLES_FILTERS,
-  GET_ROLES_URI
+  ROLES_FETCH, SET_ROLES, SET_ROLES_STATE, SET_ROLES_META, SET_ROLES_FILTERS, FETCH_PRIVILEGES, SET_PRIVILEGES, SET_PRIVILEGES_STATE
 } from './role-store-constants'
-import { apiCall } from '../../store/apiCall'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { apiCall } from '../../store/apiCall'
+// import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import Utils from '../../utils/services'
 
 // state
@@ -23,6 +19,10 @@ const state = {
   currentRole: {
     data: {},
     state: 'LOADING'
+  },
+  privileges: {
+    data: [],
+    state: 'LOADING'
   }
 }
 
@@ -32,7 +32,8 @@ const getters = {
   rolesFilters: state => state.roles.filters,
   rolesMeta: state => state.roles.meta,
   rolesSortParams: state => state.roles.sortParams,
-  rolesState: state => state.roles.state
+  rolesState: state => state.roles.state,
+  privileges: state => state.privileges.data
 }
 
 // mutations
@@ -55,21 +56,24 @@ const mutations = {
   },
   [SET_ROLES_FILTERS] (state, data) {
     state.roles.filters = data
+  },
+  [SET_PRIVILEGES] (state, payload) {
+    state.privileges.state = 'DATA'
+    state.privileges.data = payload
+  },
+  [SET_PRIVILEGES_STATE] (state, data) {
+    state.privileges.state = data
   }
 }
 
 // actions
 const actions = {
-  [ROLES_FETCH] ({ state, commit, rootGetters }, {
-    page = 1,
-    cache = true
-  } = {}) {
+  [ROLES_FETCH] ({ state, commit, rootGetters }, {page = 1, cache = true} = {}) {
     var filters = state.roles.filters
     var query = ''
     if (Utils.empty(filters)) {
       query = `?all=true&page=${page}&limit=12`
     } else {
-      // filters.search_value = 'cashin'
       query = Utils.createQueryParams(filters, page)
     }
     commit(SET_ROLES_STATE, 'LOADING')
@@ -83,13 +87,36 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('transactions for roles', response)
+          console.log('Roles', response)
           commit(SET_ROLES_STATE, 'DATA')
           commit(SET_ROLES_META, response.data.response.data)
           commit(SET_ROLES, response.data.response.data.user_groups)
           resolve(response)
         }).catch((error) => {
           commit(SET_ROLES_STATE, 'ERROR')
+          console.log(error)
+          reject(error)
+        })
+      })
+    }
+  },
+  [FETCH_PRIVILEGES] ({ state, commit, rootGetters }, {page = 1, cache = true} = {}) {
+    commit(SET_PRIVILEGES_STATE, 'LOADING')
+    if (cache && state.privileges.data.length !== 0) {
+      commit(SET_PRIVILEGES_STATE, 'DATA')
+    } else {
+      return new Promise((resolve, reject) => {
+        apiCall({
+          url: `${GET_BASE_URI}v2/privileges`,
+          method: 'GET',
+          token: rootGetters.token
+        }).then((response) => {
+          console.log('privileges for roles', response)
+          commit(SET_PRIVILEGES_STATE, 'DATA')
+          commit(SET_PRIVILEGES, response.data.response.data)
+          resolve(response)
+        }).catch((error) => {
+          commit(SET_PRIVILEGES_STATE, 'ERROR')
           console.log(error)
           reject(error)
         })

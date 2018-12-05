@@ -123,6 +123,7 @@ $border: #dcdfe6;
     th{
         background-color: #F7FAFC !important;
         padding: 0;
+        padding-left: 5px!important;
         text-transform: uppercase;
         font-size: 11px;
         border-top: 1px solid #ebeef5;
@@ -136,6 +137,7 @@ $border: #dcdfe6;
 .transactions-table-body{
     td{
         padding: 8px 0 !important;
+        padding-left: 5px!important;
         // color: #999999;
         text-transform: capitalize;
         cursor: pointer;
@@ -509,10 +511,8 @@ $border: #dcdfe6;
 }
 
 .search_n_roles {
-    .el-input--mini {
-        .el-input__inner:hover {
-            border-radius: 20px!important;
-        }
+    .el-input__inner {
+        border-radius: 20px!important;
     }
     .roles { 
         border: 1px solid #c0c4cc;
@@ -527,7 +527,7 @@ $border: #dcdfe6;
     margin: 0;
 }
 
-.invite-user {
+.invite-user, .select-branch {
     .el-dialog__header {
         display: none;
     }
@@ -539,10 +539,24 @@ $border: #dcdfe6;
     }
 
     .custom, {
-        .el-table__header-wrapper {
+        .el-table__header-wrapper, .el-radio__label {
             display: none;
         }
 
+        .el-table__body-wrapper {
+            border-top: 1px solid #ebeef5;
+        }
+    }
+}
+
+.select-branch {
+    .branches {
+        .el-table__header-wrapper {
+            display: block!important;
+        }     
+        .el-radio__label {
+            display: none;
+        }   
         .el-table__body-wrapper {
             border-top: 1px solid #ebeef5;
         }
@@ -621,7 +635,6 @@ $border: #dcdfe6;
     background: #fff;
 }
 
-/* for block of numbers */
 td.hljs-ln-numbers {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -634,8 +647,6 @@ td.hljs-ln-numbers {
     color: #a3acb9;
     vertical-align: top;
     padding-right: 5px;
-
-    /* your custom style here */
 }
 
 /* for block of code */
@@ -696,5 +707,11 @@ td.hljs-ln-code {
     }
     .el-loading-spinner{
         color: white;
+    }
+}
+
+.no-label-radio{
+    .el-radio__label{
+        display: none;
     }
 }
