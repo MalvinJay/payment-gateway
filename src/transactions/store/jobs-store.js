@@ -84,7 +84,7 @@ const mutations = {
 
 // actions
 const actions = {
-  [GET_JOBS] ({ state, commit, rootGetters }, { page = 1, cache = true } = {}) {
+  [GET_JOBS] ({ state, commit, rootGetters, dispatch }, { page = 1, cache = true } = {}) {
     commit(SET_JOBS_STATE, 'LOADING')
     if (cache && Utils.present(state.jobs.data)) {
       commit(SET_JOBS_STATE, 'DATA')
@@ -97,6 +97,7 @@ const actions = {
         }).then((response) => {
           commit(SET_JOBS_STATE, 'DATA')
           commit(SET_JOBS, response.data.response.data.jobs)
+          dispatch('getCurrentJob', {id: response.data.response.data.jobs[0].id})
           resolve(response)
         }).catch((error) => {
           commit(SET_JOBS_STATE, 'ERROR')

@@ -3,6 +3,7 @@ import {
 } from './role-store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
+// import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import Utils from '../../utils/services'
 
 // state
@@ -21,7 +22,7 @@ const state = {
   },
   privileges: {
     data: [],
-    state: 'LOADING',
+    state: 'LOADING'
   }
 }
 
@@ -59,15 +60,15 @@ const mutations = {
   [SET_PRIVILEGES] (state, payload) {
     state.privileges.state = 'DATA'
     state.privileges.data = payload
-  },  
+  },
   [SET_PRIVILEGES_STATE] (state, data) {
     state.privileges.state = data
-  },  
+  }
 }
 
 // actions
 const actions = {
-  [ROLES_FETCH] ({ state, commit, rootGetters }, {page = 1,cache = true} = {}) {
+  [ROLES_FETCH] ({ state, commit, rootGetters }, {page = 1, cache = true} = {}) {
     var filters = state.roles.filters
     var query = ''
     if (Utils.empty(filters)) {
@@ -150,4 +151,3 @@ export default {
   mutations,
   actions
 }
-

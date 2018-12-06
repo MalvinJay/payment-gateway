@@ -79,7 +79,7 @@ export default {
             .then((response) => {
                 this.loading = false
                 if (response.data.success) {
-                    
+                    this.close()
                     this.$message({
                         type: 'success',
                         message: response.data.response.message,

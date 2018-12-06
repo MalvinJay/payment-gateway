@@ -25,7 +25,7 @@
                     </div>
                     <div class="flex flex-column ml-1">
                         <p class="light mb-1 s-13">{{header}} was created</p>
-                        <p class="light mb-1 s-12 gray">{{form.created_at | moment("MMM Do, hh:mm A")}}</p>
+                        <p class="light mb-1 s-12 gray">{{form.created_at | moment("MMM Do,YYYY hh:mm A")}}</p>
                     </div>
                 </div>
             </div>

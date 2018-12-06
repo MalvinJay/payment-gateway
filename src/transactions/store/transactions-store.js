@@ -43,7 +43,8 @@ const state = {
   providers: [
     {label: 'MTN', value: 'mtn'},
     {label: 'Vodafone', value: 'vodafone'},
-    {label: 'AirtelTigo', value: 'airtelTigo'}
+    {label: 'Tigo', value: 'tigo'},
+    {label: 'Airtel', value: 'airtel'}
   ]
 }
 
@@ -137,7 +138,10 @@ const mutations = {
 
 // actions
 const actions = {
-  [TRANSACTIONS_FETCH] ({ state, commit, rootGetters }, {cache = true, page = 1} = {}) {
+  [TRANSACTIONS_FETCH] ({ state, commit, rootGetters, dispatch }, {
+    cache = true,
+    page = 1
+  } = {}) {
     //   url for admin or client
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
     // filters
@@ -165,6 +169,7 @@ const actions = {
           commit(SET_TRANSACTIONS_STATE, 'DATA')
           commit(SET_TRANSACTIONS_META, response.data.response.data)
           commit(SET_TRANSACTIONS, response.data.response.data.transactions)
+          dispatch(GET_CURRENT_TRANSACTION, response.data.response.data.transactions[0].reference)
           resolve()
         }).catch((error) => {
           commit(SET_TRANSACTIONS_STATE, 'ERROR')

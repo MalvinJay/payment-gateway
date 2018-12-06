@@ -82,7 +82,7 @@
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/business-settings.svg" alt=""> Business Settings
                 </template>
-                <!-- <el-menu-item route="/account" index="bs_account">Account Set-up</el-menu-item> -->
+                <el-menu-item route="/account" index="bs_account">Account Set-up</el-menu-item>
                 <!-- <el-menu-item index="10-2">Verifications</el-menu-item> -->
                 <!-- <el-menu-item route="/taxation" index="taxation">Tax details</el-menu-item> -->
                 <el-menu-item route="/teams" index="teams">Teams</el-menu-item>

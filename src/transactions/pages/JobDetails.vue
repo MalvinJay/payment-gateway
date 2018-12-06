@@ -32,7 +32,7 @@
                         </div>
                         <div class="flex flex-column ml-1">
                             <p class="light mb-1 s-13">{{header}} was created</p>
-                            <p class="light mb-1 s-12 gray">{{form.created_at | moment("MMM Do, hh:mm A")}}</p>
+                            <p class="light mb-1 s-12 gray">{{form.created_at | moment("MMM Do, YYYY hh:mm A")}}</p>
                         </div>
                     </div>
                 </div>
@@ -266,7 +266,7 @@
                                 {{scope.row.updated_at | moment("MMM Do, YYYY")}}
                             </template>
                         </el-table-column>
-                        <el-table-column align="center">
+                        <el-table-column width="80" align="center">
                             <template slot-scope="scope">
                                 <el-button :loading="deleteLoading" class="p-0 m-0" @click.native.prevent="deleteJobContact(scope.$index, scope.row)" icon="trash alternate outline icon" type="text"></el-button>
                             </template>

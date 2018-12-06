@@ -69,10 +69,13 @@ Vue.directive('can', {
     // var s = JSON.stringify
     // console.log('loho', binding.value)
     // console.log('loho', store.getters.permissions)
+    const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
     if (store.getters.permissions.find(el => el.action.toLowerCase() === binding.value.toLowerCase())) {
+      console.log('el', el)
       return true
     } else {
-      return false
+      el.style.display = 'none'
+    //   el.disabled = true
     }
   }
 })

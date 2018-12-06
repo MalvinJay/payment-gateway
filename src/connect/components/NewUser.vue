@@ -13,7 +13,7 @@
                     <el-switch v-model="userForm.use_branch_account"></el-switch>
                 </el-form-item>
                 <el-form-item label="Branch">
-                    <el-select v-model="branch" class="w-100">
+                    <el-select filterable clearable v-model="branch" class="w-100">
                         <el-option
                         v-for="(item, index) in branches"
                         :key="index"

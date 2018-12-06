@@ -1,5 +1,5 @@
 import { AUTH_REQUEST, ADMIN_LOGIN, IS_ADMIN, SET_PAGE_LOADING, SET_TEST, SET_TOKEN, SET_CLIENT,
-  SET_PERMISSIONS, LOGIN, LOGOUT, SET_CLIENT_CRED, SET_BALANCE, GET_BALANCE, RESET_PASSWORD } from './store-constants'
+  SET_PERMISSIONS, LOGIN, SEND_EMAIL, LOGOUT, SET_CLIENT_CRED, SET_BALANCE, GET_BALANCE, RESET_PASSWORD } from './store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../apiCall'
 import axios from 'axios'
@@ -171,6 +171,8 @@ const user = {
         localStorage.removeItem('isAdmin') // clear your user's token from localstorage
         localStorage.removeItem('client_id')
         localStorage.removeItem('client_secret')
+        localStorage.removeItem('password')
+        localStorage.removeItem('email')
         resolve()
       })
     },
@@ -206,6 +208,19 @@ const user = {
           console.log(error)
           reject(error)
         })
+      })
+    },
+    // EMAIL
+    [SEND_EMAIL] ({ state, commit }, email) {
+      return new Promise((resolve, reject) => {
+        var url = `${GET_BASE_URI}v1/flopay_platform/login.json?email=${email}`
+        axios.post(url)
+          .then((response) => {
+            resolve(response)
+          }).catch((error) => {
+            console.log(error)
+            reject(error)
+          })
       })
     },
     [SET_TEST] ({ commit }, data) {

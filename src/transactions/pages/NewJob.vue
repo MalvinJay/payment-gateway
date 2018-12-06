@@ -75,38 +75,42 @@
                                 placeholder="Select time">
                                 </el-time-select>
                             </el-form-item>
-                            <el-form-item class="flex" v-else-if="form.schedule === 'weekly'" label="date & time of trasactions postings">
-                                <el-select placeholder="select day" v-model="schedule.date">
-                                    <el-option v-for="(item, index) in days" :key="index" :label="item" :value="item"></el-option>
-                                </el-select>
-                                <el-time-select
-                                v-model="schedule.time"
-                                :picker-options="{
-                                    start: '08:30',
-                                    step: '00:15',
-                                    end: '18:30'
-                                }"
-                                placeholder="Select time">
-                                </el-time-select>
+                            <el-form-item v-else-if="form.schedule === 'weekly'" label="date & time of trasactions postings">
+                                <div class="flex">
+                                    <el-select placeholder="select day" v-model="schedule.date">
+                                        <el-option v-for="(item, index) in days" :key="index" :label="item" :value="item"></el-option>
+                                    </el-select>
+                                    <el-time-select
+                                    v-model="schedule.time"
+                                    :picker-options="{
+                                        start: '08:30',
+                                        step: '00:15',
+                                        end: '18:30'
+                                    }"
+                                    placeholder="Select time">
+                                    </el-time-select>
+                                </div>
                             </el-form-item>
                             <el-form-item v-else label="date & time of trasactions postings">
                                 <!-- <el-input placeholder="input " class="w-25" v-model="schedule.date"></el-input> -->
-                                <el-date-picker
-                                    type="date"
-                                    placeholder="Date"
-                                    value-format="yyyy-MM-dd"
-                                    format="MMM dd, yyyy"
-                                    v-model="schedule.date" 
-                                    :default-value="Date.now()"></el-date-picker>
-                                <el-time-select
-                                v-model="schedule.time"
-                                :picker-options="{
-                                    start: '08:30',
-                                    step: '00:15',
-                                    end: '18:30'
-                                }"
-                                placeholder="Select time">
-                                </el-time-select>
+                                <div class="flex">
+                                    <el-date-picker
+                                        type="date"
+                                        placeholder="Date"
+                                        value-format="yyyy-MM-dd"
+                                        format="MMM dd, yyyy"
+                                        v-model="schedule.date" 
+                                        :default-value="Date.now()"></el-date-picker>
+                                    <el-time-select
+                                    v-model="schedule.time"
+                                    :picker-options="{
+                                        start: '08:30',
+                                        step: '00:15',
+                                        end: '18:30'
+                                    }"
+                                    placeholder="Select time">
+                                    </el-time-select>
+                                </div>
                             </el-form-item>
                         </transition>
                     </div>

@@ -13,7 +13,7 @@
             <el-card class="b-0 analytics my-2">
                 <div class="flex flex-column analytics-div">
                     <p class="bold-600 blue-text pb-5 m-0">Analytics</p>
-                    <div class="flex">
+                    <div class="flex justify-content-between">
                         <div style="height: 30px;" class="flex align-items-center">
                             <el-radio-group @change="handleChange" v-model="form.time_interval" size="mini" class="dashboard-checkboxes mr-6 z-depth-button border-rounded">
                                 <el-radio-button v-for="duration in durations" :label="duration.value" :key="duration.label">{{duration.label}}</el-radio-button>
@@ -48,7 +48,7 @@
                             </div> -->
                         </div>
                         <div>
-                            <!-- <el-button class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text"><i class="cog icon "></i> Customize</el-button> -->
+                            <el-button @click="editAnalytics" class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text"><i class="cog icon "></i> Customize</el-button>
                         </div>
                     </div>
                 </div>
@@ -60,49 +60,7 @@
                         </div>
                     </div>
                     <div v-else v-loading="graphLoading">
-                        <div class="light-background analytics-div h-76 border-top flex justify-content-between align-items-center">
-                            <div class="flex flex-column justify-content-center">
-                                <p class="grey-text m-0 pb-5">Gross Volume</p>
-                                <p class="light-blue-text s-16 bold-600">{{grossVolume | money}}</p>
-                            </div>
-                            <div style="height: 88px" class="w-50">
-                                <line-chart id="line-chart" :data="chartData" :labels="chartOptions"></line-chart>
-                            </div>
-                        </div>
-                        <div class="light-background analytics-div h-76 border-top flex justify-content-between align-items-center">
-                            <div class="flex flex-column justify-content-center">
-                                <div class="grey-text m-0 p-0 flex align-items-center">
-                                    <p class="m-0 p-0 mr-6"> Payments </p>
-                                    <el-popover
-                                        placement="top-start"
-                                        trigger="hover"
-                                        content="Lorem">
-                                        <el-button class="p-0" slot="reference" icon="info circle icon" type="text"></el-button>
-                                    </el-popover>
-                                </div>
-                                <p class="light-blue-text s-16 bold-600">{{depositVolume | money}}</p>
-                            </div>
-                            <div style="height: 88px" class="w-50">
-                                <line-chart id="deposit" :data="chartDataDep" :labels="chartOptions"></line-chart>
-                            </div>
-                        </div>
-                        <div class="light-background analytics-div h-76 border-top flex justify-content-between align-items-center">
-                            <div class="flex flex-column justify-content-center">
-                                <div class="grey-text m-0 p-0 flex align-items-center">
-                                    <p class="m-0 p-0 mr-6"> Payouts </p>
-                                    <el-popover
-                                        placement="top-start"
-                                        trigger="hover"
-                                        content="Lorem">
-                                        <el-button class="p-0" slot="reference" icon="info circle icon" type="text"></el-button>
-                                    </el-popover>
-                                </div>
-                                <p class="light-blue-text s-16 bold-600">{{withVolume | money}}</p>
-                            </div>
-                            <div style="height: 88px" class="w-50">
-                                <line-chart id="with" :data="chartDataWith" :labels="chartOptions"></line-chart>
-                            </div>
-                        </div>
+                        <analytics-div v-for="(item, index) in options" :key="index" :form="item"></analytics-div>
                     </div>
                 </div>
             </el-card>
@@ -113,13 +71,15 @@
 <script>
 import EventBus from '../../event-bus.js'
 import DashboardHeader from '../components/DashboardHeader'
+import AnalyticsDiv from '../components/AnalyticsDiv'
 import { mapGetters } from 'vuex'
 import Utils from '../../utils/services'
 
 export default {
   name: 'Dashboard',
   components: {
-    DashboardHeader
+    DashboardHeader,
+    AnalyticsDiv
   },
   data () {
     return {
@@ -131,6 +91,7 @@ export default {
         {label: 'Qtd', value: 'quarter'},
         {label: 'Ytd', value: 'year'}
       ],
+      edit: false,
       pickerOptions: {
         disabledDate(time) {
             return time.getTime() > Date.now();
@@ -250,6 +211,9 @@ export default {
         EventBus.$emit('updateGraph')
       })
     },
+    editAnalytics () {
+        this.edit = true
+    },
     changeDate (val) {
 
     },
@@ -294,6 +258,16 @@ export default {
         todayState: 'todayState',
         pageLoading: 'pageLoading'
     }),
+    options () {
+        var analytics = [
+            {title: 'Gross Volume', id: 'line-chart', volume: this.grossVolume, chartData: this.chartData, chartOptions: this.chartOptions, popover: false},
+            {title: 'Payments', id: 'line-chart1', volume: this.depositVolume, chartData: this.chartDataDep, chartOptions: this.chartOptions, popover: true,
+            popoverContent: 'All payments recorded within the specified filters'},
+            {title: 'Payouts', id: 'line-chart2', volume: this.withVolume, chartData: this.chartDataWith, chartOptions: this.chartOptions, popover: true,
+            popoverContent: 'All payouts recorded within the specified filters'}
+        ]
+        return analytics
+    },
     error () {
         return this.state === 'ERROR'
     },

@@ -80,8 +80,15 @@ export default {
 
     mounted () {
         EventBus.$emit('sideNavClick', 'roles')
+        EventBus.$on('groupModal', () => {
+            this.dialogVisible = false
+        })
         this.$store.dispatch('getRoles')
         this.$store.dispatch('fetchPrivileges')
+    },
+
+    beforeDestroy(){
+        EventBus.$off('groupModal', () => { })
     },
 
     created(){

@@ -15,7 +15,7 @@
             </div>
             <div v-else class="breathe events_custom_headers">
                 <el-table @row-click="clickRow" empty-text="No events found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredEvents">
-                  <el-table-column label="event" prop="event">
+                  <el-table-column show-overflow-tooltip label="event" prop="event">
                         <template slot-scope="scope">
                             <p class="m-0 p-0 bold-500 s-12">{{scope.row.code || 'N/A'}}</p>
                         </template>

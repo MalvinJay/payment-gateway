@@ -12,9 +12,9 @@
             <!-- Main Container -->
             <!-- v-loading="pageLoading" -->
             <el-main v-loading="pageLoading" class="px-20">
-                <transition name="fade" mode="out-in">
+                <!-- <transition name="fade" mode="out-in"> -->
                     <router-view></router-view>
-                </transition>
+                <!-- </transition> -->
                 <div>
                     <!-- <div id="v-step-0">A DOM element on your page. The first step will pop on this element because its ID is 'v-step-0'.</div> -->
                     <!-- <div class="v-step-1">A DOM element on your page. The second step will pop on this element because its ID is 'v-step-1'.</div>

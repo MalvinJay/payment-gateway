@@ -24,7 +24,10 @@ const NewJob = () => import('../transactions/pages/NewJob')
 const Disputes = () => import('../transactions/pages/Disputes')
 // const JobDetails = () => import('../transactions/pages/JobDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
+
 const FirstTimeLogin = () => import('../pages/FirstTimeLogin')
+const ResetPassword = () => import('../pages/ResetPassword')
+const Profile = () => import('../pages/client/Profile')
 
 const FoneMessenger = () => import('../fonemessenger/pages/FoneMessenger')
 const Fees = () => import('../accounts/pages/Fees')
@@ -56,6 +59,11 @@ let router = new Router({
         requiresAuth: true
       },
       children: [
+        {
+          path: '/profile',
+          name: 'Profile',
+          component: Profile
+        },
         {
           path: '/',
           name: 'Dashboard',
@@ -242,6 +250,11 @@ let router = new Router({
       path: '/change_password',
       name: 'FirstTimeLogin',
       component: FirstTimeLogin
+    },
+    {
+      path: '/forgot-password',
+      name: 'ResetPassword',
+      component: ResetPassword
     },
     { path: '/404', component: NotFound },
     { path: '*', redirect: '/' }
