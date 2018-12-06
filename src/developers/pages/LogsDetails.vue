@@ -47,7 +47,7 @@
 import { mapGetters } from 'vuex'
 import EventBus from '../../event-bus.js'
 import moment from 'moment'
-// import hightlight from ''
+import Utils from '../../utils/services'
 
 export default {
   name: 'LogDetails',
@@ -134,12 +134,28 @@ export default {
       return log;
     },
 
-    requestBody () {  
-      return this.syntaxHighlight(this.log.request) 
+    requestBody () {
+      if (Utils.present(this.log.request)){
+        return this.syntaxHighlight(this.log.request) 
+      } 
+      else if (Utils.present(this.log.request)){
+        return this.syntaxHighlight(this.log.request) 
+      }
+      else {
+        return this.syntaxHighlight('No Request Body Found')
+      }
     },
 
     responseBody () {
-      return this.syntaxHighlight(this.log.response.response)     
+      if (Utils.present(this.log.response.response)){
+        return this.syntaxHighlight(this.log.response.response)
+      } 
+      else if (Utils.present(this.log.response.accounts)){
+        return this.syntaxHighlight(this.log.response.accounts)
+      }
+      else {
+        return this.syntaxHighlight('No Response Body Found')
+      }
     }
   }
 }

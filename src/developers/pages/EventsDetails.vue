@@ -2,7 +2,8 @@
   <div v-loading="loadingPage">
     <el-card :class="[{'test-data': isTest}, 'flex', 'flex-column']">
         <h2 class="blue-text bold-500 m-0 pb-5">
-          <span class="text-uppercase">{{filteredevent.Method}}</span> <span class="text-lowercase">{{filteredevent.URL}}</span>
+          <!-- <span class="text-uppercase">{{filteredevent.Method}}</span> -->
+          <span class="text-lowercase">{{data.code}}</span>
         </h2>
         <p class="gray-text">{{filteredevent.Date}}</p>
     </el-card>
@@ -60,6 +61,7 @@
 import { mapGetters } from 'vuex'
 import EventBus from '../../event-bus.js'
 import moment from 'moment'
+import Utils from '../../utils/services'
 
 export default {
   name: 'eventsDetails',
@@ -220,7 +222,7 @@ export default {
                     type: "balance.available"
           }          
         },                
-      ]
+      ],
     }
   },
 
@@ -294,7 +296,7 @@ export default {
     hljs.initHighlightingOnLoad();
     $('code.hljs').each(function(i, block) {
       hljs.lineNumbersBlock(block);
-    });      
+    });
   },
 
   computed: {
@@ -318,24 +320,46 @@ export default {
     filteredevent (){
       var event = {
         ID: this.event.id,
-        Date: moment(this.created_at).format("YYYY/MM/DD, hh:mm a"),
-        Method: this.event.method? this.event.method.toUpperCase(): 'N/A',
+        Date: moment(this.event.created_at).format("YYYY/MM/DD, hh:mm a"),
+        // Method: this.event.method? this.event.method.toUpperCase(): 'N/A',
         URL: `/${this.event.url? this.event.url: 'n/a'}`,
         Version: '2018/2019',
-        Source: 'Dashboard',
-        // Status: '200',
-        // IP: 'N/A',
-        // Origin: 'https://dashboard.flopay.io'
+        Source: 'Dashboard'
       }
       return event;
     },
 
     requestBody (){     
-      return this.syntaxHighlight(this.event.request);
+      if(this.event.data){
+        var eventData = JSON.stringify(this.event.data.REQUEST, undefined, 2)
+        eventData = JSON.parse(eventData)
+        
+        if (Utils.present(eventData)){
+          return this.syntaxHighlight(eventData) 
+        } 
+        else if (Utils.present(eventData)){
+          return this.syntaxHighlight(eventData) 
+        }
+        else {
+          return this.syntaxHighlight('No Data')
+        }      
+      }
     },
 
-    responseBody () {     
-      return this.syntaxHighlight(this.event.response);
+    responseBody () {   
+      if(this.event.data){
+        var eventData = JSON.stringify(this.event.data.RESPONSE, undefined, 2)
+
+        if (Utils.present(eventData)){
+          return this.syntaxHighlight(eventData) 
+        } 
+        else if (Utils.present(eventData)){
+          return this.syntaxHighlight(eventData) 
+        }
+        else {
+          return this.syntaxHighlight('No Data')
+        }
+      }
     }
   }
 }
