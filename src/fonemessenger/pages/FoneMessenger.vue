@@ -6,6 +6,7 @@
                     <p class="blue-text bold-600 s-16 m-0 p-0">Fone Messenger</p>
                 </div>
                 <div>
+                    <el-button @click="topupDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Topup</el-button>
                     <el-button @click="logDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
                 </div>
             </div>
@@ -57,6 +58,7 @@
             </div>
         </div>
         <log-dialog :modalVisible="logDialog"></log-dialog>
+        <topup-account :modalVisible="topupDialog"></topup-account>
     </el-card>
 </template>
 
@@ -64,11 +66,13 @@
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 import LogDialog from '../components/LogDialog'
+import TopupAccount from '../components/TopupAccount'
 
 export default {
   name: 'FoneMessenger',
   components: {
-    LogDialog  
+    LogDialog,
+    TopupAccount
   },
   data () {
     return {
@@ -79,6 +83,7 @@ export default {
         {label: 'recipient', dataField: 'recipient_no', align: 'left'}
       ],
       logDialog: false,
+      topupDialog: false,
       styleObject: {
         fontSize: '12px'
       }
@@ -91,6 +96,9 @@ export default {
     EventBus.$emit('sideNavClick', 'fonemessenger')
     EventBus.$on('logModal', () => {
        this.logDialog = false
+    })
+    EventBus.$on('topupModal', () => {
+       this.topupDialog = false
     })
   },
   beforeDestroy () {
@@ -107,6 +115,9 @@ export default {
     },
     fetchMessages () {
       this.$store.dispatch('getFoneMessengers')
+    },
+    topUpAccount () {
+      
     },
     submitForm(formName) {
         this.$refs[formName].validate((valid) => {

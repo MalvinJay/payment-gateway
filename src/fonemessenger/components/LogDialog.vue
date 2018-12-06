@@ -52,7 +52,8 @@
                         <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Number</el-button>
                     </el-form-item>
                     <el-form-item label="Message">
-                        <el-input type="textarea" autosize v-model="form.message"></el-input>
+                        <el-input type="textarea" autosize v-model="message"></el-input>
+                        <p class="cha-info">{{characters}} characters {{messages}} messages</p>
                     </el-form-item>
                 </div>
                 <el-form-item>
@@ -82,6 +83,9 @@ export default {
           is_batch: false,
           contacts: []
         },
+        characters: 0,
+        messages: 0,
+        message: '',
         fileList: [],
         loading: false,
         column: 'all',
@@ -98,6 +102,12 @@ export default {
         inputValue: '',
         loading: false
       }
+    },
+    watch: {
+        message () {
+            this.characters = this.message.length
+            this.messages = Math.ceil(this.characters / 160)
+        }
     },
     methods: {
       close () {
@@ -133,6 +143,7 @@ export default {
                 if (this.form.is_batch) {
                     this.form.file_url = this.file
                 }
+                this.form.message = this.message
                 this.$store.dispatch('createLog', this.form)
                 .then((response) => {
                     if (response.data.success) {
@@ -187,6 +198,12 @@ export default {
     .el-dialog__body{
         padding: 0px !important
     }
+}
+
+.cha-info{
+    font-size: 10px;
+    font-style: italic;
+    margin-top: 5px;
 }
 .new-export-bg{
     background: #F7FAFC;

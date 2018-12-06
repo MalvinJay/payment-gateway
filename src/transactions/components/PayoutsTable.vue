@@ -52,7 +52,7 @@
                             <div class="mini-menu">
                                 <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i>
                                 <el-dropdown trigger="click">
-                                    <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
+                                    <!-- <i class="ellipsis horizontal icon m-0 blue-text cursor"></i> -->
                                     <el-dropdown-menu class="w-200" slot="dropdown">
                                         <el-dropdown-item disabled>
                                             <div class="table-dropdown-header blue-text bold-600 text-uppercase">
@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        <!-- New Payment -->
+        <!-- New Payout -->
         <el-dialog custom-class="new-transaction"
             title="Create New Payout - Mobile Money"
             :visible.sync="dialogVisible"
@@ -107,6 +107,9 @@
                                 :value="item.value"
                             ></el-option>
                         </el-select>
+                    </el-form-item>
+                    <el-form-item v-if="form.provider === 'vodafone'" label="Voucher">
+                        <el-input v-model="form.voucher"></el-input>
                     </el-form-item>
                     <el-form-item label="Sender Amount" prop="sender_amount">
                         <el-input class="little-padding-input" v-model="form.sender_amount"><span slot="prefix">&#8373</span></el-input>

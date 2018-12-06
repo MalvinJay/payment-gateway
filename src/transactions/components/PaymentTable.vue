@@ -42,7 +42,7 @@
                     <el-table-column width="80px">
                         <template slot-scope="scope">
                             <div class="mini-menu">
-                                <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i>
+                                <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i> -->
                                 <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
                                     <i class="ellipsis horizontal icon mr-0 cursor"></i>
                                     <el-dropdown-menu class="w-200" slot="dropdown">
@@ -100,6 +100,9 @@
                                 :value="item.value"
                             ></el-option>
                         </el-select>
+                    </el-form-item>
+                    <el-form-item v-if="form.provider === 'vodafone'" label="Voucher">
+                        <el-input v-model="form.voucher"></el-input>
                     </el-form-item>
                     <el-form-item label="Amount" prop="amount">
                         <el-input class="little-padding-input" v-model="form.amount"><span slot="prefix">&#8373</span></el-input>
