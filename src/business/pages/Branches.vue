@@ -162,9 +162,9 @@ export default {
 
     mounted () {
         EventBus.$emit('sideNavClick', 'branches')
-        EventBus.$on('exportModal', (val) => {
-            this.exportVisible = false
-        })
+        // EventBus.$on('exportModal', (val) => {
+        //     this.exportVisible = false
+        // })
         this.$store.dispatch('getBranches')
     },
 

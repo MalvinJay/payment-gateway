@@ -20,6 +20,7 @@ import accountsSettlements from '../connect/store/connect-settlements-store'
 import accountFees from '../connect/store/connect-fees-store'
 import logs from '../developers/store/logs-store'
 import events from '../developers/store/events-store'
+import webhook from '../developers/store/webhooks-store'
 
 // axios.defaults.baseURL = 'https://api.flopay.io/'
 
@@ -47,6 +48,7 @@ export default new Vuex.Store({
     accountsSettlements,
     accountFees,
     logs,
-    events
+    events,
+    webhook
   }
 })

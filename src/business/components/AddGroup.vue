@@ -5,7 +5,7 @@
         :visible="modalVisible"
         width="35%">
         <div class="flex justify-content-center new-export-bg">
-            <el-form class="transaction-form my-2" size="mini" style="width: 90%" :rules="rules" ref="form" :model="form" label-width="150px">
+            <el-form class="transaction-form my-2" size="mini" style="width: 90%" :rules="rules" ref="form" :model="form" label-width="100px">
                 <el-form-item :prop="item.prop" v-for="(item, index) in columns" :key="index" :label="item.label">
                     <el-input v-model="form[item.value]"></el-input>
                 </el-form-item>
@@ -72,7 +72,6 @@ export default {
         var form = {
             ...this.form,
             privileges: this.form.privileges.map(el => el.code),
-            client_till: this.$route.params.id
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -158,7 +157,7 @@ export default {
     }),
     priv: {
         get () {
-            console.log('FORM:', this.form)
+            console.log('FORM :', this.form)
             return this.form.privileges.map(el => el.code)
         },
         set (val) {

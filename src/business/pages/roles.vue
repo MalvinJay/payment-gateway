@@ -37,9 +37,6 @@
                                                 <p class="s-12 py-5">{{item.action}}</p>
                                             </div>
                                         </div>
-                                        <!-- <el-table row-class-name="roles-table-body" header-row-class-name="no-header-table" :data="scope.row.privileges">
-                                            <el-table-column prop="action" label="action"></el-table-column>
-                                        </el-table> -->
                                     </div>
                                     <el-button icon="info circle icon" type="text" slot="reference"></el-button>
                                 </el-popover>
@@ -50,56 +47,8 @@
             </div>
         </el-card>
 
-        <!-- <add-group :modalVisible.sync="dialogVisible" title="Add Group" :form="form" mode="new"></add-group> -->
-        <!-- Add A Role -->
-        
-        <!-- <el-dialog custom-class="invite-user" :visible.sync="dialogVisible" width="30%">
-            <div class="head flex flex-column justify-content-start px-20 py-16">
-                <div class="ContentHeader flex justify-content-center flex-column black-text">
-                    <span class="black-text bold-600 text-lineHeight--30">
-                        <span>Add a new role</span>
-                    </span>
-                </div>
+        <add-group :modalVisible.sync="dialogVisible" title="Add New Role" :form="form" mode="new"></add-group>
 
-                <div class="flex justify-content-center new-transaction-bg">
-                    <el-form size="mini" hide-required-asterisk class="transaction-form" :model="form" label-width="100px">
-                        <el-form-item label="Name">
-                            <el-input v-model="form.name"></el-input>
-                        </el-form-item>
-                        <el-form-item label="Description">
-                            <el-input v-model="form.description"></el-input>
-                        </el-form-item>
-                        <el-form-item label="Approval Limit">
-                            <el-input v-model="form.approval_limit"></el-input>
-                        </el-form-item>
-
-                        <el-form-item label="Privileges">
-                            <el-select placeholder="" v-model="column">
-                                <el-option label="All" value="all"></el-option>
-                                <el-option label="Custom" value="custom"></el-option>
-                            </el-select>
-                        </el-form-item>
-
-                        <el-form-item v-if="column == 'custom'" class="my-2">
-                            <el-checkbox-group v-model="fieldColumns">
-                            <el-row :gutter="20">
-                                <el-col :span="12">
-                                    <el-checkbox class="no-margin-checkbox m-0" v-for="(field, index) in fieldSet.slice(0, 10)" :key="index" :label="field.key">{{field.value}}</el-checkbox>
-                                </el-col>
-                                <el-col class="flex flex-column" :span="12">
-                                    <el-checkbox class="no-margin-checkbox m-0" v-for="(field, index) in fieldSet.slice(11, 20)" :key="index" :label="field.key">{{field.value}}</el-checkbox>
-                                </el-col>
-                            </el-row>
-                            </el-checkbox-group>
-                        </el-form-item>
-                    </el-form>
-                </div>                                    
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
-                <el-button size="mini" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="goForward(true)">Add Role</el-button>
-            </span>
-        </el-dialog> -->
     </div>
 </template>
 
@@ -121,30 +70,34 @@ export default {
                 privileges: '',
                 test: 'test'
             },
-            isIndeterminate: false,
             styleObject: {
                 fontSize: '12px'
             },
             columns: ['name', 'description'],
-            column: 'all',    
+            column: 'all'  
         }
     },
 
     mounted () {
         EventBus.$emit('sideNavClick', 'roles')
-        EventBus.$on('exportModal', (val) => {
-            this.exportVisible = false
+        EventBus.$on('groupModal', () => {
+            this.dialogVisible = false
         })
         this.$store.dispatch('getRoles')
         this.$store.dispatch('fetchPrivileges')
+    },
+
+    beforeDestroy(){
+        EventBus.$off('groupModal', () => { })
+    },
+
+    created(){
+        this.form.privileges = this.privileges
     },
     
     methods: {
         fetchRoles () {
             this.$store.dispatch('getRoles', {cache: false})
-        },
-        fetchPrivileges (){
-            this.$store.dispatch('fetchPrivileges', {cache: false})
         },
         formatter(row, column) {
             var value = row[column.property] ? row[column.property] : '-'
