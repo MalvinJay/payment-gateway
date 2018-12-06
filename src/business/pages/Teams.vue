@@ -204,8 +204,6 @@ export default {
                 msisdn: '',
                 role: 'admin',
                 user_group_id: '',
-                // bank_account_no: '',
-                // use_branch_account: ''
             },            
             isTest: true,
             selected: '',
@@ -256,9 +254,9 @@ export default {
 
     mounted () {
         EventBus.$emit('sideNavClick', 'teams')
-        EventBus.$on('exportModal', (val) => {
-            this.exportVisible = false
-        })
+        // EventBus.$on('exportModal', (val) => {
+        //     this.exportVisible = false
+        // })
         this.$store.dispatch('getTeams');
         this.$store.dispatch('getRoles');
         this.$store.dispatch('getBranches');
@@ -266,7 +264,7 @@ export default {
 
     methods: {
         close () {
-            EventBus.$emit('branchModal', false)
+            EventBus.$emit('teamModal', false)
         },        
         clickRow (row, event, column) {
             if (column.property) {

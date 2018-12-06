@@ -1,5 +1,5 @@
 import {
-  ROLES_FETCH, SET_ROLES, SET_ROLES_STATE, SET_ROLES_META, SET_ROLES_FILTERS,FETCH_PRIVILEGES,SET_PRIVILEGES, SET_PRIVILEGES_STATE
+  ROLES_FETCH, SET_ROLES, SET_ROLES_STATE, SET_ROLES_META, SET_ROLES_FILTERS,FETCH_PRIVILEGES,SET_PRIVILEGES, SET_PRIVILEGES_STATE, CREATE_ROLE
 } from './role-store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
@@ -126,6 +126,22 @@ const actions = {
     commit(SET_ROLES_FILTERS, filters)
     dispatch('getroles', {page: 1, cache: false})
   },
+  [CREATE_ROLE] ({ state, commit, rootGetters }, group) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v2/user_groups.json`,
+        method: 'POST',
+        token: rootGetters.token,
+        data: group
+      }).then((response) => {
+        console.log('Role Created', response)
+        resolve(response)
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  }
 }
 
 export default {
