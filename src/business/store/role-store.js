@@ -3,7 +3,6 @@ import {
 } from './role-store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
-// import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import Utils from '../../utils/services'
 
 // state
@@ -125,7 +124,7 @@ const actions = {
   },
   [SET_ROLES_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_ROLES_FILTERS, filters)
-    dispatch('getroles', {page: 1, cache: false})
+    dispatch('getRoles', {page: 1, cache: false})
   },
   [CREATE_ROLE] ({ state, commit, rootGetters }, group) {
     return new Promise((resolve, reject) => {

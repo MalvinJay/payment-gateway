@@ -6,8 +6,14 @@
                     <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" size="mini" placeholder="Filter by name or email..."></el-input>
                     
                     <div class="roles">
-                        <el-select v-model="value" size="mini" filterable placeholder="Select">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        <el-select 
+                            v-model="value" 
+                            size="mini"
+                            filterable
+                            @change="filterByName"
+                            placeholder="Select a role">
+                            <el-option v-model="all" label="all"></el-option>
+                            <el-option v-for="item in filteredRoles" :key="item.code" :label="item.name" :value="item.code"></el-option>
                         </el-select>                    
                     </div>
                 </div>            
@@ -49,7 +55,7 @@
                                         <i class="ellipsis horizontal icon mr-0 cursor"></i>
                                         <el-dropdown-menu class="w-200" slot="dropdown">
                                             <el-dropdown-item command="edit" class="s-12">View User Details</el-dropdown-item>
-                                            <el-dropdown-item command="edit" class="s-12">Delete User</el-dropdown-item>
+                                            <el-dropdown-item command="delete" class="s-12">Delete User</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </div>
@@ -214,40 +220,11 @@ export default {
                 fontSize: '12px'
             },        
             search: '',       
-            options: [
-            {
-                value: 'all',
-                label: 'All Roles'
-            }, 
-            {
-                value: 'administrator',
-                label: 'Administrator'
-            }, 
-            {
-                value: 'developer',
-                label: 'Developer'
-            }, 
-            {
-                value: 'analyst',
-                label: 'Analyst'
-            },
-            {
-                value: 'support',
-                label: 'Support Specialist'
-            },
-            {
-                value: 'view_only',
-                label: 'View Only'
-            }        ],
-            value: 'all', 
+            value: 'all',
+            all: 'all',
             createLoading: false,
-            rules: {
-                customer_no: [
-                    { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
-                ],
-                amount: [
-                    { required: true, message: 'This field is required', trigger: 'blur' }
-                ]
+            filter: {
+                name: ''
             }
         }
     },
@@ -257,9 +234,9 @@ export default {
         // EventBus.$on('exportModal', (val) => {
         //     this.exportVisible = false
         // })
-        this.$store.dispatch('getTeams');
-        this.$store.dispatch('getRoles');
-        this.$store.dispatch('getBranches');
+        this.$store.dispatch('getTeams')
+        this.$store.dispatch('getRoles')
+        this.$store.dispatch('getBranches')
     },
 
     methods: {
@@ -287,19 +264,58 @@ export default {
                 case 'edit':
                     // this.$router.push(`/teams/${row.reference}`)
                     break
+                case 'delete':
+                    this.deleteUser(row.msisdn)
+                    break                    
                 default:
                     break
             }
         },                   
         fetchTeams () {
             this.$store.dispatch('getTeams', {cache: false})
-        },        
+        },              
         searchButton (){
 
         },
+        deleteUser (code) {
+            this.$confirm('This will permanently delete this User. Continue?', 'Warning', {
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+            }).then(() => {
+                this.$store.dispatch('deleteUser', code)
+                .then((response) => {
+                if (response.data.success) {
+                    this.$message({
+                        type: 'success',
+                        message: response.data.response.message
+                    })
+                    this.$store.dispatch('getTeams', {cache: false})
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.response.message
+                    })
+                }  
+                }).catch((error) => {
+                    this.$message({
+                        type: 'error',
+                        message: 'User not deleted'
+                    })
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'error',
+                    message: 'User not deleted'
+                })                        
+            })
+        },        
+        filterByName(val){
+            this.filter.name = val
+            this.$store.dispatch('setTeamsFilters', this.filter)
+        },
         inviteUser() {
-            this.createLoading = true         
-            console.log('Form to Sent:', this.form)
+            this.createLoading = true
             this.$store.dispatch('createUser', this.form)
             .then((response) => {
                 this.createLoading = false

@@ -17,7 +17,31 @@
                             <el-input v-model="client.client.timezone || 'N/A'"></el-input>
                         </el-form-item>
                         <el-form-item class="flex" label="Phone verification">
-                            <el-input v-model="form.Phone_verification"></el-input>
+                            <div class="flex justify-content-start w-100">
+                                <the-tag status="failed" :title="form.Phone_verification" icon="detail check icon" class="flex justify-content w-50 bold-600 s-12 mr-2"></the-tag>
+                                <el-popover
+                                    placement="right"
+                                    width="400"
+                                    popper-class="no-padding-popover"
+                                    trigger="hover">
+                                    <div>
+                                        <div class="flex justify-content-between p-10 border-bottom">
+                                            <!-- <p class="blue-text bold-600 s-14 m-0 p-0">Role Type</p> -->
+                                            <the-tag status="failed" :title="client.client.full_name" icon="reply icon"></the-tag>
+                                        </div>
+                                        <div class="p-10">
+                                            <!-- <div v-for="(item, index) in scope.row.privileges" :key="index">
+                                                <p class="s-12 py-5">{{item.action}}</p>
+                                            </div> -->
+                                            <p>
+                                                The account owner can add a phone number to this account in order 
+                                                to process payments and manage customer cards directly from the Dashboard.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <el-button icon="info circle icon" type="text" slot="reference"></el-button>
+                                </el-popover>                                
+                            </div>
                         </el-form-item>
                     </el-form>
                 </div>  
@@ -43,7 +67,47 @@
                     </div>                    
                     <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form py-20" :model="info" label-width="200px">
                         <el-form-item label="Statement descriptor" class="flex">
-                            <el-input v-model="client.client.company_name  || 'N/A'" placeholder="Business Name"></el-input>
+                            <div class="flex">
+                                <el-input v-model="client.client.company_name  || 'N/A'" placeholder="Business Name" class="mr-2"></el-input>
+                                
+                                <el-popover
+                                    placement="right"
+                                    width="400"
+                                    popper-class="no-padding-popover"
+                                    trigger="hover">
+                                    <div>
+                                        <div class="flex flex-column justify-content-between p-10 s-12">
+                                            <div class="root">
+                                                <div class="statement p-5">
+                                                    <div class="root mb-2">
+                                                        <div class="flex justify-content-start">
+                                                                <div class="svg ml-1">
+                                                                    <svg class="SVGInline-svg SVGInline--cleaned-svg SVG-svg Icon-svg Icon--bank-svg SVG--color-svg SVG--color--gray200-svg" style="width: 16px;height: 16px;" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M1.02 6A1 1 0 0 1 .5 4.134C.82 3.95 3.32 2.572 8 0c4.681 2.572 7.181 3.95 7.5 4.134A1 1 0 0 1 14.98 6zM11 14V7.5h3V14h1a1 1 0 0 1 1 1v1H0v-1a1 1 0 0 1 1-1h1V7.5h3V14h1.5V7.5h3V14z" fill-rule="evenodd"></path></svg>
+                                                                </div>
+                                                                <div class="ml-2">
+                                                                    <span> ...1234 BANK STATEMENT </span>
+                                                                </div>
+                                                        </div>
+                                                    </div>
+                                                    <el-table empty-text="No account found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" :data="accounts">
+                                                        <el-table-column label="Amount">
+                                                            <template slot-scope="scope">
+                                                                
+                                                            </template>
+                                                        </el-table-column>
+                                                        <el-table-column label="Transaction">
+                                                            <template slot-scope="scope">
+                                                                
+                                                            </template>
+                                                        </el-table-column>                                                        
+                                                    </el-table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <el-button icon="info circle icon" type="text" slot="reference"></el-button>
+                                </el-popover>  
+                            </div>
                             <p class="my-1">
                                 <span class="info">This is the business name your customers see on their transactions. Use a recognizable name to prevent unintended chargebacks.</span>
                             </p>                            
@@ -106,20 +170,24 @@ export default {
     name: 'BsSettings',
     data () {
         return {
+             styleObject: {
+                fontSize: '10px'
+            },
             isTest: true,
             createLoading: false,
             info: {
                 Account_name: 'Client Name',
                 Country: 'Ghana',
                 Timezone: 'GMT - Accra',
-                Phone_verification: 'Unvefified'
+                Phone_verification: 'Unverified'
             },
             form: {
                 Account_name: '',
                 Country: 'Ghana',
                 Timezone: '',
-                Phone_verification: 'Unvefified'
+                Phone_verification: 'Unverified'
             },      
+            accounts: []
         }
     },
 
@@ -156,6 +224,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    .statement {
+        background: #f8f9fb;
+    }
     .mb-2 {
         margin-bottom: 1em
     }
@@ -177,4 +248,10 @@ export default {
     .el-card__body {
         background-color: #f7fafc;
     }
+
+    .SVG--color{
+        fill: currentColor;
+        color: #c1c9d2;
+    }
+
 </style>

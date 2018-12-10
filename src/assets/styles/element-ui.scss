@@ -500,13 +500,17 @@ $border: #dcdfe6;
 
         .no-header {
             .transactions-table-header {
-                display: none!important;
+                display: none!important
             }
 
             .cell {
-                padding-left: 20px;
+                padding-left: 20px
             }
         }
+    }
+
+    .el-form-item__content {
+        justify-content: center
     }
 }
 

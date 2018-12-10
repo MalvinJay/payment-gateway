@@ -1,5 +1,5 @@
 import {
-  TEAMS_FETCH, SET_TEAMS, SET_TEAMS_STATE, SET_TEAMS_META, SET_TEAMS_FILTERS, CREATE_USER
+  TEAMS_FETCH, SET_TEAMS, SET_TEAMS_STATE, SET_TEAMS_META, SET_TEAMS_FILTERS, CREATE_USER, DELETE_USER
 } from './team-store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
@@ -93,7 +93,7 @@ const actions = {
   },
   [SET_TEAMS_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_TEAMS_FILTERS, filters)
-    dispatch('getteams', {page: 1, cache: false})
+    dispatch('getTeams', {page: 1, cache: false})
   },
   [CREATE_USER] ({ state, commit, rootGetters }, user) {
     return new Promise((resolve, reject) => {
@@ -110,7 +110,21 @@ const actions = {
         reject(error)
       })
     })
-  }
+  },
+  [DELETE_USER] ({ rootGetters }, msisdn) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/users.json?msisdn=${msisdn}`,
+        method: 'DELETE',
+        token: rootGetters.token
+      }).then((response) => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+        return error
+      })
+    })
+  },  
 }
 
 export default {

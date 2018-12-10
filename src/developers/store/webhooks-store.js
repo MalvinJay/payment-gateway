@@ -28,8 +28,8 @@ import {
     hooksMeta: state => state.hooks.meta,
     hooksSortParams: state => state.hooks.sortParams,
     hooksState: state => state.hooks.state,
-    currenthook: state => state.currenthook.data,
-    currenthookState: state => state.currenthook.state,    
+    // currenthook: state => state.currenthook.data,
+    // currenthookState: state => state.currenthook.state,    
   }
   
   // mutations
