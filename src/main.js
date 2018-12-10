@@ -11,6 +11,7 @@ import './assets/styles/element-variables.scss'
 import locale from 'element-ui/lib/locale/lang/en'
 import '@/assets/styles/app.scss'
 import components from './components'
+
 import store from './store/store.js'
 import VueMoment from 'vue-moment'
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
@@ -86,6 +87,7 @@ Vue.directive('can', {
 //   }, 5000)
 // })
 
+Vue.config.devtools = process.env.NODE_ENV === 'development'
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

@@ -48,6 +48,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import initState from '../utils/initState'
 export default {
   name: 'Header',
   data () {
@@ -74,6 +75,8 @@ export default {
     logout () {
         this.$store.dispatch('logout')
         .then(() => {
+            var init = initState.initState()
+            this.$store.replaceState(init)
             this.$session.remove('client')
             this.$session.remove('token')
             this.$session.destroy()

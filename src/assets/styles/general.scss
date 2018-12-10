@@ -54,7 +54,9 @@ button{
 .flex{
     display: flex
 }
-
+.flex-wrap{
+    flex-wrap: wrap
+}
 .flex-column{
     flex-direction: column
 }
@@ -465,4 +467,16 @@ button{
     padding: 0 20px;
     align-items: center;
     display: flex;
+}
+
+// button
+.icon-only-button{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    color: #606266;
+    i{
+        margin: 0;
+    }
 }

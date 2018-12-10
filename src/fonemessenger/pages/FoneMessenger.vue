@@ -5,7 +5,8 @@
                 <div class="flex align-items-baseline">
                     <p class="blue-text bold-600 s-16 m-0 p-0">Fone Messenger</p>
                 </div>
-                <div>
+                <div class="flex align-items-center">
+                    <p class="balance-info gray-text border-right">{{balance.fon_messanger_balance | money }}</p>
                     <el-button @click="topupDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Topup</el-button>
                     <el-button @click="logDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
                 </div>
@@ -145,7 +146,8 @@ export default {
       state: 'messagesState',
       total: 'messagesCount',
       providers: 'providers',
-      pageSize: 'pageSize'
+      pageSize: 'pageSize',
+      balance: 'balance'
     }),
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'
@@ -180,6 +182,11 @@ export default {
         // }
         font-size: 12px;
     }
+}
+.balance-info{
+    margin: 0;
+    margin-right: 10px;
+    padding-right: 10px;
 }
 .new-transaction{
     .el-dialog__header{

@@ -25,7 +25,7 @@ import webhook from '../developers/store/webhooks-store'
 // axios.defaults.baseURL = 'https://api.flopay.io/'
 
 Vue.use(Vuex)
-Vue.config.devtools = true
+Vue.config.devtools = process.env.NODE_ENV === 'development'
 
 export default new Vuex.Store({
   modules: {

@@ -152,6 +152,7 @@ export default {
                             message: 'Message Sent',
                         })
                         this.$store.dispatch('getFoneMessengers', {cache: false})
+                        this.$store.dispatch('getBalance')
                         this.close()
                     } else {
                         this.$message({

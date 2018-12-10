@@ -110,7 +110,7 @@
                 </div>
             </el-card>
             <!-- SCHEDULES -->
-            <el-card class="my-2">
+            <el-card class="my-2 card-0">
                 <div slot="header">
                     <div class="flex">
                         <span class="blue-text bold-600 s-16">{{header}} schedules</span>
@@ -151,7 +151,7 @@
                 </div>
             </el-card>
             <!-- TRANSACTIONS -->
-            <el-card class="my-2">
+            <el-card class="my-2 card-0">
                 <div slot="header">
                     <div class="flex">
                         <span class="blue-text bold-600 s-16">{{header}} transactions</span>
@@ -174,22 +174,22 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="gross_amount" label="gross" width="80">
+                    <el-table-column prop="gross_amount" label="gross" min-width="80">
                         <template slot-scope="scope">
                             {{scope.row.gross_amount | money}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="charged_amount" label="fee" width="80">
+                    <el-table-column prop="charged_amount" label="fee" min-width="80">
                         <template slot-scope="scope">
                             {{scope.row.charged_amount | money}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="net_amount" label="net" width="80">
+                    <el-table-column prop="net_amount" label="net" min-width="80">
                         <template slot-scope="scope">
                             {{scope.row.net_amount | money}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="reference" label="reference"></el-table-column>
+                    <el-table-column show-overflow-tooltip prop="reference" label="reference"></el-table-column>
                     <el-table-column prop="updated_at" label="date">
                         <template slot-scope="scope">
                             {{scope.row.created_at | moment("MMM Do, YYYY")}}

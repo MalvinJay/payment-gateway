@@ -101,6 +101,7 @@ export default {
                             type: 'success',
                             message: response.data.response.message,
                         })
+                        this.$store.dispatch('getBalance')
                         this.$store.dispatch('getFoneMessengers', {cache: false})
                         this.close()
                     } else {
