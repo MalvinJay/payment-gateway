@@ -39,7 +39,7 @@
                         </el-table-column>
                         <el-table-column prop="updated_at" label="Date" width="auto">
                             <template slot-scope="scope">
-                                {{scope.row.updated_at | moment("Do MMM, YYYY hh:mm A")}}
+                                {{scope.row.updated_at | moment("D MMM,YY hh:mm A")}}
                             </template>
                         </el-table-column> -->
                     </el-table>

@@ -51,7 +51,7 @@
                         <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                         <el-table-column prop="created_at" label="Date" width="auto">
                             <template slot-scope="scope">
-                                {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
+                                {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
                             </template>
                         </el-table-column>
                     </el-table>

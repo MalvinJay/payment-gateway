@@ -3,7 +3,7 @@
         <div class="transactions">
             <div class="customer-div flex">
                 <div class="flex align-items-baseline">
-                    <p class="blue-text bold-600 s-16 m-0 p-0">Contacts</p>
+                    <p class="blue-text bold-600 s-16 m-0 p-0">Customers</p>
                     <!-- <filter-component filterType="payment"></filter-component> -->
                 </div>
                 <div>

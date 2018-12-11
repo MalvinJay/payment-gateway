@@ -148,6 +148,9 @@ $border: #dcdfe6;
         }
     }
 }
+.el-table .warning-row {
+    background: rgba(#983705, 0.04);
+  }
 .accounts-table-body{
     td{
         padding: 8px 0 !important;

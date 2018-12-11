@@ -20,9 +20,9 @@
                     </div>
                     <div>
                         <el-button :disabled="error" @click="refund" :loading="loading" v-if="status === 'failed'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Refund</el-button>
-                        <el-button @click="ticketVisible = true" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Open Ticket</el-button>
+                        <el-button v-if="!form.has_dispute" @click="ticketVisible = true" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Open Ticket</el-button>
                         <el-dropdown class="ml-10" @command="command => handleTableCommand(command, form)" trigger="click">
-                            <el-button size="mini" class="mr-0 cursor z-depth-button bold-600 s-13 open-sans mini-button b-0 icon-only-button" plain icon="ellipsis horizontal icon"></el-button>
+                            <el-button size="mini" class="mr-0 cursor z-depth-button bold-600 s-13 open-sans mini-button b-0" plain icon="ellipsis horizontal icon"></el-button>
                             <el-dropdown-menu class="w-200" slot="dropdown">
                                 <el-dropdown-item disabled>
                                     <div class="table-dropdown-header bold-600 text-uppercase">
@@ -44,7 +44,7 @@
                         <div class="flex flex-column ml-1">
                             <p v-if="form.payment_status == 'paid'" class="light mb-1 s-13">{{header}} succeeded</p>
                             <p v-else class="light mb-1 s-13">{{header}} failed</p>
-                            <p class="light mb-1 s-12 gray">{{form.date | moment("Do MMM, yyyy hh:mm A")}}</p>
+                            <p class="light mb-1 s-12 gray">{{form.date | moment("D MMM,YY hh:mm A")}}</p>
                         </div>
                     </div>
                 </div>
@@ -203,7 +203,7 @@ export default {
                 fee: `${symbol}${this.form.charged_amount}`,
                 date: this.form.date,
                 time: this.form.time,
-                message: this.form.remarks ? this.form.remarks : '-'
+                remarks: this.form.remarks ? this.form.remarks : '-'
             }
             return nForm
         },

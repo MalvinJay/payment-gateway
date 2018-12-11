@@ -28,13 +28,14 @@ export default {
       form = {
         sender_amount: row.sender_amount,
         sender_currency: 'GHS',
-        recipient_amount: row.recipient_amount,
+        recipient_amount: row.receiver_amount,
         recipient_currency: 'GHS',
         recipient_no: row.receiver_no,
         recipient_name: row.receiver_name,
-        provider: row.provider,
+        provider: row.provider_code,
         country_code: 'GH',
-        service_code: 'cashin'
+        service_code: 'cashin',
+        reference: reference
       }
     }
 

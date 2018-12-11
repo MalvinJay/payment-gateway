@@ -32,8 +32,8 @@
                     <!-- JOB SERVICE CODE -->
                     <el-form-item label="Service Code">
                         <el-select v-model="form.service_code">
-                            <el-option label="Cash In" value="cash_in"></el-option>
-                            <el-option label="Cash Out" value="cash_out"></el-option>
+                            <el-option label="Cash In" value="cashin"></el-option>
+                            <el-option label="Cash Out" value="cashout"></el-option>
                             <el-option label="Direct Payment" value="direct_payment"></el-option>
                         </el-select>
                     </el-form-item>
