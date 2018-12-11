@@ -220,10 +220,9 @@ export default {
                 this.createLoading = false
             }).catch((error) => {
                 this.createLoading = false
-                const response = error.response
                 this.$message({
-                    message: response.data.error,
-                    type: 'error'
+                    type: 'error',
+                    message: error.response.error_message
                 })
             })
           } else {
