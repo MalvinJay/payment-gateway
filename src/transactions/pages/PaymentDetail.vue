@@ -96,6 +96,65 @@
                     </div>
                 </div>
             </el-card>
+            <el-card class="my-2 card-0">
+                <div slot="header">
+                    <span class="blue-text bold-600 s-16">{{header}} events</span>
+                </div>
+                <div>
+                    <el-table
+                    @row-click="clickRow"
+                    empty-text="No events found"
+                    row-class-name="transactions-table-body"
+                    header-row-class-name="transactions-table-header"
+                    :data="events">
+                        <el-table-column show-overflow-tooltip label="event" prop="event">
+                                <template slot-scope="scope">
+                                    <p class="m-0 p-0 bold-500 s-12">{{scope.row.code || 'N/A'}}</p>
+                                </template>
+                        </el-table-column>
+                        <el-table-column label="id" prop="id" width="200">
+                                <template slot-scope="scope">
+                                    <p class="m-0 p-0 mr-10 bold-500 s-12 text-uppercase">{{scope.row.id || 'N/A'}}</p>
+                                </template>
+                        </el-table-column>
+                        <el-table-column label="date" prop="created_at" width="200">
+                                <template slot-scope="scope">
+                                    <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("D MMM,YY hh:mm A")}}</p>
+                                </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </el-card>
+            <el-card v-if="form.has_dispute" class="my-2 card-0">
+                <div slot="header">
+                    <span class="blue-text bold-600 s-16">{{header}} disputes</span>
+                </div>
+                <div>
+                    <el-table
+                    @row-click="clickRow"
+                    empty-text="No disputes found"
+                    row-class-name="transactions-table-body"
+                    header-row-class-name="transactions-table-header"
+                    :data="disputes">
+                        <el-table-column type="index"></el-table-column>
+                        <el-table-column prop="amount" label="Amount" width="100">
+                            <template slot-scope="scope">
+                                <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.amount | money}}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="status" label="" width="auto">
+                            <template slot-scope="scope">
+                                <div class="flex">
+                                    <the-tag v-if="scope.row.status === 'resolved'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-else-if="scope.row.status === 'failed'" status="failed" :title="scope.row.status" icon="close icon"></the-tag>
+                                    <the-tag v-else status="pending" :title="scope.row.status" icon="reply icon"></the-tag>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                    </el-table>
+                </div>
+            </el-card>
         </div>
         <ticket-modal :transaction="form" :ticketVisible.sync="ticketVisible"></ticket-modal>
     </div>
@@ -104,6 +163,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import EventBus from '../../event-bus.js'
+import moment from 'moment'
 
 export default {
     name: 'PaymentDetail',
@@ -115,7 +175,13 @@ export default {
             remarks: '',
             page: this.$route.path,
             ticketVisible: false,
-            loading: false
+            loading: false,
+            columns: [
+                {label: 'Customer', dataField: 'name', width: 'auto'},
+                {label: 'Dispute Ref.', dataField: 'ref', width: 'auto'},
+                {label: 'Transaction Ref.', dataField: 'trans_ref', width: 'auto'},
+                {label: 'Date', dataField: 'date', width: 'auto'}
+            ]
         }
     },
     mounted () {
@@ -169,6 +235,11 @@ export default {
                     type: 'error'
                 })
             })            
+        },
+        clickRow (row, event, column) {
+            if (column.property) {
+            this.$router.push(`/events/${row.id}`)
+            }
         }
     },
     mounted () {
@@ -179,6 +250,15 @@ export default {
             form: 'currentTransaction',
             state: 'currentTransactionState'
         }),
+        events () {
+           return this.form.events
+        },
+        disputes () {
+            return this.form.disputes.map(el => {
+                el.date = moment(el.created_at).format('D MMM,YY hh:mm A')
+                return el
+            })
+        },
         loadingPage () {
             return this.state === 'LOADING'
             // return true
@@ -190,9 +270,10 @@ export default {
             return this.status === 'paid'
         },
         data () {
-            var symbol = '\u20B5'
+            // var symbol = '\u20B5'
+            var symbol = 'GHs'
             if (this.form.currency === 'GHs') {
-               symbol = '\u20B5'
+               symbol = 'GHs'
             }
             var nForm = {
                 name: this.form.company,

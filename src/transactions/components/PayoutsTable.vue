@@ -6,7 +6,7 @@
             </div>
             <div>
                 <el-button v-if="canMakePayouts" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
-                <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
+                <el-button @click="exportVisible = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button>
             </div>
         </div>
         <div>
@@ -133,9 +133,10 @@
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="close">Cancel</el-button>
-                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payout</el-button>
+                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Initiate Payout</el-button>
             </span>
         </el-dialog>
+        <export-modal type="deposit" :modalVisible.sync="exportVisible"></export-modal>
         <ticket-modal :transaction="transaction" :ticketVisible.sync="ticketVisible"></ticket-modal>
     </div>
 </template>
@@ -165,6 +166,7 @@ export default {
       date: false,
       dialogVisible: false,
       ticketVisible: false,
+      exportVisible: false,
       transaction: {},
       form: {
         sender_amount: '',
@@ -199,10 +201,16 @@ export default {
     EventBus.$on('ticketModal', (val) => {
         this.ticketVisible = false
     })
+    EventBus.$on('exportModal', (val) => {
+        this.exportVisible = false
+    })
   },
   beforeDestroy () {
     EventBus.$off('ticketModal', (val) => {
         this.ticketVisible = false
+    })
+    EventBus.$off('exportModal', (val) => {
+        this.exportVisible = false
     })  
   },
   methods: {

@@ -19,8 +19,16 @@
                     </div>
                 </div>
                 <div v-else>
-                    <el-table ref="dispute" @row-click="clickRow" empty-text="No disputes" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="disputes">
-                        <el-table-column type="expand" width="55">
+                    <el-table
+                    ref="dispute"
+                    @row-click="clickRow"
+                    empty-text="No disputes"
+                    v-loading="loading"
+                    :row-style="styleObject"
+                    row-class-name="transactions-table-body"
+                    header-row-class-name="transactions-table-header"
+                    :data="disputes">
+                        <!-- <el-table-column type="expand" width="55">
                             <template slot-scope="props">
                                 <div class="flex justify-content-start">
                                     <div class="p-10">
@@ -33,7 +41,8 @@
                                     </div>
                                 </div>
                             </template>                            
-                        </el-table-column>
+                        </el-table-column> -->
+                        <el-table-column type="selection"></el-table-column>
                         <el-table-column prop="amount" label="Amount" width="100">
                             <template slot-scope="scope">
                                 <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.amount | money}}</p>
@@ -107,7 +116,10 @@ export default {
         this.$store.dispatch('getDisputes', {page: val, cache: false})
     },
     clickRow (row, event, column) {
-        this.$refs.dispute.toggleRowExpansion(row)
+        if (column.property) {
+            this.$router.push(`/payments/${row.trans_ref}`)
+        }
+        // this.$refs.dispute.toggleRowExpansion(row)
     },    
     fetchDisputes () {
       this.$store.dispatch('getDisputes', {cache: false})
@@ -128,7 +140,7 @@ export default {
     ...mapGetters({
       disputes: 'disputes',
       state: 'disputesState',
-      pageSize: 'disputesCount'
+      pageSize: 'pageSize'
     }),
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'

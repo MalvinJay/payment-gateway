@@ -195,7 +195,7 @@ const user = {
     // RESET PASSWORD
     [RESET_PASSWORD] ({ state, commit, rootGetters }, form) {
       return new Promise((resolve, reject) => {
-        var url = `${GET_BASE_URI}v1/users/pass_reset.json`
+        var url = `${GET_BASE_URI}v2/accounts/send_password_reset_link`
         apiCall({
           url: url,
           method: 'POST',

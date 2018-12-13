@@ -96,6 +96,7 @@
 
 <script>
 import EventBus from '../../event-bus.js'
+import Utils from '../../utils/services'
 export default {
     name: 'FilterComponent',
     props: ['filterType', 'dispatch'],
@@ -227,7 +228,7 @@ export default {
                     this.filters.reasons.push(element)
                 })
             }
-        },        
+        }
     },
     mounted () {
         EventBus.$on('blur', this.keepVisible)
@@ -261,7 +262,17 @@ export default {
             return this.filterType === 'dispute'
         },
         filterCount() {
-            return this.count
+            var count = 0
+            if (Utils.present(this.filters.from) || Utils.present(this.filters.to)) {
+                count++
+            }
+            if (Utils.present(this.filters.payment_types)) {
+                count++
+            }
+            if (Utils.present(this.filters.statuses)) {
+                count++
+            }
+            return count
         }
     }
 }

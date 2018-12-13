@@ -34,11 +34,11 @@
                 <el-dropdown-menu slot="dropdown" class="w-200">
                     <el-dropdown-item disabled>
                         <div class="flex flex-column dropdown-header">
-                            <p class="blue-text text-capitalize">{{client.full_name}}</p>
+                            <p class="blue-text text-capitalize bold-600">{{client.full_name}}</p>
                             <p class="s-8">{{client.company_name}}</p>
                         </div>
                     </el-dropdown-item>
-                    <el-dropdown-item class="header-user-dropdown" command="profile">Profile</el-dropdown-item>
+                    <el-dropdown-item divided class="header-user-dropdown" command="profile">Profile</el-dropdown-item>
                     <el-dropdown-item class="header-user-dropdown" command="logout">Sign Out</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>

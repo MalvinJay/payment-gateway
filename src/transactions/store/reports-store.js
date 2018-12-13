@@ -1,4 +1,5 @@
-import { GET_FIELDS, SET_FIELDS, SET_DOWNLOAD_LINK, SET_FIELDS_STATE, GET_BASE_URI, SUBMIT_REPORT, DOWNLOAD_REPORT } from './transactions-store-constants'
+import { GET_FIELDS, SET_FIELDS, SET_DOWNLOAD_LINK, SET_FIELDS_STATE,
+  GET_BASE_URI, SUBMIT_REPORT, DOWNLOAD_REPORT, GET_REPORT } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 
 // state
@@ -7,7 +8,8 @@ const state = {
     data: [],
     state: 'DATA'
   },
-  link: ''
+  link: '',
+  job_id: null
 }
 
 // getters
@@ -62,17 +64,13 @@ const actions = {
         token: rootGetters.token
       }).then((response) => {
         if (response.data.success) {
-          apiCall({
-            url: `${GET_BASE_URI}v1/clients/reports/${response.data.response.data.job_id}`,
-            method: 'GET',
-            token: rootGetters.token
-          }).then((response) => {
-            commit(SET_DOWNLOAD_LINK, response.data.response.data.file_name)
-            // dispatch(DOWNLOAD_REPORT, response.data.response.data.file_name)
-            resolve(response)
-          }).catch((error) => {
-            reject(error)
-          })
+          state.job_id = response.data.response.data.job_id
+          dispatch(GET_REPORT, state.job_id)
+            .then((response) => {
+              resolve(response)
+            }).catch((error) => {
+              reject(error)
+            })
         }
       }).catch((error) => {
         commit(SET_FIELDS_STATE, 'ERROR')
@@ -81,14 +79,36 @@ const actions = {
       })
     })
   },
-  [DOWNLOAD_REPORT] ({ state, commit, rootGetters }, report) {
+  [GET_REPORT] ({ state, commit, rootGetters, dispatch }, jobId = state.job_id) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/clients/reports/${jobId}`,
+        method: 'GET',
+        token: rootGetters.token
+      }).then((response) => {
+        if (response.data.response.data.done) {
+          commit(SET_DOWNLOAD_LINK, response.data.response.data.file_name)
+        } else {
+          reject(response)
+          setTimeout(() => {
+            dispatch(GET_REPORT, jobId)
+          }, 5000)
+        }
+        resolve(response)
+      }).catch((error) => {
+        reject(error)
+      })
+    })
+  },
+  [DOWNLOAD_REPORT] ({ state, commit, rootGetters }, report = state.link) {
     return new Promise((resolve, reject) => {
       apiCall({
         url: `${GET_BASE_URI}v1/clients/reports/download?file_name=${report}`,
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
-        state.link = ''
+        // state.link =
+        resolve(response)
       }).catch((error) => {
         commit(SET_FIELDS_STATE, 'ERROR')
         console.log(error)

@@ -45,7 +45,7 @@
                     <el-form-item label="Mode">
                         <el-select v-model="form.scheduled">
                             <el-option label="Automatic" :value="true"></el-option>
-                            <el-option label="Manual" :value="false"></el-option>
+                            <el-option v-if="form.service_code === 'cashin' || form.service_code === 'cashout'" label="Manual" :value="false"></el-option>
                         </el-select>
                     </el-form-item>
                     <!-- JOB AUTOMATIC SCHEDULED -->
@@ -184,6 +184,7 @@ export default {
                 // beneficiaries: 'upload',
                 // times: [],
                 // contacts: [],
+                service_code: 'cashin',
                 start_date: '',
                 termination_date: '',
                 timezone: "Africa/Accra",

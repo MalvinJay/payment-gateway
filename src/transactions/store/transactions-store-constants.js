@@ -11,7 +11,7 @@ export const SET_CURRENT_TRANSACTION_STATE = 'setCurrentTransactionState'
 export const REFUND_TRANSACTION = 'createRefund'
 
 export const GET_BASE_URI = 'https://api.flopay.io/'
-// export const GET_BASE_URI = 'https://cfb572b4.ngrok.io/api/'
+// export const GET_BASE_URI = 'https://88377316.ngrok.io/api/'
 export const GET_TRANSACTIONS_URI = `${GET_BASE_URI}v2/transactions.json`
 export const GET_REFUND_TRANSACTION_URI = `${GET_BASE_URI}v1/reverse.json`
 
@@ -21,6 +21,7 @@ export const SET_FIELDS = 'setFields'
 export const SET_FIELDS_STATE = 'setFieldsState'
 export const SET_DOWNLOAD_LINK = 'setDownloadLink'
 export const SUBMIT_REPORT = 'submitReport'
+export const GET_REPORT = 'getReport'
 export const DOWNLOAD_REPORT = 'downloadReport'
 
 // disputes

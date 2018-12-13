@@ -26,11 +26,46 @@
                     </div>
                 </div>
                 <div class="blue-graph" v-else v-loading="todayLoading">
-                    <!-- <time-line-chart :dashboard="today" :data="count" :labels="days"></time-line-chart> -->
                     <line-chart id="time-line-chart" :data="chartData" :labels="chartOptions"></line-chart>
                 </div>
             </div>
         </el-card>
+        <!-- <el-row :gutter="20">
+            <el-col :span="20">
+                <el-card class="b-0 dashboard-header">
+                    <div class="flex justify-content-between">
+                        <div class="flex flex-column">
+                            <div class="flex">
+                                <p class="p-0 m-0">Account Balance</p>
+                                <p class="p-0 m-0 bold-600 ml-16">{{ balance | money }}</p>
+                            </div>
+                            <div class="flex align-items-center">
+                                <el-date-picker class="transparent-input"
+                                    v-model="currentDate"
+                                    type="date"
+                                    :picker-options="pickerOptions"
+                                    placeholder="Today">
+                                    </el-date-picker>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blue-graph">
+                        <div class="blue-graph" v-if="todayError">
+                            <div class="center flex-column">
+                                <p class="m-0 p-0 s-12">Unable to load this graph</p>
+                                <el-button @click.prevent="fetchToday" icon="sync icon" type="text">Retry</el-button>
+                            </div>
+                        </div>
+                        <div class="blue-graph" v-else v-loading="todayLoading">
+                            <line-chart id="time-line-chart" :data="chartData" :labels="options"></line-chart>
+                        </div>
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="4">
+                <el-card></el-card>
+            </el-col>
+        </el-row> -->
     </div>
 </template>
 
@@ -131,6 +166,71 @@ export default {
                 }
             }
         },
+        options: {
+            scales: {
+                yAxes: [{
+                    display: false,
+                    ticks: {
+                        beginAtZero: false,
+                        display: false
+                    },
+                        // gridLines: {
+                        //     display: false
+                        // }
+                    }],
+                xAxes: [{
+                    display: true,
+                    ticks: {
+                        beginAtZero: false,
+                        display: false
+                    },
+                    gridLines: {
+                        color: "rgba(128, 142, 227, 0.1)",
+                        drawBorder: false,
+                        tickMarkLength: 0
+                    }
+                }],
+                gridLines: {
+                    display: true,
+                    color: "rgba(255, 255, 255, 0.1)",
+                    drawBorder: false,
+                    tickMarkLength: 0
+                }
+            },
+            legend: {
+            display: false,
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.datasets[tooltipItem.datasetIndex].label || ''
+
+                        if (label) {
+                            label += ': ';
+                        }
+                        tooltipItem.width = 500
+                        label += Math.round(tooltipItem.yLabel * 100) / 100;
+                        return label
+                    }
+                },
+                backgroundColor: 'white',
+                titleFontColor: 'black',
+                footerFontColor: 'black',
+                bodyFontColor: 'black',
+                borderColor: '#dcdfe6',
+                borderWidth: 1,
+                displayColors: false
+            },
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 20,
+                    bottom: 20
+                }
+            }
+        },
         pickerOptions: {
             disabledDate(time) {
                 return time.getTime() > Date.now();
@@ -177,6 +277,12 @@ export default {
             datasets: [{
                 // label: this.labels,
                 data: this.count,
+                // backgroundColor: '#E8EBF8',
+                // borderColor: '#808EE3',
+                // borderWidth: 2,
+                // pointRadius: 0,
+                // pointHitRadius: 20,
+                // lineTension: 0,
                 borderColor: '#ffffff',
                 pointHoverBackgroundColor: '#ffffff',
                 borderWidth: 2,
@@ -232,6 +338,9 @@ export default {
     .el-card__body{
         padding: 10px 20px !important;
     }
+}
+.dashboard-header{
+    height: 200px;
 }
 .ml-16{
     margin-left: 16px !important;

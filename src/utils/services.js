@@ -132,6 +132,9 @@ export default {
     if (this.present(form.to)) {
       query = query += `&end_date=${form.to}`
     }
+    if (this.present(form.cash_flow)) {
+      query = query += `&cash_flow=${form.cash_flow}`
+    }
     if (this.present(form.fields)) {
       if (form.fields.length === 1) {
         query = query += `&fields[]=${form.fields}`

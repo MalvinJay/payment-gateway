@@ -8,7 +8,7 @@
             <p class="text-center gray-text bold-500 s-13 my-1">Enter your email address and we will send you a link to reset your password.</p>
             <el-form @keyup.enter.native="login('form')" :model="form" :rules="rules" ref="form">
                 <el-form-item prop="email">
-                    <el-input class="no-border-input" placeholder="Enter your email address" v-model="email" type="email"></el-input>
+                    <el-input class="no-border-input" placeholder="Enter your email address" v-model="form.email" type="email"></el-input>
                 </el-form-item>
                 <el-form-item class="my-2">
                     <el-button class="w-100" :loading="loading" type="warning" @click="sendEmail('form')">Send password to reset email</el-button>
@@ -25,6 +25,9 @@ export default {
   name: 'Login',
   data () {
     return {
+      form: {
+        email: ''
+      },
       email: '',
       loading: false,
       rules: {
@@ -39,7 +42,7 @@ export default {
         this.loading = true
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$store.dispatch('sendEmail', email)
+            this.$store.dispatch('sendEmail', this.form)
             .then((response) => {
                 if (response.data.success) {
                    this.$message({
