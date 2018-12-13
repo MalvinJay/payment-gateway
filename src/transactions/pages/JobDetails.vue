@@ -258,7 +258,7 @@
                     row-class-name="transactions-table-body"
                     header-row-class-name="transactions-table-header"
                     :data="form.contacts.slice((page * 12) - 12, page * 12)">
-                        <el-table-column v-if="!scope.row.has_mandate" type="index"></el-table-column>
+                        <el-table-column type="index"></el-table-column>
                         <!-- <el-table-column type="expand">
                             <template slot-scope="props">
                                 <div>
