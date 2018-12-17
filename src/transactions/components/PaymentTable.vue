@@ -41,18 +41,19 @@
                     </el-table-column>
                     <el-table-column width="80px">
                         <template slot-scope="scope">
+                            <div class="status" v-if="scope.row.has_dispute"></div>
                             <div class="mini-menu">
-                                <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i>
+                                <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i> -->
                                 <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
-                                    <i class="ellipsis horizontal icon mr-0 cursor"></i>
+                                    <el-button class="icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
                                     <el-dropdown-menu class="w-200" slot="dropdown">
-                                        <el-dropdown-item v-if="scope.row.status.toLowerCase() ==='failed'" disabled>
+                                        <el-dropdown-item disabled>
                                             <div class="table-dropdown-header bold-600 text-uppercase">
                                                 action
                                             </div>
                                         </el-dropdown-item>
-                                        <el-dropdown-item command="open" v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Open Ticket</el-dropdown-item>
-                                        <el-dropdown-item v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Retry</el-dropdown-item>
+                                        <el-dropdown-item command="open" class="s-12">Open Ticket</el-dropdown-item>
+                                        <el-dropdown-item command="retry" v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Retry</el-dropdown-item>
                                         <el-dropdown-item :divided="scope.row.status.toLowerCase() ==='failed'" disabled>
                                             <div class="table-dropdown-header bold-600 text-uppercase">
                                                 connection
@@ -101,6 +102,9 @@
                             ></el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item v-if="form.provider === 'vodafone'" label="Voucher">
+                        <el-input v-model="form.voucher"></el-input>
+                    </el-form-item>
                     <el-form-item label="Amount" prop="amount">
                         <el-input class="little-padding-input" v-model="form.amount"><span slot="prefix">&#8373</span></el-input>
                     </el-form-item>
@@ -121,6 +125,7 @@
 
 <script>
 import EventBus from '../../event-bus.js'
+import Utils from '../../utils/services'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -203,11 +208,14 @@ export default {
                 this.ticketVisible = true
                 this.transaction = row
                 break
+            case 'retry':
+                this.retry(row)
+                break
             default:
                 break
         }
     },
-    submitForm(formName) {
+    submitForm (formName) {
         this.createLoading = true
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -249,10 +257,38 @@ export default {
             return false
           }
         })
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-      }
+    },
+    retry (row) {
+        var form = Utils.retryTransactions(row, 'payment')
+        form.live = !this.test
+        form.dummy = this.test
+
+        this.$store.dispatch('createTransactions', form)
+        .then((response) => {
+            if (response.data.success) {
+                this.$message({
+                    message: 'Retry successful',
+                    type: 'success'
+                })
+                this.fetchTransactions()
+                this.dialogVisible = false
+            } else {
+            this.$message({
+                    type: 'error',
+                    message: response.data.response.message.message
+                })
+            }
+        }).catch((error) => {
+            const response = error.response
+            this.$message({
+                message: response.data.error,
+                type: 'error'
+            })
+        })
+    },
+    resetForm(formName) {
+        this.$refs[formName].resetFields()
+    }
   },
   computed: {
     ...mapGetters({
@@ -360,5 +396,12 @@ export default {
 }
 .mr-10{
     margin-right: 10px;
+}
+.status{
+    width: 8px;
+    height: 8px;
+    border: 0;
+    border-radius: 50%;
+    background: red;
 }
 </style>

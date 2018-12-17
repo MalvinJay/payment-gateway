@@ -17,7 +17,7 @@ const getters = {
   disputes: state => state.disputes.data,
   disputesState: state => state.disputes.state,
   disputesCount: state => state.disputes.count,
-  disputesFilters: state => state.disputes.filters,
+  disputesFilters: state => state.disputes.filters
 }
 
 // mutations
@@ -32,7 +32,7 @@ const mutations = {
   },
   [SET_DISPUTES_FILTERS] (state, data) {
     state.disputes.filters = data
-  },  
+  }
 }
 
 // actions
@@ -45,7 +45,7 @@ const actions = {
       query = `?page=${page}&limit=12`
     } else {
       query = Utils.createQueryParams(filters, page)
-    }    
+    }
 
     // state
     commit(SET_DISPUTES_STATE, 'LOADING')
@@ -91,7 +91,7 @@ const actions = {
   [SET_DISPUTES_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_DISPUTES_FILTERS, filters)
     dispatch('getDisputes', {page: 1, cache: false})
-  },  
+  }
 }
 
 export default {

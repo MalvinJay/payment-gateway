@@ -17,7 +17,24 @@
                 <el-table @row-click="clickRow" empty-text="No events found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredEvents">
                   <el-table-column show-overflow-tooltip label="event" prop="event">
                         <template slot-scope="scope">
-                            <p class="m-0 p-0 bold-500 s-12">{{scope.row.code || 'N/A'}}</p>
+                            <p class="m-0 p-0 bold-500 s-13">
+                              <span v-if="scope.row.request.transaction.service_code == 'cashout'">
+                                <span v-if="scope.row.request.transaction.status == 'paid'">
+                                  A successful <strong>payment</strong> was made for <strong>GHS {{scope.row.request.transaction.amount}}</strong>
+                                </span>
+                                <span v-if="scope.row.request.transaction.status == 'failed'">
+                                  A <strong>payment</strong> of <strong>GHS {{scope.row.request.transaction.amount}}</strong> failed
+                                </span>
+                              </span>
+                              <span v-if="scope.row.request.transaction.service_code == 'cashin'">
+                                <span v-if="scope.row.request.transaction.status == 'paid'">
+                                  A successful <strong>payout</strong> was made for <strong>GHS {{scope.row.request.transaction.amount}}</strong>
+                                </span>
+                                <span v-if="scope.row.request.transaction.status == 'failed'">
+                                  A <strong>payout</strong> of <strong>GHS {{scope.row.request.transaction.amount}}</strong> failed
+                                </span>                                
+                              </span>
+                            </p>
                         </template>
                   </el-table-column>
                   <el-table-column label="id" prop="id" width="200">

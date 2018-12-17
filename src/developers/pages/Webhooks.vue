@@ -87,8 +87,8 @@
                     </el-form-item>                    
                     <el-form-item class="h-auto" label="Webhook version" prop="version">
                         <div class="flex align-items-center w-100" v-for="(item, index) in form.webhook_versions" :key="index">
-                            <el-radio v-model="form.name" :label="form.name"></el-radio>
-                            <div class="flex align-items-center w-100   ">
+                            <el-radio v-model="form.id" :label="item.id"></el-radio>
+                            <div class="flex align-items-center w-100 px-10">
                                 <span class="pr-6">{{item.date}}</span>
                                 <div class="flex align-items-center">
                                     <the-tag v-if="item.tag === 'default'" status="pending" :title="item.tag" icon="detail check icon"></the-tag>
@@ -97,10 +97,10 @@
                             </div>
                         </div>
                     </el-form-item>
-                    <el-form-item label="Filter event" prop="event">
+                    <el-form-item label="Filter events" prop="event">
                         <div class="flex align-items-center" v-for="(item, index) in form.subscribed_event" :key="index">
-                            <el-radio v-model="form.name" :label="form.name"></el-radio>
-                            <div>
+                            <el-radio v-model="radio" :label="item.id"></el-radio>            
+                            <div class="px-10">
                                 <span>{{item.type}}</span>
                                 <div>
                                     <span>{{item.tag}}</span>
@@ -108,9 +108,24 @@
                             </div>
                         </div>                        
                     </el-form-item>
+                    <el-form-item label="Events" prop="event" class="filtered-events m-0">
+                        <el-checkbox-group @change="handleCheckedPrivilegesChange" v-model="event">
+                            <el-row :gutter="20">
+                                <el-col :span="12">
+                                    <div class="flex align-items-center events" v-for="(item, index) in services" :key="index">
+                                        <!-- <el-radio v-model="event" :label="item"></el-radio> -->
+                                        <el-checkbox class="no-margin-checkbox m-0" v-model="event" :label="item">{{item}}</el-checkbox>
+                                        <div class="px-10">
+                                            <span>{{item}}</span>
+                                        </div>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </el-checkbox-group>
+                    </el-form-item>
                 </el-form>
             </div>
-            <span slot="footer" class="dialog-footer">
+            <span slot="footer" class="dialog-footer py-10">
                 <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
                 <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="SaveWebhook('form')">Add endpoint</el-button>
             </span>
@@ -133,16 +148,21 @@ export default {
             },
             loading: false,
             dialogVisible: false,
+            radio: 1,
+            event: 1,
             form: {
+                id: 1,
                 test_url: '',
                 production_url: '',
                 webhook_versions: [
                     {
+                        id: 1,
                         name: 'v1',
                         date: '2018-01-01',
                         tag: 'default'
                     },
                     {
+                        id: 2,
                         name: 'v2',
                         date: '2018-07-01',
                         tag: 'latest'
@@ -150,167 +170,207 @@ export default {
                 ],
                 subscribed_event: [
                     {
+                        id: 1,
                         type: 'Send all event types'
                     },
                     {
-                        type: 'Select types to send'
+                        id: 2,
+                        type: 'Select types to send',
                     }
                 ]
             },  
+            services: [
+                'account.updated',
+                'account.application.authorized',
+                'account.application.deauthorized',
+                'account.external_account.created',
+                'account.external_account.deleted',
+                'account.external_account.updated',
+                'application_fee.created',
+                'application_fee.refunded',
+                'application_fee.refund.updated',
+                'balance.available',
+                'charge.captured',
+                'charge.expired',
+                'charge.failed',
+                'charge.pending',
+                'charge.refunded',
+                'charge.succeeded',
+                'charge.updated',
+                'charge.dispute.closed',
+                'charge.dispute.created',
+                'charge.dispute.funds_reinstated',
+                'charge.dispute.funds_withdrawn',
+                'charge.dispute.updated',
+                'charge.refund.updated',
+                'customer.created',
+                'customer.deleted',
+                'customer.updated',
+                'customer.bank_account.deleted',
+                'file.created',
+                'invoice.created',
+                'invoice.deleted',
+                'invoice.payment_failed',
+                'invoice.payment_succeeded',
+                'invoice.sent',
+                'invoice.upcoming',
+                'invoice.updated',
+                'invoiceitem.created',
+            ],
             createLoading: false,
             webhooks: [
-                // {
-                //     url: "https://flopay-callback.free.beeceptor.com",
-                //     version: "2018-01-02",
-                //     status: "success",
-                //     Retry_history: "2018/11/22 12:08 to https://flopay-callback.free.beeceptor.com",
-                //     statusCode: 200,
-                //     request: {
-                //         id: "evt_1DZGzKA4jBSsp2qWd78MpJ3p",
-                //         object: "event",
-                //         api_version: "2018-09-24",
-                //         created: 1542888534,
-                //         data: {
-                //         object: {
-                //             object: "balance",
-                //             available: [
-                //             {
-                //                 currency: "usd",
-                //                 amount: 155830,
-                //                 source_types: {
-                //                 card: 155830
-                //                 }
-                //             }
-                //             ],
-                //             connect_reserved: [
-                //             {
-                //                 currency: "usd",
-                //                 amount: 0
-                //             }
-                //             ],
-                //             livemode: false,
-                //             pending: [
-                //             {
-                //                 currency: "usd",
-                //                 amount: 0,
-                //                 source_types: {
-                //                 card: 0
-                //                 }
-                //             }
-                //             ]
-                //         }
-                //         },
-                //         livemode: false,
-                //         pending_webhooks: 1,
-                //         request: {
-                //         id: null,
-                //         idempotency_key: null
-                //         },
-                //         type: "balance.available"
-                //         }
-                // },
-                // {
-                //     url: "https://flopay-sync.free.beeceptor.com",
-                //     version: "2018-01-02",
-                //     status: "success",
-                //     Retry_history: "2018/11/22 12:08 to https://flopay-sync.free.beeceptor.com",
-                //     statusCode: 200,
-                //     request: {
-                //             id: "evt_1DZGzKA4jBSsp2qWd78MpJ3p",
-                //             object: "event",
-                //             api_version: "2018-09-24",
-                //             created: 1542888534,
-                //             data: {
-                //             object: {
-                //                 object: "balance",
-                //                 available: [
-                //                 {
-                //                     currency: "ghs",
-                //                     amount: 155830,
-                //                     source_types: {
-                //                     card: 155830
-                //                     }
-                //                 }
-                //                 ],
-                //                 connect_reserved: [
-                //                 {
-                //                     currency: "ghs",
-                //                     amount: 0
-                //                 }
-                //                 ],
-                //                 livemode: false,
-                //                 pending: [
-                //                 {
-                //                     currency: "ghs",
-                //                     amount: 0,
-                //                     source_types: {
-                //                     card: 0
-                //                     }
-                //                 }
-                //                 ]
-                //             }
-                //             },
-                //             livemode: false,
-                //             pending_webhooks: 1,
-                //             request: {
-                //             id: null,
-                //             idempotency_key: null
-                //             },
-                //             type: "balance.available"
-                // }       
-                // },
-                // {
-                //     url: "https://flopay-test.free.beeceptor.com",
-                //     version: "2018-01-02",
-                //     status: "failed",
-                //     Retry_history: "2018/11/22 12:08 to https://flopay-test.free.beeceptor.com",
-                //     statusCode: 401,
-                //     request: {
-                //             id: "evt_1DZGzKA4jBSsp2qWd78MpJ3p",
-                //             object: "event",
-                //             api_version: "2018-09-24",
-                //             created: 1542888534,
-                //             data: {
-                //             object: {
-                //                 object: "balance",
-                //                 available: [
-                //                 {
-                //                     currency: "gbp",
-                //                     amount: 155830,
-                //                     source_types: {
-                //                     card: 155830
-                //                     }
-                //                 }
-                //                 ],
-                //                 connect_reserved: [
-                //                 {
-                //                     currency: "gbp",
-                //                     amount: 0
-                //                 }
-                //                 ],
-                //                 livemode: false,
-                //                 pending: [
-                //                 {
-                //                     currency: "gbp",
-                //                     amount: 0,
-                //                     source_types: {
-                //                     card: 0
-                //                     }
-                //                 }
-                //                 ]
-                //             }
-                //             },
-                //             livemode: false,
-                //             pending_webhooks: 1,
-                //             request: {
-                //             id: null,
-                //             idempotency_key: null
-                //             },
-                //             type: "balance.available"
-                // }          
-                // }             
+                {
+                    url: "https://flopay-callback.free.beeceptor.com",
+                    version: "2018-01-02",
+                    status: "success",
+                    Retry_history: "2018/11/22 12:08 to https://flopay-callback.free.beeceptor.com",
+                    statusCode: 200,
+                    request: {
+                        id: "evt_1DZGzKA4jBSsp2qWd78MpJ3p",
+                        object: "event",
+                        api_version: "2018-09-24",
+                        created: 1542888534,
+                        data: {
+                        object: {
+                            object: "balance",
+                            available: [
+                            {
+                                currency: "usd",
+                                amount: 155830,
+                                source_types: {
+                                card: 155830
+                                }
+                            }
+                            ],
+                            connect_reserved: [
+                            {
+                                currency: "usd",
+                                amount: 0
+                            }
+                            ],
+                            livemode: false,
+                            pending: [
+                            {
+                                currency: "usd",
+                                amount: 0,
+                                source_types: {
+                                card: 0
+                                }
+                            }
+                            ]
+                        }
+                        },
+                        livemode: false,
+                        pending_webhooks: 1,
+                        request: {
+                        id: null,
+                        idempotency_key: null
+                        },
+                        type: "balance.available"
+                        }
+                },
+                {
+                    url: "https://flopay-sync.free.beeceptor.com",
+                    version: "2018-01-02",
+                    status: "success",
+                    Retry_history: "2018/11/22 12:08 to https://flopay-sync.free.beeceptor.com",
+                    statusCode: 200,
+                    request: {
+                            id: "evt_1DZGzKA4jBSsp2qWd78MpJ3p",
+                            object: "event",
+                            api_version: "2018-09-24",
+                            created: 1542888534,
+                            data: {
+                            object: {
+                                object: "balance",
+                                available: [
+                                {
+                                    currency: "ghs",
+                                    amount: 155830,
+                                    source_types: {
+                                    card: 155830
+                                    }
+                                }
+                                ],
+                                connect_reserved: [
+                                {
+                                    currency: "ghs",
+                                    amount: 0
+                                }
+                                ],
+                                livemode: false,
+                                pending: [
+                                {
+                                    currency: "ghs",
+                                    amount: 0,
+                                    source_types: {
+                                    card: 0
+                                    }
+                                }
+                                ]
+                            }
+                            },
+                            livemode: false,
+                            pending_webhooks: 1,
+                            request: {
+                            id: null,
+                            idempotency_key: null
+                            },
+                            type: "balance.available"
+                }       
+                },
+                {
+                    url: "https://flopay-test.free.beeceptor.com",
+                    version: "2018-01-02",
+                    status: "failed",
+                    Retry_history: "2018/11/22 12:08 to https://flopay-test.free.beeceptor.com",
+                    statusCode: 401,
+                    request: {
+                            id: "evt_1DZGzKA4jBSsp2qWd78MpJ3p",
+                            object: "event",
+                            api_version: "2018-09-24",
+                            created: 1542888534,
+                            data: {
+                            object: {
+                                object: "balance",
+                                available: [
+                                {
+                                    currency: "gbp",
+                                    amount: 155830,
+                                    source_types: {
+                                    card: 155830
+                                    }
+                                }
+                                ],
+                                connect_reserved: [
+                                {
+                                    currency: "gbp",
+                                    amount: 0
+                                }
+                                ],
+                                livemode: false,
+                                pending: [
+                                {
+                                    currency: "gbp",
+                                    amount: 0,
+                                    source_types: {
+                                    card: 0
+                                    }
+                                }
+                                ]
+                            }
+                            },
+                            livemode: false,
+                            pending_webhooks: 1,
+                            request: {
+                            id: null,
+                            idempotency_key: null
+                            },
+                            type: "balance.available"
+                }          
+                }             
             ],
-            appsHooks: [ ]
+            appsHooks: []
         }
     },
     created() {
@@ -326,7 +386,7 @@ export default {
             if (column.property) {
                 // this.$router.push(`/webhooks/${row.id}`)
             }
-        },    
+        },
         SaveWebhook () {
             this.createLoading = true
             console.log('Form to Sent:', this.form)
@@ -357,7 +417,16 @@ export default {
                     message: response.data.error,
                 })
             })          
-        }
+        },
+        handleCheckAllChange (val) {
+            this.priv = val ? this.privileges.map(el => el.code) : []
+            this.isIndeterminate = false
+        },
+        handleCheckedPrivilegesChange(value) {
+            let checkedCount = value.length
+            this.checkAll = checkedCount === this.privileges.length
+            this.isIndeterminate = checkedCount > 0 && checkedCount < this.privileges.length
+        },        
     },
     computed: {
         ...mapGetters({
@@ -388,5 +457,9 @@ export default {
 <style lang="scss" scoped>
 .transaction-form {
     width: 100%;
+}
+
+.el-dialog__body{
+
 }
 </style>

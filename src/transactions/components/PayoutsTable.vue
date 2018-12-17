@@ -46,26 +46,27 @@
                         <template slot-scope="scope">
                             {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
                         </template>
-                    </el-table-column> -->
+                    </el-table-column>
                     <el-table-column width="80px">
                         <template slot-scope="scope">
                             <div class="mini-menu">
-                                <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i>
-                                <el-dropdown trigger="click">
-                                    <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
+                                <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i> -->
+                                <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                                    <!-- <i class="ellipsis horizontal icon m-0 mr-0 blue-text cursor"></i> -->
+                                    <el-button class="icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
                                     <el-dropdown-menu class="w-200" slot="dropdown">
                                         <el-dropdown-item disabled>
                                             <div class="table-dropdown-header blue-text bold-600 text-uppercase">
                                                 action
                                             </div>
                                         </el-dropdown-item>
-                                        <el-dropdown-item class="s-12">Open Ticket</el-dropdown-item>
-                                        <el-dropdown-item class="s-12">Retry</el-dropdown-item>
+                                        <el-dropdown-item command="open" class="s-12">Open Ticket</el-dropdown-item>
+                                        <el-dropdown-item command="retry" class="s-12">Retry</el-dropdown-item>
                                         <el-dropdown-item divided disabled>
                                             <div class="table-dropdown-header blue-text bold-600 text-uppercase">
                                                 connection
                                             </div></el-dropdown-item>
-                                        <el-dropdown-item class="s-12">View Payment Details</el-dropdown-item>
+                                        <el-dropdown-item command="edit" class="s-12">View Payment Details</el-dropdown-item>
                                     </el-dropdown-menu>
                                 </el-dropdown>
                             </div>
@@ -86,7 +87,7 @@
                 </div>
             </div>
         </div>
-        <!-- New Payment -->
+        <!-- New Payout -->
         <el-dialog custom-class="new-transaction"
             title="Create New Payout - Mobile Money"
             :visible.sync="dialogVisible"
@@ -108,6 +109,9 @@
                             ></el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item v-if="form.provider === 'vodafone'" label="Voucher">
+                        <el-input v-model="form.voucher"></el-input>
+                    </el-form-item>
                     <el-form-item label="Sender Amount" prop="sender_amount">
                         <el-input class="little-padding-input" v-model="form.sender_amount"><span slot="prefix">&#8373</span></el-input>
                     </el-form-item>
@@ -120,10 +124,11 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
-                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payment</el-button>
+                <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="close">Cancel</el-button>
+                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payout</el-button>
             </span>
         </el-dialog>
+        <ticket-modal :transaction="transaction" :ticketVisible.sync="ticketVisible"></ticket-modal>
     </div>
 </template>
 
@@ -150,6 +155,8 @@ export default {
       activeName: '1',
       date: false,
       dialogVisible: false,
+      ticketVisible: false,
+      transaction: {},
       form: {
         sender_amount: '',
         sender_currency: 'GHS',
@@ -180,6 +187,14 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'payouts')
+    EventBus.$on('ticketModal', (val) => {
+        this.ticketVisible = false
+    })
+  },
+  beforeDestroy () {
+    EventBus.$off('ticketModal', (val) => {
+        this.ticketVisible = false
+    })  
   },
   methods: {
     clickRow (row, event, column) {
@@ -193,7 +208,66 @@ export default {
     fetchTransactions () {
       this.$store.dispatch('getPayouts', {cache: false})
     },
-    submitForm(formName) {
+    close () {
+        this.form = {
+            sender_amount: '',
+            sender_currency: 'GHS',
+            recipient_amount: '',
+            recipient_currency: 'GHS',
+            recipient_no: '',
+            recipient_name: '',
+            provider: '',
+            country_code: 'GH',
+            service_code: 'cashin',
+            live: false
+        }
+        this.dialogVisible = false
+    },
+    handleTableCommand (command, row) {
+        switch (command) {
+            case 'edit':
+                this.$router.push(`payments/${row.id}`)
+                break
+            case 'open':
+                this.ticketVisible = true
+                this.transaction = row
+                break
+            case 'retry':
+                this.retry(row)
+                break
+            default:
+                break
+        }
+    },
+    retry (row) {
+        var form = Utils.retryTransactions(row, 'payout')
+        form.live = !this.test
+        form.dummy = this.test
+        
+        this.$store.dispatch('createPayouts', form)
+        .then((response) => {
+            if (response.data.success) {
+                this.$message({
+                    message: 'Retry successful',
+                    type: 'success'
+                })
+                this.fetchTransactions()
+                this.dialogVisible = false
+            } else {
+            this.$message({
+                    type: 'error',
+                    message: response.data.response.message.message
+                })
+            }
+        }).catch((error) => {
+            const response = error.response
+            this.$message({
+                message: response.data.error,
+                type: 'error'
+            })
+        })
+    },
+    submitForm (formName) {
         this.createLoading = true
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -231,10 +305,10 @@ export default {
             return false
           }
         })
-      },
-      resetForm(formName) {
+    },
+    resetForm (formName) {
         this.$refs[formName].resetFields();
-      }
+    }
   },
   computed: {
     ...mapGetters({

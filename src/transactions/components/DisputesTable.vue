@@ -4,7 +4,6 @@
         <div class="transactions">
             <div class="trans-div flex justify-content-between">
                 <div>
-                    <!-- <p class="blue-text bold-600 s-16 m-0 p-0">Disputes</p> -->
                     <filter-component dispatch="setDisputesFilters" filterType="dispute"></filter-component>
                 </div>
                 <div>
@@ -49,37 +48,12 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                        <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                         <el-table-column prop="created_at" label="Date" width="auto">
                             <template slot-scope="scope">
                                 {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
                             </template>
                         </el-table-column>
-                        <!-- <el-table-column width="80px">
-                            <template slot-scope="scope">
-                                <div class="mini-menu">
-                                    <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i>
-                                    <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
-                                        <i class="ellipsis horizontal icon mr-0 cursor"></i>
-                                        <el-dropdown-menu class="w-200" slot="dropdown">
-                                            <el-dropdown-item v-if="scope.row.status.toLowerCase() ==='failed'" disabled>
-                                                <div class="table-dropdown-header bold-600 text-uppercase">
-                                                    action
-                                                </div>
-                                            </el-dropdown-item>
-                                            <el-dropdown-item command="open" v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Open Ticket</el-dropdown-item>
-                                            <el-dropdown-item v-if="scope.row.status.toLowerCase() ==='failed'" class="s-12">Retry</el-dropdown-item>
-                                            <el-dropdown-item :divided="scope.row.status.toLowerCase() ==='failed'" disabled>
-                                                <div class="table-dropdown-header bold-600 text-uppercase">
-                                                    connection
-                                                </div>
-                                            </el-dropdown-item>
-                                            <el-dropdown-item command="edit" class="s-12">View Dispute Details</el-dropdown-item>
-                                        </el-dropdown-menu>
-                                    </el-dropdown>
-                                </div>
-                            </template>
-                        </el-table-column> -->
                     </el-table>
                     
                     <!-- FOOTER -->
@@ -99,7 +73,6 @@
             </div>
         </div>
     </el-card>
-    <export-modal :modalVisible.sync="exportVisible"></export-modal>    
 </div>
 </template>
 
@@ -112,13 +85,10 @@ export default {
   data () {
     return {
       columns: [
-        // {label: 'Method', dataField: 'method', width: '100px'},
         {label: 'Customer', dataField: 'name', width: 'auto'},
         {label: 'Dispute Ref.', dataField: 'ref', width: 'auto'},
-        {label: 'Transaction Ref.', dataField: 'trans_ref', width: 'auto'},
-        // {label: 'type', dataField: 'transaction_type', width: '100px'}
+        {label: 'Transaction Ref.', dataField: 'trans_ref', width: 'auto'}
       ],
-    //   disputes: [],
       styleObject: {
         fontSize: '12px'
       },
@@ -131,14 +101,6 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'disputes')
-    EventBus.$on('exportModal', (val) => {
-        this.exportVisible = false
-    })
-  },
-  beforeDestroy() {
-    EventBus.$off('exportModal', (val) => {
-        this.exportVisible = false
-    })      
   },
   methods: {
     handleCurrentChange (val) {

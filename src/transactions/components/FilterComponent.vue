@@ -18,12 +18,12 @@
             <el-collapse-transition>
                 <div id="filter-from" class="filter-bg" v-show="date">
                     <div class="flex align-items-center">
-                        <el-date-picker class="filter-input blue-text mr-10"
+                        <el-date-picker class="filter-input blue-text mr-10" ref="filterFrom"
                             v-model="filters.from"
                             type="date"
                             placeholder="From.."
                             @change="keepVisible"
-                            @focus="keepVisible"
+                            @focus="showAyt"
                             @blur="keepVisible"
                             value-format="yyyy-MM-dd"
                             format="MMM dd, yyyy">
@@ -47,7 +47,7 @@
             </el-dropdown-item>
             <el-collapse-transition>
                 <div class="filter-bg" v-show="reason">
-                    <el-select size="mini" v-model="filters.reasons" @remove-tag="removeAllTypes" @change="reasonClick" multiple collapse-tags placeholder="Select A Reason">
+                    <el-select filterable size="mini" v-model="filters.reasons" @remove-tag="removeAllTypes" @change="reasonClick" multiple collapse-tags placeholder="Select A Reason">
                         <el-option
                         v-for="item in reasons"
                         :key="item.value"
@@ -185,8 +185,11 @@ export default {
             this.createFilters()
         },
         keepVisible () {
-            console.log('now')
             this.$refs.messageDrop.show()
+        },
+        showAyt () {
+            console.log('hoy')
+            console.log('hoy', this.$refs.filterFrom)
         },
         statusClick (val) {
             this.keepVisible()
@@ -231,6 +234,12 @@ export default {
         EventBus.$on('focus', this.keepVisible)
         this.$on('blur', this.keepVisible)
         this.$on('focus', this.keepVisible)
+
+        console.log('focus here', this.$refs.messageDrop)
+
+        // if (this.$refs.messageDrop.$refs.input.focus()) {
+            
+        // }
         // let ref = this.$refs
         // let button = document.querySelectorAll('button')
         // button.forEach((elem) => {

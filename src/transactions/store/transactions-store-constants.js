@@ -10,8 +10,8 @@ export const SET_CURRENT_TRANSACTION = 'setCurrentTransaction'
 export const SET_CURRENT_TRANSACTION_STATE = 'setCurrentTransactionState'
 export const REFUND_TRANSACTION = 'createRefund'
 
-// export const GET_BASE_URI = 'https://api.flopay.io/'
-export const GET_BASE_URI = 'https://cbdd8a34.ngrok.io/api/'
+export const GET_BASE_URI = 'https://api.flopay.io/'
+// export const GET_BASE_URI = 'https://63cf7c38.ngrok.io/api/'
 export const GET_TRANSACTIONS_URI = `${GET_BASE_URI}v2/transactions.json`
 export const GET_REFUND_TRANSACTION_URI = `${GET_BASE_URI}v1/reverse.json`
 

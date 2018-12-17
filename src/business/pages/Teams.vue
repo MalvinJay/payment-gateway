@@ -102,10 +102,10 @@
                 </div>
                 <div class="flex justify-content-center">
                   <div class="custom">
-                    <el-table highlight-current-row @row-click="checkRole" ref="role" empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
+                    <el-table :show-header="header" highlight-current-row @row-click="checkRole" ref="role" empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
                         <el-table-column width="50">
                             <template slot-scope="scope">
-                                <el-radio v-model="form.branch_code" :label="scope.row.code"></el-radio>
+                                <el-radio v-model="form.user_group_id" :label="scope.row.id"></el-radio>
                             </template>
                         </el-table-column>
                         <el-table-column width="200" class="bold-600">
@@ -116,7 +116,7 @@
                         <el-table-column>
                             <template slot-scope="scope">
                                 {{scope.row.description || 'N/A'}}
-                            </template>                            
+                            </template>              
                         </el-table-column>
                         <el-table-column align="right">
                             <template slot-scope="scope">
@@ -136,7 +136,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <el-button icon="info circle icon" type="text" slot="reference"></el-button>
+                                    <el-button icon="info circle icon" type="text" slot="reference" class="p-0"></el-button>
                                 </el-popover>
                             </template>
                         </el-table-column>                                          
@@ -150,7 +150,7 @@
             </el-dialog>
 
             <!-- Select A Branch -->
-            <el-dialog custom-class="select-branch" :visible.sync="dialogVisible1" width="40%">
+            <el-dialog custom-class="invite-user" :visible.sync="dialogVisible1" width="40%">
                 <div class="head flex flex-column justify-content-start px-20 py-16">
                     <div class="ContentHeader flex justify-content-center flex-column black-text">
                         <span class="black-text bold-600 text-lineHeight--30">
@@ -159,7 +159,7 @@
                     </div>
                 </div>
                 <div class="flex justify-content-center">
-                  <div class="branches w-100">
+                  <div class="custom  w-100">
                     <el-table highlight-current-row @row-click="checkBranch" ref="branch" empty-text="No Branches Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredBranches">
                         <el-table-column width="50">
                             <template slot-scope="scope">
@@ -201,13 +201,14 @@ export default {
     name: 'Teams',
     data (){
         return {
+            header: false,
             roleId: '',
             multiemail: '',
             form: {
-                name: '',
                 email: '',
-                branch_code: '',
+                name: '',
                 msisdn: '',
+                branch_code: '',
                 role: 'admin',
                 user_group_id: '',
             },            
@@ -318,14 +319,15 @@ export default {
             this.createLoading = true
             this.$store.dispatch('createUser', this.form)
             .then((response) => {
-                this.createLoading = false
                 this.$message({
                     type: 'success',
                     message: response.data.response.message,
                 })
-                this.$store.dispatch('getTeams');
+                this.createLoading = false
+
                 if (response.data.success) {
-                    this.close()
+                    this.dialogVisible1 = false
+                    this.$store.dispatch('getTeams', {cache: false})
                 }
             }).catch((error) => {
                 this.createLoading = false

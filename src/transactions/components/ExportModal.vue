@@ -39,9 +39,13 @@
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item class="flex justify-content-end">
-                    <el-button @click="close">Cancel</el-button>
-                    <a v-if="ready" download :href="this.link" type="primary">Download</a>
-                    <el-button v-else @click="submitExport('form')" type="primary" :loading="loading">Submit</el-button>
+                    <div class="flex">
+                        <el-button @click="close">Cancel</el-button>
+                        <!-- <a v-if="ready" download :href="this.link" type="primary">Download</a> -->
+                        
+                        <el-button v-if="ready" @click="download" type="primary" :loading="loading">download</el-button>
+                        <el-button v-else @click="submitExport('form')" type="primary" :loading="loading">Submit</el-button>
+                    </div>
                 </el-form-item>
             </el-form>
         </div>

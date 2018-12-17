@@ -14,8 +14,8 @@
                         <i slot="suffix" @click="showPassword" class="el-input__icon eye icon"></i>
                     </el-input>
                 </el-form-item>
-                <div class="flex justify-content-between align-items-center s-12 my-2">
-                    <el-checkbox size="mini" v-model="isAdmin" label="Admin?"></el-checkbox>
+                <div class="flex justify-content-end align-items-center s-12 my-2">
+                    <el-checkbox v-if="false" size="mini" v-model="isAdmin" label="Admin?"></el-checkbox>
                     <el-button @click="forgotPassword" size="mini" type="text">Forgot password?</el-button>
                 </div>
                 <el-form-item class="my-2">

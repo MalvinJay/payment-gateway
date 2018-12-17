@@ -44,7 +44,7 @@
                     <el-table-column width="80">
                         <template slot-scope="scope">
                             <div class="mini-menu">
-                                <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i>
+                                <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i> -->
                                 <el-dropdown trigger="click">
                                     <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
                                     <el-dropdown-menu class="w-200" slot="dropdown">

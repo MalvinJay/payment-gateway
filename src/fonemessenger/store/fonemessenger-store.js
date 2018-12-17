@@ -1,5 +1,6 @@
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
-import { GET_FONE_MESSENGERS, CREATE_LOG, SET_FONE_MESSENGERS, SET_FONE_MESSENGERS_STATE } from './fonemessenger-store-constants'
+import { GET_FONE_MESSENGERS, CREATE_LOG, SET_FONE_MESSENGERS,
+  SET_FONE_MESSENGERS_STATE, TOPUP_OVA } from './fonemessenger-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 
@@ -63,6 +64,21 @@ const actions = {
         method: 'POST',
         token: rootGetters.token,
         data: log
+      }).then((response) => {
+        resolve(response)
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  [TOPUP_OVA] ({ rootGetters }, { url, ova }) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}${url}`,
+        method: 'POST',
+        token: rootGetters.token,
+        data: ova
       }).then((response) => {
         resolve(response)
       }).catch((error) => {

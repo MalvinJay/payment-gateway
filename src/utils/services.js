@@ -1,6 +1,46 @@
 import equal from 'fast-deep-equal'
 import moment from 'moment'
 export default {
+  retryTransactions (row, type) {
+    var form = {}
+    var reference = ''
+
+    if (row.reference.toLowerCase().startsWith('r')) {
+      reference = row.reference
+    } else {
+      reference = `R${row.reference}`
+    }
+
+    if (type === 'payment') {
+      form = {
+        amount: row.receiver_amount,
+        currency: 'GHS',
+        customer_no: row.receiver_no,
+        country_code: 'GH',
+        reference: reference,
+        customer_name: row.receiver_name,
+        provider: row.provider,
+        remarks: row.remarks,
+        retry: true
+      }
+      form.service_code = 'cashout'
+    } else {
+      form = {
+        sender_amount: row.sender_amount,
+        sender_currency: 'GHS',
+        recipient_amount: row.recipient_amount,
+        recipient_currency: 'GHS',
+        recipient_no: row.receiver_no,
+        recipient_name: row.receiver_name,
+        provider: row.provider,
+        country_code: 'GH',
+        service_code: 'cashin'
+      }
+    }
+
+    console.log('retry', form)
+    return form
+  },
   // debit payment
   createDebitFreq (schedule, job) {
     var newString = schedule

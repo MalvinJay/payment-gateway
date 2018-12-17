@@ -2,7 +2,7 @@
     <div class="bg pt-20 nav-container">
         <div class="navigation-card card-0">
             <div class="flex align-items-center">
-                <el-button class="side-button" style="padding: 5px;margin-right: 5px">
+                <el-button type="text" class="side-button" style="padding: 5px;margin-right: 5px">
                     <img style="width: 1em" src="../assets/images/icons/header.png" alt="">
                 </el-button>
                 <!-- <avatar :size="25" username="Flopay" backgroundColor="#f7921e"></avatar> -->
@@ -13,8 +13,7 @@
                     <p slot="reference" class="text-uppercase s-16 p-0 m-0 bold-500 client_name">{{client}}</p>                
                 </el-popover>
             </div>
-        </div>
-
+        </div> 
         <el-menu router :unique-opened="true" :default-active="defaultActive" active-text-color='#586ADA' text-color="#999999" background-color="#f1f6f8">
             <el-menu-item route="/" index="dashboard">
                 <template slot="title">

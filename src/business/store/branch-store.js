@@ -1,5 +1,5 @@
 import {
-  GET_BRANCHES,CREATE_BRANCH,SET_BRANCHES,SET_BRANCHES_STATE,DELETE_BRANCH,GET_CURRENT_BRANCH,SET_CURRENT_BRANCH
+  GET_BRANCHES, CREATE_BRANCH, SET_BRANCHES, SET_BRANCHES_STATE, DELETE_BRANCH, GET_CURRENT_BRANCH, SET_CURRENT_BRANCH
 } from './branch-store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
@@ -33,12 +33,12 @@ const mutations = {
   },
   [SET_BRANCHES_STATE] (state, data) {
     state.branches.state = data
-  },
+  }
 }
 
 // actions
 const actions = {
-  [GET_BRANCHES] ({ state, commit, rootGetters }, {page = 1,cache = true} = {}) {
+  [GET_BRANCHES] ({ state, commit, rootGetters }, {page = 1, cache = true} = {}) {
     var filters = state.branches.filters
     var query = ''
     if (Utils.empty(filters)) {
@@ -97,7 +97,7 @@ const actions = {
         return error
       })
     })
-  },  
+  }
 }
 
 export default {

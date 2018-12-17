@@ -2,8 +2,7 @@
   <div v-loading="loadingPage">
     <el-card :class="[{'test-data': isTest}, 'flex', 'flex-column']">
         <h2 class="blue-text bold-500 m-0 pb-5">
-          <!-- <span class="text-uppercase">{{filteredevent.Method}}</span> -->
-          <span class="text-lowercase">{{data.code}}</span>
+          <span class="text-lowercase">{{eventName}}</span>
         </h2>
         <p class="gray-text">{{filteredevent.Date}}</p>
     </el-card>
@@ -21,16 +20,27 @@
         </div>
     </el-card>
 
+    <el-card class="mb-2">
+        <div slot="header">
+            <span class="blue-text bold-600">Event Response</span>
+        </div>
+        <div>
+          <pre class="m-0">
+            <code class="html hljs s-13" v-html="responseBody"></code>
+          </pre>
+        </div>
+    </el-card>
+
     <el-card class="events-hooks">
         <div slot="header">
           <div class="flex justify-content-between align-items-center">
             <div class="blue-text bold-600">Webhooks</div>
-            <el-button :disabled="error" @click="retryHooks" :loading="loading" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="redo icon"></i> Retry all webhooks </el-button>
+            <el-button :disabled="error" @click="retryHooks" :loading="loading" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="redo icon"></i> Resend webhook </el-button>
           </div>
         </div>
         <div class="flex justify-content-center">
           <div class="callbacks w-100 s-13">
-            <el-table ref="events" @row-click="clickRow" empty-text="No Webhooks Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="webhooks">
+            <el-table ref="events" @row-click="clickRow" empty-text="No retried webhooks available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="events_reposted">
                 <el-table-column prop="message" type="expand">
                     <template slot-scope="scope">   
                       <event-webhook :code="scope.row.statusCode" :status="scope.row.status" :Retry_history="scope.row.Retry_history" :request="scope.row.request"></event-webhook>
@@ -68,161 +78,11 @@ export default {
   data () {
     return {
       isTest: true,
+      eventName: 'N/A',
       styleObject: {
         fontSize: '12px'
       },
       loading: false,
-      webhooks: [
-        {
-          url: "https://flopay-callback.free.beeceptor.com",
-          status: "success",
-          Retry_history: "2018/11/22 12:08 to https://flopay-callback.free.beeceptor.com",
-          statusCode: 200,
-          request: {
-                    id: "evt_1DZGzKA4jBSsp2qWd78MpJ3p",
-                    object: "event",
-                    api_version: "2018-09-24",
-                    created: 1542888534,
-                    data: {
-                      object: {
-                        object: "balance",
-                        available: [
-                          {
-                            currency: "usd",
-                            amount: 155830,
-                            source_types: {
-                              card: 155830
-                            }
-                          }
-                        ],
-                        connect_reserved: [
-                          {
-                            currency: "usd",
-                            amount: 0
-                          }
-                        ],
-                        livemode: false,
-                        pending: [
-                          {
-                            currency: "usd",
-                            amount: 0,
-                            source_types: {
-                              card: 0
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    livemode: false,
-                    pending_webhooks: 1,
-                    request: {
-                      id: null,
-                      idempotency_key: null
-                    },
-                    type: "balance.available"
-                  }
-        },
-      
-        {
-          url: "https://flopay-sync.free.beeceptor.com",
-          status: "success",
-          Retry_history: "2018/11/22 12:08 to https://flopay-sync.free.beeceptor.com",
-          statusCode: 200,
-          request: {
-                    id: "evt_1DZGzKA4jBSsp2qWd78MpJ3p",
-                    object: "event",
-                    api_version: "2018-09-24",
-                    created: 1542888534,
-                    data: {
-                      object: {
-                        object: "balance",
-                        available: [
-                          {
-                            currency: "ghs",
-                            amount: 155830,
-                            source_types: {
-                              card: 155830
-                            }
-                          }
-                        ],
-                        connect_reserved: [
-                          {
-                            currency: "ghs",
-                            amount: 0
-                          }
-                        ],
-                        livemode: false,
-                        pending: [
-                          {
-                            currency: "ghs",
-                            amount: 0,
-                            source_types: {
-                              card: 0
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    livemode: false,
-                    pending_webhooks: 1,
-                    request: {
-                      id: null,
-                      idempotency_key: null
-                    },
-                    type: "balance.available"
-          }       
-        },
-
-        {
-          url: "https://flopay-test.free.beeceptor.com",
-          status: "failed",
-          Retry_history: "2018/11/22 12:08 to https://flopay-test.free.beeceptor.com",
-          statusCode: 401,
-          request: {
-                    id: "evt_1DZGzKA4jBSsp2qWd78MpJ3p",
-                    object: "event",
-                    api_version: "2018-09-24",
-                    created: 1542888534,
-                    data: {
-                      object: {
-                        object: "balance",
-                        available: [
-                          {
-                            currency: "gbp",
-                            amount: 155830,
-                            source_types: {
-                              card: 155830
-                            }
-                          }
-                        ],
-                        connect_reserved: [
-                          {
-                            currency: "gbp",
-                            amount: 0
-                          }
-                        ],
-                        livemode: false,
-                        pending: [
-                          {
-                            currency: "gbp",
-                            amount: 0,
-                            source_types: {
-                              card: 0
-                            }
-                          }
-                        ]
-                      }
-                    },
-                    livemode: false,
-                    pending_webhooks: 1,
-                    request: {
-                      id: null,
-                      idempotency_key: null
-                    },
-                    type: "balance.available"
-          }          
-        },                
-      ],
     }
   },
 
@@ -251,31 +111,30 @@ export default {
         })
       }
     },
-    
+
     retryHooks(){
       this.loading = true
-      // this.$store.dispatch('retryHook', this.form.reference)
-      // .then((response) => {
-      //     if (response.data.success) {
-      //         this.$message({
-      //             type: 'success',
-      //             message: 'Payment Refunded',
-      //         })
-      //     } else {
-      //         this.$message({
-      //             type: 'error',
-      //             message: response.data.response.message
-      //         })
-      //     }
-      //     this.loading = false
-      // }).catch((error) => {
-      //     this.loading = false
-      //     const response = error.response
-      //     this.$message({
-      //         message: response.data.response.error_message,
-      //         type: 'error'
-      //     })
-      // })            
+      this.$store.dispatch('retryHook', this.event.id)
+      .then((response) => {
+          if (response.data.success) {
+              this.$message({
+                  type: 'success',
+                  message: 'Hooks Resent',
+              })
+          } else {
+              this.$message({
+                  type: 'error',
+                  message: response.data.response.message
+              })
+          }
+          this.loading = false
+      }).catch((error) => {
+          this.loading = false
+          this.$message({
+              message: 'Webhook being sent...',
+              type: 'error'
+          })
+      })            
     },
     
     fetchEvent () {
@@ -311,53 +170,61 @@ export default {
 
     error () {
       return this.state === 'ERROR'
-    },    
-
-    data () {
-      return this.event;
     },
 
     filteredevent (){
       var event = {
         ID: this.event.id,
         Date: moment(this.event.created_at).format("YYYY/MM/DD, hh:mm a"),
-        // Method: this.event.method? this.event.method.toUpperCase(): 'N/A',
-        URL: `/${this.event.url? this.event.url: 'n/a'}`,
+        URL: `${this.event.url? this.event.url: 'n/a'}`,
         Version: '2018/2019',
         Source: 'Dashboard'
       }
+      this.eventName = this.event.request.event_name
       return event;
     },
 
+    events_reposted() {
+      var reposted = []
+      var array = this.event.events_reposted
+      var record;
+
+      for (let i = 0; i < array.length; i++) {
+        record = {
+          url: array[i].url,
+          status: array[i].request.transaction.status == "paid"? "success": "failed",
+          Retry_history: `${moment(array[i].created_at).format("YYYY/MM/DD, hh:mm a")} to ${array[i].url}`,
+          statusCode: array[i].request.transaction.status == "paid"? 200: 401,
+          request: array[i].request
+        }      
+
+        reposted.push(record)
+      }
+      return reposted
+    },
+
     requestBody (){     
-      if(this.event.data){
-        var eventData = JSON.stringify(this.event.data.REQUEST, undefined, 2)
-        eventData = JSON.parse(eventData)
+      if(this.event.request){
+        var eventData = this.event.request
         
         if (Utils.present(eventData)){
           return this.syntaxHighlight(eventData) 
-        } 
-        else if (Utils.present(eventData)){
-          return this.syntaxHighlight(eventData) 
         }
         else {
-          return this.syntaxHighlight('No Data')
+          return this.syntaxHighlight('No Request body')
         }      
       }
     },
 
     responseBody () {   
-      if(this.event.data){
-        var eventData = JSON.stringify(this.event.data.RESPONSE, undefined, 2)
+      if(this.event.data.RESPONSE){
+        var eventData = this.event.data.RESPONSE
 
         if (Utils.present(eventData)){
           return this.syntaxHighlight(eventData) 
-        } 
-        else if (Utils.present(eventData)){
-          return this.syntaxHighlight(eventData) 
         }
         else {
-          return this.syntaxHighlight('No Data')
+          return this.syntaxHighlight('No Response body')
         }
       }
     }

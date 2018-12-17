@@ -3,7 +3,7 @@
         title="Open Ticket"
         @close="close"
         :visible="ticketVisible"
-        width="25%">
+        width="30%">
         <div class="flex new-ticket-bg">
             <el-form label-width="80px" ref="ticketForm" size="mini" class="w-80 m-auto">
                 <el-form-item label="Issue">
@@ -17,13 +17,35 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Email">
-                    <el-input v-model="form.email" type="email"></el-input>
+                    <div class="flex flex-wrap">
+                        <el-tag
+                            :key="tag"
+                            v-for="tag in form.email"
+                            closable
+                            :disable-transitions="false"
+                            @close="handleClose(tag)">
+                            {{tag}}
+                            </el-tag>
+                        <el-input
+                            resize="horizontal"
+                            class="input-new-tag"
+                            v-if="inputVisible"
+                            v-model="inputValue"
+                            ref="saveTagInput"
+                            size="mini"
+                            @keyup.enter.native="handleInputConfirm"
+                            @blur="handleInputConfirm"
+                            >
+                        </el-input>
+                        <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Email</el-button>
+                    </div>
+                    <!-- <el-input v-model="form.email" type="email"></el-input> -->
                 </el-form-item>
-                <el-form-item v-if="form.description === 'other'" label="Subject">
+                <el-form-item label="Subject">
                     <el-input v-model="form.subject" type="text"></el-input>
                 </el-form-item>
-                <el-form-item v-if="form.description === 'other'" label="Other">
-                    <el-input v-model="other" autosize type="textarea"></el-input>
+                <el-form-item label="Remarks">
+                    <el-input v-model="other" :autosize="{ minRows: 3, maxRows: 8}" type="textarea"></el-input>
                 </el-form-item>
                 <div class="flex justify-content-end my-2">
                     <el-button size="mini" @click="close">Cancel</el-button>
@@ -40,34 +62,59 @@ import EventBus from '../../event-bus.js'
 export default {
     name: 'TicketModal',
     props: ['ticketVisible', 'transaction'],
-    data() {
+    data () {
       return {
         reasons: ['other', 'pending transaction', 'successful but customer not credited', 'transaction callback not received'],
         form: {
-            description: ''
+            description: '',
+            email: []
         },
         other: '',
-        loading: false
+        loading: false,
+        // form.email: ['Tag 1', 'Tag 2', 'Tag 3'],
+        inputVisible: false,
+        inputValue: ''
       }
     },
     methods: {
       close () {
         EventBus.$emit('ticketModal', false)
       },
+      handleClose(tag) {
+        this.form.email.splice(this.form.email.indexOf(tag), 1)
+      },
+
+      showInput() {
+        this.inputVisible = true
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus()
+        })
+      },
+
+      handleInputConfirm() {
+        let inputValue = this.inputValue
+        if (inputValue) {
+          this.form.email.push(inputValue)
+        }
+        this.inputVisible = false
+        this.inputValue = ''
+      },
       submitTicket (formName) {
         this.loading = true
-        this.form.description = this.form.description === 'other' ? this.other : this.form.description
+        // this.form.description = this.form.description === 'other' ? this.other : this.form.description
         var form = {
             ...this.form,
-            wallet_number: this.transaction.customer_no,
-            amount: this.transaction.amount,
+            wallet_number: this.transaction.receiver_no,
+            amount: this.transaction.sender_amount,
             reference: this.transaction.reference,
-            date_of_transaction: this.transaction.date,
+            date_of_transaction: this.transaction.created_at,
             email: [this.$session.get('email')],
+            emails: [...this.form.email],
             customer_name: this.transaction.receiver_name,
-            provider_reference: this.transaction.provider_reference,
+            provider_reference: this.transaction.provider_ref,
             from: this.$session.get('email')
         }
+        console.log('formm for ticket', form)
         this.$store.dispatch('createTicket', form)
         .then((response) => {
             this.loading = false
@@ -109,5 +156,20 @@ export default {
 }
 .w-80{
     width: 80%
+}
+.el-tag + .el-tag {
+    margin-left: 10px;
+}
+.button-new-tag {
+    margin-left: 0px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.input-new-tag {
+    width: auto;
+    margin-left: 0px;
+    vertical-align: bottom;
 }
 </style>
