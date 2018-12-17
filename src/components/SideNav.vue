@@ -71,7 +71,7 @@
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/developer.svg" alt="">Developers
                 </template>
-                <!-- <el-menu-item index="9-1">Apps</el-menu-item> -->
+                <el-menu-item index="keys">API Keys</el-menu-item>
                 <el-menu-item route="/events" index="events">Events</el-menu-item>
                 <el-menu-item route="/logs" index="logs">Logs</el-menu-item>
                 <el-menu-item route="/webhooks" index="webhooks">Webhooks</el-menu-item>
