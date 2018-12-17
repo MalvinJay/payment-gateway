@@ -70,7 +70,7 @@
                         </el-row>
                     </div>
                     <div class="flex justify-content-end">
-                        <el-button @click="saveNewDetails" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button" type="primary">Save</el-button>
+                        <el-button :loading="saveLoading" @click="saveNewDetails" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button" type="primary">Save</el-button>
                     </div>
                 </div>
             </div>
@@ -113,6 +113,7 @@ export default {
        revealSecret: false,
        form: {},
        loading: false,
+       saveLoading: false,
        rules: {
         password: [
             { required: true, message: 'Password is required', trigger: 'blur' }
@@ -154,7 +155,31 @@ export default {
         })
     },
     saveNewDetails () {
-        
+        this.saveLoading = true
+        var items = [this.user.client.test_callbackurl, this.user.client.callbackurl]
+        this.$store.dispatch('getCurrentHook', items)
+            .then((response) => {
+                if (response.data.success) {
+                    this.user.client.test_callbackurl = response.data.response.data.test_callbackurl
+                    this.user.client.callbackurl = response.data.response.data.production_callbackurl
+                    this.$message({
+                        message: response.data.response.message,
+                        type: 'success'
+                    })
+                } else {
+                    this.$message({
+                        message: response.data.response.message,
+                        type: 'error'
+                    })
+                }
+                this.saveLoading = false
+            }).catch((error) => {
+                this.saveLoading = false
+                this.$message({
+                    message: 'Error. Please try again later',
+                    type: 'error'
+                })
+            })
     }
   },
   created () {

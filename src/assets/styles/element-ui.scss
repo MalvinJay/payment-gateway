@@ -140,7 +140,7 @@ $border: #dcdfe6;
         padding-left: 5px!important;
         // color: #999999;
         font-size: 12px;
-        text-transform: capitalize;
+        // text-transform: capitalize;
         cursor: pointer;
 
         a,p,div{
@@ -504,13 +504,17 @@ $border: #dcdfe6;
 
         .no-header {
             .transactions-table-header {
-                display: none!important;
+                display: none!important
             }
 
             .cell {
-                padding-left: 20px;
+                padding-left: 20px
             }
         }
+    }
+
+    .el-form-item__content {
+        justify-content: center
     }
 }
 
@@ -542,25 +546,11 @@ $border: #dcdfe6;
         padding: 20px;
     }
 
-    .custom, {
-        .el-table__header-wrapper, .el-radio__label {
-            display: none;
-        }
-
-        .el-table__body-wrapper {
-            border-top: 1px solid #ebeef5;
-        }
-    }
-}
-
-.select-branch {
-    .branches {
-        .el-table__header-wrapper {
-            display: block!important;
-        }     
+    .custom {
         .el-radio__label {
             display: none;
-        }   
+        }
+
         .el-table__body-wrapper {
             border-top: 1px solid #ebeef5;
         }
@@ -586,6 +576,14 @@ $border: #dcdfe6;
     }
     .el-card__body {
         padding: 0;
+    }
+}
+
+.filtered-events {
+    .el-form-item__content {
+        height: 30vh;
+        overflow-x: hidden;
+        display: block;
     }
 }
 
@@ -637,6 +635,8 @@ $border: #dcdfe6;
 
 .hljs {
     background: #fff;
+    float: left;
+    padding: 10px 0 20px 20px;
 }
 
 td.hljs-ln-numbers {
@@ -714,8 +714,13 @@ td.hljs-ln-code {
     }
 }
 
-.no-label-radio{
+.no-label-radio {
     .el-radio__label{
         display: none;
     }
+}
+
+
+.el-radio__label {
+    display: none;
 }

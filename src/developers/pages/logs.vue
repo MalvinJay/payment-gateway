@@ -17,7 +17,7 @@
                 <el-table @row-click="clickRow" empty-text="No logs found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredLogs">
                   <el-table-column label="status" prop="status" width="100">
                         <template slot-scope="scope">
-                            <p class="status bold-600 s-12">201 OK</p>
+                            <p class="status bold-600">201 OK</p>
                         </template>                    
                   </el-table-column>
                   <el-table-column label="description" prop="method">
@@ -113,6 +113,7 @@ export default {
     background: #e3e8ee;
     text-align: center;
     border-radius: 20px;
+    font-size: 11px!important;
     padding: 2px;
     width: 80%;
     float: right;    

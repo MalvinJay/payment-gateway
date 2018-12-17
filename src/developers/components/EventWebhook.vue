@@ -10,7 +10,7 @@
     </div> 
     <div class="flex justify-content-start">
       <p class="property">Request</p>
-      <div class="border w-75">
+      <div class="w-75 border border-rounded">
         <pre class="m-0">
           <code class="request hljs s-12" v-html="syntaxHighlight(request)"></code>
         </pre>

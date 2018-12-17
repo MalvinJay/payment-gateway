@@ -316,6 +316,12 @@ export default {
                     })
                 }
                 this.createLoading = false
+            }).catch((error) => {
+                this.createLoading = false
+                this.$message({
+                    type: 'error',
+                    message: error.response.error_message
+                })
             })
           } else {
             this.createLoading = false

@@ -107,6 +107,7 @@ export default {
             to: ''
         }
         this.loading = false
+        this.ready = false
         EventBus.$emit('exportModal', false)
       },
       submitExport (formName) {
@@ -119,7 +120,7 @@ export default {
             this.$store.dispatch('submitReport', query)
             .then((response) => {
                 if (response.data.success) {
-                    console.log('file url', response.data.response.data)
+                    console.log('file url', response.data)
                     this.ready = true
                     this.$message({
                         type: 'success',

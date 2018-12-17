@@ -1,5 +1,5 @@
 import {
-  EVENTS_FETCH, SET_EVENTS, SET_EVENTS_STATE, SET_EVENTS_META, SET_EVENTS_FILTERS, GET_CURRENT_EVENT, SET_CURRENT_EVENT, SET_CURRENT_EVENTS_STATE
+  EVENTS_FETCH, SET_EVENTS, SET_EVENTS_STATE, SET_EVENTS_META, SET_EVENTS_FILTERS, GET_CURRENT_EVENT, SET_CURRENT_EVENT, SET_CURRENT_EVENTS_STATE,RETRY_WEBHOOK
 } from './events-store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
@@ -121,7 +121,21 @@ const actions = {
         reject(error)
       })
     })
-  }
+  },
+  [RETRY_WEBHOOK] ({ rootGetters }, id) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v2/events/${id}/resend.json`,
+        method: 'POST',
+        token: rootGetters.token
+      }).then((response) => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+        return error
+      })
+    })
+  }  
 }
 
 export default {

@@ -183,8 +183,16 @@ export default {
       }
       if (this.present(filters.reasons)) {
         query = query + `&reasons[]=${filters.reasons}`
-      }
-      if (this.empty(filters.from) && this.empty(filters.to) && this.empty(filters.payment_types) && this.empty(filters.statuses) && this.empty(filters.reasons)) {
+      } 
+      if (this.present(filters.name)) {
+        query = query + `&user_group=${filters.name}`
+      }            
+      if (this.empty(filters.from) && 
+          this.empty(filters.to) && 
+          this.empty(filters.payment_types) && 
+          this.empty(filters.statuses) && 
+          this.empty(filters.reasons) && 
+          this.empty(filters.name)) {
         query = query + '&all=true'
       }
     } else {

@@ -1,6 +1,7 @@
 // team
 export const TEAMS_FETCH = 'getTeams'
 export const SET_TEAMS = 'setTeams'
+export const DELETE_USER = 'deleteUser'
 export const SET_TEAMS_STATE = 'setTeamsState'
 export const SET_TEAMS_META = 'setTeamsMeta'
 export const SET_TEAMS_FILTERS = 'setTeamsFilters'

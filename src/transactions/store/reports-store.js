@@ -67,6 +67,7 @@ const actions = {
           state.job_id = response.data.response.data.job_id
           dispatch(GET_REPORT, state.job_id)
             .then((response) => {
+              console.log('resolved', response)
               resolve(response)
             }).catch((error) => {
               reject(error)
@@ -88,13 +89,13 @@ const actions = {
       }).then((response) => {
         if (response.data.response.data.done) {
           commit(SET_DOWNLOAD_LINK, response.data.response.data.file_name)
+          resolve(response)
         } else {
           reject(response)
           setTimeout(() => {
             dispatch(GET_REPORT, jobId)
           }, 5000)
         }
-        resolve(response)
       }).catch((error) => {
         reject(error)
       })

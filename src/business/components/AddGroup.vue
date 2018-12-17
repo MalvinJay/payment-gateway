@@ -34,6 +34,7 @@
 <script>
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
+
 export default {
   name: 'NewGroup',
   props: ['modalVisible', 'title', 'form', 'mode'],
@@ -84,7 +85,7 @@ export default {
                         type: 'success',
                         message: response.data.response.message,
                     })
-                    this.$store.dispatch('getRoles')
+                    this.$store.dispatch('getRoles',{cache: false})
                 } else {
                     this.$message({
                         type: 'error',

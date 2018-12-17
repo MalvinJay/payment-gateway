@@ -128,7 +128,7 @@ export default {
 
 <style lang="scss" scoped>
 .px-20{
-    padding: 8px 20px !important;
+    padding: 10px 20px !important;
 }
 .full-height{
     height: 100vh;

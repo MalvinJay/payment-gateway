@@ -6,8 +6,14 @@
                     <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" size="mini" placeholder="Filter by name or email..."></el-input>
                     
                     <div class="roles">
-                        <el-select v-model="value" size="mini" filterable placeholder="Select">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        <el-select 
+                            v-model="value" 
+                            size="mini"
+                            filterable
+                            @change="filterByName"
+                            placeholder="Select a role">
+                            <el-option v-model="all" label="all"></el-option>
+                            <el-option v-for="item in filteredRoles" :key="item.code" :label="item.name" :value="item.code"></el-option>
                         </el-select>                    
                     </div>
                 </div>            
@@ -49,7 +55,7 @@
                                         <i class="ellipsis horizontal icon mr-0 cursor"></i>
                                         <el-dropdown-menu class="w-200" slot="dropdown">
                                             <el-dropdown-item command="edit" class="s-12">View User Details</el-dropdown-item>
-                                            <el-dropdown-item command="edit" class="s-12">Delete User</el-dropdown-item>
+                                            <el-dropdown-item command="delete" class="s-12">Delete User</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </div>
@@ -96,10 +102,10 @@
                 </div>
                 <div class="flex justify-content-center">
                   <div class="custom">
-                    <el-table highlight-current-row @row-click="checkRole" ref="role" empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
+                    <el-table :show-header="header" highlight-current-row @row-click="checkRole" ref="role" empty-text="No Roles Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredRoles">
                         <el-table-column width="50">
                             <template slot-scope="scope">
-                                <el-radio v-model="form.branch_code" :label="scope.row.code"></el-radio>
+                                <el-radio v-model="form.user_group_id" :label="scope.row.id"></el-radio>
                             </template>
                         </el-table-column>
                         <el-table-column width="200" class="bold-600">
@@ -110,7 +116,7 @@
                         <el-table-column>
                             <template slot-scope="scope">
                                 {{scope.row.description || 'N/A'}}
-                            </template>                            
+                            </template>              
                         </el-table-column>
                         <el-table-column align="right">
                             <template slot-scope="scope">
@@ -130,7 +136,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <el-button icon="info circle icon" type="text" slot="reference"></el-button>
+                                    <el-button icon="info circle icon" type="text" slot="reference" class="p-0"></el-button>
                                 </el-popover>
                             </template>
                         </el-table-column>                                          
@@ -144,7 +150,7 @@
             </el-dialog>
 
             <!-- Select A Branch -->
-            <el-dialog custom-class="select-branch" :visible.sync="dialogVisible1" width="40%">
+            <el-dialog custom-class="invite-user" :visible.sync="dialogVisible1" width="40%">
                 <div class="head flex flex-column justify-content-start px-20 py-16">
                     <div class="ContentHeader flex justify-content-center flex-column black-text">
                         <span class="black-text bold-600 text-lineHeight--30">
@@ -153,7 +159,7 @@
                     </div>
                 </div>
                 <div class="flex justify-content-center">
-                  <div class="branches w-100">
+                  <div class="custom  w-100">
                     <el-table highlight-current-row @row-click="checkBranch" ref="branch" empty-text="No Branches Available" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredBranches">
                         <el-table-column width="50">
                             <template slot-scope="scope">
@@ -195,13 +201,14 @@ export default {
     name: 'Teams',
     data (){
         return {
+            header: false,
             roleId: '',
             multiemail: '',
             form: {
-                name: '',
                 email: '',
-                branch_code: '',
+                name: '',
                 msisdn: '',
+                branch_code: '',
                 role: 'admin',
                 user_group_id: '',
             },            
@@ -214,40 +221,11 @@ export default {
                 fontSize: '12px'
             },        
             search: '',       
-            options: [
-            {
-                value: 'all',
-                label: 'All Roles'
-            }, 
-            {
-                value: 'administrator',
-                label: 'Administrator'
-            }, 
-            {
-                value: 'developer',
-                label: 'Developer'
-            }, 
-            {
-                value: 'analyst',
-                label: 'Analyst'
-            },
-            {
-                value: 'support',
-                label: 'Support Specialist'
-            },
-            {
-                value: 'view_only',
-                label: 'View Only'
-            }        ],
-            value: 'all', 
+            value: 'all',
+            all: 'all',
             createLoading: false,
-            rules: {
-                customer_no: [
-                    { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
-                ],
-                amount: [
-                    { required: true, message: 'This field is required', trigger: 'blur' }
-                ]
+            filter: {
+                name: ''
             }
         }
     },
@@ -257,9 +235,9 @@ export default {
         // EventBus.$on('exportModal', (val) => {
         //     this.exportVisible = false
         // })
-        this.$store.dispatch('getTeams');
-        this.$store.dispatch('getRoles');
-        this.$store.dispatch('getBranches');
+        this.$store.dispatch('getTeams')
+        this.$store.dispatch('getRoles')
+        this.$store.dispatch('getBranches')
     },
 
     methods: {
@@ -287,29 +265,69 @@ export default {
                 case 'edit':
                     // this.$router.push(`/teams/${row.reference}`)
                     break
+                case 'delete':
+                    this.deleteUser(row.msisdn)
+                    break                    
                 default:
                     break
             }
         },                   
         fetchTeams () {
             this.$store.dispatch('getTeams', {cache: false})
-        },        
+        },              
         searchButton (){
 
         },
+        deleteUser (code) {
+            this.$confirm('This will permanently delete this User. Continue?', 'Warning', {
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+            }).then(() => {
+                this.$store.dispatch('deleteUser', code)
+                .then((response) => {
+                if (response.data.success) {
+                    this.$message({
+                        type: 'success',
+                        message: response.data.response.message
+                    })
+                    this.$store.dispatch('getTeams', {cache: false})
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.response.message
+                    })
+                }  
+                }).catch((error) => {
+                    this.$message({
+                        type: 'error',
+                        message: 'User not deleted'
+                    })
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'error',
+                    message: 'User not deleted'
+                })                        
+            })
+        },        
+        filterByName(val){
+            this.filter.name = val
+            this.$store.dispatch('setTeamsFilters', this.filter)
+        },
         inviteUser() {
-            this.createLoading = true         
-            console.log('Form to Sent:', this.form)
+            this.createLoading = true
             this.$store.dispatch('createUser', this.form)
             .then((response) => {
-                this.createLoading = false
                 this.$message({
                     type: 'success',
                     message: response.data.response.message,
                 })
-                this.$store.dispatch('getTeams');
+                this.createLoading = false
+
                 if (response.data.success) {
-                    this.close()
+                    this.dialogVisible1 = false
+                    this.$store.dispatch('getTeams', {cache: false})
                 }
             }).catch((error) => {
                 this.createLoading = false
