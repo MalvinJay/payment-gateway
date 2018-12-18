@@ -6,7 +6,7 @@
             </div>
             <div>
                 <el-button v-if="canMakePayouts" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
-                <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
+                <el-button @click="exportVisible = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button>
             </div>
         </div>
         <div>
@@ -17,7 +17,14 @@
                 </div>
             </div>
             <div v-else>
-                <el-table  @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
+                <el-table
+                @row-click="clickRow"
+                empty-text="No match found, filter desired period range"
+                v-loading="loading"
+                :row-style="styleObject"
+                :row-class-name="tableRowClassName"
+                header-row-class-name="transactions-table-header"
+                :data="filteredTransactions">
                     <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column prop="amount" label="Amount" width="150">
                         <template slot-scope="scope">
@@ -44,11 +51,12 @@
                     <el-table-column :show-overflow-tooltip="true" :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                     <el-table-column prop="created_at" label="Date" width="170">
                         <template slot-scope="scope">
-                            {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
+                            {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
                         </template>
                     </el-table-column>
                     <el-table-column width="80px">
                         <template slot-scope="scope">
+                            <i v-if="scope.row.has_dispute" class="exclamation icon red-text"></i>
                             <div class="mini-menu">
                                 <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i> -->
                                 <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
@@ -125,9 +133,10 @@
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="close">Cancel</el-button>
-                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payout</el-button>
+                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Initiate Payout</el-button>
             </span>
         </el-dialog>
+        <export-modal type="deposit" :modalVisible.sync="exportVisible"></export-modal>
         <ticket-modal :transaction="transaction" :ticketVisible.sync="ticketVisible"></ticket-modal>
     </div>
 </template>
@@ -135,6 +144,7 @@
 <script>
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
+import Utils from '../../utils/services'
 
 export default {
   name: 'PayoutsTable',
@@ -156,6 +166,7 @@ export default {
       date: false,
       dialogVisible: false,
       ticketVisible: false,
+      exportVisible: false,
       transaction: {},
       form: {
         sender_amount: '',
@@ -190,16 +201,29 @@ export default {
     EventBus.$on('ticketModal', (val) => {
         this.ticketVisible = false
     })
+    EventBus.$on('exportModal', (val) => {
+        this.exportVisible = false
+    })
   },
   beforeDestroy () {
     EventBus.$off('ticketModal', (val) => {
         this.ticketVisible = false
+    })
+    EventBus.$off('exportModal', (val) => {
+        this.exportVisible = false
     })  
   },
   methods: {
     clickRow (row, event, column) {
-        if (column.property) {
+        if (column.property || !column.status === 'error') {
             this.$router.push(`/payments/${row.reference}`)
+        }
+    },
+    tableRowClassName({row, rowIndex}) {
+        if (row.has_dispute) {
+            return 'transactions-table-body warning-row'
+        } else {
+            return 'transactions-table-body'
         }
     },
     handleCurrentChange (val) {
@@ -254,9 +278,9 @@ export default {
                 this.fetchTransactions()
                 this.dialogVisible = false
             } else {
-            this.$message({
+                this.$message({
                     type: 'error',
-                    message: response.data.response.message.message
+                    message: response.data.response.error_message
                 })
             }
         }).catch((error) => {

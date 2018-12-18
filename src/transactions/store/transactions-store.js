@@ -5,6 +5,7 @@ import { TRANSACTION_CREATE, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SE
   CREATE_TICKET, REFUND_TRANSACTION } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
+import moment from 'moment'
 
 // const url = localStorage.getItem('isAdmin') === true ? 'v2/accounts/transactions' : 'v2/transactions.json'
 // var url = ''
@@ -37,7 +38,10 @@ const state = {
   pending: {
     data: [],
     state: 'LOADING',
-    filters: {},
+    filters: {
+      from: moment().startOf('month').format('YYYY-MM-DD'),
+      to: moment().endOf('month').format('YYYY-MM-DD')
+    },
     meta: {}
   },
   providers: [

@@ -47,9 +47,9 @@
                                 <el-button class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text">Daily</el-button>
                             </div> -->
                         </div>
-                        <div>
+                        <!-- <div>
                             <el-button @click="editAnalytics" class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text"><i class="cog icon "></i> Customize</el-button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div>

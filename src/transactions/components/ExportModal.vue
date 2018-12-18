@@ -41,9 +41,9 @@
                 <el-form-item class="flex justify-content-end">
                     <div class="flex">
                         <el-button @click="close">Cancel</el-button>
-                        <!-- <a v-if="ready" download :href="this.link" type="primary">Download</a> -->
+                        <a :href="`${GET_BASE_URI}v1/clients/reports/download?access_token=${token}&file_name=${link}`"
+                        class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" v-if="ready" download>Download</a>
                         
-                        <el-button v-if="ready" @click="download" type="primary" :loading="loading">download</el-button>
                         <el-button v-else @click="submitExport('form')" type="primary" :loading="loading">Submit</el-button>
                     </div>
                 </el-form-item>
@@ -57,10 +57,11 @@ import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 import Utils from '../../utils/services'
 import moment from 'moment'
+import { GET_BASE_URI } from '../store/transactions-store-constants'
 
 export default {
     name: 'ExportModal',
-    props: ['modalVisible'],
+    props: ['modalVisible', 'type'],
     data() {
       return {
         checkAll: false,
@@ -84,7 +85,8 @@ export default {
           payment_types: [
             { required: true, message: 'Please select at least one option', trigger: 'change' }
           ]
-        }
+        },
+        GET_BASE_URI: GET_BASE_URI
       }
     },
     methods: {
@@ -98,10 +100,20 @@ export default {
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.types.length
       },
       close () {
+        this.form = {
+            payment_types: [],
+            fields: '',
+            file_type: 'csv',
+            from: '',
+            to: ''
+        }
+        this.loading = false
+        this.ready = false
         EventBus.$emit('exportModal', false)
       },
       submitExport (formName) {
         this.loading = true
+        this.form.cash_flow = this.type
         this.form.fields = this.column === 'all' ? this.fieldSet.map(el => el.key).join(',') : this.form.fields
         var query = Utils.createExportQuery(this.form)
         this.$refs[formName].validate((valid) => {
@@ -109,11 +121,14 @@ export default {
             this.$store.dispatch('submitReport', query)
             .then((response) => {
                 if (response.data.success) {
+                    console.log('file url', response.data)
                     this.ready = true
                     this.$message({
                         type: 'success',
                         message: response.data.response.message,
                     })
+                    // var link = document.getElementById('dwnl').href = response.data.response.data.file_name
+                    // link.href = this.link
                 } else {
                     this.$message({
                         type: 'error',
@@ -139,16 +154,24 @@ export default {
           }
         })
       },
-      download () {
-        this.$store.dispatch('downloadReport', this.link)
-        window.location.href = this.link
-        // this.$router.push(this.link)
-      }
+    //   download () {
+    //     var link = document.getElementById('dwnl')
+    //     link.href = `https://api.flopay.io/v1/clients/reports/download?access_token=${this.token}&file_name=${this.link}`
+    //     this.$store.dispatch('downloadReport')
+    //     .then((response) => {
+    //         console.log('file data', response.data)
+            
+    //     })
+    //   }
+    },
+    created(){
+        console.log('BASE URL:', this.GET_BASE_URI)
     },
     computed: {
         ...mapGetters({
             fields: 'fields',
-            link: 'downloadLink'
+            link: 'downloadLink',
+            token: 'token'
         }),
         fieldSet () {
             var props = Object.keys(this.fields).map(function(key) {
@@ -190,6 +213,15 @@ export default {
     .el-dialog__body{
         padding: 0px !important
     }
+}
+.mini-button{
+    background: #4f5fc4;
+    border-radius: 2px;
+    margin-left: 10px;
+    color: white;
+    padding: 7px 15px;
+    font-size: 12px;
+    border-radius: 3px;
 }
 .new-export-bg{
     background: #F7FAFC;

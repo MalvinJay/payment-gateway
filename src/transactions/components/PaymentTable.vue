@@ -17,7 +17,14 @@
                 </div>
             </div>
             <div v-else>
-                <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTransactions">
+                <el-table
+                @row-click="clickRow"
+                empty-text="No match found, filter desired period range"
+                v-loading="loading"
+                :row-style="styleObject"
+                :row-class-name="tableRowClassName"
+                header-row-class-name="transactions-table-header"
+                :data="filteredTransactions">
                     <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column prop="amount" label="Amount" width="150">
                         <template slot-scope="scope">
@@ -36,12 +43,13 @@
                     <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                     <el-table-column prop="created_at" label="Date" width="auto">
                         <template slot-scope="scope">
-                            {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
+                            {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
                         </template>
                     </el-table-column>
                     <el-table-column width="80px">
                         <template slot-scope="scope">
-                            <div class="status" v-if="scope.row.has_dispute"></div>
+                            <i v-if="scope.row.has_dispute" class="exclamation icon red-text"></i>
+                            <!-- <div class="status" v-if="scope.row.has_dispute"></div> -->
                             <div class="mini-menu">
                                 <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i> -->
                                 <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
@@ -115,10 +123,10 @@
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
-                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Create Payment</el-button>
+                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Initiate Payment</el-button>
             </span>
         </el-dialog>
-        <export-modal :modalVisible.sync="exportVisible"></export-modal>
+        <export-modal type="deposit" :modalVisible.sync="exportVisible"></export-modal>
         <ticket-modal :transaction="transaction" :ticketVisible.sync="ticketVisible"></ticket-modal>
     </div>
 </template>
@@ -136,7 +144,7 @@ export default {
       columns: [
         {label: 'Customer', dataField: 'customer', width: 'auto'},
         {label: 'Reference', dataField: 'reference', width: 'auto'},
-        {label: 'type', dataField: 'transaction_type', width: '100px'}
+        // {label: 'type', dataField: 'transaction_type', width: '100px'}
       ],
       styleObject: {
         fontSize: '12px'
@@ -213,6 +221,13 @@ export default {
                 break
             default:
                 break
+        }
+    },
+    tableRowClassName({row, rowIndex}) {
+        if (row.has_dispute) {
+            return 'transactions-table-body warning-row'
+        } else {
+            return 'transactions-table-body'
         }
     },
     submitForm (formName) {
@@ -330,6 +345,9 @@ export default {
 
 <style lang="scss" scoped>
 
+.warning-row{
+    background: red;
+}
 .mini-menu{
     position: absolute;
     top: 8px;

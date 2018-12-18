@@ -95,6 +95,13 @@ button{
     justify-content: center;
 }
 
+.v-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
 .text-lineHeight--20 {
     line-height: 20px;
   }
@@ -482,4 +489,9 @@ button{
     i{
         margin: 0;
     }
+}
+
+// red exclamation mark
+.red-text{
+    color: red;
 }

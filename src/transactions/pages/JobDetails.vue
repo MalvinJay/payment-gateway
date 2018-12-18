@@ -216,6 +216,11 @@
                                 {{scope.row.updated_at | moment("hh:mm A")}}
                             </template>
                         </el-table-column>
+                        <el-table-column width="80" align="center">
+                            <template slot-scope="scope">
+                                <el-button type="text" class="p-0 m-0" icon="download icon"></el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
                     <!-- FOOTER -->
                     <div class="flex justify-content-between align-items-center px-20">
@@ -254,6 +259,30 @@
                     header-row-class-name="transactions-table-header"
                     :data="form.contacts.slice((page * 12) - 12, page * 12)">
                         <el-table-column type="index"></el-table-column>
+                        <!-- <el-table-column type="expand">
+                            <template slot-scope="props">
+                                <div>
+                                    <el-row>
+                                        <el-col :span="5">
+                                            <p class="blue-text s-13 bold-600 p-0 m-0 mr-6">Reference: </p>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <p class="s-12 gray p-0 m-0 ">{{ props.row.data.reference }}</p>
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                                <div>
+                                    <el-row>
+                                        <el-col :span="5">
+                                            <p class="blue-text s-13 bold-600 p-0 m-0 mr-6">Response Message: </p>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <p class="s-12 gray p-0 m-0 ">{{ props.row.data.response_message }}</p>
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                            </template>
+                        </el-table-column> -->
                         <el-table-column prop="name" label="name"></el-table-column>
                         <el-table-column prop="msisdn" label="Phone Number"></el-table-column>
                         <el-table-column prop="amount" label="amount">
@@ -329,6 +358,14 @@ export default {
         this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
 
         this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
+        // this.$nextTick(() => {
+        //     const trs = [].slice.call(document.querySelectorAll('.el-table__row'))
+        //     this.form.contacts.forEach((row, index) => {
+        //         if (row.has_mandate === 'hola') {
+        //             trs[index].querySelector('.el-table__expand-column').style.visibility = 'hidden'
+        //         }
+        //     })
+        // })
     },
     methods: {
         clickRun (row, event, column) {

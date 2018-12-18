@@ -10,9 +10,14 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 #app{
     width: 90%;
     margin: 0 auto;
+}
+@media only screen and (max-width: 1200px) {
+  #app{
+    width: 98%
+  }
 }
 </style>

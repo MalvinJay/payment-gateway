@@ -184,7 +184,7 @@ export default {
     ...mapGetters(['user']),
     services () {
         return this.user.account_services.map(el => {
-            el.date = moment(el.created_at).format('Do MMM, YYYY hh:mm A')
+            el.date = moment(el.created_at).format('D MMM,YY hh:mm A')
             el.money = `GHs ${el.amount}`
             el.nlimit = `GHs ${el.limit}`
             return el

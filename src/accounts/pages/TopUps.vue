@@ -1,9 +1,12 @@
 <template>
     <el-card class="transactions">
-        <div class="trans-div">
+        <div class="trans-div flex justify-content-between">
             <div class="flex align-items-baseline">
                 <!-- <p class="header-text">Topups</p> -->
                 <filter-component dispatch="setTopUpsFilters" filterType="payment"></filter-component>
+            </div>
+            <div>
+                <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="topupVisible = true" type="text"><i class="plus icon"></i> New</el-button>
             </div>
         </div>
         <div>
@@ -23,7 +26,7 @@
                     <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                     <el-table-column prop="created_at" label="Date">
                         <template slot-scope="scope">
-                            {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
+                            {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
                         </template>
                     </el-table-column>
                 </el-table>
@@ -41,15 +44,20 @@
                 </div>
             </div>
         </div>
+        <topup-modal :modalVisible="topupVisible"></topup-modal>
     </el-card>
 </template>
 
 <script>
 import EventBus from '../../event-bus.js'
+import TopupModal from '../components/TopUpModal'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'TopUps',
+  components: {
+    TopupModal
+  },
   data () {
     return {
       test: true,
@@ -60,7 +68,8 @@ export default {
       ],
       styleObject: {
         fontSize: '12px'
-      }
+      },
+      topupVisible: false
     }
   },
   created () {
@@ -68,6 +77,14 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'topups')
+    EventBus.$on('topupModal', (val) => {
+        this.topupVisible = false
+    })
+  },
+  beforeDestroy () {
+    EventBus.$off('topupModal', (val) => {
+      this.topupVisible = false
+    })
   },
   methods: {
     handleCurrentChange (val) {

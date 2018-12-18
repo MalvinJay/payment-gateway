@@ -110,7 +110,7 @@ const actions = {
       }).then((response) => {
         commit(SET_CURRENT_HOOK, response.data)
         commit(SET_CURRENT_HOOKS_STATE, 'DATA')
-        resolve()
+        resolve(response)
       }).catch((error) => {
         commit(SET_CURRENT_HOOKS_STATE, 'ERROR')
         reject(error)
@@ -125,4 +125,3 @@ export default {
   mutations,
   actions
 }
-

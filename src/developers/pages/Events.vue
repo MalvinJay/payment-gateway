@@ -14,7 +14,14 @@
                 </div>
             </div>
             <div v-else class="breathe events_custom_headers">
-                <el-table @row-click="clickRow" empty-text="No events found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredEvents">
+                <el-table
+                @row-click="clickRow"
+                empty-text="No events found, filter desired period range"
+                v-loading="loading"
+                :row-style="styleObject"
+                row-class-name="transactions-table-body"
+                header-row-class-name="transactions-table-header"
+                :data="filteredEvents">
                   <el-table-column show-overflow-tooltip label="event" prop="event">
                         <template slot-scope="scope">
                             <p class="m-0 p-0 bold-500 s-13">
@@ -44,7 +51,7 @@
                   </el-table-column>
                   <el-table-column label="date" prop="created_at" width="200">
                         <template slot-scope="scope">
-                            <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("MMM Do, YYYY hh:mm A")}}</p>
+                            <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("D MMM,YY hh:mm A")}}</p>
                         </template>      
                   </el-table-column>                                    
                 </el-table>

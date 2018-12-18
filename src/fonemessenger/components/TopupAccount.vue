@@ -1,6 +1,6 @@
 <template>
     <el-dialog custom-class="export-dialog"
-        title="Top-Up EVA"
+        title="Top-Up OVA"
         @close="close"
         :visible="modalVisible"
         width="35%">

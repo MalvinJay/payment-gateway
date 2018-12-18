@@ -32,8 +32,8 @@
                     <!-- JOB SERVICE CODE -->
                     <el-form-item label="Service Code">
                         <el-select v-model="form.service_code">
-                            <el-option label="Cash In" value="cash_in"></el-option>
-                            <el-option label="Cash Out" value="cash_out"></el-option>
+                            <el-option label="Cash In" value="cashin"></el-option>
+                            <el-option label="Cash Out" value="cashout"></el-option>
                             <el-option label="Direct Payment" value="direct_payment"></el-option>
                         </el-select>
                     </el-form-item>
@@ -45,7 +45,7 @@
                     <el-form-item label="Mode">
                         <el-select v-model="form.scheduled">
                             <el-option label="Automatic" :value="true"></el-option>
-                            <el-option label="Manual" :value="false"></el-option>
+                            <el-option v-if="form.service_code === 'cashin' || form.service_code === 'cashout'" label="Manual" :value="false"></el-option>
                         </el-select>
                     </el-form-item>
                     <!-- JOB AUTOMATIC SCHEDULED -->
@@ -184,6 +184,7 @@ export default {
                 // beneficiaries: 'upload',
                 // times: [],
                 // contacts: [],
+                service_code: 'cashin',
                 start_date: '',
                 termination_date: '',
                 timezone: "Africa/Accra",

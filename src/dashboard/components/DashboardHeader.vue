@@ -26,11 +26,63 @@
                     </div>
                 </div>
                 <div class="blue-graph" v-else v-loading="todayLoading">
-                    <!-- <time-line-chart :dashboard="today" :data="count" :labels="days"></time-line-chart> -->
                     <line-chart id="time-line-chart" :data="chartData" :labels="chartOptions"></line-chart>
                 </div>
             </div>
         </el-card>
+        <!-- <el-row :gutter="15">
+            <el-col :span="18">
+                <el-card class="b-0 blue-banner dashboard-header">
+                    <div class="flex justify-content-between">
+                        <div class="flex flex-column">
+                            <div class="flex">
+                                <p class="p-0 m-0">Account Balance</p>
+                                <p class="p-0 m-0 bold-600 ml-16">{{ balance | money }}</p>
+                            </div>
+                            <div class="flex align-items-center">
+                                <el-date-picker class="transparent-input"
+                                    v-model="currentDate"
+                                    type="date"
+                                    :picker-options="pickerOptions"
+                                    placeholder="Today">
+                                    </el-date-picker>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blue-graph">
+                        <div class="blue-graph" v-if="todayError">
+                            <div class="center flex-column">
+                                <p class="m-0 p-0 s-12">Unable to load this graph</p>
+                                <el-button @click.prevent="fetchToday" icon="sync icon" type="text">Retry</el-button>
+                            </div>
+                        </div>
+                        <div class="blue-graph" v-else v-loading="todayLoading">
+                            <line-chart id="time-line-chart" :data="chartData" :labels="chartOptions"></line-chart>
+                        </div>
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="6">
+                <el-card class="dashboard-header">
+                    <div class="flex flex-column h-120 justify-content-between">
+                        <div class="flex flex-column light-gray mb-3">
+                            <h3 class="s-14">Available Balance</h3>
+                            <div class="flex align-items-center">
+                                <i class="mobile alternate icon"></i>
+                                <p class="s-20"> {{balance | money}} </p>
+                            </div>
+                        </div>
+                        <div class="flex flex-column light-gray">
+                            <h3 class="s-14">FoneMessenger Balance</h3>
+                            <div class="flex align-items-center">
+                                <i class="envelope icon"></i>
+                                <p class="s-20"> {{fon | money}} </p>
+                            </div>
+                        </div>
+                    </div>
+                </el-card>
+            </el-col>
+        </el-row> -->
     </div>
 </template>
 
@@ -131,6 +183,87 @@ export default {
                 }
             }
         },
+        options: {
+            scales: {
+                yAxes: [{
+                    display: false,
+                    ticks: {
+                        beginAtZero: false,
+                        display: true
+                    },
+                        // gridLines: {
+                        //     display: false
+                        // }
+                    }],
+                xAxes: [{
+                    display: true,
+                    ticks: {
+                        // beginAtZero: false,
+                        // display: false,
+                        fontColor: 'gray',
+                        lineHeight: 2,
+                        padding: 2,
+                        callback: function(value, index, values) {
+                            console.log('valie', value)
+                            switch (value) {
+                                case '0:00':
+                                    return value
+                                    break
+                                case '23:00':
+                                    return value
+                                    break
+                                default:
+                                    return ''
+                            }
+                        }
+                    },
+                    gridLines: {
+                        color: "rgba(128, 142, 227, 0.1)",
+                        drawBorder: false,
+                        tickMarkLength: 0
+                    }
+                }],
+                gridLines: {
+                    display: true,
+                    color: "rgba(255, 255, 255, 0.1)",
+                    drawBorder: false,
+                    tickMarkLength: 0
+                }
+            },
+            legend: {
+                display: false,
+            },
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.datasets[tooltipItem.datasetIndex].label || ''
+
+                        if (label) {
+                            label += ': ';
+                        }
+                        tooltipItem.width = 500
+                        label += Math.round(tooltipItem.yLabel * 100) / 100;
+                        return label
+                    }
+                },
+                backgroundColor: 'white',
+                titleFontColor: 'black',
+                footerFontColor: 'black',
+                bodyFontColor: 'black',
+                borderColor: '#dcdfe6',
+                borderWidth: 1,
+                displayColors: false
+            },
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    left: 5,
+                    right: 5,
+                    top: 5,
+                    bottom: 10
+                }
+            }
+        },
         pickerOptions: {
             disabledDate(time) {
                 return time.getTime() > Date.now();
@@ -170,6 +303,9 @@ export default {
     balance () {
         return this.amount.available_balance
     },
+    fon () {
+        return this.amount.fon_messanger_balance
+    },
     chartData () {
         var count = ''
         return {
@@ -177,6 +313,8 @@ export default {
             datasets: [{
                 // label: this.labels,
                 data: this.count,
+                // backgroundColor: '#E8EBF8',
+                // borderColor: '#808EE3',
                 borderColor: '#ffffff',
                 pointHoverBackgroundColor: '#ffffff',
                 borderWidth: 2,
@@ -232,6 +370,31 @@ export default {
     .el-card__body{
         padding: 10px 20px !important;
     }
+}
+.light-gray{
+    color: #a3acb9
+}
+.dashboard-header{
+    // height: 200px;
+    height: 190px;
+
+    h3{
+        margin-bottom: 4px;
+    }
+
+    i{
+        line-height: 28px;
+        height: 28px;
+    }
+}
+.h-120{
+    height: 120px;
+}
+.mb-3{
+    margin-bottom: 1rem;
+}
+.s-20{
+    font-size: 20px;
 }
 .ml-16{
     margin-left: 16px !important;

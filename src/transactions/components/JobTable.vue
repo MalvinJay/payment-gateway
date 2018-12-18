@@ -37,7 +37,7 @@
                     </el-table-column>
                     <el-table-column prop="created_at" label="Date" width="170px">
                         <template slot-scope="scope">
-                            {{scope.row.created_at | moment("Do MMM, YYYY hh:mm A")}}
+                            {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
                         </template>
                     </el-table-column>
                     <el-table-column width="100px">
@@ -125,7 +125,7 @@ export default {
   },
   methods: {
     handleCurrentChange (val) {
-        this.$store.dispatch('getJobs', {page: val})
+        this.$store.dispatch('getJobs', {page: val, cache: false})
     },
     clickRow (row, event, column) {
         if (column.property) {
@@ -207,6 +207,7 @@ export default {
     ...mapGetters({
       jobs: 'jobs',
       state: 'jobsState',
+      count: 'jobsCount',
       providers: 'providers',
       pageSize: 'pageSize'
     }),
@@ -222,7 +223,7 @@ export default {
         })
     },
     total () {
-      return this.jobs.length
+      return this.count
     },
     loading () {
       return this.state === 'LOADING'

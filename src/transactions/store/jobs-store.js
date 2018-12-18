@@ -46,7 +46,8 @@ const getters = {
 const mutations = {
   [SET_JOBS] (state, payload) {
     state.jobs.state = 'DATA'
-    state.jobs.data = payload
+    state.jobs.data = payload.jobs
+    state.jobs.count = payload.jobs_filtered
   },
   [SET_JOBS_STATE] (state, data) {
     state.jobs.state = data
@@ -86,17 +87,21 @@ const mutations = {
 const actions = {
   [GET_JOBS] ({ state, commit, rootGetters, dispatch }, { page = 1, cache = true } = {}) {
     commit(SET_JOBS_STATE, 'LOADING')
+    var filters = {
+      page: page
+    }
+    var query = Utils.createQueryParams(filters, page)
     if (cache && Utils.present(state.jobs.data)) {
       commit(SET_JOBS_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_BASE_URI}/v1/clients/jobs/files/all.json`,
+          url: `${GET_BASE_URI}/v1/clients/jobs/files/all.json${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
           commit(SET_JOBS_STATE, 'DATA')
-          commit(SET_JOBS, response.data.response.data.jobs)
+          commit(SET_JOBS, response.data.response.data)
           dispatch('getCurrentJob', {id: response.data.response.data.jobs[0].id})
           resolve(response)
         }).catch((error) => {

@@ -45,6 +45,7 @@ const Events = () => import('../developers/pages/events')
 const EventsDetails = () => import('../developers/pages/EventsDetails')
 const Webhooks = () => import('../developers/pages/Webhooks')
 const WebhookDetails = () => import('../developers/pages/WebhookDetails')
+const APIKeys = () => import('../developers/pages/APIKeys')
 
 Vue.use(Router)
 
@@ -126,6 +127,11 @@ let router = new Router({
           component: LogsDetails
         },
         {
+          path: '/keys',
+          name: 'APIKeys',
+          component: APIKeys
+        },
+        {
           path: '/events',
           name: 'Events',
           component: Events
@@ -144,7 +150,7 @@ let router = new Router({
           path: '/webhooks/:id',
           name: 'WebhookDetails',
           component: WebhookDetails
-        },                        
+        },
         {
           path: '/fees/:id',
           name: 'FeesDetails',
@@ -195,7 +201,7 @@ let router = new Router({
           path: '/branches',
           name: 'Branches',
           component: Branches
-        },        
+        },
         {
           path: '/reports',
           name: 'Reports',

@@ -98,7 +98,7 @@ const actions = {
           commit(SET_PAYOUTS_STATE, 'DATA')
           commit(SET_PAYOUTS_META, response.data.response.data)
           commit(SET_PAYOUTS, response.data.response.data.transactions)
-          resolve()
+          resolve(response)
         }).catch((error) => {
           commit(SET_PAYOUTS_STATE, 'ERROR')
           console.log(error)
