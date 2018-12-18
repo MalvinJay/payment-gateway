@@ -49,6 +49,7 @@
                     </div>
                 </div>
             </el-card>
+            <!-- details -->
             <el-card class="my-2">
                 <div slot="header">
                     <span class="blue-text bold-600 s-16">{{header}} details</span>
@@ -96,6 +97,67 @@
                     </div>
                 </div>
             </el-card>
+            <!-- sms -->
+            <el-card class="my-2 card-0">
+                <div slot="header">
+                    <span class="blue-text bold-600 s-16">{{header}} SMS</span>
+                </div>
+                <div>
+                    <el-table ref="fone" empty-text="No messages to display" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="messages">
+                        <el-table-column type="expand" width="55">
+                            <template slot-scope="props">
+                                <div class="pl-15">
+                                    <p class="blue-text s-13 bold-600">Message: </p>
+                                    <p class="s-12 gray">{{ props.row.message }}</p>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in fonecolumns" :prop="column.dataField" :label="column.label"></el-table-column>
+                        <!-- <el-table-column show-overflow-tooltip label="Message text" prop="message"></el-table-column> -->
+                        <el-table-column width="80">
+                            <template slot-scope="scope">
+                                <div class="flex">
+                                    <the-tag status="failed" :title="scope.row.post_type"></the-tag>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="updated_at" label="Date" width="200">
+                            <template slot-scope="scope">
+                                {{scope.row.updated_at | moment("D MMM,YY hh:mm A")}}
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </el-card>
+            <!-- logs -->
+            <el-card class="my-2 card-0">
+                <div slot="header">
+                    <span class="blue-text bold-600 s-16">{{header}} Logs</span>
+                </div>
+                <div>
+                    <el-table @row-click="clickLogs" empty-text="No logs found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="logs">
+                        <el-table-column label="status" prop="status" width="100">
+                                <template slot-scope="scope">
+                                    <p class="status bold-600">201 OK</p>
+                                </template>                    
+                        </el-table-column>
+                        <el-table-column label="description" prop="method">
+                                <template slot-scope="scope">
+                                    <div class="flex justify-content-start">
+                                    <p class="m-0 p-0 mr-10 bold-500 s-12 text-uppercase">{{scope.row.method || 'N/A'}}</p>
+                                    <p class="m-0 p-0 mr-10 bold-500 s-12 text-lowercase">{{scope.row.url || 'n/a'}}</p>
+                                    </div>
+                                </template>
+                        </el-table-column>
+                        <el-table-column label="date" prop="created_at" width="200">
+                                <template slot-scope="scope">
+                                    <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("D MMM,YY hh:mm A")}}</p>
+                                </template>      
+                        </el-table-column>                                    
+                    </el-table>
+                </div>
+            </el-card>
+            <!-- events -->
             <el-card class="my-2 card-0">
                 <div slot="header">
                     <span class="blue-text bold-600 s-16">{{header}} events</span>
@@ -125,6 +187,7 @@
                     </el-table>
                 </div>
             </el-card>
+            <!-- disputes -->
             <el-card v-if="form.has_dispute" class="my-2 card-0">
                 <div slot="header">
                     <span class="blue-text bold-600 s-16">{{header}} disputes</span>
@@ -181,6 +244,11 @@ export default {
                 {label: 'Dispute Ref.', dataField: 'ref', width: 'auto'},
                 {label: 'Transaction Ref.', dataField: 'trans_ref', width: 'auto'},
                 {label: 'Date', dataField: 'date', width: 'auto'}
+            ],
+            fonecolumns: [
+                {label: 'message id', dataField: 'response_id', align: 'center'},
+                {label: 'delivery status', dataField: 'response_message', align: 'left'},
+                {label: 'recipient', dataField: 'recipient_no', align: 'left'}
             ]
         }
     },
@@ -240,7 +308,12 @@ export default {
             if (column.property) {
             this.$router.push(`/events/${row.id}`)
             }
-        }
+        },
+        clickLogs (row, event, column) {
+            if (column.property) {
+                this.$router.push(`/logs/${row.id}`)
+            }
+        },
     },
     mounted () {
         this.$store.dispatch('getCurrentTransaction', this.$route.params.id)
@@ -253,11 +326,17 @@ export default {
         events () {
            return this.form.events
         },
+        logs () {
+           return this.form.logs
+        },
         disputes () {
             return this.form.disputes.map(el => {
                 el.date = moment(el.created_at).format('D MMM,YY hh:mm A')
                 return el
             })
+        },
+        messages () {
+            return this.form.sms_logs
         },
         loadingPage () {
             return this.state === 'LOADING'
