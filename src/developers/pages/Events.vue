@@ -24,36 +24,66 @@
                 :data="filteredEvents">
                   <el-table-column show-overflow-tooltip label="event" prop="event">
                         <template slot-scope="scope">
-                            <p v-if="scope.row.request" class="m-0 p-0 bold-500 s-13">
-                              <span v-if="scope.row.request.transaction.service_code == 'cashout'">
-                                <span v-if="scope.row.request.transaction.status == 'paid'">
+                            <p class="m-0 p-0 bold-500 s-13">                             
+                              <span v-if="scope.row.request.transaction.service_code === 'cashout'">
+                                <span v-if="scope.row.request.transaction.status === 'paid'">
                                   A successful <strong>payment</strong> was made for <strong>GHS {{scope.row.request.transaction.amount}}</strong>
                                 </span>
-                                <span v-if="scope.row.request.transaction.status == 'failed'">
+                                <span v-if="scope.row.request.transaction.status === 'failed'">
                                   A <strong>payment</strong> of <strong>GHS {{scope.row.request.transaction.amount}}</strong> failed
                                 </span>
                               </span>
-                              <span v-if="scope.row.request.transaction.service_code == 'cashin'">
-                                <span v-if="scope.row.request.transaction.status == 'paid'">
+                              <span v-if="scope.row.request.transaction.service_code === 'cashin'">
+                                <span v-if="scope.row.request.transaction.status === 'paid'">
                                   A successful <strong>payout</strong> was made for <strong>GHS {{scope.row.request.transaction.amount}}</strong>
                                 </span>
-                                <span v-if="scope.row.request.transaction.status == 'failed'">
+                                <span v-if="scope.row.request.transaction.status === 'failed'">
                                   A <strong>payout</strong> of <strong>GHS {{scope.row.request.transaction.amount}}</strong> failed
                                 </span>                                
                               </span>
-                            </p>
-                            <p v-else class="m-0 p-0 bold-500 s-13">
-                              <span>
+                              <span v-if="scope.row.request.transaction.service_code === 'card_payment'">
+                                <span v-if="scope.row.request.transaction.status === 'paid'">
+                                  A successful <strong>card payment</strong> was made for <strong>GHS {{scope.row.request.transaction.amount}}</strong>
+                                </span>
+                                <span v-if="scope.row.request.transaction.status === 'cancelled'">
+                                  A <strong>card payment</strong> of <strong>GHS {{scope.row.request.transaction.amount}}</strong> was cancelled
+                                </span>
+                                <span v-if="scope.row.request.transaction.status === 'failed'">
+                                  A <strong>card payment</strong> of <strong>GHS {{scope.row.request.transaction.amount}}</strong> failed
+                                </span>                                                                
+                              </span>
+                              <span v-if="scope.row.request.transaction.service_code === 'direct_payment'">
+                                <span v-if="scope.row.request.transaction.status === 'success'">
+                                  A successful <strong>direct_payment</strong> was made for <strong>GHS {{scope.row.request.transaction.amount}}</strong>
+                                </span>
+                                <span v-if="scope.row.request.transaction.status === 'failed'">
+                                  A <strong>direct_payment</strong> of <strong>GHS {{scope.row.request.transaction.amount}}</strong> failed
+                                </span>                                                                
+                              </span>                             
+                              <span v-if="scope.row.request.transaction.service_code === 'cash_transfer'">
+                                <span v-if="scope.row.request.transaction.status === 'paid'">
+                                  A successful <strong>cash_transfer</strong> was made for <strong>GHS {{scope.row.request.transaction.amount}}</strong>
+                                </span>
+                                <span v-if="scope.row.request.transaction.status === 'failed'">
+                                  A <strong>cash_transfer</strong> of <strong>GHS {{scope.row.request.transaction.amount}}</strong> failed
+                                </span>                                                                
+                              </span>                                                        
+                              <span v-if="scope.row.request.transaction.service_code === 'tickets'">
+                                <span>
+                                  A <strong>ticket event</strong> was raised.
+                                </span>                             
+                              </span>
+                              <!-- <span v-else>
                                 <span>
                                   An <strong>event</strong> was made.
                                 </span>
-                              </span>
-                            </p>                              
+                              </span> -->
+                            </p>
                         </template>
                   </el-table-column>
-                  <el-table-column label="id" prop="id" width="200">
+                  <el-table-column label="reference" prop="reference" width="200">
                         <template slot-scope="scope">
-                              <p class="m-0 p-0 mr-10 bold-500 s-12 text-uppercase">{{scope.row.id || 'N/A'}}</p>
+                              <p class="m-0 p-0 mr-10 bold-500 s-12 text-uppercase">{{scope.row.data.REFERENCE || 'N/A'}}</p>
                         </template>
                   </el-table-column>
                   <el-table-column label="date" prop="created_at" width="200">
@@ -79,6 +109,7 @@
 
 <script>
 import EventBus from '../../event-bus.js'
+import Utils from '../../utils/services'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -89,7 +120,8 @@ export default {
       styleObject: {
         fontSize: '12px'
       },
-      log: {},      
+      log: {},
+      event_description: ''    
     }
   },
   created() {
@@ -118,7 +150,81 @@ export default {
       meta: 'eventsMeta',
     }),    
     filteredEvents () {
-        return this.events
+      var ev = this.events;
+      for (let i = 0; i < this.events.length; i++) {
+        if(ev[i].request.transaction == undefined){
+          ev[i].request.transaction = []
+        }
+        if(ev[i].request.transaction.service_code == undefined){
+          ev[i].request.transaction.service_code = 'tickets'
+        }
+        // if(Object.keys(ev[i].request).length === 0 && ev[i].request.constructor === Object){
+        // if (Utils.empty(ev[i].request)){
+        //   console.log('Here!!')
+        //   ev[i].request[key] = transaction
+        //   ev[i].request.transaction[key] = service_code
+
+        //   ev[i].request.transaction.service_code ='tickets'
+        //   console.log('View foolish event!!:', ev[i].request.transaction.service_code)
+        // }
+
+        console.log(`REQUEST ${ev[i].id}: `, ev[i].request)
+        
+        // var status = ev[i].request.transaction.status
+        // var amount = ev[i].request.transaction.amount
+
+        // switch (ev[i].request.transaction.service_code){
+        //   case 'cashout':
+        //     if(status == 'paid'){
+        //       return this.event_description = `A successful <strong>payment</strong> was made for <strong>GHS ${amount}</strong>`
+        //       break;
+        //     }
+        //     if(status == 'failed'){
+        //       return this.event_description = `A <strong>payment</strong> of <strong>GHS ${amount}</strong> failed`
+        //       break;
+        //     }
+    
+        //   case 'cashin' || 'direct_payment':
+        //     if(status == 'paid'){
+        //       return this.event_description = `A successful <strong>payment</strong> was made for <strong>GHS ${amount}</strong>`
+        //       break;
+        //     }
+        //     if(status == 'failed'){
+        //       return this.event_description = `A <strong>payment</strong> of <strong>GHS ${amount}</strong> failed`
+        //       break;
+        //     }
+
+        //   case 'card_payment':
+        //     if(status == 'paid'){
+        //       return this.event_description = `A successful <strong>card</strong> was made for <strong>GHS ${amount}</strong>`
+        //       break;
+        //     }
+        //     if(status == 'failed'){
+        //       return this.event_description = `A <strong>payment</strong> of <strong>GHS ${amount}</strong> failed`
+        //       break;
+        //     }
+        //     if(status == 'cancelled'){
+        //       return this.event_description = `A <strong>payment</strong> of <strong>GHS ${amount}</strong> was called`
+        //       break;
+        //     }
+
+        //   case 'cash_transfer':
+        //     if(status == 'paid'){
+        //       return this.event_description = `A successful <strong>cash transfer</strong> was made for <strong>GHS ${amount}</strong>`
+        //       break;
+        //     }
+        //     if(status == 'failed'){
+        //       return this.event_description = `A <strong>cash transfer</strong> of <strong>GHS ${amount}</strong> failed`
+        //       break;
+        //     }
+
+        //   case 'tickets':
+        //     return this.event_description = `An <strong>event</strong> was made`
+        //     break;
+        // }
+      }
+
+      return ev
     },  
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'

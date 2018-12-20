@@ -117,9 +117,9 @@
                             ></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item v-if="form.provider === 'vodafone'" label="Voucher">
+                    <!-- <el-form-item v-if="form.provider === 'vodafone'" label="Voucher">
                         <el-input v-model="form.voucher"></el-input>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item label="Sender Amount" prop="sender_amount">
                         <el-input class="little-padding-input" v-model="form.sender_amount"><span slot="prefix">&#8373</span></el-input>
                     </el-form-item>
