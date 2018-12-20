@@ -114,7 +114,7 @@
                         <el-input v-model="form.voucher"></el-input>
                     </el-form-item>
                     <el-form-item label="Amount" prop="amount">
-                        <el-input class="little-padding-input" v-model="form.amount"><span slot="prefix">&#8373</span></el-input>
+                        <el-input class="little-padding-input" v-model="form.amount"><span slot="prefix">&#8373;</span></el-input>
                     </el-form-item>
                     <el-form-item label="Remarks">
                         <el-input type="textarea" v-model="form.remarks"></el-input>

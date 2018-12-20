@@ -71,7 +71,7 @@ const actions = {
     var query = ''
 
     if (Utils.empty(filters)) {
-      query = `?page=${page}&limit=20`
+      query = `?page=${page}&limit=50`
     } else {
       query = Utils.createQueryParams(filters, page)
     }
