@@ -30,7 +30,7 @@
                   </el-table-column>
                   <el-table-column label="date" prop="created_at" width="200">
                         <template slot-scope="scope">
-                            <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("MMM Do, YYYY hh:mm A")}}</p>
+                            <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("D MMM,YY hh:mm A")}}</p>
                         </template>      
                   </el-table-column>                                    
                 </el-table>
@@ -78,10 +78,10 @@ export default {
       if (column.property) {
         this.$router.push(`/logs/${row.id}`)
       }
-    },   
+    },
     handleCurrentChange (val) {
         this.$store.dispatch('getLogs', {page: val, cache: false})
-    },     
+    },
     fetchLogs (){
       this.$store.dispatch('getLogs', {cache: false})
     }

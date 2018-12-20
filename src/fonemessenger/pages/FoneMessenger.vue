@@ -41,7 +41,7 @@
                             <template slot-scope="scope">
                                 {{scope.row.updated_at | moment("D MMM,YY hh:mm A")}}
                             </template>
-                        </el-table-column> -->
+                        </el-table-column>
                     </el-table>
                     <!-- FOOTER -->
                     <div class="flex justify-content-between align-items-center px-10">

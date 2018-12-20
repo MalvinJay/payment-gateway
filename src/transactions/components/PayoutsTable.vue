@@ -136,7 +136,7 @@
                 <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Initiate Payout</el-button>
             </span>
         </el-dialog>
-        <export-modal type="deposit" :modalVisible.sync="exportVisible"></export-modal>
+        <export-modal type="withdrawal" :modalVisible.sync="exportVisible"></export-modal>
         <ticket-modal :transaction="transaction" :ticketVisible.sync="ticketVisible"></ticket-modal>
     </div>
 </template>
