@@ -4,12 +4,12 @@
         <el-card class="my-2 card-0 custom">
             <div class="flex align-items-baseline justify-content-between" slot="header">
                 <span class="header-text">Profile</span>
-                <el-button type="primary" class="z-depth-button s-13 open-sans mini-button b-0" size="mini">Sign Out</el-button>
+                <el-button @click="logout" type="primary" class="z-depth-button s-13 open-sans mini-button b-0" size="mini">Sign Out</el-button>
             </div>
             <div>
                 <el-row type="flex" justify="center">
                     <el-col :sm="16" :lg="13">
-                        <el-form label-position="left" size="mini" ref="form" hide-required-asterisk class="transaction-form py-20" :model="client" label-width="200px">
+                        <el-form label-position="left" size="mini" ref="form" hide-required-asterisk class="transaction-form py-20" :model="user.client" label-width="200px">
                             <el-form-item v-for="(item, index) in columns" :key="index" :label="item.label">
                                 <el-input v-if="item.type === 'input'" v-model="user.client[item.model]"></el-input>
                                 <p v-if="item.subtext" class="my-1">
@@ -22,7 +22,7 @@
             </div>
             <div class="el-card__footer flex justify-content-end">
                 <el-button size="mini" class="z-depth-button s-13 open-sans mini-button b-0">Cancel</el-button>
-                <el-button size="mini" class="z-depth-button s-13 b-0 bold-500 open-sans white-text" type="primary">Save</el-button>
+                <el-button size="mini" :loading="createLoading" @click="updateProfile('form')" class="z-depth-button s-13 b-0 bold-500 open-sans white-text" type="primary">Update Client Profile</el-button>
             </div>
         </el-card>
         <!-- Accounts -->
@@ -120,7 +120,7 @@
                 <span class="header-text">Account Services</span>
             </div>
             <div>
-                <el-table class="breathe" :data="services" @row-click="clickRow" empty-text="No services to display" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header">
+                <el-table class="breathe" :data="services" empty-text="No services to display" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header">
                     <el-table-column
                         v-for="(item, index) in tableColumns"
                         :key="index"
@@ -148,6 +148,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import moment from 'moment'
+import initState from '../utils/initState'
 
 export default {
   name: 'Profile',
@@ -177,11 +178,13 @@ export default {
         {label: 'name', prop: 'name'},
         {label: 'desciption', prop: 'description'}
       ],
-      form: {}
+      form: {},
+      createLoading: false,
+      page: 1
     }
   },
   computed: {
-    ...mapGetters(['user']),
+    ...mapGetters(['user', 'pageSize']),
     services () {
         return this.user.account_services.map(el => {
             el.date = moment(el.created_at).format('D MMM,YY hh:mm A')
@@ -195,6 +198,58 @@ export default {
     },
     deposit () {
         return this.user.deposit_accounts
+    }
+  },
+  methods: {
+    updateProfile (formName) {
+        this.form = {
+            country_code: "GH",
+            name: this.user.client.full_name,
+            company: this.user.client.company_name,
+            client_msisdn: this.user.client.msisdn,
+            email: this.user.client.email,
+            city: this.user.client.city
+        }
+
+        this.createLoading = true
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$store.dispatch('updateProfile', this.form)
+            .then((response) => {
+                this.createLoading = false
+                this.$message({
+                    message: 'Profile Updated Successfully',
+                    type: 'success'
+                })
+            }).catch(() => {
+                this.createLoading = false
+                this.$message({
+                    message: 'Unable to update profile. Please try again later',
+                    type: 'error'
+                })
+            })
+          } else {
+            this.createLoading = false
+            this.$message({
+                message: 'Please fill form correctly',
+                type: 'error'
+            })
+          }
+        })
+    },
+    logout () {
+        this.$store.dispatch('logout')
+        .then(() => {
+            var init = initState.initState()
+            this.$store.replaceState(init)
+            this.$session.remove('client')
+            this.$session.remove('token')
+            this.$session.destroy()
+            this.$router.push('/login')
+        })
+    },
+    handleCurrentChange (page) {
+        this.page = page
     }
   }
 }

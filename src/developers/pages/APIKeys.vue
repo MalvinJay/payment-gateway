@@ -13,7 +13,7 @@
                     Access the API documentation from this link: <a href="https://developer.flopay.io"> flopay.io/docs</a></p>
             </div>
         </el-card>
-        <el-card class="my-2">
+        <el-card v-can="'View API Credentials'" class="my-2">
             <div slot="header">
                 <p class="header-text">API Credentials</p>
             </div>

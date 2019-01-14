@@ -1,9 +1,12 @@
 <template>
     <el-card class="transactions">
-        <div class="trans-div">
+        <div class="trans-div flex justify-content-between">
             <div class="flex align-items-baseline">
                 <!-- <p class="header-text">Settlements</p> -->
                 <filter-component dispatch="setSettlementsFilters" filterType="payment"></filter-component>
+            </div>
+            <div>
+                <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="settlementVisible = true" type="text"><i class="plus icon"></i> New</el-button>
             </div>
         </div>
         <div>
@@ -71,15 +74,20 @@
                 </div>
             </div>
         </div>
+        <settlement-modal :modalVisible="settlementVisible"></settlement-modal>
     </el-card>
 </template>
 
 <script>
 import EventBus from '../../event-bus.js'
+import SettlementModal from '../components/SettlementModal'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'Settlements',
+  components: {
+    SettlementModal
+  },
   data () {
     return {
       test: true,
@@ -89,7 +97,8 @@ export default {
       ],
       styleObject: {
         fontSize: '12px'
-      }
+      },
+      settlementVisible: false
     }
   },
   created () {
@@ -97,6 +106,14 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'settlements')
+    EventBus.$on('settlementModal', (val) => {
+        this.settlementVisible = false
+    })
+  },
+  beforeDestroy () {
+    EventBus.$off('settlementModal', (val) => {
+      this.settlementVisible = false
+    })
   },
   methods: {
     handleCurrentChange (val) {

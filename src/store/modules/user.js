@@ -1,5 +1,5 @@
 import { AUTH_REQUEST, ADMIN_LOGIN, IS_ADMIN, SET_PAGE_LOADING, SET_TEST, SET_TOKEN, SET_CLIENT,
-  SET_PERMISSIONS, LOGIN, SEND_EMAIL, LOGOUT, SET_CLIENT_CRED, SET_BALANCE, GET_BALANCE, RESET_PASSWORD } from './store-constants'
+  SET_PERMISSIONS, LOGIN, SEND_EMAIL, UPDATE_PROFILE, LOGOUT, SET_CLIENT_CRED, SET_BALANCE, GET_BALANCE, RESET_PASSWORD } from './store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../apiCall'
 import axios from 'axios'
@@ -21,6 +21,10 @@ const user = {
     permissions: {
       data: []
     },
+    services: {
+      data: []
+    },
+    banks: [],
     pageLoading: false,
     isAdmin: Utils.returnBool(localStorage.getItem('isAdmin')),
     pageSize: 12,
@@ -38,7 +42,9 @@ const user = {
     logIn: state => state.logIn,
     isAdmin: state => state.isAdmin,
     pageSize: state => state.pageSize,
-    balance: state => state.balance
+    balance: state => state.balance,
+    banks: state => state.banks,
+    services: state => state.services.data
   },
 
   // mutations
@@ -49,8 +55,11 @@ const user = {
     },
     // client data
     [SET_CLIENT] (state, data) {
+      console.log('data data', data)
       if (!state.isAdmin) {
         state.permissions.data = data.client.privileges
+        state.services.data = data.account_services
+        state.banks = data.deposit_accounts[1].providers
       }
       state.user.data = data
       state.userdata = data
@@ -232,6 +241,22 @@ const user = {
     },
     [SET_TOKEN] ({ commit }, data) {
       commit(SET_TOKEN, data)
+    },
+    // UPDATE PROFILE
+    [UPDATE_PROFILE] ({ rootGetters }, form) {
+      return new Promise((resolve, reject) => {
+        var url = `${GET_BASE_URI}v1/merchants/update.json`
+        apiCall({
+          url: url,
+          method: 'PUT',
+          token: rootGetters.token,
+          data: form
+        }).then((response) => {
+          resolve(response)
+        }).catch((error) => {
+          reject(error)
+        })
+      })
     }
   }
 }

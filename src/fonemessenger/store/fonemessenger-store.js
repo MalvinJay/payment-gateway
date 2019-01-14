@@ -23,7 +23,7 @@ const getters = {
 // mutations
 const mutations = {
   [SET_FONE_MESSENGERS] (state, payload) {
-    state.messages.count = payload.total_logs
+    state.messages.count = payload.total_page_logs
     state.messages.data = payload.logs
   },
   [SET_FONE_MESSENGERS_STATE] (state, payload) {

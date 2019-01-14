@@ -69,7 +69,7 @@
                                 v-model="schedule.time"
                                 :picker-options="{
                                     start: '08:30',
-                                    step: '00:15',
+                                    step: '00:05',
                                     end: '18:30'
                                 }"
                                 placeholder="Select time">
@@ -284,8 +284,10 @@ export default {
                                 message: 'Job created',
                             })
                             this.$store.dispatch('getJobs', {cache: false})
-                            EventBus.$emit('tabNumber', '3')
                             this.$router.push('/payments')
+                            setTimeout(() => {
+                                EventBus.$emit('tabNumber', '3')
+                            }, 1000)
                         } else {
                             this.$message({
                                 type: 'error',

@@ -5,8 +5,8 @@
                 <filter-component dispatch="setTransactionsFilters" filterType="payment"></filter-component>
             </div>
             <div>
-                <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
-                <el-button v-if="canGenerateReports" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+                <el-button v-can="'Accept Payment'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
+                <el-button v-can="'Generate Reports'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
             </div>
         </div>
         <div>
@@ -248,6 +248,7 @@ export default {
                     })
                     this.fetchTransactions()
                     this.dialogVisible = false
+                    this.$store.dispatch('getBalance')
                 } else {
                 this.$message({
                         type: 'error',
@@ -286,6 +287,7 @@ export default {
                     type: 'success'
                 })
                 this.fetchTransactions()
+                this.$store.dispatch('getBalance')
                 this.dialogVisible = false
             } else {
             this.$message({

@@ -1,6 +1,7 @@
 import { PAYOUT_CREATE, SET_PAYOUTS_META, SET_PAYOUTS_FILTERS,
   PAYOUTS_FETCH,
   SET_PAYOUTS_STATE,
+  BILL_PAYOUT,
   SET_PAYOUTS,
   GET_BASE_URI } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
@@ -112,9 +113,10 @@ const actions = {
     dispatch('getPayouts', {page: 1, cache: false})
   },
   [PAYOUT_CREATE] ({commit, state, rootGetters}, transaction) {
+    var url = transaction.service_code === 'airtime' ? 'v1/airtime.json' : 'v1/transfer.json'
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}v1/transfer.json`,
+        url: `${GET_BASE_URI}${url}`,
         method: 'POST',
         data: transaction,
         token: rootGetters.token
@@ -122,6 +124,21 @@ const actions = {
         resolve(response)
       }).catch((error) => {
         console.log('ERROR', error)
+        reject(error)
+      })
+    })
+  },
+  [BILL_PAYOUT] ({commit, state, rootGetters}, transaction) {
+    var url = 'v1/bills.json'
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}${url}`,
+        method: 'POST',
+        data: transaction,
+        token: rootGetters.token
+      }).then((response) => {
+        resolve(response)
+      }).catch((error) => {
         reject(error)
       })
     })

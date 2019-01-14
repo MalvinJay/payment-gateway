@@ -70,13 +70,23 @@ Vue.directive('can', {
     // var s = JSON.stringify
     // console.log('loho', binding.value)
     // console.log('loho', store.getters.permissions)
-    const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
+    // const behaviour = binding.modifiers.disable ? 'disable' : 'hide'
     if (store.getters.permissions.find(el => el.action.toLowerCase() === binding.value.toLowerCase())) {
       console.log('el', el)
       return true
     } else {
       el.style.display = 'none'
     //   el.disabled = true
+    }
+  }
+})
+
+Vue.directive('service', {
+  bind: function (el, binding, vnode) {
+    if (store.getters.services.find(el => el.name.toLowerCase() === binding.value.toLowerCase())) {
+      return true
+    } else {
+      el.style.display = 'none'
     }
   }
 })

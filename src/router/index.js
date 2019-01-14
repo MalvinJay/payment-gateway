@@ -46,6 +46,7 @@ const EventsDetails = () => import('../developers/pages/EventsDetails')
 const Webhooks = () => import('../developers/pages/Webhooks')
 const WebhookDetails = () => import('../developers/pages/WebhookDetails')
 const APIKeys = () => import('../developers/pages/APIKeys')
+const Sandbox = () => import('../developers/pages/Sandbox')
 
 Vue.use(Router)
 
@@ -130,6 +131,11 @@ let router = new Router({
           path: '/keys',
           name: 'APIKeys',
           component: APIKeys
+        },
+        {
+          path: '/sandbox',
+          name: 'Sandbox',
+          component: Sandbox
         },
         {
           path: '/events',

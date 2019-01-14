@@ -1,40 +1,58 @@
 <template>
     <el-dialog custom-class="export-dialog"
-        title="Top-Up EVA"
+        title="Initiate Settlement"
         @close="close"
         :visible="modalVisible"
         width="35%">
         <div class="flex justify-content-center new-transaction-bg">
-            <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="120px">
-                <el-form-item label="Wallet Name">
-                    <el-input v-model="form.recipient_name"></el-input>
-                </el-form-item>
-                <el-form-item class="h-auto" label="Wallet Number" prop="recipient_no">
-                    <el-input v-model="form.recipient_no"></el-input>
-                </el-form-item>
-                <el-form-item label="Provider">
-                    <el-select v-model="form.provider" placeholder="Select Provider">
+            <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form mt-2" :rules="rules" :model="form" label-width="120px">
+                <el-form-item label="Bank Name">
+                    <el-select v-model="form.bank_name">
+                        <el-option label="Direct Transfer" value="N/A"></el-option>
                         <el-option
                             v-for="(item, index) in providers" :key="index"
-                            :label="item.label"
-                            :value="item.value"
+                            :label="item.name"
+                            :value="item.code"
                         ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="Sender Amount" prop="sender_amount">
-                    <el-input class="little-padding-input" v-model="form.sender_amount"><span slot="prefix">&#8373</span></el-input>
+                <el-form-item v-if="form.bank_name === 'N/A'" label="Location">
+                    <el-input v-model="form.location"></el-input>
                 </el-form-item>
-                <el-form-item label="Recipient Amount" prop="recipient_amount">
-                    <el-input class="little-padding-input" v-model="form.recipient_amount"><span slot="prefix">&#8373</span></el-input>
+                <div v-else>
+                    <el-form-item label="Name on Account">
+                        <el-input v-model="form.location"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Account Number">
+                        <el-input v-model="form.account_no"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Branch">
+                        <el-input v-model="form.branch"></el-input>
+                    </el-form-item>
+                </div>
+                <el-form-item label="Amount" prop="amount">
+                    <el-input class="little-padding-input" v-model="form.amount"><span slot="prefix">&#8373</span></el-input>
                 </el-form-item>
+                <el-form-item label="Name" prop="recipient_name">
+                    <el-input v-model="form.recipient_name"></el-input>
+                </el-form-item>
+                <!-- <el-form-item label="Service Code">
+                    <el-select v-model="form.service_code">
+                        <el-option
+                            v-for="(item, index) in options" :key="index"
+                            :label="item.name"
+                            :value="item.value"
+                        ></el-option>
+                    </el-select>
+                </el-form-item> -->
                 <el-form-item label="Remarks">
-                    <el-input type="textarea" v-model="form.remarks"></el-input>
+                    <el-input type="textarea" v-model="form.description"></el-input>
                 </el-form-item>
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="close">Cancel</el-button>
-            <el-button size="mini" :loading="loading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="createLog('form')">Initiate Topup</el-button>
+            <el-button size="mini" :loading="loading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="createLog('form')">Initiate Settlement</el-button>
         </span>
     </el-dialog>
 </template>
@@ -50,23 +68,19 @@ export default {
     props: ['modalVisible'],
     data() {
       return {
-        checkAll: false,
-        topupoption: 'flopay',
         form: {
-            sender_amount: '',
-            sender_currency: 'GHS',
-            recipient_amount: '',
-            recipient_currency: 'GHS',
-            recipient_no: '',
-            recipient_name: '',
-            provider: '',
-            country_code: 'GH',
-            service_code: 'cashin',
-            live: false
+            bank_name: 'N/A',
+            currency: "Ghs",
+            country_code: "GH",
+            live: true,
+            dummy: false,
+            service_code: 'cash_transfer',
+            integration_type: 'FLOPAY_WEB',
+            is_direct_transfer: true
         },
         options: [
-            {name: 'Flopay Wallet', value: 'flopay'},
-            {name: 'External Wallet', value: 'external'}
+            {name: 'Cash In', value: 'cashin'},
+            {name: 'Cash Out', value: 'cashout'}
         ],
         rules: {
             recipient_no: [
@@ -84,7 +98,17 @@ export default {
     },
     methods: {
       close () {
-        EventBus.$emit('topupModal', false)
+        this.form = {
+            bank_name: 'N/A',
+            currency: "Ghs",
+            country_code: "GH",
+            live: true,
+            dummy: false,
+            service_code: 'cash_transfer',
+            integration_type: 'FLOPAY_WEB',
+            is_direct_transfer: true
+        },
+        EventBus.$emit('settlementModal', false)
       },
       createLog (formName) {
         this.loading = true
@@ -92,17 +116,14 @@ export default {
             if (valid) {
                 this.form.live = !this.test
                 this.form.dummy = this.test
-                this.form.service_code = 'cashin'
-                this.form.reference = 'FLPCI' + Math.floor(Math.random() * 99999999999)
-                this.$store.dispatch('createPayouts', this.form)
+                this.form.account_no = this.form.account_no ? this.form.account_no : 'others'
+                this.$store.dispatch('createSettlement', this.form)
                 .then((response) => {
                     if (response.data.success) {
                         this.$message({
                             type: 'success',
                             message: response.data.response.message,
                         })
-                        this.$store.dispatch('getBalance')
-                        this.$store.dispatch('getTopUps', {cache: false})
                         this.close()
                     } else {
                         this.$message({
@@ -131,7 +152,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            providers: 'providers',
+            providers: 'banks',
             test: 'test'
         })
     }
@@ -150,9 +171,7 @@ export default {
 .new-export-bg{
     background: #F7FAFC;
 }
-.m-0{
-    margin: 0 !important;
-}
+
 .el-tag + .el-tag {
     margin-left: 10px;
     margin-bottom: 5px;

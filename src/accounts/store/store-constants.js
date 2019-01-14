@@ -13,9 +13,13 @@ export const GET_TOPUPS = 'getTopUps'
 export const SET_TOPUPS = 'setTopUps'
 export const SET_TOPUPS_STATE = 'setTopUpsState'
 export const SET_TOPUPS_FILTERS = 'setTopUpsFilters'
+export const TOPUP_EVA = 'topupEva'
 
-// topups
+// settlements
 export const GET_SETTLEMENTS = 'getSettlements'
 export const SET_SETTLEMENTS = 'setSettlements'
 export const SET_SETTLEMENTS_STATE = 'setSettlementsState'
 export const SET_SETTLEMENTS_FILTERS = 'setSettlementsFilters'
+export const CREATE_SETTLEMENT = 'createSettlement'
+export const GET_ACCOUNTS = 'getClientAccounts'
+export const SET_ACCOUNTS = 'setClientAccounts'

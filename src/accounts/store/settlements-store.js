@@ -2,7 +2,10 @@ import {
   SET_SETTLEMENTS,
   SET_SETTLEMENTS_STATE,
   GET_SETTLEMENTS,
-  SET_SETTLEMENTS_FILTERS
+  SET_SETTLEMENTS_FILTERS,
+  GET_ACCOUNTS,
+  SET_ACCOUNTS,
+  CREATE_SETTLEMENT
 } from './store-constants'
 import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
@@ -20,13 +23,17 @@ const state = {
       from: moment().startOf('month').format('YYYY-MM-DD'),
       to: moment().endOf('month').format('YYYY-MM-DD')
     }
+  },
+  clientAccounts: {
+    data: []
   }
 }
 
 // getters
 const getters = {
   settlements: state => state.settlements.data,
-  settlementsState: state => state.settlements.state
+  settlementsState: state => state.settlements.state,
+  clientAccounts: state => state.clientAccounts.data
 }
 
 // mutations
@@ -40,6 +47,9 @@ const mutations = {
   },
   [SET_SETTLEMENTS_FILTERS] (state, data) {
     state.settlements.filters = data
+  },
+  [SET_ACCOUNTS] (state, data) {
+    state.clientAccounts.data = data
   }
 }
 
@@ -79,6 +89,21 @@ const actions = {
   [SET_SETTLEMENTS_FILTERS] ({ commit, dispatch }, filters) {
     commit(SET_SETTLEMENTS_FILTERS, filters)
     dispatch('getSettlements', {page: 1, cache: false})
+  },
+  [CREATE_SETTLEMENT] ({ rootGetters }, data) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/cash_transfers`,
+        method: 'POST',
+        token: rootGetters.token,
+        data: data
+      }).then((response) => {
+        resolve(response)
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
   }
 }
 

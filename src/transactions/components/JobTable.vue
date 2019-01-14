@@ -95,7 +95,6 @@ export default {
       styleObject: {
         fontSize: '12px'
       },
-      activeName: '1',
       date: false,
       dialogVisible: false,
       form: {
