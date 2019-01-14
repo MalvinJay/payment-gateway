@@ -47,7 +47,7 @@
                             <tbody>
                                 <tr>
                                     <td>Telephone No:</td>
-                                    <td> {{form.phone}} </td>
+                                    <td> {{phone}} </td>
                                 </tr>
                                 <tr>
                                     <td>Transaction type</td>
@@ -68,7 +68,22 @@
             </el-col>
             <el-col :span="12">
                 <div class="center h-100">
-                    <img src="../../assets/images/s8.png" alt="">
+                    <div class="img">
+                        <div v-if="ready" class="message">
+                            {{message}}
+                        </div>
+                        <div v-if="authorize">
+                            <div class="v-center message">
+                                <p>Authorize payment of GHs{{form.sender_amount}} from your account. Enter MM PIN to continue</p>
+                                <el-input size="mini" type="password" v-model="pin"></el-input>
+                                <div class="my-1">
+                                    <el-button @click="cancel" size="mini">Cancel</el-button>
+                                    <el-button @click="sendTrans" size="mini">Send</el-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <img src="../../assets/images/s8.png" alt=""> -->
                 </div>
             </el-col>
         </el-row>
@@ -88,56 +103,109 @@ export default {
             country_code: 'GH',
             live: false,
             dummy: true
+        },
+        message: 'You have received GHs1 into your mobile money account',
+        ready: false,
+        authorize: false,
+        pin: '',
+        rules: {
+            customer_no: [
+                { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
+            ],
+            recipient_no: [
+                { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
+            ],
         }
       }
+    },
+    watch: {
+        ready (newValue, oldValue) {
+            if (newValue === true) {
+               setTimeout(() => {
+                   this.ready = false
+               }, 3000)
+            }
+        }
     },
     methods: {
         submitForm (formName) {
             this.createLoading = true
             this.$refs[formName].validate((valid) => {
-            if (valid) {
-                this.form.reference = 'FLPCO' + Math.floor(Math.random() * 99999999999)
+                if (valid) {
+                    this.form.reference = 'FLPCO' + Math.floor(Math.random() * 99999999999)
+                    var amount = this.form.service_code === 'cashin' ? this.form.amount : this.form.sender_amount
 
-                var dispatch = ''
-                if (this.form.service_code === 'cashin') {
-                    dispatch = 'createTransactions'
-                } else {
-                    dispatch = 'createPayouts'
-                    this.form.sender_currency= 'GHS'
-                    this.form.recipient_currency= 'GHS'
-                }
-
-                this.$store.dispatch(dispatch, this.form)
-                .then((response) => {
-                    if (response.data.success) {
-                        this.$message({
-                            message: 'Payment successful',
-                            type: 'success'
-                        })
+                    var dispatch = ''
+                    if (this.form.service_code === 'cashin') {
+                        dispatch = 'createTransactions'
                     } else {
-                        this.$message({
-                            type: 'error',
-                            message: response.data.response.error_message
-                        })
+                        dispatch = 'createPayouts'
+                        this.form.sender_currency= 'GHS'
+                        this.form.recipient_currency= 'GHS'
                     }
-                    this.createLoading = false
-                }).catch((error) => {
-                    this.createLoading = false
-                    const response = error.response
+
+                    this.$store.dispatch(dispatch, this.form)
+                    .then((response) => {
+                        // if (response.data.success) {
+                        //     this.$message({
+                        //         message: 'Payment successful',
+                        //         type: 'success'
+                        //     })
+                        // } else {
+                        //     this.$message({
+                        //         type: 'error',
+                        //         message: response.data.response.error_message
+                        //     })
+                        // }
+                        if (this.form.service_code === 'cashin') {
+                            this.ready = true
+                            this.message = `You have received GHs${amount} into your mobile money account`
+                        } else {
+                            this.authorize = true
+                        }
+                        
+                        this.createLoading = false
+                    }).catch((error) => {
+                        this.createLoading = false
+                        const response = error.response
+                        this.$message({
+                            message: response.data.error,
+                            type: 'error'
+                        })
+                    })
+                } else {
+                    this.createLoading = false  
                     this.$message({
-                        message: response.data.error,
+                        message: 'Please correct the errors',
                         type: 'error'
                     })
-                })
-            } else {
-                this.createLoading = false  
-                this.$message({
-                    message: 'Please correct the errors',
-                    type: 'error'
-                })
-                return false
-            }
+                    return false
+                }
             })
+        },
+        cancel () {
+            this.authorize = false
+        },
+        sendTrans () {
+            this.authorize = false
+            this.ready = true
+            var amount = this.form.service_code === 'cashin' ? this.form.amount : this.form.sender_amount
+            if (this.pin === '1234') {
+                this.authorize = false
+                this.pin = ''
+                this.message = `GHs${amount} has been withdrawn from your mobile money account`
+            } else {
+                this.authorize = false
+                this.message = `Pin is incorrect. Please try again`
+                setTimeout(() => {
+                    this.authorize = true
+                }, 800)
+            }
+        }
+    },
+    computed: {
+        phone () {
+            return this.form.service_code === 'cashin' ? this.form.customer_no : this.form.recipient_no
         }
     }
 }
@@ -146,6 +214,33 @@ export default {
 <style lang="scss" scoped>
 img{
     width: 55%;
+}
+.img{
+    background: url('https://res.cloudinary.com/seddiescloudimagecdn/image/upload/v1547459489/s8.png') no-repeat center;
+    background-size: 50% 90%;
+    height: 100%;
+    width: 100%;
+    position: relative;
+
+    .message{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        position: absolute;
+        left: 30%;
+        top: 40%;
+        background: #EBF0F1;
+        width: 40%;
+        font-size: 12px;
+        padding: 10px;
+        color: #2c3e50;
+        text-align: center;
+        border-top: 2px solid #e67e22;
+        border-radius: 5px;
+        box-shadow: 0.5px 1px 2px rgba(0,0,0,.3);
+        height: auto;
+        animation: fadeIn .2s ease-in forwards;
+    }
 }
 h3{
     font-size: 12px;

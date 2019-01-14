@@ -1,7 +1,7 @@
 import {
   EVENTS_FETCH, SET_EVENTS, SET_EVENTS_STATE, SET_EVENTS_META, SET_EVENTS_FILTERS, GET_CURRENT_EVENT, SET_CURRENT_EVENT, SET_CURRENT_EVENTS_STATE,RETRY_WEBHOOK
 } from './events-store-constants'
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 
@@ -71,7 +71,7 @@ const actions = {
     var query = ''
 
     if (Utils.empty(filters)) {
-      query = `?page=${page}&limit=50`
+      query = `?page=${page}&limit=20`
     } else {
       query = Utils.createQueryParams(filters, page)
     }

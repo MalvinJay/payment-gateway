@@ -9,7 +9,7 @@
             </div>
             <div v-if="!hasNoData" v-for="(value, key, index) in data" :key="index">
                 <div class="flex align-items-center mb-1">
-                    <p class="m-0 mr-2 w-150">{{key}}</p>
+                    <p class="s-13 m-0 mr-2 w-150">{{key}}</p>
                     <p class="s-13 mono">{{value}}</p>
                 </div>
             </div>

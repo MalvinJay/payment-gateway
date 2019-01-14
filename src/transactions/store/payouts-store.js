@@ -2,9 +2,9 @@ import { PAYOUT_CREATE, SET_PAYOUTS_META, SET_PAYOUTS_FILTERS,
   PAYOUTS_FETCH,
   SET_PAYOUTS_STATE,
   BILL_PAYOUT,
-  SET_PAYOUTS,
-  GET_BASE_URI } from './transactions-store-constants'
+  SET_PAYOUTS} from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
+import { GET_BASE_URI } from '../../store/constants'
 import Utils from '../../utils/services'
 
 // const url = localStorage.getItem('isAdmin') === true ? 'v2/accounts/transactions' : 'v2/transactions.json'

@@ -328,7 +328,7 @@ import Utils from '../../utils/services'
 import Job from '../models/Job.js'
 import moment from 'moment'
 import { AWS_BUCKET } from '../store/transactions-store-constants.js'
-import { GET_BASE_URI } from '../store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 
 export default {
     name: 'JobDetails',

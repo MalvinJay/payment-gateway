@@ -1,3 +1,4 @@
+import {GET_BASE_URI} from '../../store/constants'
 // transactions
 export const TRANSACTIONS_FETCH = 'getTransactions'
 export const TRANSACTION_CREATE = 'createTransactions'
@@ -10,7 +11,7 @@ export const SET_CURRENT_TRANSACTION = 'setCurrentTransaction'
 export const SET_CURRENT_TRANSACTION_STATE = 'setCurrentTransactionState'
 export const REFUND_TRANSACTION = 'createRefund'
 
-export const GET_BASE_URI = 'https://api.flopay.io/'
+// export const GET_BASE_URI = 'https://api.flopay.io/'
 // export const GET_BASE_URI = 'https://645a4161.ngrok.io/api/'
 
 export const GET_TRANSACTIONS_URI = `${GET_BASE_URI}v2/transactions.json`

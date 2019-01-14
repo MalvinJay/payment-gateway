@@ -1,6 +1,7 @@
 import { GET_FIELDS, SET_FIELDS, SET_DOWNLOAD_LINK, SET_FIELDS_STATE,
-  GET_BASE_URI, SUBMIT_REPORT, DOWNLOAD_REPORT, SUBMIT_JOB_REPORT, GET_REPORT } from './transactions-store-constants'
+  SUBMIT_REPORT, DOWNLOAD_REPORT, SUBMIT_JOB_REPORT, GET_REPORT } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
+import { GET_BASE_URI } from '../../store/constants'
 
 // state
 const state = {

@@ -1,7 +1,7 @@
 import {
   LOGS_FETCH, SET_LOGS, SET_LOGS_STATE, SET_LOGS_META, SET_LOGS_FILTERS, GET_CURRENT_LOG, SET_CURRENT_LOG, SET_CURRENT_LOGS_STATE
 } from './logs-store-constants'
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 

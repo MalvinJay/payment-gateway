@@ -1,5 +1,5 @@
 import { GET_DASHBOARD_GRAPH, GET_TODAY_GRAPH, SET_TODAY_GRAPH, SET_TODAY_GRAPH_STATE, SET_DASHBOARD_FILTERS, SET_DASHBOARD_GRAPH, SET_DASHBOARD_GRAPH_STATE, GET_DASHBOARD_URI } from './dashboard-store-constants'
-import { GET_BASE_URI } from '../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../store/constants'
 import { apiCall } from '../store/apiCall'
 import Utils from '../utils/services'
 import Dashboard from './models/Dashboard'

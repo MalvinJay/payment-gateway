@@ -1,7 +1,7 @@
 import {
   TEAMS_FETCH, SET_TEAMS, SET_TEAMS_STATE, SET_TEAMS_META, SET_TEAMS_FILTERS, CREATE_USER, DELETE_USER
 } from './team-store-constants'
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { apiCall } from '../../store/apiCall'
 // import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import Utils from '../../utils/services'

@@ -1,7 +1,7 @@
 import {
   GET_BRANCHES, CREATE_BRANCH, SET_BRANCHES, SET_BRANCHES_STATE, DELETE_BRANCH, GET_CURRENT_BRANCH, SET_CURRENT_BRANCH
 } from './branch-store-constants'
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 

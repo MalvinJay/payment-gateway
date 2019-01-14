@@ -1,4 +1,4 @@
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { GET_ACCOUNT_FEES, SET_ACCOUNT_FEES, SET_ACCOUNT_FEES_STATE,
   SET_CURRENT_ACCOUNT_FEES, GET_CURRENT_ACCOUNT_FEES, SET_ACCOUNT_FEES_FILTERS } from './store-constants'
 import { apiCall } from '../../store/apiCall'

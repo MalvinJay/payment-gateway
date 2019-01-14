@@ -1,5 +1,6 @@
-import { GET_BASE_URI, GET_DISPUTES, SET_DISPUTES, CREATE_DISPUTE, SET_DISPUTES_STATE, SET_DISPUTES_FILTERS } from './transactions-store-constants'
+import { GET_DISPUTES, SET_DISPUTES, CREATE_DISPUTE, SET_DISPUTES_STATE, SET_DISPUTES_FILTERS } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
+import { GET_BASE_URI } from '../../store/constants'
 import Utils from '../../utils/services'
 
 // state

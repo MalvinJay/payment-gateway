@@ -1,6 +1,6 @@
 import { GET_CONTACTS, SET_CONTACTS_STATE, GET_CURRENT_CONTACT, SET_CURRENT_CONTACT, SET_CURRENT_CONTACT_STATE,
   CREATE_CONTACT, SET_CURRENT_CONTACTS, SET_CURRENT_CONTACT_SCHEDULES, SET_CURRENT_CONTACT_TRANSACTIONS, GET_CONTACTS_URI, SET_CONTACTS } from './contacts-store-constants'
-import { GET_BASE_URI } from '../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../store/constants'
 import { apiCall } from '../store/apiCall'
 // import Utils from '../utils/Utils'
 

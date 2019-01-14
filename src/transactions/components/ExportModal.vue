@@ -57,7 +57,7 @@ import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 import Utils from '../../utils/services'
 import moment from 'moment'
-import { GET_BASE_URI } from '../store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 
 export default {
     name: 'ExportModal',

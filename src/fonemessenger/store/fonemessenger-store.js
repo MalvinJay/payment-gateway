@@ -1,4 +1,4 @@
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { GET_FONE_MESSENGERS, CREATE_LOG, SET_FONE_MESSENGERS,
   SET_FONE_MESSENGERS_STATE, TOPUP_OVA } from './fonemessenger-store-constants'
 import { apiCall } from '../../store/apiCall'

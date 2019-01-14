@@ -1,4 +1,4 @@
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { GET_ACCOUNT_SETTLEMENTS, SET_ACCOUNT_SETTLEMENTS, SET_ACCOUNT_SETTLEMENTS_STATE,
   SET_CURRENT_ACCOUNT_SETTLEMENTS, GET_CURRENT_ACCOUNT_SETTLEMENTS } from './store-constants'
 import { apiCall } from '../../store/apiCall'
