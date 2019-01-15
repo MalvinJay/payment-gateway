@@ -123,18 +123,18 @@ export default {
         this.form.contacts.splice(this.form.contacts.indexOf(tag), 1);
       },
       showInput () {
-        this.inputVisible = true;
+        this.inputVisible = true
         this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
+          this.$refs.saveTagInput.$refs.input.focus()
+        })
       },
       handleInputConfirm () {
-        let inputValue = this.inputValue;
+        let inputValue = this.inputValue
         if (inputValue) {
-          this.form.contacts.push(inputValue);
+          this.form.contacts.push(inputValue)
         }
-        this.inputVisible = false;
-        this.inputValue = '';
+        this.inputVisible = false
+        this.inputValue = ''
       },
       createLog (formName) {
         this.loading = true
@@ -149,7 +149,7 @@ export default {
                     if (response.data.success) {
                         this.$message({
                             type: 'success',
-                            message: 'Message Sent',
+                            message: 'Message Sent'
                         })
                         this.$store.dispatch('getFoneMessengers', {cache: false})
                         this.$store.dispatch('getBalance')

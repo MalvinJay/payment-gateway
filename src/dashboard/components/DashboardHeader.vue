@@ -10,7 +10,9 @@
                     <div class="flex align-items-center">
                         <el-date-picker class="transparent-input"
                             v-model="currentDate"
+                            @change="handleChange"
                             type="date"
+                            value-format="yyyy-MM-dd"
                             :picker-options="pickerOptions"
                             placeholder="Today">
                             </el-date-picker>
@@ -204,7 +206,6 @@ export default {
                         lineHeight: 2,
                         padding: 2,
                         callback: function(value, index, values) {
-                            console.log('valie', value)
                             switch (value) {
                                 case '0:00':
                                     return value
@@ -301,7 +302,7 @@ export default {
         amount: 'balance'
     }),
     balance () {
-        return this.amount.available_balance
+        return this.amount.available_balance ? this.amount.available_balance : 0
     },
     fon () {
         return this.amount.fon_messanger_balance
@@ -354,6 +355,15 @@ export default {
   methods: {
     fetchToday () {
         this.$store.dispatch('getTodayGraph', {cache: false})
+        .then(() => {
+            EventBus.$emit('updateGraph')
+        })
+    },
+    handleChange (val) {
+        var form = {
+            date: val
+        }
+        this.$store.dispatch('setTodayFilters', form)
         .then(() => {
             EventBus.$emit('updateGraph')
         })

@@ -58,7 +58,6 @@ export default {
     }
   },
   created () {
-    console.log('length', Object.keys(this.user).length)
     // if (Object.keys(this.user).length === 0) {
     //   this.logout()
     // }  

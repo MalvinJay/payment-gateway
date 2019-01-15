@@ -71,9 +71,7 @@ export default {
           if (valid) {
             this.$store.dispatch(url, {email: this.form.email, password: this.form.password})
             .then((response) => {
-                console.log('i got here')
                 if (response.data.success) {
-                    console.log('here too')
                     this.$session.start()
                     this.$session.set('client', JSON.stringify(response.data.response.data))
                     this.$session.set('email', this.form.email)

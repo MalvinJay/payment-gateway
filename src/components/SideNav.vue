@@ -28,7 +28,7 @@
                 <el-menu-item route="/payments" index="payments">Payments</el-menu-item>
                 <el-menu-item route="/payouts" index="payouts">Payouts</el-menu-item>
                 <el-menu-item route="/disputes" index="disputes">Disputes</el-menu-item>
-                <el-menu-item class="v-step-1" index="2-4">Settings</el-menu-item>
+                <el-menu-item v-if="false" class="v-step-1" index="2-4">Settings</el-menu-item>
             </el-submenu>
             <el-submenu ref="sideMenu" index="3">
                 <template slot="title">
@@ -37,14 +37,14 @@
                 <el-menu-item route="/fees" index="fees">Fees</el-menu-item>
                 <el-menu-item route="/topups" index="topups">Topups</el-menu-item>
                 <el-menu-item route="/settlements" index="settlements">Settlements</el-menu-item>
-                <el-menu-item index="3-4">Settings</el-menu-item>
+                <el-menu-item v-if="false" index="3-4">Settings</el-menu-item>
             </el-submenu>
             <el-menu-item v-can="'Manage Contacts'" route="/contacts" index="contacts">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/customer.svg" alt="">Customers
                 </template>
             </el-menu-item>
-            <el-submenu index="5">
+            <el-submenu v-if="false" index="5">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/billing.svg" alt="">Billing
                 </template>
@@ -60,7 +60,7 @@
                 <el-menu-item route="/accounts" index="accounts">Accounts</el-menu-item>
                 <el-menu-item route="/account-settlements" index="account-settlements">Settlements</el-menu-item>
                 <el-menu-item route="/account-fees" index="account-fees">Fees</el-menu-item>
-                <el-menu-item index="6-4">Settings</el-menu-item>
+                <el-menu-item v-if="false" index="6-4">Settings</el-menu-item>
             </el-submenu>
             <el-menu-item v-if="!isAdmin" route="/fonemessenger" index="fonemessenger">
                 <template slot="title">
@@ -76,7 +76,7 @@
                 <el-menu-item route="/logs" index="logs">Logs</el-menu-item>
                 <el-menu-item route="/webhooks" index="webhooks">Webhooks</el-menu-item>
                 <el-menu-item route="/sandbox" index="sandbox">Sandbox</el-menu-item>
-                <el-menu-item index="9-5">Settings</el-menu-item>
+                <el-menu-item v-if="false" index="9-5">Settings</el-menu-item>
             </el-submenu>
             <el-submenu ref="sideMenu" route="/account" index="10">
                 <template slot="title">

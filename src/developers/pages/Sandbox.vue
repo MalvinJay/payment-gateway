@@ -91,6 +91,7 @@
 </template>
 
 <script>
+import EventBus from '../../event-bus.js'
 export default {
     name: 'Sandbox',
     data () {
@@ -126,6 +127,9 @@ export default {
                }, 3000)
             }
         }
+    },
+    mounted () {
+        EventBus.$emit('sideNavClick', 'sandbox')
     },
     methods: {
         submitForm (formName) {

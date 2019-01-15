@@ -62,7 +62,7 @@ import { GET_BASE_URI } from '../../store/constants'
 export default {
     name: 'ExportModal',
     props: ['modalVisible', 'type'],
-    data() {
+    data () {
       return {
         checkAll: false,
         ready: false,
@@ -90,11 +90,11 @@ export default {
       }
     },
     methods: {
-      handleCheckAllChange(val) {
+      handleCheckAllChange (val) {
         this.form.payment_types = val ? this.types.map(el => el.value) : []
         this.isIndeterminate = false
       },
-      handleCheckedTypesChange(value) {
+      handleCheckedTypesChange (value) {
         let checkedCount = value.length
         this.checkAll = checkedCount === this.types.length
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.types.length
@@ -121,7 +121,6 @@ export default {
             this.$store.dispatch('submitReport', query)
             .then((response) => {
                 if (response.data.success) {
-                    console.log('file url', response.data)
                     this.ready = true
                     this.$message({
                         type: 'success',
@@ -164,8 +163,7 @@ export default {
     //     })
     //   }
     },
-    created(){
-        console.log('BASE URL:', this.GET_BASE_URI)
+    created () {
     },
     computed: {
         ...mapGetters({

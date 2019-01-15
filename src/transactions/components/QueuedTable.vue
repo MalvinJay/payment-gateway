@@ -136,7 +136,7 @@ export default {
     handleCurrentChange (val) {
         this.$store.dispatch('getQueues', {page: val, cache: false})
     },
-    tableRowClassName({row, rowIndex}) {
+    tableRowClassName ({row, rowIndex}) {
         if (row.has_dispute) {
             return 'transactions-table-body warning-row'
         } else {

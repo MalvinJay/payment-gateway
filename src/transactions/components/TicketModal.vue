@@ -80,18 +80,16 @@ export default {
       close () {
         EventBus.$emit('ticketModal', false)
       },
-      handleClose(tag) {
+      handleClose (tag) {
         this.form.email.splice(this.form.email.indexOf(tag), 1)
       },
-
-      showInput() {
+      showInput () {
         this.inputVisible = true
         this.$nextTick(_ => {
           this.$refs.saveTagInput.$refs.input.focus()
         })
       },
-
-      handleInputConfirm() {
+      handleInputConfirm () {
         let inputValue = this.inputValue
         if (inputValue) {
           this.form.email.push(inputValue)
@@ -114,7 +112,6 @@ export default {
             provider_reference: this.transaction.provider_ref,
             from: this.$session.get('email')
         }
-        console.log('formm for ticket', form)
         this.$store.dispatch('createTicket', form)
         .then((response) => {
             this.loading = false
@@ -134,7 +131,7 @@ export default {
             })
         })
       },
-      resetForm(formName) {
+      resetForm (formName) {
         this.$refs[formName].resetFields();
       }
     }

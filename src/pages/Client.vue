@@ -74,8 +74,6 @@ export default {
         }
         this.$store.dispatch('setDashboardFilters', time)
         .then((response) => {
-            console.log('header', response.data)
-            console.log('header data', response)
             EventBus.$emit('updateGraph')
         }).catch((error) => {
             if (error.response.status === 401) {
@@ -118,7 +116,6 @@ export default {
   },
   onActive() {
     setInterval(() => {
-        console.log('active')
         this.$store.dispatch('setClient', JSON.parse(this.$session.get('client')))
         this.$store.dispatch('getToken')
     }, 3300000)

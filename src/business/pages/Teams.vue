@@ -275,7 +275,7 @@ export default {
         fetchTeams () {
             this.$store.dispatch('getTeams', {cache: false})
         },              
-        searchButton (){
+        searchButton () {
 
         },
         deleteUser (code) {
@@ -311,11 +311,11 @@ export default {
                 })                        
             })
         },        
-        filterByName(val){
+        filterByName (val) {
             this.filter.name = val
             this.$store.dispatch('setTeamsFilters', this.filter)
         },
-        inviteUser() {
+        inviteUser () {
             this.createLoading = true
             this.$store.dispatch('createUser', this.form)
             .then((response) => {
@@ -338,7 +338,7 @@ export default {
                 })
             })
         },
-        goForward(val){
+        goForward (val) {
             if(val == true){
                 this.dialogVisible = false
                 this.dialogVisible1 = true
@@ -371,10 +371,10 @@ export default {
         filteredTeams () {
             return this.teams
         },   
-        filteredRoles (){
+        filteredRoles () {
             return this.roles;
         },
-        filteredBranches (){
+        filteredBranches () {
             return this.branches
         }
     }

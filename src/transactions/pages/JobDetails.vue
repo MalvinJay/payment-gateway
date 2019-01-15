@@ -416,7 +416,6 @@ export default {
             
             this.$store.dispatch('runJob', this.form.id)
             .then((response) => {
-                console.log('response', response)
                 if (response.data.success) {
                     this.$message({
                         message: 'Job Run Successfully',
@@ -450,7 +449,6 @@ export default {
             
             this.$store.dispatch('deleteJobContact', {id: row.id, job: this.$route.params.id})
             .then((response) => {
-                console.log('delete', response)
                 if (response.data.success) {
                     this.$message({
                         message: 'Contact Deleted Successfully',
@@ -478,13 +476,9 @@ export default {
             this.addLoading = true
             let fileInput = this.$el.querySelector(".upload-contacts input[type='file']")
             let filess = fileInput.files[0]
-            console.log('file', filess)
             this.$store.dispatch('sendToBucket', filess)
             .then((response) => {
-                console.log('data res', response)
                 if (response) {
-                    console.log('fileState', this.fileState)
-                    console.log('fileState', response.body)
                     var upload = {
                         Bucket: AWS_BUCKET,
                         Key: this.file.key
@@ -515,7 +509,6 @@ export default {
            
             this.form.schedule = this.form.scheduled ? Utils.createJobQuery (this.form.schedule, this.schedule) : 'false'
             var newForm = Utils.createJobDetailsArray(this.form, ['description', 'scheduled', 'schedule', 'retry_limit', 'active', 'test'])
-            console.log(newForm)
             // var newForm = Job.getCreateView(this.form)
             // var schedule = Utils.createJobQuery (newForm.schedule, this.schedule)
             // newForm.schedule = schedule
@@ -523,7 +516,6 @@ export default {
             
             this.$store.dispatch('updateJob', {id: this.form.id, data: newForm})
             .then((response) => {
-                console.log('response', response)
                 if (response.data.success) {
                     this.$message({
                         message: 'Job Updated Successfully',
@@ -558,7 +550,6 @@ export default {
             this.$store.dispatch('submitJobReport', id)
             .then((response) => {
                 if (response.data.success) {
-                    console.log('file url', response.data)
                     this.ready = true
                     this.$message({
                         type: 'success',

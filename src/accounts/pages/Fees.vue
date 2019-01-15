@@ -80,7 +80,8 @@ export default {
             ],
             styleObject: {
                 fontSize: '12px'
-            }
+            },
+            exportVisible: false
         }
     },
     created () {

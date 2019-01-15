@@ -182,7 +182,7 @@ export default {
                   
         })
     },
-    submitForm(formName) {
+    submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$store.dispatch('createTransactions', this.form)
@@ -197,10 +197,10 @@ export default {
             return false
           }
         })
-      },
-      resetForm(formName) {
+    },
+    resetForm (formName) {
         this.$refs[formName].resetFields();
-      }
+    }
   },
   computed: {
     ...mapGetters({

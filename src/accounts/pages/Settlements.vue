@@ -43,7 +43,7 @@
                         <template slot-scope="scope">
                             <div class="mini-menu">
                                 <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i>
-                                <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                                <el-dropdown @command="command => handleCommand(command, scope.row)" trigger="click">
                                     <i class="ellipsis horizontal icon mr-0 cursor"></i>
                                     <el-dropdown-menu class="w-200" slot="dropdown">
                                         <el-dropdown-item disabled>

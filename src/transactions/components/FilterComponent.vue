@@ -258,10 +258,10 @@ export default {
         showStatus () {
             return this.filterType === 'payment' || this.filterType === 'payouts'
         },
-        showDispute (){
+        showDispute () {
             return this.filterType === 'dispute'
         },
-        filterCount() {
+        filterCount () {
             var count = 0
             if (Utils.present(this.filters.from) || Utils.present(this.filters.to)) {
                 count++
@@ -318,6 +318,13 @@ export default {
 }
 .mr-10{
     margin-right: 10px
+}
+
+.reveal-enter-active, .reveal-leave-active {
+  transition: max-height .5s;
+}
+.reveal-enter, .reveal-leave-to /* .reveal-leave-active below version 2.1.8 */ {
+  max-height: 0;
 }
 </style>
 

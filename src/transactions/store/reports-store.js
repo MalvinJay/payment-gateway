@@ -63,12 +63,10 @@ const actions = {
         method: 'POST',
         token: rootGetters.token
       }).then((response) => {
-        console.log('job report', response)
         if (response.data.success) {
           state.job_id = response.data.response.data.job_id
           dispatch(GET_REPORT, state.job_id)
             .then((response) => {
-              console.log('resolved', response)
               resolve(response)
             }).catch((error) => {
               reject(error)
@@ -93,7 +91,6 @@ const actions = {
           state.job_id = response.data.response.data.job_id
           dispatch(GET_REPORT, state.job_id)
             .then((response) => {
-              console.log('resolved', response)
               resolve(response)
             }).catch((error) => {
               reject(error)

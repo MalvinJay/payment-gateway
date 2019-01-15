@@ -57,7 +57,6 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('branches for roles', response)
           commit(SET_BRANCHES_STATE, 'DATA')
           commit(SET_BRANCHES, response.data.response.data.branches)
           resolve(response)
@@ -76,7 +75,6 @@ const actions = {
         token: rootGetters.token,
         data: branch
       }).then((response) => {
-        console.log('Branch Created', response)
         resolve(response)
       }).catch((error) => {
         console.log(error)

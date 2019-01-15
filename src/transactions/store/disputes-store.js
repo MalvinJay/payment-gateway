@@ -62,7 +62,6 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('Disputes:', response.data)
           commit(SET_DISPUTES_STATE, 'DATA')
           commit(SET_DISPUTES, response.data.response.data.tickets)
           resolve(response)

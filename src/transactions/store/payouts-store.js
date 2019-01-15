@@ -83,8 +83,6 @@ const actions = {
       filters.search_value = 'cashin'
       query = Utils.createQueryParams(filters, page)
     }
-    console.log('is admin', rootGetters.isAdmin)
-    console.log('url', url)
     commit(SET_PAYOUTS_STATE, 'LOADING')
     commit(SET_PAYOUTS_FILTERS, filters)
     if (cache && state.payouts.data.length !== 0) {

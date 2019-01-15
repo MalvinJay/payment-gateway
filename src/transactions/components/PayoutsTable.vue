@@ -114,8 +114,8 @@
                             <el-select v-model="form.provider" placeholder="Select Provider">
                                 <el-option
                                     v-for="(item, index) in banks" :key="index"
-                                    :label="item.label"
-                                    :value="item.value"
+                                    :label="item.name"
+                                    :value="item.code"
                                 ></el-option>
                             </el-select>
                         </el-form-item>
@@ -253,7 +253,7 @@ export default {
             this.$router.push(`/payments/${row.reference}`)
         }
     },
-    tableRowClassName({row, rowIndex}) {
+    tableRowClassName ({row, rowIndex}) {
         if (row.has_dispute) {
             return 'transactions-table-body warning-row'
         } else {
@@ -432,7 +432,7 @@ export default {
       test: 'test',
       permissions: 'permissions',
       pageSize: 'pageSize',
-      banks: 'banks'
+      banks: 'bills'
     }),
     total () {
       return this.meta.trans

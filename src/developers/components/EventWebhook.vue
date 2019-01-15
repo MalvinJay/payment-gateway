@@ -41,11 +41,11 @@ export default {
       }
   },
 
-  mounted() {
-    hljs.initHighlightingOnLoad();
-    $('code.hljs').each(function(i, block) {
-      hljs.lineNumbersBlock(block);
-    });      
+  mounted () {
+    hljs.initHighlightingOnLoad()
+    $('code.hljs').each(function (i, block) {
+      hljs.lineNumbersBlock(block)
+    })
   },  
 
   methods: {

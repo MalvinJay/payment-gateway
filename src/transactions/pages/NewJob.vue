@@ -223,7 +223,6 @@ export default {
         daterange: {
             get () {
                 var range = [this.form.start_date, this.form.termination_date]
-                console.log('range', range)
                 return range
             },
             set (val) {

@@ -162,11 +162,9 @@ export default {
             return this.form.privileges.map(el => el.code)
         },
         set (val) {
-            console.log('priv', val)
             var newPriv = []
             for (let index = 0; index < val.length; index++) {
                 var exists = this.privileges.find(el => el.code === val[index])
-                console.log('exists', exists)
                 if(Object.keys(exists).length > 0) {
                     newPriv.push(exists)
                 }

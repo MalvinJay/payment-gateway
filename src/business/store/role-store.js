@@ -86,7 +86,6 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('Roles', response)
           commit(SET_ROLES_STATE, 'DATA')
           commit(SET_ROLES_META, response.data.response.data)
           commit(SET_ROLES, response.data.response.data.user_groups)
@@ -110,7 +109,6 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('privileges for roles', response)
           commit(SET_PRIVILEGES_STATE, 'DATA')
           commit(SET_PRIVILEGES, response.data.response.data)
           resolve(response)
@@ -134,7 +132,6 @@ const actions = {
         token: rootGetters.token,
         data: group
       }).then((response) => {
-        console.log('Role Created', response)
         resolve(response)
       }).catch((error) => {
         console.log(error)

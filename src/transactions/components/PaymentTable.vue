@@ -223,7 +223,7 @@ export default {
                 break
         }
     },
-    tableRowClassName({row, rowIndex}) {
+    tableRowClassName ({row, rowIndex}) {
         if (row.has_dispute) {
             return 'transactions-table-body warning-row'
         } else {
@@ -303,7 +303,7 @@ export default {
             })
         })
     },
-    resetForm(formName) {
+    resetForm (formName) {
         this.$refs[formName].resetFields()
     }
   },

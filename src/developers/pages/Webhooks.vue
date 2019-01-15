@@ -259,10 +259,8 @@ export default {
         },
         SaveWebhook () {
             this.createLoading = true
-            console.log('Form to Sent:', this.form)
             var query = []
             query.push(this.form.test_url, this.form.test_url)
-            console.log('Query:', query)
             this.$store.dispatch('getCurrentHook', query)
             .then((response) => {
                 if (response.data.success) {
@@ -270,7 +268,6 @@ export default {
                         type: 'success',
                         message: response.data.response.message,
                     })
-                    // this.fetchBranches()
                     this.createLoading = false
                 } else {
                 this.$message({
@@ -292,12 +289,12 @@ export default {
             this.priv = val ? this.privileges.map(el => el.code) : []
             this.isIndeterminate = false
         },
-        handleCheckedPrivilegesChange(value) {
+        handleCheckedPrivilegesChange (value) {
             let checkedCount = value.length
             this.checkAll = checkedCount === this.privileges.length
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.privileges.length
         },      
-        handleEventSelection(val){
+        handleEventSelection (val) {
             if(val == 2) this.custom = true
             else this.custom = false
         }  

@@ -22,7 +22,6 @@ export default {
   computed: {
     // ...mapGetters(['isAdmin'])
     isAdmin () {
-        console.log('type of', localStorage.getItem('isAdmin') === 'true')
         return localStorage.getItem('isAdmin') === 'true'
     }
   }

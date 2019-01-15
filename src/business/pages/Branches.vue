@@ -6,7 +6,7 @@
                     <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" size="mini" placeholder="Filter branch by name or code"></el-input>
                 </div>            
                 <div>
-                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New branch</el-button>
+                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="addBranch" type="text"><i class="plus icon"></i> New branch</el-button>
                 </div>
             </div>
             <div>
@@ -108,11 +108,12 @@ import { mapGetters } from 'vuex'
 
 export default {
     name: 'Branches',
-    data (){
+    data () {
         return {
             phone: '',
             isTest: true,
-            form: {
+            form: {},
+            emptyForm: {
                 name: '',
                 bank_account_no: '',
                 location: '',
@@ -159,15 +160,10 @@ export default {
             value: 'all',                
         }
     },
-
     mounted () {
         EventBus.$emit('sideNavClick', 'branches')
-        // EventBus.$on('exportModal', (val) => {
-        //     this.exportVisible = false
-        // })
         this.$store.dispatch('getBranches')
     },
-
     methods: {
         clickRow (row, event, column) {
             if (column.property) {
@@ -176,16 +172,26 @@ export default {
         }, 
         handleCurrentChange (val) {
             this.$store.dispatch('getBranches', {page: val, cached: false })
-        },    
+        },
+        editBranch (row) {
+            this.dialogVisible = true
+            this.form = row
+            this.phone = this.form.phone_numbers.join()
+        },
+        addBranch () {
+            this.dialogVisible = true
+            this.phone = ''
+            this.form = this.emptyForm
+        },
         handleTableCommand (command, row) {
             switch (command) {
-                case 'edit':
+                case 'view':
                     // this.$router.push(`/branches/${row.reference}`)
+                    this.editBranch(row)
                     break
                 case 'delete':
                     this.deleteJob(row.branch_code)
                 break
-
                 default:
                     break
             }
@@ -229,19 +235,18 @@ export default {
                 })                        
             })
         },        
-        saveBranch() {
+        saveBranch () {
             this.createLoading = true         
-            var temp = new Array();
-            temp = this.phone.split(",");
+            var temp = new Array()
+            temp = this.phone.split(',')
 
             this.form.phone_numbers.push(temp)
-            console.log('Form to Sent:', this.form)
             this.$store.dispatch('createBranch', this.form)
             .then((response) => {
                 if (response.data.success) {
                     this.$message({
                         type: 'success',
-                        message: response.data.response.message,
+                        message: response.data.response.message
                     })
                     this.fetchBranches()
                     this.dialogVisible = false
@@ -257,12 +262,11 @@ export default {
                 const response = error.response
                 this.$message({
                     type: 'error',
-                    message: response.data.error,
+                    message: response.data.error
                 })
             })
         }      
     },
-
     computed: {
         ...mapGetters({
             branches: 'branches',
@@ -278,7 +282,7 @@ export default {
         loading () {
             return this.state === 'LOADING'
         }, 
-        filteredBranches (){
+        filteredBranches () {
             return this.branches
         }
     }

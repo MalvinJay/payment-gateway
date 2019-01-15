@@ -25,6 +25,7 @@ const user = {
       data: []
     },
     banks: [],
+    bills: [],
     pageLoading: false,
     isAdmin: Utils.returnBool(localStorage.getItem('isAdmin')),
     pageSize: 12,
@@ -44,6 +45,7 @@ const user = {
     pageSize: state => state.pageSize,
     balance: state => state.balance,
     banks: state => state.banks,
+    bills: state => state.bills,
     services: state => state.services.data
   },
 
@@ -55,11 +57,11 @@ const user = {
     },
     // client data
     [SET_CLIENT] (state, data) {
-      console.log('data data', data)
       if (!state.isAdmin) {
         state.permissions.data = data.client.privileges
         state.services.data = data.account_services
-        state.banks = data.deposit_accounts[1].providers
+        state.banks = data.deposit_accounts[2].providers
+        state.bills = data.deposit_accounts[1].providers
       }
       state.user.data = data
       state.userdata = data

@@ -150,12 +150,12 @@ export default {
       meta: 'eventsMeta',
     }),    
     filteredEvents () {
-      var ev = this.events;
+      var ev = this.events
       for (let i = 0; i < this.events.length; i++) {
-        if(ev[i].request.transaction == undefined){
+        if (ev[i].request.transaction == undefined) {
           ev[i].request.transaction = []
         }
-        if(ev[i].request.transaction.service_code == undefined){
+        if (ev[i].request.transaction.service_code == undefined) {
           ev[i].request.transaction.service_code = 'tickets'
         }
         // if(Object.keys(ev[i].request).length === 0 && ev[i].request.constructor === Object){

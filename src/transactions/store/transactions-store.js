@@ -299,7 +299,7 @@ const actions = {
     commit(SET_CURRENT_TRANSACTION_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}/v1/rekt_transacts/${id}`,
+        url: `${GET_BASE_URI}v1/rekt_transacts/${id}`,
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
