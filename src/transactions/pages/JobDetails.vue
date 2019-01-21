@@ -255,7 +255,8 @@
                 </div>
                 <div class="breathe">
                     <el-table
-                    empty-text="No job customers"
+                    @row-click="clickContact"
+                    empty-text="No job subscribers"
                     v-loading="loading"
                     row-class-name="transactions-table-body"
                     header-row-class-name="transactions-table-header"
@@ -360,7 +361,7 @@ export default {
     //     }
     // },
     mounted () {
-        EventBus.$emit('sideNavClick', 'payments')
+        EventBus.$emit('sideNavClick', 'jobs')
         this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
 
         this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
@@ -377,6 +378,11 @@ export default {
         clickRun (row, event, column) {
             if (column.property) {
                 this.$refs.run.toggleRowExpansion(row)
+            }
+        },
+        clickContact (row, event, column) {
+            if (column.property) {
+                this.$router.push(`/job-contacts/${row.id}`)
             }
         },
         fetchTransactions () {

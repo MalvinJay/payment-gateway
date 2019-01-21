@@ -51,10 +51,10 @@
                     <el-table-column width="80">
                         <template slot-scope="scope">
                             <i v-if="scope.row.has_dispute" class="exclamation icon red-text"></i>
-                            <div class="mini-menu">
+                            <div>
                                 <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i> -->
-                                <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
-                                    <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
+                                <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                                    <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
                                     <el-dropdown-menu class="w-200" slot="dropdown">
                                         <el-dropdown-item disabled>
                                             <div class="table-dropdown-header blue-text bold-600 text-uppercase">
@@ -196,7 +196,8 @@ export default {
 .mini-menu{
     position: absolute;
     top: 8px;
-    padding: 2px 7px;
+    // padding: 2px 7px;
+    padding: 0;
     border-radius: 4px;
     transition: all ease;
     line-height: normal;

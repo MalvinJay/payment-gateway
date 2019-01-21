@@ -29,7 +29,14 @@
                     </div>
                 </div>
                 <div v-else class="breathe">
-                    <el-table @row-click="clickRow" empty-text="No team found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredTeams">
+                    <el-table
+                    @row-click="clickRow"
+                    empty-text="No team found, create team"
+                    v-loading="loading"
+                    :row-style="styleObject"
+                    row-class-name="transactions-table-body"
+                    header-row-class-name="transactions-table-header"
+                    :data="filteredTeams.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) ||  data.email.toLowerCase().includes(search.toLowerCase()))">
                         <el-table-column prop="name" label="USER">
                             <template slot-scope="scope">
                                 <div class="flex flex-column justify-content-center">

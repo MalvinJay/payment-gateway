@@ -10,6 +10,18 @@
                 <el-row type="flex" justify="center">
                     <el-col :sm="16" :lg="13">
                         <el-form label-position="left" size="mini" ref="form" hide-required-asterisk class="transaction-form py-20" :model="user.client" label-width="200px">
+                            <!-- <el-form-item label="Client Photo">
+                                <el-upload
+                                    class="avatar-uploader"
+                                    action="https://flopay-batchstore.s3.eu-central-1.amazonaws.com/flopay-file-batch/3Hw_Batch_file_format%20%284%29.csv"
+                                    :show-file-list="false"
+                                    accept=".png,.jpeg,.jpg"
+                                    :on-success="handleAvatarSuccess"
+                                    :on-change="handlePictureCardPreview">
+                                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                </el-upload>
+                            </el-form-item> -->
                             <el-form-item v-for="(item, index) in columns" :key="index" :label="item.label">
                                 <el-input v-if="item.type === 'input'" v-model="user.client[item.model]"></el-input>
                                 <p v-if="item.subtext" class="my-1">
@@ -154,6 +166,8 @@ export default {
   name: 'Profile',
   data () {
     return {
+      imageUrl: '',
+      fileList: [],
       columns: [
         { label: 'Client Name', type: 'input', model: 'full_name', subtext: 'Enter your client name.'},
         { label: 'Client Till', type: 'input', model: 'code'},
@@ -198,7 +212,15 @@ export default {
     },
     deposit () {
         return this.user.deposit_accounts
-    }
+    },
+    // imageUrl: {
+    //     get () {
+    //         return this.user.client.picture_url
+    //     },
+    //     set (val) {
+    //         this.user.client.picture_url = val
+    //     }
+    // }
   },
   methods: {
     updateProfile (formName) {
@@ -237,11 +259,14 @@ export default {
           }
         })
     },
+    handleAvatarSuccess (res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw)
+    },
     logout () {
         this.$store.dispatch('logout')
         .then(() => {
-            var init = initState.initState()
-            this.$store.replaceState(init)
+            // var init = initState.initState()
+            // this.$store.replaceState(init)
             this.$session.remove('client')
             this.$session.remove('token')
             this.$session.destroy()
@@ -250,6 +275,9 @@ export default {
     },
     handleCurrentChange (page) {
         this.page = page
+    },
+    handlePictureCardPreview (file) {
+        this.imageUrl = file.url
     }
   }
 }

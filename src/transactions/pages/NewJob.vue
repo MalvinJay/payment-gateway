@@ -32,8 +32,8 @@
                     <!-- JOB SERVICE CODE -->
                     <el-form-item label="Service Code">
                         <el-select v-model="form.service_code">
-                            <el-option label="Cash In" value="cashin"></el-option>
-                            <el-option label="Cash Out" value="cashout"></el-option>
+                            <el-option label="Payout" value="cashin"></el-option>
+                            <el-option label="Payment" value="cashout"></el-option>
                             <el-option label="Direct Payment" value="direct_payment"></el-option>
                         </el-select>
                     </el-form-item>
@@ -283,10 +283,10 @@ export default {
                                 message: 'Job created',
                             })
                             this.$store.dispatch('getJobs', {cache: false})
-                            this.$router.push('/payments')
-                            setTimeout(() => {
-                                EventBus.$emit('tabNumber', '3')
-                            }, 1000)
+                            this.$router.push('/jobs')
+                            // setTimeout(() => {
+                            //     EventBus.$emit('tabNumber', '3')
+                            // }, 1000)
                         } else {
                             this.$message({
                                 type: 'error',
@@ -319,7 +319,7 @@ export default {
         }
     },
     mounted () {
-        EventBus.$emit('sideNavClick', 'payments')
+        EventBus.$emit('sideNavClick', 'jobs')
     }
 }
 </script>

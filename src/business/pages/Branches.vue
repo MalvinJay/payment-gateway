@@ -17,7 +17,13 @@
                     </div>
                 </div>
                 <div v-else class="breathe">
-                    <el-table @row-click="clickRow" empty-text="No branches found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredBranches">
+                    <el-table
+                    @row-click="clickRow"
+                    empty-text="No branches found, create a new branch"
+                    v-loading="loading" :row-style="styleObject"
+                    row-class-name="transactions-table-body"
+                    header-row-class-name="transactions-table-header"
+                    :data="filteredBranches.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) ||  data.location.toLowerCase().includes(search.toLowerCase()))">
                         <el-table-column prop="name" label="NAME">
                             <template slot-scope="scope">
                                 <div class="flex flex-column justify-content-center">

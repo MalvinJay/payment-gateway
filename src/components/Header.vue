@@ -7,15 +7,7 @@
             <!-- <div style="height: 25px">
                 <el-switch active-text="Test" v-model="testData"></el-switch>
             </div>
-            <el-dropdown trigger="click">
-                <span class="el-dropdown-link">
-                    <img class="img-fluid" src="../assets/images/icons/bookmark.svg" alt="">
-                </span>
-                <el-dropdown-menu slot="dropdown" class="w-200">
-                    <el-dropdown-item>Documentation</el-dropdown-item>
-                    <el-dropdown-item>Support</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
+            
             <el-dropdown trigger="click">
                 <span class="el-dropdown-link">
                     <img class="img-fluid" src="../assets/images/icons/bell.svg" alt="">
@@ -27,9 +19,26 @@
                     <el-dropdown-item divided>Lorem</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown> -->
+            <div class="balance flex align-items-center">
+                <div class="flex flex-column">
+                    <p>Account balance</p>
+                    <p>{{clientBalance | money}}</p>
+                </div>
+                <div class="v-divider"></div>
+            </div>
+            <el-dropdown @command="handleDocCommand" style="height: 17px" class="mr-2" trigger="click">
+                <span class="el-dropdown-link">
+                    <img class="img-fluid" src="../assets/images/icons/bookmark.svg" alt="">
+                </span>
+                <el-dropdown-menu slot="dropdown" class="w-200">
+                    <el-dropdown-item command="docs">Documentation</el-dropdown-item>
+                    <el-dropdown-item command="manual">User Manual</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
             <el-dropdown id="v-step-0" class="logout-dropdown" @command="handleCommand" trigger="click">
                 <span class="el-dropdown-link">
-                    <img class="img-big circle" src="../assets/images/profile/profile.jpg" alt="">
+                    <!-- <img class="img-big circle" src="../assets/images/profile/profile.jpg" alt=""> -->
+                    <avatar :size="28" :username="clientName"></avatar>
                 </span>
                 <el-dropdown-menu slot="dropdown" class="w-200">
                     <el-dropdown-item disabled>
@@ -74,8 +83,8 @@ export default {
     logout () {
         this.$store.dispatch('logout')
         .then(() => {
-            var init = initState.initState()
-            this.$store.replaceState(init)
+            // var init = initState.initState()
+            // this.$store.replaceState(init)
             this.$session.remove('client')
             this.$session.remove('token')
             this.$session.destroy()
@@ -93,10 +102,22 @@ export default {
             default:
                 break
         }
+    },
+    handleDocCommand (command) {
+        switch (command) {
+            case 'docs':
+                window.open('https://developer.flopay.io/','_blank')
+                break
+            case 'manual':
+                this.$router.push('/profile')
+                break
+            default:
+                break
+        }
     }
   },
   computed: {
-    ...mapGetters(['user', 'test', 'isAdmin']),
+    ...mapGetters(['user', 'test', 'isAdmin', 'balance']),
     testData: {
         get () {
             return this.test
@@ -116,12 +137,22 @@ export default {
             client.company_name = Object.keys(this.user).length !== 0 ? this.user.client.company_name : ''
         }
         return client
+    },
+    clientBalance () {
+        return this.balance.available_balance ? this.balance.available_balance : 0
+    },
+    clientName () {
+        return this.client.company_name ? this.client.company_name : 'Sedinam'
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.mr-2{
+    // margin-left: 1rem;
+    margin-right: 10px;
+}
 .header{
     padding-top: 20px;
 
@@ -132,6 +163,36 @@ export default {
             height: 30px !important;
             line-height: 30px !important;
         }
+    }
+}
+.balance {
+    p{
+        padding: 0;
+        margin: 0;
+        font-size: 12px;
+        text-transform: uppercase;
+
+        &:first-child{
+            font-weight: 700;
+            color: rgba(0,0,0,.5);
+            margin-top: 3px;
+            font-size: 9px;
+        }
+
+        &:last-child{
+            margin: 0;
+            white-space: nowrap;
+            line-height: 1;
+            text-align: left;
+            margin-top: 3px;
+            color: rgb(88, 106, 218);
+        }
+    }
+    .v-divider{
+        border-right: 1px solid #e5e5e5;
+        height: 28px;
+        width: 0;
+        margin: 0 10px;
     }
 }
 .notify-header{
@@ -171,9 +232,11 @@ export default {
     width: 40%;
 }
 .header-side-panel{
-    width: 15%;
+    // width: 15%;
     // justify-content: space-between;
     // align-items: center;
 }
-
+a{
+    color: #606266
+}
 </style>

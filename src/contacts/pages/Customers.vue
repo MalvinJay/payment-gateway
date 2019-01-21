@@ -33,18 +33,18 @@
                         <el-table-column :formatter="formatContent" :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                         <el-table-column width="100px">
                             <template slot-scope="scope">
-                                <div class="mini-menu">
-                                    <i v-if="scope.row.status ==='failed'" class="reply icon blue-text cursor first-icon"></i>
-                                    <el-dropdown @command="command => handleCommand(command, scope.row)" trigger="click">
-                                        <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
+                                <div>
+                                    <!-- <i v-if="scope.row.status ==='failed'" class="reply icon blue-text cursor first-icon"></i> -->
+                                    <el-dropdown class="mini-menu" @command="command => handleCommand(command, scope.row)" trigger="click">
+                                        <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
                                         <el-dropdown-menu class="w-200" slot="dropdown">
                                             <el-dropdown-item disabled>
                                                 <div class="table-dropdown-header blue-text bold-600 text-uppercase">
                                                     actions
                                                 </div>
                                             </el-dropdown-item>
-                                            <el-dropdown-item command="edit" class="s-12">Edit Contact</el-dropdown-item>
-                                            <el-dropdown-item command="delete" class="s-12">Delete Contact</el-dropdown-item>
+                                            <el-dropdown-item command="edit" class="s-12">Edit Customer</el-dropdown-item>
+                                            <el-dropdown-item command="delete" class="s-12">Delete Customer</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </div>
@@ -68,7 +68,7 @@
                 
             </div>
             <!-- New Customer -->
-           <add-contact :form="contact" dialogVisible="dialogVisible"></add-contact>
+           <add-contact :form="contact" :dialogVisible="dialogVisible"></add-contact>
         </div>
     </el-card>
 </template>
@@ -77,6 +77,7 @@
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 import AddContact from '../components/AddContact'
+import Customer from '../model/customer.js'
 
 export default {
   name: 'Contacts',
@@ -89,8 +90,8 @@ export default {
       test: true,
       columns: [
         {label: 'Type', dataField: 'type', width: 'auto'},
-        {label: 'phone number', dataField: 'msisdn', width: 'auto'},
-        {label: 'Provider', dataField: 'provider', width: 'auto'},
+        {label: 'phone number', dataField: 'account_no', width: 'auto'},
+        {label: 'Provider', dataField: 'bank', width: 'auto'},
         {label: 'Owner', dataField: 'owner', width: 'auto'}
       ],
       styleObject: {
@@ -123,7 +124,10 @@ export default {
     },
     clickRow (row, event, column) {
         if (column.property) {
-            this.$router.push(`/contacts/${row.id}`)
+            // this.$router.push(`/contacts/${row.id}`)
+            var form = Customer.getEditView(row)
+            this.dialogVisible = true
+            this.contact = form
         }
     },
     newContact () {
@@ -171,7 +175,10 @@ export default {
         this.$refs[formName].resetFields()
     },
     editContact (row) {
-        this.$router.push(`/contacts/${row.id}`)
+        // this.$router.push(`/contacts/${row.id}`)
+        var form = Customer.getEditView(row)
+        this.dialogVisible = true
+        this.contact = form
     },
     handleCommand (command, row) {
         switch (command) {
@@ -212,7 +219,7 @@ export default {
 .mini-menu{
     position: absolute;
     top: 8px;
-    padding: 2px 7px;
+    padding: 0;
     border-radius: 4px;
     transition: all ease;
     line-height: normal;

@@ -163,7 +163,7 @@ export default {
 <style lang="scss">
   .vue-avatar--wrapper{
     // display: inline-block !important;
-    margin-right: 20px !important;
+    margin-right: 0px;
     display: flex;
     align-items: center;
     justify-content: center;

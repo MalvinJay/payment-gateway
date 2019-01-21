@@ -123,7 +123,6 @@ const user = {
           .then((response) => {
             localStorage.setItem('login', true)
             // localStorage.setItem('isAdmin', false)
-            resolve(response)
             // commit(SET_CLIENT, response.data.response.data.client)
             // localStorage.setItem('name', response.data.response.data.client.full_name)
             // localStorage.setItem('company', response.data.response.data.client.company_name)
@@ -132,6 +131,7 @@ const user = {
             // commit(SET_CLIENT_CRED, response.data.response.data.access_key)
             localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
             localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
+            resolve(response)
           }).catch((error) => {
             console.log(error)
             reject(error)

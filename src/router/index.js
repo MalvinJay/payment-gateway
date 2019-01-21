@@ -16,13 +16,15 @@ import Teams from '@/business/pages/Teams'
 import Roles from '@/business/pages/Roles'
 import Branches from '@/business/pages/Branches'
 import Reports from '@/business/pages/Reports'
-import JobDetails from '../transactions/pages/JobDetails'
+// import JobDetails from '../transactions/pages/JobDetails'
+import Jobs from '../transactions/pages/Jobs'
 
 const Customers = () => import('../contacts/pages/Customers')
 const Payouts = () => import('../transactions/pages/Payouts')
 const NewJob = () => import('../transactions/pages/NewJob')
 const Disputes = () => import('../transactions/pages/Disputes')
-// const JobDetails = () => import('../transactions/pages/JobDetails')
+const JobDetails = () => import('../transactions/pages/JobDetails')
+const JobContactDetails = () => import('../contacts/pages/JobContactDetails')
 const RunDetails = () => import('../transactions/pages/RunDetails')
 
 const FirstTimeLogin = () => import('../pages/FirstTimeLogin')
@@ -75,6 +77,11 @@ let router = new Router({
           path: '/payments',
           name: 'ViewTransactions',
           component: ViewTransactions
+        },
+        {
+          path: '/jobs',
+          name: 'Jobs',
+          component: Jobs
         },
         {
           path: '/job/:id',
@@ -181,6 +188,11 @@ let router = new Router({
           path: '/contacts/:id',
           name: 'ContactDetails',
           component: ContactDetails
+        },
+        {
+          path: '/job-contacts/:id',
+          name: 'JobContactDetails',
+          component: JobContactDetails
         },
         // Business Settings
         {

@@ -8,7 +8,7 @@
                         <p class="p-0 m-0 bold-600 ml-16">{{ balance | money }}</p>
                     </div>
                     <div class="flex align-items-center">
-                        <el-date-picker class="transparent-input"
+                        <el-date-picker class="transparent-input" ref="datePick"
                             v-model="currentDate"
                             @change="handleChange"
                             type="date"
@@ -16,6 +16,7 @@
                             :picker-options="pickerOptions"
                             placeholder="Today">
                             </el-date-picker>
+                            <i style="font-size: 0.9em" @click="openDate" class="caret down icon"></i>
                         <!-- <p class="p-0 m-0 bold-600 little-money" style="padding-left: 16px">{{ sum | money }}</p> -->
                     </div>
                 </div>
@@ -367,6 +368,9 @@ export default {
         .then(() => {
             EventBus.$emit('updateGraph')
         })
+    },
+    openDate () {
+        this.$refs.datePick.focus()
     }
   }
 }

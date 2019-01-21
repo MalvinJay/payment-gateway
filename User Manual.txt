@@ -1,0 +1,235 @@
+Login
+	At the beginning of each session/ after 15 minutes of inaction, the user is redirected to this page to login into the app. 
+	On the login screen, the user is required to input his/her user name and password. After which he would be directed to the dashboard.
+	In cases where the user has forgotten his password, he could click on 'Forgot password' on the login screen
+	
+Dashboard
+	1.
+	On the side panel, we have the menu which links the user to various segments of the app
+	Header 
+	The header is accessible on any part of the app
+		Search bar
+		To the left of the header is a search bar which allows the user to search by name of customer, transaction reference, transaction type and phone number for any transaction
+		After typing the search term, press on enter on your keyboard
+	To the right of the header is the Account balance
+	To the immediate right of the Account balance is round button that is represented by the user's profile picture or an avatar. Clicking on it, would open a dropdown menu 
+	which affords the user the option of signing out or links to the profile page
+	2.
+	On the main page, we have to segments/cards.
+	The blue card shows a graph of the current day's transactions. If the user wishes to see transactions of a particular day, he could do so by clicking the arrow next to 'TODAY' and selecting a day
+	3.Underneath the blue card is the analytics card, which shows the graphs of the gross volume, payments and payouts
+	Above the graphs are filters, which are duration, transaction type, transaction status
+	The clear button, sends the graph to its default state
+Transactions
+Under transactions are 4 items, payments, payouts, jobs and disputes
+Payments
+	1.
+	Here, we have all payments and queued payments
+		All Payments
+		A table of the last 50 transactions are shown here
+		Click on the transaction to view that transaction's details
+	2. 
+	Upon clicking on the filter button, a dropdown with filter options appear
+	3-7. 
+	Check a checkbox to select an option you want the transactions to be filtered by
+	Click Done or Clear depending on what action you want to take
+	8.
+	Click on New to create a new payment
+	Fill in the form on the modal that appears
+	Click initiate payment or cancel depending on what action you want to take
+	9-10.
+	Click on Export to download a csv file of transactions
+	Fill in the form on the modal that appears
+	Under columns are two options all and custom - custom affords you the flexibility to choose the csv columns that you want
+	Click Submit or Cancel depending on what action you want to take
+	11-12.
+	Click on the overflow button at the end of a transaction to show options available for that transaction
+		Open a Ticket
+			In cases of a dispute/issue with a transaction, click on the 'Open Ticket'
+			Fill the form
+			By default the response is sent to the email that the account is registered with, however you are allowed to add emails that you want the response to be copied to
+			Submit the form
+			NB: All transactions with disputes/issues have a different backround and an exclamation mark
+		Retry
+			For failed transactions, a retry button has been added to retry the transaction
+		View Transaction
+			There are two ways to view the transaction's details - click on View Transaction or click on the transaction's table row
+	13.
+	All queued transactions can be viewed here
+	Click on the transaction to view that transaction's details
+	14-15
+	Transaction Details
+	All the payment details are displayed here - all SMS and emails sent after a payment,
+	logs and events of a transaction and if a transaction has a dispute, the details are also shown here
+	Refund, Open Ticket and Retry transactions are also posiible here
+Payouts
+	1.
+	Here, we have all payouts, queued and pending payouts
+		All Payments
+		A table of the last 50 payout transactions are shown here
+		Click on the transaction to view that transaction's details
+	2-3. 
+	Payouts consist of three options - payout transaction, buy airtime and bill payments
+		Payout, airtime and bill payment
+			Click on New to create a new payout
+			Fill in the form on the modal that appears
+			Click initiate payment or cancel depending on what action you want to take
+	4.
+	Here, payouts made by users who do not have approve/checker privileges are shown here for approved
+	Select a transaction/ transactions you want to approve and click on the approve button
+	Click on the transaction to view that transaction's details
+	5.
+	All queued payouts are shown here
+	Click on the transaction to view that transaction's details
+Jobs
+Jobs are scheduled transactions for a number of people
+	1-2.
+	Click on jobs to access all jobs
+	Click on the button on the transaction to show an overflow menu
+	The overflow menu allows a couple of actions
+		Edit Job
+			There are two ways of viewing a job detail - clicking on 'Edit Job' or click on the job
+		Delete Job
+			To delete a job, click on 'Delete a Job'
+			A prompt appears to ensure if you want to delete the job.
+			Click 'Delete' or 'Cancel' depending on what action you want to take
+	3. Create a Job
+	To create a job, click on 'New' on the Jobs Page
+	Fill in the form
+	A job is created by uploading a csv file of contacts hence download the sample file and edit it
+	Upload the editted file
+	Click 'Save Job' or 'Cancel' depending on what action you want to take
+	NB: Vodafone numbers are not supported
+	4-5. View Job Details
+	To view a job, click on the job
+	Here, all the job details are shown here including all job runs, transactions and Subscribers
+	Click on upload contacts to add contacts to a job
+	Click on delete to delete a contact from a job
+	Click on the download button on a job run to download all transactions under a run
+	For a manual job, click on run job to trigger a job run
+Disputes
+Disputes are all transactions with tickets
+	1-2. 
+	All disputes are shown here
+	Click on a disputed transaction to view its details
+	Disputes can be filtered
+ACCOUNTS
+Fees
+Fees are charges on every transaction
+	1.
+	All fees are shown here
+	Fees can be filtered
+	Click on the fee to view it's details - this takes you to the transaction's details
+TopUps
+TopUps are all transactions made to topup your flopay account
+	1. 
+	All topups are shown here
+	TopUps can be filtered
+	2. Initiate a topup
+	Click on 'New'
+	Fill the form on the modal that appears
+	Click 'Initiate TopUp' or 'Cancel' depending on what action you want to take
+Settlements
+Settlements are transactions that are made from one account to another
+	1.
+	All settlements are shown here
+	Settlements can be filtered
+	2. Initiate a Settlement
+	Click on 'New'
+	Fill the form on the modal that appears
+	Click 'Initiate Settlement' or 'Cancel' depending on what action you want to take
+	
+CUSTOMERS
+All created customers are shown here
+	1. View Customers
+	To view all customers under you flopay account, click Contacts on the side navigation
+		View Customer Details
+		Click on the overflow button or the customer to view its details
+		Delete a Customer
+		Click on the overflow button
+		Click 'Delete Customer' to delete the customer
+	2-3. Create a Customer
+		Click on 'New' to open the modal
+		Fill in the form to create a customer with either their mobile number account or bank account
+		Click 'Create Customer' or 'Cancel' depending on what action you want to take
+	
+FONEMESSENGER
+Fonemessenger is a platform that allows users to send SMS to customers
+	1. View all messages from Fonemessenger
+	Click on Fonemessenger on the side navigation
+		View Fonemessenger Balance
+			On the right side of the header is the fonemesenger balance
+			This amount represents the amount available for sending SMS on fonemesenger
+	2. View Message details
+		Click on the right angle icon or the table row to show the details of the message
+	3. Top Up Fonemessenger balance
+		Click on 'Topup' on the Fonemessenger page
+		There are two options - 
+			Flopay Wallet
+			Select 'Flopay Wallet' to transfer money from your flopay account wallet to your fonemessenger wallet
+			Fill and submit the form
+	4. External Wallet
+		Select 'External Wallet' to transfer money from your mobile money wallet to your fonemessenger wallet
+		Fill and submit the form	
+	5. Send a new message
+		Click on 'New' on the Fonemessenger page
+		There are two options -
+			Single 
+			Select 'Single' under the Type of message to send a message to a single receiver
+			Fill and submit the form
+	6. File Upload
+		Select 'File Upload' to send a message to multiple people through csv
+		Download a Sample csv file and edit it to suit your purpose
+		Click on 'Click to upload' to upload the editted file
+		Click 'Create' or 'Cancel' depending on what action you want to take
+DEVELOPER
+API Keys
+	1. View API Keys
+		Click on Developers and then click on API Keys
+	2. View API Credentials
+		Click on 'Reveal credentials'
+		Fill in the form and submit
+		The credentials would now be revealed
+	3. Edit Callback url
+		Edit the callback url
+		Click on 'Save'
+Events
+	1.
+	2.
+	3.
+Logs
+	1.
+	2.
+	3.
+Webhooks
+	1.
+	2.
+Sandbox
+	1.
+	
+BUSINESS SETTINGS
+Account Set-up
+	1.
+	2.
+Teams
+	1.
+	2.
+	3.
+	4.
+	5.
+	6.
+Roles
+	1.
+	2.
+	3.
+Branches
+	1.
+	2.
+PROFILE
+Profile is a page that highlights details of the floplay account
+	1. View Profile
+	Click on the icon at the top right corner
+	Click on 'Profile'
+	2-4. View Client Profile Details
+	This page shows the user's details including the deposit accounts, privileges and account services
+	

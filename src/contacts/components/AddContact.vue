@@ -1,15 +1,15 @@
 <template>
      <el-dialog custom-class="new-transaction"
-        title="Create Contact"
+        title="Create Customer"
         @close="close"
-        :visible.sync="dialogVisible"
+        :visible="dialogVisible"
         width="30%">
         <div class="flex justify-content-center new-transaction-bg">
             <el-form style="width:90%" size="mini" ref="form" label-position="left" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="150px">
-                <el-form-item label="Contact Name">
+                <el-form-item label="Customer Name">
                     <el-input v-model="form.deposit_account.account_name"></el-input>
                 </el-form-item>
-                <el-form-item class="h-auto" label="Contact Email" prop="deposit_account.email">
+                <el-form-item class="h-auto" label="Customer Email" prop="deposit_account.email">
                     <el-input v-model="form.deposit_account.email"></el-input>
                 </el-form-item>
                 <el-form-item class="h-auto" label="Phone Number" prop="deposit_account.customer_msisdn">
@@ -56,7 +56,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="resetForm('form')">Cancel</el-button>
-            <el-button size="mini" class="z-depth-button b-0 bold-500 open-sans white-text" :loading="createLoading" type="primary" @click="submitForm('form')">Create Contact</el-button>
+            <el-button size="mini" class="z-depth-button b-0 bold-500 open-sans white-text" :loading="createLoading" type="primary" @click="submitForm('form')">Create Customer</el-button>
         </span>
     </el-dialog>
 </template>
@@ -69,6 +69,10 @@ export default {
     props: ['form', 'dialogVisible'],
     data () {
         return {
+            // form: {
+            //     accounts_provider_code: 'mobile',
+            //     deposit_account: {}
+            // },
             rules: {
                 'deposit_account.customer_msisdn': [
                     { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }

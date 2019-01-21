@@ -480,7 +480,7 @@ button{
 }
 
 // button
-.icon-only-button{
+.icon-only-button, .trans-icon-only-button{
     margin: 0;
     padding: 0;
     border: 0;
@@ -489,6 +489,10 @@ button{
     i{
         margin: 0;
     }
+}
+
+.trans-icon-only-button{
+    padding: 2px 7px;
 }
 
 // red exclamation mark

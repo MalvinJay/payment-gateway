@@ -38,16 +38,18 @@ const getters = {
 const mutations = {
   [SET_CONTACTS] (state, payload) {
     state.contacts.state = 'DATA'
-    // var contacts = []
-    // payload.forEach(element => {
-    //   element.accounts.forEach(el => {
-    //     el.type = element.name
-    //     contacts.push(el)
-    //   })
-    // })
+    var contacts = []
+    payload.forEach(element => {
+      element.accounts.forEach(el => {
+        el.type = element.name
+        contacts.push(el)
+      })
+    })
+    console.log('payload', contacts.length)
+    console.log('payload', contacts)
     // var contacts = Object.values(payload.reduce((acc, cur) => Object.assign(acc, {[cur.name]: cur}), {}))
-    state.contacts.count = payload.length
-    state.contacts.data = payload
+    state.contacts.count = contacts.length
+    state.contacts.data = contacts
   },
   [SET_CURRENT_CONTACTS] (state, {
     page = 1,
@@ -84,15 +86,16 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_BASE_URI}/v1/clients/contacts/all`,
+        //   url: `${GET_BASE_URI}/v1/clients/contacts/all`,
+          url: `${GET_BASE_URI}v1/accounts.json`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
           commit(SET_CONTACTS_STATE, 'DATA')
-          commit(SET_CONTACTS, response.data.response.data.contacts)
+          commit(SET_CONTACTS, response.data.response.data.deposit_accounts)
           //   state.contacts.count = response.data.response.data.contacts_total
           commit(SET_CURRENT_CONTACTS, {payload: state.contacts.data, page: 1})
-          resolve()
+          resolve(response)
         }).catch((error) => {
           commit(SET_CONTACTS_STATE, 'ERROR')
           console.log(error)
@@ -123,6 +126,7 @@ const actions = {
       })
     })
   },
+  //   job contact
   [GET_CURRENT_CONTACT] ({ state, commit, rootGetters, dispatch }, id) {
     commit(SET_CURRENT_CONTACT_STATE, 'LOADING')
     // var contact = state.contacts.data.find(el => el.code === id)
@@ -131,6 +135,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       apiCall({
         url: `${GET_BASE_URI}v1/clients/contacts/${id}`,
+        // url: `${GET_BASE_URI}v1/accounts.json/${id}`,
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
@@ -138,7 +143,7 @@ const actions = {
         commit(SET_CURRENT_CONTACT, response.data.response.data)
         dispatch(SET_CURRENT_CONTACT_SCHEDULES, {contacts: response.data.response.data.schedules})
         dispatch(SET_CURRENT_CONTACT_TRANSACTIONS, {contacts: response.data.response.data.executed_transactions})
-        resolve()
+        resolve(response)
       }).catch((error) => {
         commit(SET_CURRENT_CONTACT_STATE, 'ERROR')
         console.log(error)

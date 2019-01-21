@@ -5,9 +5,9 @@
         :visible="modalVisible"
         width="35%">
         <div class="flex justify-content-center new-transaction-bg">
-            <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form mt-2" :rules="rules" :model="form" label-width="120px">
+            <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form mt-2 w-70" :rules="rules" :model="form" label-width="120px">
                 <el-form-item label="Bank Name">
-                    <el-select v-model="form.bank_name">
+                    <el-select filterable class="w-100" v-model="form.bank_name">
                         <el-option label="Direct Transfer" value="N/A"></el-option>
                         <el-option
                             v-for="(item, index) in providers" :key="index"
@@ -66,7 +66,19 @@ import moment from 'moment'
 export default {
     name: 'TopupAccount',
     props: ['modalVisible'],
-    data() {
+    data () {
+      var checkAmount = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('This field is required'))
+        }
+        setTimeout(() => {
+          if (Number(value) < 1000) {
+            callback(new Error('Amount must be greater than GHc1000'))
+          } else {
+              callback()
+          }
+        }, 1000)
+      };
       return {
         form: {
             bank_name: 'N/A',
@@ -86,8 +98,8 @@ export default {
             recipient_no: [
                 { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
             ],
-            sender_amount: [
-                { required: true, message: 'This field is required', trigger: 'blur' }
+            amount: [
+                { validator: checkAmount, trigger: 'blur' }
             ],
             recipient_amount: [
                 { required: true, message: 'This field is required', trigger: 'blur' }
@@ -117,6 +129,7 @@ export default {
                 this.form.live = !this.test
                 this.form.dummy = this.test
                 this.form.account_no = this.form.account_no ? this.form.account_no : 'others'
+                
                 this.$store.dispatch('createSettlement', this.form)
                 .then((response) => {
                     if (response.data.success) {
@@ -160,6 +173,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.w-70{
+    width: 70%;
+}
 .export-dialog{
     .el-dialog__header{
         color: #2b2d50;

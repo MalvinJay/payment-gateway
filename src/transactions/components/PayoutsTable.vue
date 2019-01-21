@@ -57,11 +57,11 @@
                     <el-table-column width="80px">
                         <template slot-scope="scope">
                             <i v-if="scope.row.has_dispute" class="exclamation icon red-text"></i>
-                            <div class="mini-menu">
+                            <div>
                                 <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i> -->
-                                <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                                <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)" trigger="click">
                                     <!-- <i class="ellipsis horizontal icon m-0 mr-0 blue-text cursor"></i> -->
-                                    <el-button class="icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
+                                    <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
                                     <el-dropdown-menu class="w-200" slot="dropdown">
                                         <el-dropdown-item disabled>
                                             <div class="table-dropdown-header blue-text bold-600 text-uppercase">
@@ -147,7 +147,7 @@
                             <el-input class="little-padding-input" v-model="form.sender_amount"><span slot="prefix">&#8373</span></el-input>
                         </el-form-item>
                         <el-form-item label="Recipient Amount" prop="recipient_amount">
-                            <el-input class="little-padding-input" v-model="form.recipient_amount"><span slot="prefix">&#8373</span></el-input>
+                            <el-input class="little-padding-input" v-model="recipient_amount"><span slot="prefix">&#8373</span></el-input>
                         </el-form-item>
                         <div v-if="form.service_code === 'airtime'">
                             <el-form-item label="Opt Token">
@@ -453,6 +453,15 @@ export default {
     },
     canMakePayouts () {
         return this.permissions.some(el => el.code === 'make_payout')
+    },
+    recipient_amount: {
+        get () {
+            return this.form.sender_amount
+        },
+        set (val) {
+            this.form.sender_amount = val
+            this.form.recipient_amount = val
+        }
     }
   }
 }
@@ -464,7 +473,8 @@ export default {
 .mini-menu{
     position: absolute;
     top: 8px;
-    padding: 2px 7px;
+    // padding: 2px 7px;
+    padding: 0;
     border-radius: 4px;
     transition: all ease;
     line-height: normal;

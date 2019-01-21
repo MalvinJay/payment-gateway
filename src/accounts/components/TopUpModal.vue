@@ -25,7 +25,7 @@
                     <el-input class="little-padding-input" v-model="form.sender_amount"><span slot="prefix">&#8373</span></el-input>
                 </el-form-item>
                 <el-form-item label="Recipient Amount" prop="recipient_amount">
-                    <el-input class="little-padding-input" v-model="form.recipient_amount"><span slot="prefix">&#8373</span></el-input>
+                    <el-input class="little-padding-input" v-model="recipient_amount"><span slot="prefix">&#8373</span></el-input>
                 </el-form-item>
                 <el-form-item label="Remarks">
                     <el-input type="textarea" v-model="form.remarks"></el-input>
@@ -133,7 +133,16 @@ export default {
         ...mapGetters({
             providers: 'providers',
             test: 'test'
-        })
+        }),
+        recipient_amount: {
+            get () {
+                return this.form.sender_amount
+            },
+            set (val) {
+                this.form.sender_amount = val
+                this.form.recipient_amount = val
+            }
+        }
     }
 }
 </script>
