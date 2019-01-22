@@ -24,6 +24,7 @@
                                 <p>Fee</p>
                             </template>
                         </el-table-column>
+                        <el-table-column show-overflow-tooltip prop="reference" label="Reference"></el-table-column>
                         <el-table-column label="Net">
                             <template slot-scope="scope">
                                 <p class="m-0 p-0 mr-10 s-13">{{scope.row.net_amount | money}}</p>
@@ -76,11 +77,12 @@ export default {
             columns: [
                 {label: 'Net', dataField: 'type'},
                 {label: 'Amount', dataField: 'customer'},
-                {label: 'Fee', dataField: 'ref'}
+                {label: 'Fee', dataField: 'ref'},
             ],
             styleObject: {
                 fontSize: '12px'
-            }
+            },
+            exportVisible: false
         }
     },
     created () {
@@ -95,7 +97,7 @@ export default {
     methods: {
         clickRow (row, event, column) {
             if (column.property) {
-                this.$router.push(`/fees/${row.reference}`)
+                this.$router.push(`/payments/${row.reference}`)
             }        
         },   
         handleCurrentChange (val) {
@@ -134,28 +136,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.mini-menu{
-    position: absolute;
-    top: 8px;
-    padding: 2px 7px;
-    border-radius: 4px;
-    transition: all ease;
-    line-height: normal;
-    right: 20px;
 
-    &:hover{
-        // background: red;
-    }
-    .first-icon{
-        opacity: 0;
-    }
-    i{
-        // &:first-child{
-        //     opacity: 0;
-        // }
-        font-size: 12px;
-    }
-}
 .new-transaction{
     .el-dialog__header{
         color: #2b2d50;

@@ -15,6 +15,7 @@
                     <p class="bold-600 blue-text pb-5 m-0">Analytics</p>
                     <div class="flex justify-content-between">
                         <div style="height: 30px;" class="flex align-items-center">
+                            <!-- time interval -->
                             <el-radio-group @change="handleChange" v-model="form.time_interval" size="mini" class="dashboard-checkboxes mr-6 z-depth-button border-rounded">
                                 <el-radio-button v-for="duration in durations" :label="duration.value" :key="duration.label">{{duration.label}}</el-radio-button>
                             </el-radio-group>
@@ -47,9 +48,10 @@
                                 <el-button class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text">Daily</el-button>
                             </div> -->
                         </div>
-                        <!-- <div>
-                            <el-button @click="editAnalytics" class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text"><i class="cog icon "></i> Customize</el-button>
-                        </div> -->
+                        <div>
+                            <!-- <el-button @click="editAnalytics" class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text"><i class="cog icon "></i> Customize</el-button> -->
+                            <el-button @click="clearDashboard" class="z-depth-button bold-600 s-13 open-sans blue-button mini-button" type="text"><i class="cog icon "></i> Clear</el-button>
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -119,7 +121,7 @@ export default {
       },
       currentDate: '',
       payment: ['wallet', 'card','bank'],
-      status: ['Succeeded', 'pending','failed'],
+      status: ['succeeded', 'pending','failed'],
       statue: [],
       cash: [],
       form: {
@@ -205,7 +207,7 @@ export default {
     // EventBus.$emit('updateTimeGraph')
   },
   methods: {
-    handleChange (val) {
+    handleChange () {
       this.$store.dispatch('setDashboardFilters', this.form)
       .then(() => {
         EventBus.$emit('updateGraph')
@@ -213,6 +215,15 @@ export default {
     },
     editAnalytics () {
         this.edit = true
+    },
+    clearDashboard () {
+        var form = {
+            time_interval: 'month',
+            payment_types: [],
+            statuses: []
+        }
+        this.form = form
+        this.handleChange()
     },
     changeDate (val) {
 
@@ -388,14 +399,12 @@ export default {
         padding: 10px 20px !important;
     }
 }
-
 .blue-graph{
     height: 70px;
 }
 .little-money{
     font-size: 12px;
 }
-
 .transparent-input{
     width: 100px;
 }

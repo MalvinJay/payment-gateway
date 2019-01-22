@@ -16,8 +16,6 @@ export default {
       form.dummy = this.test
       form.service_code = 'cashout'
 
-      console.log('retry', form)
-
       this.$store.dispatch('createTransactions', form)
         .then((response) => {
           if (response.data.success) {

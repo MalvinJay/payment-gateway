@@ -1,35 +1,35 @@
 import {
-    HOOKS_FETCH, SET_HOOKS, SET_HOOKS_STATE, SET_HOOKS_META, SET_HOOKS_FILTERS, GET_CURRENT_HOOK, SET_CURRENT_HOOK, SET_CURRENT_HOOKS_STATE 
-  } from './webhooks-store-constants'
-  import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
-  import { apiCall } from '../../store/apiCall'
-  import Utils from '../../utils/services'
-  
-  // state
-  const state = {
-    hooks: {
-      data: [],
-      meta: {page: 1},
-      errors: [],
-      state: 'DATA',
-      filters: {},
-      sortParams: { param: 'updated_at', order: 'DESC' }
-    },
-    currentHook: {
-      data: {},
-      state: 'LOADING'
-    }
+  HOOKS_FETCH, SET_HOOKS, SET_HOOKS_STATE, SET_HOOKS_META, SET_HOOKS_FILTERS, GET_CURRENT_HOOK, SET_CURRENT_HOOK, SET_CURRENT_HOOKS_STATE
+} from './webhooks-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
+import { apiCall } from '../../store/apiCall'
+import Utils from '../../utils/services'
+
+// state
+const state = {
+  hooks: {
+    data: [],
+    meta: {page: 1},
+    errors: [],
+    state: 'DATA',
+    filters: {},
+    sortParams: { param: 'updated_at', order: 'DESC' }
+  },
+  currentHook: {
+    data: {},
+    state: 'LOADING'
   }
-  
+}
+
 // getters
 const getters = {
   hooks: state => state.hooks.data,
   hooksFilters: state => state.hooks.filters,
   hooksMeta: state => state.hooks.meta,
   hooksSortParams: state => state.hooks.sortParams,
-  hooksState: state => state.hooks.state,
+  hooksState: state => state.hooks.state
   // currenthook: state => state.currenthook.data,
-  // currenthookState: state => state.currenthook.state,    
+  // currenthookState: state => state.currenthook.state,
 }
 
 // mutations

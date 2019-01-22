@@ -8,7 +8,7 @@
             </div>
             <div>
                 <!-- <div id="hook-arguments-example" v-can:foo.a.b="message"></div> -->
-                <el-button v-can="'Approve Transactions'" :disabled="selectedCount === 0" v-if="canApproveTransactions" :loading="loading" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Approve</el-button>
+                <el-button @click="approve" v-can="'Approve Transactions'" :disabled="selectedCount === 0" v-if="canApproveTransactions" :loading="approveLoading" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Approve</el-button>
                 <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
             </div>
         </div>
@@ -41,10 +41,10 @@
                 <el-table-column width="80px">
                     <template slot-scope="scope">
                         <i v-if="scope.row.has_dispute" class="exclamation icon red-text"></i>
-                        <div class="mini-menu">
+                        <div>
                             <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i> -->
-                            <el-dropdown trigger="click">
-                                <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
+                            <el-dropdown class="mini-menu" trigger="click">
+                                <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
                                 <el-dropdown-menu class="w-200" slot="dropdown">
                                     <el-dropdown-item disabled>
                                         <div class="table-dropdown-header blue-text bold-600 text-uppercase">
@@ -100,7 +100,7 @@ export default {
       activeName: '1',
       date: false,
       dialogVisible: false,
-      loading: false,
+      approveLoading: false,
       multipleSelection: {
         transactions: []
       }
@@ -116,13 +116,13 @@ export default {
         }
     },
     handleCurrentChange (val) {
-        this.$store.dispatch('getPending', {page: val})
+        this.$store.dispatch('getPending', {page: val, cache: false})
     },
     handleSelectionChange (val) {
         this.multipleSelection.transactions = val
     },
     approve () {
-        this.loading = true
+        this.approveLoading = true
         this.$store.dispatch('approveTransactions', this.multipleSelection)
         .then((response) => {
             if (response.data.success) {
@@ -137,9 +137,9 @@ export default {
                     message: response.data.response.message
                 })
             }
-            this.loading = false
+            this.approveLoading = false
         }).catch(() => {
-            this.loading = false
+            this.approveLoading = false
             this.$message({
                 message: 'Error',
                 type: 'error'
@@ -197,7 +197,7 @@ export default {
 .mini-menu{
     position: absolute;
     top: 8px;
-    padding: 2px 7px;
+    padding: 0;
     border-radius: 4px;
     transition: all ease;
     line-height: normal;

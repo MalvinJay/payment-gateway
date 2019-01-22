@@ -190,22 +190,20 @@ export default {
             accounts: []
         }
     },
-
     methods: {
-        fetchUser (){
+        fetchUser () {
             this.$store.dispatch('getClient', {cache: false})
         },
         save () {
 
         },
-        saveAccountChanges(){
+        saveAccountChanges () {
             
         }
     },
 
     mounted () {
         EventBus.$emit('sideNavClick', 'bs_account')
-        console.log('init:', this.user)
     },
 
     computed: {

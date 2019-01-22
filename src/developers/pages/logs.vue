@@ -82,7 +82,7 @@ export default {
     handleCurrentChange (val) {
         this.$store.dispatch('getLogs', {page: val, cache: false})
     },
-    fetchLogs (){
+    fetchLogs () {
       this.$store.dispatch('getLogs', {cache: false})
     }
   },

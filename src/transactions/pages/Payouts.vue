@@ -12,9 +12,9 @@
             <el-tab-pane label="Pending Approval">
                 <pending-table></pending-table>
             </el-tab-pane>
-            <el-tab-pane label="Jobs">
+            <!-- <el-tab-pane label="Jobs">
                 <job-table type="cashin"></job-table>
-            </el-tab-pane>
+            </el-tab-pane> -->
         </el-tabs>
     </div>
 </template>

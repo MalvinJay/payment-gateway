@@ -1,32 +1,30 @@
 import {
-    SAVE_SETTINGS,
-    SAVE_BS_URI
-  } from './bs-store-constants'
-  import { apiCall } from '../../store/apiCall'
-  import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
-  import Utils from '../../utils/services'
+  SAVE_SETTINGS,
+  SAVE_BS_URI
+} from './bs-store-constants'
+import { apiCall } from '../../store/apiCall'
+import { GET_BASE_URI } from '../../store/constants'
+import Utils from '../../utils/services'
 
-  //SAVE_BS_URI = `${GET_BASE_URI}merchants/update.json`
+// SAVE_BS_URI = `${GET_BASE_URI}merchants/update.json`
 
 // state
 const state = {
-    client: {
-      data: [],
-      meta: {page: 1},
-      errors: [],
-      state: 'DATA',
-      filters: {},
-      sortParams: {param: 'updated_at', order: 'DESC'}
-    },
-    currentRole: {
-      data: {},
-      state: 'LOADING'
-    }
+  client: {
+    data: [],
+    meta: {page: 1},
+    errors: [],
+    state: 'DATA',
+    filters: {},
+    sortParams: {param: 'updated_at', order: 'DESC'}
+  },
+  currentRole: {
+    data: {},
+    state: 'LOADING'
   }
+}
 
-  // getters
+// getters
 const getters = {
-    client: state => state.client.data,
-  }
-  
-  
+  client: state => state.client.data
+}

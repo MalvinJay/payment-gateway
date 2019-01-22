@@ -25,6 +25,9 @@
                             <el-button size="small" type="primary">Click to upload</el-button>
                         </el-upload>
                     </el-form-item>
+                    <el-form-item label="Download File Format">
+                        <a download href="../../../static/Batch_messages_format.csv">Download file format</a>
+                    </el-form-item>
                 </div>
                 <div v-else>
                     <el-form-item label="Title Of Message">
@@ -123,33 +126,42 @@ export default {
         this.form.contacts.splice(this.form.contacts.indexOf(tag), 1);
       },
       showInput () {
-        this.inputVisible = true;
+        this.inputVisible = true
         this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
+          this.$refs.saveTagInput.$refs.input.focus()
+        })
       },
       handleInputConfirm () {
-        let inputValue = this.inputValue;
+        let inputValue = this.inputValue
         if (inputValue) {
-          this.form.contacts.push(inputValue);
+          this.form.contacts.push(inputValue)
         }
-        this.inputVisible = false;
-        this.inputValue = '';
+        this.inputVisible = false
+        this.inputValue = ''
       },
       createLog (formName) {
         this.loading = true
         this.$refs[formName].validate((valid) => {
             if (valid) {
+                var form = {}
                 if (this.form.is_batch) {
                     this.form.file_url = this.file
+                    form.file_url = this.file
+                    form.is_batch = true
+                } else {
+                    form.message = this.message
+                    form.contacts = this.form.contacts
+                    form.title = this.form.title
+                    form.is_batch = false
                 }
-                this.form.message = this.message
-                this.$store.dispatch('createLog', this.form)
+                console.log('fonemessages', form)
+                // this.form.message = this.message
+                this.$store.dispatch('createLog', form)
                 .then((response) => {
                     if (response.data.success) {
                         this.$message({
                             type: 'success',
-                            message: 'Message Sent',
+                            message: 'Message Sent'
                         })
                         this.$store.dispatch('getFoneMessengers', {cache: false})
                         this.$store.dispatch('getBalance')
@@ -165,7 +177,7 @@ export default {
                     this.loading = false
                     const response = error.response
                     this.$message({
-                        message: response.data.error,
+                        message: 'Failed to send message. Please try again',
                         type: 'error'
                     })
                 })

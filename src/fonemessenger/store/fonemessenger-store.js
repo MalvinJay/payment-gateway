@@ -1,4 +1,4 @@
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { GET_FONE_MESSENGERS, CREATE_LOG, SET_FONE_MESSENGERS,
   SET_FONE_MESSENGERS_STATE, TOPUP_OVA } from './fonemessenger-store-constants'
 import { apiCall } from '../../store/apiCall'
@@ -23,7 +23,7 @@ const getters = {
 // mutations
 const mutations = {
   [SET_FONE_MESSENGERS] (state, payload) {
-    state.messages.count = payload.total_logs
+    state.messages.count = payload.total_page_logs
     state.messages.data = payload.logs
   },
   [SET_FONE_MESSENGERS_STATE] (state, payload) {

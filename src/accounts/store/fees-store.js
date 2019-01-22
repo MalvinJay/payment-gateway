@@ -1,7 +1,7 @@
 import {
   FEES_FETCH, SET_FEES, SET_FEES_STATE, SET_FEES_META, SET_FEES_FILTERS
 } from './store-constants'
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 

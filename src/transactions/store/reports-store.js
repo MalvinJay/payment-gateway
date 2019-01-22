@@ -1,6 +1,7 @@
 import { GET_FIELDS, SET_FIELDS, SET_DOWNLOAD_LINK, SET_FIELDS_STATE,
-  GET_BASE_URI, SUBMIT_REPORT, DOWNLOAD_REPORT, GET_REPORT } from './transactions-store-constants'
+  SUBMIT_REPORT, DOWNLOAD_REPORT, SUBMIT_JOB_REPORT, GET_REPORT } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
+import { GET_BASE_URI } from '../../store/constants'
 
 // state
 const state = {
@@ -55,6 +56,29 @@ const actions = {
       })
     }
   },
+  [SUBMIT_JOB_REPORT] ({ state, commit, rootGetters, dispatch }, id) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/clients/jobs/files/reports/default?group_job_id=${id}`,
+        method: 'POST',
+        token: rootGetters.token
+      }).then((response) => {
+        if (response.data.success) {
+          state.job_id = response.data.response.data.job_id
+          dispatch(GET_REPORT, state.job_id)
+            .then((response) => {
+              resolve(response)
+            }).catch((error) => {
+              reject(error)
+            })
+        }
+        resolve(response)
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
   [SUBMIT_REPORT] ({ state, commit, rootGetters, dispatch }, report) {
     commit(SET_FIELDS_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
@@ -67,7 +91,6 @@ const actions = {
           state.job_id = response.data.response.data.job_id
           dispatch(GET_REPORT, state.job_id)
             .then((response) => {
-              console.log('resolved', response)
               resolve(response)
             }).catch((error) => {
               reject(error)

@@ -4,43 +4,38 @@
         @close="close"
         :visible="modalVisible"
         width="35%">
-        <div class="flex justify-content-center new-export-bg">
-            <el-form hide-required-asterisk class="transaction-form my-2" size="mini" style="width: 90%" :rules="rules" ref="form" :model="form" label-width="150px">
-                <el-form-item label="Topup Type">
-                    <el-select class="w-75" v-model="topupoption">
-                        <el-option v-for="(item, index) in options" :key="index" :label="item.name" :value="item.value"
+        <div class="flex justify-content-center new-transaction-bg">
+            <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="120px">
+                <el-form-item label="Wallet Name">
+                    <el-input v-model="form.recipient_name"></el-input>
+                </el-form-item>
+                <el-form-item class="h-auto" label="Wallet Number" prop="recipient_no">
+                    <el-input v-model="form.recipient_no"></el-input>
+                </el-form-item>
+                <el-form-item label="Provider">
+                    <el-select v-model="form.provider" placeholder="Select Provider">
+                        <el-option
+                            v-for="(item, index) in providers" :key="index"
+                            :label="item.label"
+                            :value="item.value"
                         ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="Amount" prop="amount">
-                    <el-input class="w-75" v-model="form.amount"><span slot="prefix">GHs</span></el-input>
+                <el-form-item label="Sender Amount" prop="sender_amount">
+                    <el-input class="little-padding-input" v-model="form.sender_amount"><span slot="prefix">&#8373</span></el-input>
                 </el-form-item>
-                <div v-if="topupoption === 'external'">
-                    <el-form-item label="Provider">
-                        <el-select class="w-75" v-model="form.provider">
-                            <el-option
-                            v-for="(item, index) in providers"
-                            :key="index"
-                            :label="item.label"
-                            :value="item.value"
-                            ></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="Phone" prop="phone">
-                        <el-input class=" w-75" v-model="form.customer_no"></el-input>
-                    </el-form-item>
-                    <el-form-item v-if="form.provider === 'vodafone'" label="Voucher">
-                        <el-input class=" w-75" v-model="form.voucher"></el-input>
-                    </el-form-item>
-                </div>
-                <el-form-item>
-                    <div class="flex justify-content-end w-100">
-                        <el-button @click="close" type="text">Cancel</el-button>
-                        <el-button @click="createLog('form')" :loading="loading" type="primary">Create</el-button>
-                    </div>
+                <el-form-item label="Recipient Amount" prop="recipient_amount">
+                    <el-input class="little-padding-input" v-model="recipient_amount"><span slot="prefix">&#8373</span></el-input>
+                </el-form-item>
+                <el-form-item label="Remarks">
+                    <el-input type="textarea" v-model="form.remarks"></el-input>
                 </el-form-item>
             </el-form>
         </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="close">Cancel</el-button>
+            <el-button size="mini" :loading="loading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="createLog('form')">Initiate Topup</el-button>
+        </span>
     </el-dialog>
 </template>
 
@@ -58,16 +53,31 @@ export default {
         checkAll: false,
         topupoption: 'flopay',
         form: {
-            currency: "ghs"
+            sender_amount: '',
+            sender_currency: 'GHS',
+            recipient_amount: '',
+            recipient_currency: 'GHS',
+            recipient_no: '',
+            recipient_name: '',
+            provider: '',
+            country_code: 'GH',
+            service_code: 'cashin',
+            live: false
         },
         options: [
             {name: 'Flopay Wallet', value: 'flopay'},
             {name: 'External Wallet', value: 'external'}
         ],
         rules: {
-          amount: [
-            { required: true, message: 'This field is required', trigger: 'blur' }
-          ]
+            recipient_no: [
+                { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
+            ],
+            sender_amount: [
+                { required: true, message: 'This field is required', trigger: 'blur' }
+            ],
+            recipient_amount: [
+                { required: true, message: 'This field is required', trigger: 'blur' }
+            ]
         },
         loading: false
       }
@@ -80,21 +90,11 @@ export default {
         this.loading = true
         this.$refs[formName].validate((valid) => {
             if (valid) {
-                var url = ''
-                var form = {}
-                if (this.topupoption === 'flopay') {
-                    url = 'v1/ova/topup'
-                    form = this.form
-                } else {
-                    url = 'v1/ova/wallet/topup'
-                    form = {
-                      ...this.form,
-                      country_code: 'GH',
-                      service_code: 'cashout',
-                      live: true
-                    }
-                }
-                this.$store.dispatch('topupOVA', { url: url, ova: form })
+                this.form.live = !this.test
+                this.form.dummy = this.test
+                this.form.service_code = 'cashin'
+                this.form.reference = 'FLPCI' + Math.floor(Math.random() * 99999999999)
+                this.$store.dispatch('createPayouts', this.form)
                 .then((response) => {
                     if (response.data.success) {
                         this.$message({
@@ -102,7 +102,7 @@ export default {
                             message: response.data.response.message,
                         })
                         this.$store.dispatch('getBalance')
-                        this.$store.dispatch('getFoneMessengers', {cache: false})
+                        this.$store.dispatch('getTopUps', {cache: false})
                         this.close()
                     } else {
                         this.$message({
@@ -131,8 +131,18 @@ export default {
     },
     computed: {
         ...mapGetters({
-            providers: 'providers'
-        })
+            providers: 'providers',
+            test: 'test'
+        }),
+        recipient_amount: {
+            get () {
+                return this.form.sender_amount
+            },
+            set (val) {
+                this.form.sender_amount = val
+                this.form.recipient_amount = val
+            }
+        }
     }
 }
 </script>

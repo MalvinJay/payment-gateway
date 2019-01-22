@@ -101,9 +101,6 @@ export default {
             page: this.$route.path
         }
     },
-    watch: {
-
-    },
     methods: {
         toggleReadonly () {
             this.readonly = !this.readonly
@@ -111,7 +108,7 @@ export default {
         cancel () {
             this.readonly = true
         },
-        update() {
+        update () {
         
         },
     },

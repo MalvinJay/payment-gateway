@@ -9,9 +9,9 @@
             <el-tab-pane name="2" label="Queued">
                 <queued-table></queued-table>
             </el-tab-pane>
-            <el-tab-pane name="3" label="Jobs">
+            <!-- <el-tab-pane name="3" label="Jobs">
                 <job-table type="cashout"></job-table>
-            </el-tab-pane>
+            </el-tab-pane> -->
         </el-tabs>
     </div>
 </template>

@@ -200,7 +200,7 @@
                     header-row-class-name="transactions-table-header"
                     :data="disputes">
                         <el-table-column type="index"></el-table-column>
-                        <el-table-column prop="amount" label="Amount" width="100">
+                        <el-table-column prop="amount" label="Amount">
                             <template slot-scope="scope">
                                 <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.amount | money}}</p>
                             </template>
@@ -251,11 +251,6 @@ export default {
                 {label: 'recipient', dataField: 'recipient_no', align: 'left'}
             ]
         }
-    },
-    mounted () {
-        EventBus.$on('ticketModal', (val) => {
-            this.ticketVisible = val
-        })
     },
     created () {
         // EventBus.$emit('sideNavClick', 'payments')
@@ -317,6 +312,9 @@ export default {
     },
     mounted () {
         this.$store.dispatch('getCurrentTransaction', this.$route.params.id)
+        EventBus.$on('ticketModal', (val) => {
+            this.ticketVisible = val
+        })
     },
     computed: {
         ...mapGetters({

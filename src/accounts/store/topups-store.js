@@ -2,9 +2,10 @@ import {
   SET_TOPUPS,
   SET_TOPUPS_STATE,
   GET_TOPUPS,
-  SET_TOPUPS_FILTERS
+  SET_TOPUPS_FILTERS,
+  TOPUP_EVA
 } from './store-constants'
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 import moment from 'moment'
@@ -79,6 +80,21 @@ const actions = {
   [SET_TOPUPS_FILTERS] ({ commit, dispatch }, filters) {
     commit(SET_TOPUPS_FILTERS, filters)
     dispatch('getTopUps', {page: 1, cache: false})
+  },
+  [TOPUP_EVA] ({ rootGetters }, { url, ova }) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}${url}`,
+        method: 'POST',
+        token: rootGetters.token,
+        data: ova
+      }).then((response) => {
+        resolve(response)
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
   }
 }
 

@@ -216,9 +216,11 @@
                                 {{scope.row.updated_at | moment("hh:mm A")}}
                             </template>
                         </el-table-column>
-                        <el-table-column width="80" align="center">
+                        <el-table-column min-width="80" align="center">
                             <template slot-scope="scope">
-                                <el-button type="text" class="p-0 m-0" icon="download icon"></el-button>
+                                <a :href="`${GET_BASE_URI}v1/clients/reports/download?access_token=${token}&file_name=${link}`"
+                                    class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" v-if="ready" download>Download</a>
+                                <el-button @click="submitExport(scope.row.id)" :loading="exportLoading" v-else type="text" class="p-0 m-0" icon="download icon"></el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -253,7 +255,8 @@
                 </div>
                 <div class="breathe">
                     <el-table
-                    empty-text="No job customers"
+                    @row-click="clickContact"
+                    empty-text="No job subscribers"
                     v-loading="loading"
                     row-class-name="transactions-table-body"
                     header-row-class-name="transactions-table-header"
@@ -326,6 +329,7 @@ import Utils from '../../utils/services'
 import Job from '../models/Job.js'
 import moment from 'moment'
 import { AWS_BUCKET } from '../store/transactions-store-constants.js'
+import { GET_BASE_URI } from '../../store/constants'
 
 export default {
     name: 'JobDetails',
@@ -342,6 +346,9 @@ export default {
             changedFields: {},
             deleteLoading: false,
             page: 1,
+            ready: false,
+            exportLoading: false,
+            GET_BASE_URI: GET_BASE_URI
         }
     },
     // watch: {
@@ -354,7 +361,7 @@ export default {
     //     }
     // },
     mounted () {
-        EventBus.$emit('sideNavClick', 'payments')
+        EventBus.$emit('sideNavClick', 'jobs')
         this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
 
         this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
@@ -369,7 +376,14 @@ export default {
     },
     methods: {
         clickRun (row, event, column) {
-            this.$refs.run.toggleRowExpansion(row)
+            if (column.property) {
+                this.$refs.run.toggleRowExpansion(row)
+            }
+        },
+        clickContact (row, event, column) {
+            if (column.property) {
+                this.$router.push(`/job-contacts/${row.id}`)
+            }
         },
         fetchTransactions () {
             this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
@@ -408,7 +422,6 @@ export default {
             
             this.$store.dispatch('runJob', this.form.id)
             .then((response) => {
-                console.log('response', response)
                 if (response.data.success) {
                     this.$message({
                         message: 'Job Run Successfully',
@@ -418,6 +431,7 @@ export default {
                     EventBus.$emit('tabNumber', '3')
                     setTimeout(() => {
                         this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
+                        this.$store.dispatch('getBalance')
                         // this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
                     }, 5000)
                 } else {
@@ -441,7 +455,6 @@ export default {
             
             this.$store.dispatch('deleteJobContact', {id: row.id, job: this.$route.params.id})
             .then((response) => {
-                console.log('delete', response)
                 if (response.data.success) {
                     this.$message({
                         message: 'Contact Deleted Successfully',
@@ -469,13 +482,9 @@ export default {
             this.addLoading = true
             let fileInput = this.$el.querySelector(".upload-contacts input[type='file']")
             let filess = fileInput.files[0]
-            console.log('file', filess)
             this.$store.dispatch('sendToBucket', filess)
             .then((response) => {
-                console.log('data res', response)
                 if (response) {
-                    console.log('fileState', this.fileState)
-                    console.log('fileState', response.body)
                     var upload = {
                         Bucket: AWS_BUCKET,
                         Key: this.file.key
@@ -506,7 +515,6 @@ export default {
            
             this.form.schedule = this.form.scheduled ? Utils.createJobQuery (this.form.schedule, this.schedule) : 'false'
             var newForm = Utils.createJobDetailsArray(this.form, ['description', 'scheduled', 'schedule', 'retry_limit', 'active', 'test'])
-            console.log(newForm)
             // var newForm = Job.getCreateView(this.form)
             // var schedule = Utils.createJobQuery (newForm.schedule, this.schedule)
             // newForm.schedule = schedule
@@ -514,7 +522,6 @@ export default {
             
             this.$store.dispatch('updateJob', {id: this.form.id, data: newForm})
             .then((response) => {
-                console.log('response', response)
                 if (response.data.success) {
                     this.$message({
                         message: 'Job Updated Successfully',
@@ -543,6 +550,33 @@ export default {
         },
         handleCurrentCustomerChange (page) {
             this.page = page
+        },
+        submitExport (id) {
+            // this.exportLoading = true
+            this.$store.dispatch('submitJobReport', id)
+            .then((response) => {
+                if (response.data.success) {
+                    this.ready = true
+                    this.$message({
+                        type: 'success',
+                        message: response.data.response.message,
+                    })
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.response.message
+                    })
+                }
+                this.exportLoading = false
+            }).catch((error) => {
+                console.log('job error', error.response)
+                this.exportLoading = false
+                const response = error.response
+                this.$message({
+                    message: response.data,
+                    type: 'error'
+                })
+            })
         }
     },
     computed: {
@@ -555,7 +589,9 @@ export default {
             file: 'file',
             fileState: 'fileState',
             pageSize: 'pageSize',
-            pageLoading: 'pageLoading'
+            pageLoading: 'pageLoading',
+            link: 'downloadLink',
+            token: 'token'
         }),
         error () {
             return this.state === 'ERROR'

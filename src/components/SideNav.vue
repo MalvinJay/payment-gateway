@@ -27,8 +27,9 @@
                 </template>
                 <el-menu-item route="/payments" index="payments">Payments</el-menu-item>
                 <el-menu-item route="/payouts" index="payouts">Payouts</el-menu-item>
+                <el-menu-item route="/jobs" index="jobs">Jobs</el-menu-item>
                 <el-menu-item route="/disputes" index="disputes">Disputes</el-menu-item>
-                <el-menu-item class="v-step-1" index="2-4">Settings</el-menu-item>
+                <el-menu-item v-if="false" class="v-step-1" index="2-4">Settings</el-menu-item>
             </el-submenu>
             <el-submenu ref="sideMenu" index="3">
                 <template slot="title">
@@ -37,14 +38,14 @@
                 <el-menu-item route="/fees" index="fees">Fees</el-menu-item>
                 <el-menu-item route="/topups" index="topups">Topups</el-menu-item>
                 <el-menu-item route="/settlements" index="settlements">Settlements</el-menu-item>
-                <el-menu-item index="3-4">Settings</el-menu-item>
+                <el-menu-item v-if="false" index="3-4">Settings</el-menu-item>
             </el-submenu>
-            <el-menu-item route="/contacts" index="contacts">
+            <el-menu-item v-can="'Manage Contacts'" route="/contacts" index="contacts">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/customer.svg" alt="">Customers
                 </template>
             </el-menu-item>
-            <el-submenu index="5">
+            <el-submenu v-if="false" index="5">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/billing.svg" alt="">Billing
                 </template>
@@ -60,7 +61,7 @@
                 <el-menu-item route="/accounts" index="accounts">Accounts</el-menu-item>
                 <el-menu-item route="/account-settlements" index="account-settlements">Settlements</el-menu-item>
                 <el-menu-item route="/account-fees" index="account-fees">Fees</el-menu-item>
-                <el-menu-item index="6-4">Settings</el-menu-item>
+                <el-menu-item v-if="false" index="6-4">Settings</el-menu-item>
             </el-submenu>
             <el-menu-item v-if="!isAdmin" route="/fonemessenger" index="fonemessenger">
                 <template slot="title">
@@ -71,11 +72,12 @@
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/developer.svg" alt="">Developers
                 </template>
-                <el-menu-item index="keys">API Keys</el-menu-item>
+                <el-menu-item v-can="'View API Credentials'" index="keys">API Keys</el-menu-item>
                 <el-menu-item route="/events" index="events">Events</el-menu-item>
                 <el-menu-item route="/logs" index="logs">Logs</el-menu-item>
                 <el-menu-item route="/webhooks" index="webhooks">Webhooks</el-menu-item>
-                <el-menu-item index="9-5">Settings</el-menu-item>
+                <el-menu-item route="/sandbox" index="sandbox">Sandbox</el-menu-item>
+                <el-menu-item v-if="false" index="9-5">Settings</el-menu-item>
             </el-submenu>
             <el-submenu ref="sideMenu" route="/account" index="10">
                 <template slot="title">
@@ -84,9 +86,9 @@
                 <el-menu-item route="/account" index="bs_account">Account Set-up</el-menu-item>
                 <!-- <el-menu-item index="10-2">Verifications</el-menu-item> -->
                 <!-- <el-menu-item route="/taxation" index="taxation">Tax details</el-menu-item> -->
-                <el-menu-item route="/teams" index="teams">Teams</el-menu-item>
-                <el-menu-item route="/roles" index="roles">Roles</el-menu-item>   
-                <el-menu-item route="/branches" index="branches">Branches</el-menu-item>
+                <el-menu-item v-can="'Manage Users'" route="/teams" index="teams">Teams</el-menu-item>
+                <el-menu-item v-can="'Manage Users'" route="/roles" index="roles">Roles</el-menu-item>   
+                <el-menu-item v-can="'Manage Users'" route="/branches" index="branches">Branches</el-menu-item>
                 <!-- <el-menu-item index="10-6">Integration</el-menu-item>     -->
                 <!-- <el-menu-item index="10-7">Relay</el-menu-item>     -->
                 <!-- <el-menu-item index="10-8">Authorized apps</el-menu-item> -->

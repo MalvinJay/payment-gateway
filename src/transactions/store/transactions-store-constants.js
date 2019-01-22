@@ -1,3 +1,4 @@
+import {GET_BASE_URI} from '../../store/constants'
 // transactions
 export const TRANSACTIONS_FETCH = 'getTransactions'
 export const TRANSACTION_CREATE = 'createTransactions'
@@ -10,8 +11,8 @@ export const SET_CURRENT_TRANSACTION = 'setCurrentTransaction'
 export const SET_CURRENT_TRANSACTION_STATE = 'setCurrentTransactionState'
 export const REFUND_TRANSACTION = 'createRefund'
 
-export const GET_BASE_URI = 'https://api.flopay.io/'
-// export const GET_BASE_URI = 'https://c10a3cf4.ngrok.io/api/'
+// export const GET_BASE_URI = 'https://api.flopay.io/'
+// export const GET_BASE_URI = 'https://645a4161.ngrok.io/api/'
 
 export const GET_TRANSACTIONS_URI = `${GET_BASE_URI}v2/transactions.json`
 export const GET_REFUND_TRANSACTION_URI = `${GET_BASE_URI}v1/reverse.json`
@@ -22,6 +23,7 @@ export const SET_FIELDS = 'setFields'
 export const SET_FIELDS_STATE = 'setFieldsState'
 export const SET_DOWNLOAD_LINK = 'setDownloadLink'
 export const SUBMIT_REPORT = 'submitReport'
+export const SUBMIT_JOB_REPORT = 'submitJobReport'
 export const GET_REPORT = 'getReport'
 export const DOWNLOAD_REPORT = 'downloadReport'
 
@@ -35,6 +37,7 @@ export const SET_DISPUTES_FILTERS = 'setDisputesFilters'
 // payouts
 export const PAYOUTS_FETCH = 'getPayouts'
 export const PAYOUT_CREATE = 'createPayouts'
+export const BILL_PAYOUT = 'createBillPayment'
 export const SET_PAYOUTS_STATE = 'setPayoutsState'
 export const SET_PAYOUTS = 'setPayouts'
 export const SET_PAYOUTS_META = 'setPayoutsMeta'

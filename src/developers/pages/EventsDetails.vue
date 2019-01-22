@@ -88,7 +88,7 @@ export default {
 
   methods: {
     syntaxHighlight (json) {
-      if(json) {
+      if (json) {
         if (typeof json !== 'string') {
           json = JSON.stringify(json, undefined, 2)
         }
@@ -112,7 +112,7 @@ export default {
       }
     },
 
-    retryHooks(){
+    retryHooks () {
       this.loading = true
       this.$store.dispatch('retryHook', this.event.id)
       .then((response) => {
@@ -141,7 +141,7 @@ export default {
       this.$store.dispatch('getCurrentEvent', this.$route.params.id) 
     },
 
-    clickRow(row, event, column){
+    clickRow (row, event, column) {
       this.$refs.events.toggleRowExpansion(row)
     }
   },
@@ -151,11 +151,11 @@ export default {
     this.$store.dispatch('getCurrentEvent', this.$route.params.id)
   },
 
-  updated() {
-    hljs.initHighlightingOnLoad();
-    $('code.hljs').each(function(i, block) {
-      hljs.lineNumbersBlock(block);
-    });
+  updated () {
+    hljs.initHighlightingOnLoad()
+    $('code.hljs').each(function (i, block) {
+      hljs.lineNumbersBlock(block)
+    })
   },
 
   computed: {
@@ -172,7 +172,7 @@ export default {
       return this.state === 'ERROR'
     },
 
-    filteredevent (){
+    filteredevent () {
       var event = {
         ID: this.event.id,
         Date: moment(this.event.created_at).format("YYYY/MM/DD, hh:mm a"),
@@ -184,10 +184,10 @@ export default {
       return event;
     },
 
-    events_reposted() {
+    events_reposted () {
       var reposted = []
       var array = this.event.events_reposted
-      var record;
+      var record
 
       for (let i = 0; i < array.length; i++) {
         record = {
@@ -203,7 +203,7 @@ export default {
       return reposted
     },
 
-    requestBody (){     
+    requestBody () {     
       if(this.event.request){
         var eventData = this.event.request
         
@@ -217,10 +217,10 @@ export default {
     },
 
     responseBody () {   
-      if(this.event.data.RESPONSE){
+      if (this.event.data.RESPONSE) {
         var eventData = this.event.data.RESPONSE
 
-        if (Utils.present(eventData)){
+        if (Utils.present(eventData)) {
           return this.syntaxHighlight(eventData) 
         }
         else {

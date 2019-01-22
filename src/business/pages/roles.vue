@@ -87,11 +87,11 @@ export default {
         this.$store.dispatch('fetchPrivileges')
     },
 
-    beforeDestroy(){
+    beforeDestroy () {
         EventBus.$off('groupModal', () => { })
     },
 
-    created(){
+    created () {
         this.form.privileges = this.privileges
     },
     
@@ -99,7 +99,7 @@ export default {
         fetchRoles () {
             this.$store.dispatch('getRoles', {cache: false})
         },
-        formatter(row, column) {
+        formatter (row, column) {
             var value = row[column.property] ? row[column.property] : '-'
             return value
         }

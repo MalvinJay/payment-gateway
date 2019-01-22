@@ -39,13 +39,11 @@ export default {
       }
     }
 
-    console.log('retry', form)
     return form
   },
   // debit payment
   createDebitFreq (schedule, job) {
     var newString = schedule
-    console.log(schedule, job)
     switch (schedule) {
       case 'daily':
         newString = 1
@@ -73,7 +71,6 @@ export default {
   // debit payment
   createFreq (schedule, job) {
     var newString = schedule
-    console.log(schedule, job)
     switch (schedule) {
       case 'daily':
         newString = 1
@@ -160,6 +157,15 @@ export default {
     }
     return query
   },
+  createDashboardDateQuery (form) {
+    var query = ``
+    if (this.present(form)) {
+      query = query + `?date_value=${form.date}&time_interval=date`
+    } else {
+      query = `?time_interval=day`
+    }
+    return query
+  },
   createQueryParams (filters, page = 1) {
     var query = `?page=${page}&limit=12`
     if (this.present(filters)) {
@@ -183,15 +189,15 @@ export default {
       }
       if (this.present(filters.reasons)) {
         query = query + `&reasons[]=${filters.reasons}`
-      } 
+      }
       if (this.present(filters.name)) {
         query = query + `&user_group=${filters.name}`
-      }            
-      if (this.empty(filters.from) && 
-          this.empty(filters.to) && 
-          this.empty(filters.payment_types) && 
-          this.empty(filters.statuses) && 
-          this.empty(filters.reasons) && 
+      }
+      if (this.empty(filters.from) &&
+          this.empty(filters.to) &&
+          this.empty(filters.payment_types) &&
+          this.empty(filters.statuses) &&
+          this.empty(filters.reasons) &&
           this.empty(filters.name)) {
         query = query + '&all=true'
       }
@@ -260,7 +266,6 @@ export default {
     return !this.present(value)
   },
   sum (arr) {
-    console.log('arr', arr)
     if (arr.length === 0) {
       return 0
     } else {

@@ -1,7 +1,7 @@
 import {
-  ROLES_FETCH, SET_ROLES, SET_ROLES_STATE, SET_ROLES_META, SET_ROLES_FILTERS,FETCH_PRIVILEGES,SET_PRIVILEGES, SET_PRIVILEGES_STATE, CREATE_ROLE
+  ROLES_FETCH, SET_ROLES, SET_ROLES_STATE, SET_ROLES_META, SET_ROLES_FILTERS, FETCH_PRIVILEGES, SET_PRIVILEGES, SET_PRIVILEGES_STATE, CREATE_ROLE
 } from './role-store-constants'
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
 
@@ -86,7 +86,6 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('Roles', response)
           commit(SET_ROLES_STATE, 'DATA')
           commit(SET_ROLES_META, response.data.response.data)
           commit(SET_ROLES, response.data.response.data.user_groups)
@@ -110,7 +109,6 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('privileges for roles', response)
           commit(SET_PRIVILEGES_STATE, 'DATA')
           commit(SET_PRIVILEGES, response.data.response.data)
           resolve(response)
@@ -134,7 +132,6 @@ const actions = {
         token: rootGetters.token,
         data: group
       }).then((response) => {
-        console.log('Role Created', response)
         resolve(response)
       }).catch((error) => {
         console.log(error)

@@ -1,6 +1,6 @@
 import { AUTH_REQUEST, ADMIN_LOGIN, IS_ADMIN, SET_PAGE_LOADING, SET_TEST, SET_TOKEN, SET_CLIENT,
-  SET_PERMISSIONS, LOGIN, SEND_EMAIL, LOGOUT, SET_CLIENT_CRED, SET_BALANCE, GET_BALANCE, RESET_PASSWORD } from './store-constants'
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+  SET_PERMISSIONS, LOGIN, SEND_EMAIL, UPDATE_PROFILE, LOGOUT, SET_CLIENT_CRED, SET_BALANCE, GET_BALANCE, RESET_PASSWORD } from './store-constants'
+import { GET_BASE_URI, CTRL_KEY } from '../../store/constants'
 import { apiCall } from '../apiCall'
 import axios from 'axios'
 import Utils from '../../utils/services'
@@ -21,6 +21,11 @@ const user = {
     permissions: {
       data: []
     },
+    services: {
+      data: []
+    },
+    banks: [],
+    bills: [],
     pageLoading: false,
     isAdmin: Utils.returnBool(localStorage.getItem('isAdmin')),
     pageSize: 12,
@@ -38,7 +43,10 @@ const user = {
     logIn: state => state.logIn,
     isAdmin: state => state.isAdmin,
     pageSize: state => state.pageSize,
-    balance: state => state.balance
+    balance: state => state.balance,
+    banks: state => state.banks,
+    bills: state => state.bills,
+    services: state => state.services.data
   },
 
   // mutations
@@ -51,6 +59,9 @@ const user = {
     [SET_CLIENT] (state, data) {
       if (!state.isAdmin) {
         state.permissions.data = data.client.privileges
+        state.services.data = data.account_services
+        state.banks = data.deposit_accounts[2].providers
+        state.bills = data.deposit_accounts[1].providers
       }
       state.user.data = data
       state.userdata = data
@@ -102,17 +113,16 @@ const user = {
       return new Promise((resolve, reject) => {
         var url = `${GET_BASE_URI}v1/flopay_client_login.json?email=${email}&password=${password}`
 
-        var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
-        var encodedString = Base64.encode('5b1892ab46d583da4542d5951ccf6d38ec27a6a8a3f1e3d9bbeb730827731314');
+        var Base64 = {_keyStr: CTRL_KEY, encode: function (e) { var t = ''; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 }t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ''; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9\+\/\=]/g, ''); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if(a != 64) { t = t + String.fromCharCode(i) } }t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/\r\n/g, '\n'); var t = ''; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else{ t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ''; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 }else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t }}
+        var encodedString = Base64.encode('5b1892ab46d583da4542d5951ccf6d38ec27a6a8a3f1e3d9bbeb730827731314')
 
         axios.defaults.headers = {
           'Ctl-Key': encodedString
-        }        
+        }
         axios.post(url)
           .then((response) => {
             localStorage.setItem('login', true)
             // localStorage.setItem('isAdmin', false)
-            resolve(response)
             // commit(SET_CLIENT, response.data.response.data.client)
             // localStorage.setItem('name', response.data.response.data.client.full_name)
             // localStorage.setItem('company', response.data.response.data.client.company_name)
@@ -121,6 +131,7 @@ const user = {
             // commit(SET_CLIENT_CRED, response.data.response.data.access_key)
             localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
             localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
+            resolve(response)
           }).catch((error) => {
             console.log(error)
             reject(error)
@@ -239,6 +250,22 @@ const user = {
     },
     [SET_TOKEN] ({ commit }, data) {
       commit(SET_TOKEN, data)
+    },
+    // UPDATE PROFILE
+    [UPDATE_PROFILE] ({ rootGetters }, form) {
+      return new Promise((resolve, reject) => {
+        var url = `${GET_BASE_URI}v1/merchants/update.json`
+        apiCall({
+          url: url,
+          method: 'PUT',
+          token: rootGetters.token,
+          data: form
+        }).then((response) => {
+          resolve(response)
+        }).catch((error) => {
+          reject(error)
+        })
+      })
     }
   }
 }

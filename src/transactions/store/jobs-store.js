@@ -1,8 +1,9 @@
 import { GET_JOBS, SET_JOBS_STATE, AWS_BUCKET, ACCESS_KEY_ID, SET_FILE_UPLOAD_DETAILS, GET_JOB_RUNS, SET_JOB_RUNS, SET_JOB_RUNS_STATE,
   CREATE_JOB_CONTACT, DELETE_JOB, UPDATE_JOB, GET_SINGLE_JOB, SET_SINGLE_JOB, SET_SINGLE_JOB_STATE, RUN_JOB, SET_FILE_STATE, GET_CURRENT_RUN, SET_CURRENT_RUN, SET_CURRENT_RUN_STATE,
-  SECRET_ACCESS_KEY, SEND_TO_BUCKET, DELETE_JOB_CONTACT, GET_BASE_URI, SET_JOBS, CREATE_JOB,
+  SECRET_ACCESS_KEY, SEND_TO_BUCKET, DELETE_JOB_CONTACT, SET_JOBS, CREATE_JOB,
   SET_CURRENT_JOB_RUNS, GET_CURRENT_JOB_RUNS } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
+import { GET_BASE_URI } from '../../store/constants'
 import Utils from '../../utils/services'
 var S3 = require('aws-sdk/clients/s3')
 
@@ -102,7 +103,9 @@ const actions = {
         }).then((response) => {
           commit(SET_JOBS_STATE, 'DATA')
           commit(SET_JOBS, response.data.response.data)
-          dispatch('getCurrentJob', {id: response.data.response.data.jobs[0].id})
+          if (response.data.response.data.jobs.length === 0 && Utils.empty(state.currentJob.data)) {
+            dispatch('getCurrentJob', {id: response.data.response.data.jobs[0].id})
+          }
           resolve(response)
         }).catch((error) => {
           commit(SET_JOBS_STATE, 'ERROR')

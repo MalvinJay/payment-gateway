@@ -59,7 +59,7 @@ export default {
 
   methods: {
     syntaxHighlight (json) {
-      if(json) {
+      if (json) {
         if (typeof json !== 'string') {
           json = JSON.stringify(json, undefined, 2)
         }
@@ -93,10 +93,10 @@ export default {
     this.$store.dispatch('getCurrentLog', this.$route.params.id)
   },
 
-  updated() {
-    hljs.initHighlightingOnLoad();
+  updated () {
+    hljs.initHighlightingOnLoad()
     $('code.hljs').each(function(i, block) {
-      hljs.lineNumbersBlock(block);
+      hljs.lineNumbersBlock(block)
     });      
   },
 
@@ -115,7 +115,7 @@ export default {
     },    
 
     data () {
-      return this.log;
+      return this.log
     },
 
     filteredlog (){
@@ -131,14 +131,14 @@ export default {
         // Related: 'product - ' + this.log.response == undefined ? 'N/A' : this.log.response.response.reference,
         Origin: 'https://dashboard.flopay.io'
       }
-      return log;
+      return log
     },
 
     requestBody () {
-      if (Utils.present(this.log.request)){
+      if (Utils.present(this.log.request)) {
         return this.syntaxHighlight(this.log.request) 
       } 
-      else if (Utils.present(this.log.request)){
+      else if (Utils.present(this.log.request)) {
         return this.syntaxHighlight(this.log.request) 
       }
       else {
@@ -147,10 +147,10 @@ export default {
     },
 
     responseBody () {
-      if (Utils.present(this.log.response.response)){
+      if (Utils.present(this.log.response.response)) {
         return this.syntaxHighlight(this.log.response.response)
       } 
-      else if (Utils.present(this.log.response.accounts)){
+      else if (Utils.present(this.log.response.accounts)) {
         return this.syntaxHighlight(this.log.response.accounts)
       }
       else {

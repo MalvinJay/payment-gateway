@@ -1,7 +1,7 @@
 import {
   TEAMS_FETCH, SET_TEAMS, SET_TEAMS_STATE, SET_TEAMS_META, SET_TEAMS_FILTERS, CREATE_USER, DELETE_USER
 } from './team-store-constants'
-import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
+import { GET_BASE_URI } from '../../store/constants'
 import { apiCall } from '../../store/apiCall'
 // import { GET_BASE_URI } from '../../transactions/store/transactions-store-constants'
 import Utils from '../../utils/services'
@@ -78,7 +78,6 @@ const actions = {
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
-          console.log('transactions for teams', response)
           commit(SET_TEAMS_STATE, 'DATA')
           commit(SET_TEAMS_META, response.data.response.data)
           commit(SET_TEAMS, response.data.response.data.users)
@@ -103,7 +102,6 @@ const actions = {
         token: rootGetters.token,
         data: user
       }).then((response) => {
-        console.log('User Created', response)
         resolve(response)
       }).catch((error) => {
         console.log(error)

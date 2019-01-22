@@ -1,80 +1,82 @@
 <template>
-    <div class="transactions">
-        <div class="trans-div flex justify-content-between">
-            <div class="flex align-items-baseline">
-                <p class="blue-text bold-600 s-16 m-0 p-0">Jobs</p>
-                <!-- <filter-component filterType="payment"></filter-component> -->
+    <el-card class="card-0">
+        <div class="transactions">
+            <div class="trans-div flex justify-content-between">
+                <div class="flex align-items-baseline">
+                    <p class="blue-text bold-600 s-16 m-0 p-0">Jobs</p>
+                    <!-- <filter-component filterType="payment"></filter-component> -->
+                </div>
+                <div>
+                    <el-button @click="newJob" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
+                    <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
+                </div>
             </div>
             <div>
-                <el-button @click="newJob" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
-                <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
-            </div>
-        </div>
-        <div>
-            <div class="center h-80" v-if="error">
-                <div class="center flex-column">
-                    <p class="m-0 p-0">Unable to load this page</p>
-                    <el-button @click.prevent="fetchTransactions" icon="sync icon" type="text">Retry</el-button>
-                </div>
-            </div>
-            <div v-else>
-                <el-table @row-click="clickRow" empty-text="No jobs to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredJobs">
-                    <el-table-column type="selection" width="55">
-                    </el-table-column>
-                    <el-table-column prop="description" label="Job Name" width="300">
-                        <template slot-scope="scope">
-                            <p style="color: #2b2d50;" class="m-0 cursor p-0 mr-10 bold-500 s-13">{{scope.row.description}}</p>
-                        </template>
-                    </el-table-column>
-                    <el-table-column :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
-                    <el-table-column prop="scheduled" label="">
-                        <template slot-scope="scope">
-                            <div class="flex">
-                                <the-tag v-if="scope.row.scheduled" status="success" title="Automatic" icon="detail check icon"></the-tag>
-                                <the-tag v-else status="failed" title="Manual" icon="reply icon"></the-tag>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="created_at" label="Date" width="170px">
-                        <template slot-scope="scope">
-                            {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
-                        </template>
-                    </el-table-column>
-                    <el-table-column width="100px">
-                        <template slot-scope="scope">
-                            <div class="mini-menu">
-                                <i v-if="scope.row.status ==='failed'" class="reply icon blue-text cursor first-icon"></i>
-                                <el-dropdown @command="command => handleCommand(command, scope.row)">
-                                    <i class="ellipsis horizontal icon m-0 blue-text cursor"></i>
-                                    <el-dropdown-menu class="w-200" slot="dropdown">
-                                        <el-dropdown-item disabled>
-                                            <div class="table-dropdown-header blue-text bold-600 text-uppercase">
-                                                action
-                                            </div>
-                                        </el-dropdown-item>
-                                        <el-dropdown-item command="edit" class="s-12">Edit Job</el-dropdown-item>
-                                        <el-dropdown-item command="delete" class="s-12">Delete Job</el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </el-dropdown>
-                            </div>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <!-- FOOTER -->
-                <div class="flex justify-content-between align-items-center px-10">
-                    <div class="s-12">
-                        {{jobs.length}} results
+                <div class="center h-80" v-if="error">
+                    <div class="center flex-column">
+                        <p class="m-0 p-0">Unable to load this page</p>
+                        <el-button @click.prevent="fetchTransactions" icon="sync icon" type="text">Retry</el-button>
                     </div>
-                    <el-pagination class="my-2 flex justify-content-end"
-                        @current-change="handleCurrentChange"
-                        :page-size="pageSize"
-                        layout="prev, pager, next"
-                        :total="total">
-                    </el-pagination>
+                </div>
+                <div v-else>
+                    <el-table @row-click="clickRow" empty-text="No jobs to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredJobs">
+                        <el-table-column type="selection" width="55">
+                        </el-table-column>
+                        <el-table-column prop="description" label="Job Name" width="300">
+                            <template slot-scope="scope">
+                                <p style="color: #2b2d50;" class="m-0 cursor p-0 mr-10 bold-500 s-13">{{scope.row.description}}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                        <el-table-column prop="scheduled" label="">
+                            <template slot-scope="scope">
+                                <div class="flex">
+                                    <the-tag v-if="scope.row.scheduled" status="success" title="Automatic" icon="detail check icon"></the-tag>
+                                    <the-tag v-else status="failed" title="Manual" icon="reply icon"></the-tag>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="created_at" label="Date" width="170px">
+                            <template slot-scope="scope">
+                                {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="100px">
+                            <template slot-scope="scope">
+                                <div>
+                                    <!-- <i v-if="scope.row.status ==='failed'" class="reply icon blue-text cursor first-icon"></i> -->
+                                    <el-dropdown class="mini-menu" @command="command => handleCommand(command, scope.row)">
+                                        <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
+                                        <el-dropdown-menu class="w-200" slot="dropdown">
+                                            <el-dropdown-item disabled>
+                                                <div class="table-dropdown-header blue-text bold-600 text-uppercase">
+                                                    action
+                                                </div>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item command="edit" class="s-12">Edit Job</el-dropdown-item>
+                                            <el-dropdown-item command="delete" class="s-12">Delete Job</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <!-- FOOTER -->
+                    <div class="flex justify-content-between align-items-center px-10">
+                        <div class="s-12">
+                            {{jobs.length}} results
+                        </div>
+                        <el-pagination class="my-2 flex justify-content-end"
+                            @current-change="handleCurrentChange"
+                            :page-size="pageSize"
+                            layout="prev, pager, next"
+                            :total="total">
+                        </el-pagination>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </el-card>
 </template>
 
 <script>
@@ -95,7 +97,6 @@ export default {
       styleObject: {
         fontSize: '12px'
       },
-      activeName: '1',
       date: false,
       dialogVisible: false,
       form: {
@@ -121,7 +122,7 @@ export default {
     this.$store.dispatch('getJobs')
   },
   mounted () {
-    EventBus.$emit('sideNavClick', 'payments')
+    EventBus.$emit('sideNavClick', 'jobs')
   },
   methods: {
     handleCurrentChange (val) {
@@ -183,7 +184,7 @@ export default {
                   
         })
     },
-    submitForm(formName) {
+    submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$store.dispatch('createTransactions', this.form)
@@ -198,10 +199,10 @@ export default {
             return false
           }
         })
-      },
-      resetForm(formName) {
+    },
+    resetForm (formName) {
         this.$refs[formName].resetFields();
-      }
+    }
   },
   computed: {
     ...mapGetters({

@@ -5,8 +5,8 @@
                 <filter-component dispatch="setPayoutsFilters" filterType="payouts"></filter-component>
             </div>
             <div>
-                <el-button v-if="canMakePayouts" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
-                <el-button @click="exportVisible = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+                <el-button v-can="'Make Payout'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
+                <el-button v-can="'Generate Reports'" @click="exportVisible = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button>
             </div>
         </div>
         <div>
@@ -57,11 +57,11 @@
                     <el-table-column width="80px">
                         <template slot-scope="scope">
                             <i v-if="scope.row.has_dispute" class="exclamation icon red-text"></i>
-                            <div class="mini-menu">
+                            <div>
                                 <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i> -->
-                                <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                                <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)" trigger="click">
                                     <!-- <i class="ellipsis horizontal icon m-0 mr-0 blue-text cursor"></i> -->
-                                    <el-button class="icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
+                                    <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
                                     <el-dropdown-menu class="w-200" slot="dropdown">
                                         <el-dropdown-item disabled>
                                             <div class="table-dropdown-header blue-text bold-600 text-uppercase">
@@ -102,38 +102,72 @@
             width="30%">
             <div class="flex justify-content-center new-transaction-bg">
                 <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="120px">
-                    <el-form-item label="Recipient Name">
-                        <el-input v-model="form.recipient_name"></el-input>
-                    </el-form-item>
-                    <el-form-item class="h-auto" label="Recipient Number" prop="recipient_no">
-                        <el-input v-model="form.recipient_no"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Provider">
-                        <el-select v-model="form.provider" placeholder="Select Provider">
-                            <el-option
-                                v-for="(item, index) in providers" :key="index"
-                                :label="item.label"
-                                :value="item.value"
-                            ></el-option>
+                    <el-form-item label="Type of transaction">
+                        <el-select v-model="form.service_code">
+                            <el-option label="Payout" value="cashin"></el-option>
+                            <el-option v-service="'Airtime'" label="Airtime" value="airtime"></el-option>
+                            <el-option v-service="'Billpay'" label="Bill Payment" value="bill"></el-option>
                         </el-select>
                     </el-form-item>
-                    <!-- <el-form-item v-if="form.provider === 'vodafone'" label="Voucher">
-                        <el-input v-model="form.voucher"></el-input>
-                    </el-form-item> -->
-                    <el-form-item label="Sender Amount" prop="sender_amount">
-                        <el-input class="little-padding-input" v-model="form.sender_amount"><span slot="prefix">&#8373</span></el-input>
-                    </el-form-item>
-                    <el-form-item label="Recipient Amount" prop="recipient_amount">
-                        <el-input class="little-padding-input" v-model="form.recipient_amount"><span slot="prefix">&#8373</span></el-input>
-                    </el-form-item>
-                    <el-form-item label="Remarks">
-                        <el-input type="textarea" v-model="form.remarks"></el-input>
-                    </el-form-item>
+                    <div v-if="form.service_code === 'bill'">
+                        <el-form-item label="Provider">
+                            <el-select v-model="form.provider" placeholder="Select Provider">
+                                <el-option
+                                    v-for="(item, index) in banks" :key="index"
+                                    :label="item.name"
+                                    :value="item.code"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item class="h-auto" label="Account Number">
+                            <el-input v-model="form.account_number"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Recipient Amount" prop="recipient_amount">
+                            <el-input class="little-padding-input" v-model="form.recipient_amount"><span slot="prefix">&#8373</span></el-input>
+                        </el-form-item>
+
+                    </div>
+                    <div v-else>
+                        <el-form-item label="Recipient Name">
+                            <el-input v-model="form.recipient_name"></el-input>
+                        </el-form-item>
+                        <el-form-item class="h-auto" label="Recipient Number" prop="recipient_no">
+                            <el-input v-model="form.recipient_no"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Provider">
+                            <el-select v-model="form.provider" placeholder="Select Provider">
+                                <el-option
+                                    v-for="(item, index) in providers" :key="index"
+                                    :label="item.label"
+                                    :value="item.value"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="Sender Amount" prop="sender_amount">
+                            <el-input class="little-padding-input" v-model="form.sender_amount"><span slot="prefix">&#8373</span></el-input>
+                        </el-form-item>
+                        <el-form-item label="Recipient Amount" prop="recipient_amount">
+                            <el-input class="little-padding-input" v-model="recipient_amount"><span slot="prefix">&#8373</span></el-input>
+                        </el-form-item>
+                        <div v-if="form.service_code === 'airtime'">
+                            <el-form-item label="Opt Token">
+                                <el-tooltip content="Default: false - 'true' would allow the system to send a token when a transfer fails" placement="top">
+                                    <el-switch
+                                        v-model="form.token">
+                                    </el-switch>
+                                </el-tooltip>
+                            </el-form-item>
+                        </div>
+                        <el-form-item label="Remarks">
+                            <el-input type="textarea" v-model="form.remarks"></el-input>
+                        </el-form-item>
+                    </div>
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="close">Cancel</el-button>
-                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Initiate Payout</el-button>
+                <el-button v-if="form.service_code === 'bill'" size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="billPayment('form')">Initiate Bill Payment</el-button>
+                <el-button v-else size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Initiate Payout</el-button>
             </span>
         </el-dialog>
         <export-modal type="withdrawal" :modalVisible.sync="exportVisible"></export-modal>
@@ -219,7 +253,7 @@ export default {
             this.$router.push(`/payments/${row.reference}`)
         }
     },
-    tableRowClassName({row, rowIndex}) {
+    tableRowClassName ({row, rowIndex}) {
         if (row.has_dispute) {
             return 'transactions-table-body warning-row'
         } else {
@@ -277,6 +311,7 @@ export default {
                 })
                 this.fetchTransactions()
                 this.dialogVisible = false
+                this.$store.dispatch('getBalance')
             } else {
                 this.$message({
                     type: 'error',
@@ -297,8 +332,18 @@ export default {
           if (valid) {
             this.form.live = !this.test
             this.form.dummy = this.test
-            this.form.service_code = 'cashin'
-            this.form.reference = 'FLPCI' + Math.floor(Math.random() * 99999999999)
+            // this.form.service_code = 'cashin'
+            // this.form.reference = 'FLPCI' + Math.floor(Math.random() * 99999999999)
+            var ref = 'FLPCI' + Math.floor(Math.random() * 99999999999)
+            if (this.form.service_code === 'airtime') {
+                // this.form.client_ref = ref
+                // this.form.reference = ref
+                this.form.integration_type = 'FLOPAY_WEB_AIR'
+                this.form.live= true
+                this.dummy= false
+            } else {
+                this.form.reference = ref
+            }
 
             this.$store.dispatch('createPayouts', this.form)
             .then((response) => {
@@ -309,10 +354,55 @@ export default {
                     })
                     this.fetchTransactions()
                     this.dialogVisible = false
+                    this.$store.dispatch('getBalance')
                 } else {
                     this.$message({
                         type: 'error',
-                        message: response.data.response.message.message
+                        message: response.data.response.error_message
+                    })
+                }
+                this.createLoading = false
+            }).catch((error) => {
+                this.createLoading = false
+                this.$message({
+                    type: 'error',
+                    message: 'Error. Please check your connection and try again'
+                })
+            })
+          } else {
+            this.createLoading = false
+            return false
+          }
+        })
+    },
+    billPayment (formName) {
+        this.createLoading = true
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            var form = {}
+            form.live = !this.test
+            form.dummy = this.test
+            form.bill_reference = 'FLPCI' + Math.floor(Math.random() * 99999999999)
+            form.recipient_currency = 'Ghs'
+            form.country_code = 'gh'
+            form.recipient_amount = this.form.recipient_amount
+            form.provider = this.form.provider
+            form.account_number = this.form.account_number
+
+            this.$store.dispatch('createBillPayment', form)
+            .then((response) => {
+                if (response.data.success) {
+                    this.$message({
+                        message: 'Bill Payment successful',
+                        type: 'success'
+                    })
+                    this.fetchTransactions()
+                    this.dialogVisible = false
+                    this.$store.dispatch('getBalance')
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: response.data.response.message
                     })
                 }
                 this.createLoading = false
@@ -325,7 +415,6 @@ export default {
             })
           } else {
             this.createLoading = false
-            console.log('error submit!!')
             return false
           }
         })
@@ -342,7 +431,8 @@ export default {
       providers: 'providers',
       test: 'test',
       permissions: 'permissions',
-      pageSize: 'pageSize'
+      pageSize: 'pageSize',
+      banks: 'bills'
     }),
     total () {
       return this.meta.trans
@@ -363,6 +453,15 @@ export default {
     },
     canMakePayouts () {
         return this.permissions.some(el => el.code === 'make_payout')
+    },
+    recipient_amount: {
+        get () {
+            return this.form.sender_amount
+        },
+        set (val) {
+            this.form.sender_amount = val
+            this.form.recipient_amount = val
+        }
     }
   }
 }
@@ -374,7 +473,8 @@ export default {
 .mini-menu{
     position: absolute;
     top: 8px;
-    padding: 2px 7px;
+    // padding: 2px 7px;
+    padding: 0;
     border-radius: 4px;
     transition: all ease;
     line-height: normal;

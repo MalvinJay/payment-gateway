@@ -1,9 +1,11 @@
 import { TRANSACTION_CREATE, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SEARCH_TRANSACTIONS,
-  TRANSACTIONS_FETCH, SET_CURRENT_TRANSACTION_STATE, GET_BASE_URI,
+  TRANSACTIONS_FETCH, SET_CURRENT_TRANSACTION_STATE,
   SET_TRANSACTIONS_STATE, GET_QUEUE, SET_QUEUE, SET_QUEUE_STATE, SET_QUEUE_FILTERS, SET_QUEUE_META, SET_CURRENT_TRANSACTION,
   SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, SET_PENDING_STATE, SET_PENDING_META, APPROVE_TRANSACTIONS, GET_CURRENT_TRANSACTION,
   CREATE_TICKET, REFUND_TRANSACTION } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
+import { ctrlCall } from '../../store/ctrlCall'
+import { GET_BASE_URI } from '../../store/constants'
 import Utils from '../../utils/services'
 import moment from 'moment'
 
@@ -173,7 +175,9 @@ const actions = {
           commit(SET_TRANSACTIONS_STATE, 'DATA')
           commit(SET_TRANSACTIONS_META, response.data.response.data)
           commit(SET_TRANSACTIONS, response.data.response.data.transactions)
-          dispatch(GET_CURRENT_TRANSACTION, response.data.response.data.transactions[0].reference)
+          if (response.data.response.data.transactions.length > 0) {
+            dispatch(GET_CURRENT_TRANSACTION, response.data.response.data.transactions[0].reference)
+          }
           resolve()
         }).catch((error) => {
           commit(SET_TRANSACTIONS_STATE, 'ERROR')
@@ -275,6 +279,7 @@ const actions = {
     dispatch('getPending', {page: 1, cache: false})
   },
   [APPROVE_TRANSACTIONS] ({ state, commit, rootGetters }, transactions) {
+    console.log('transactions pending', transactions)
     return new Promise((resolve, reject) => {
       apiCall({
         url: `${GET_BASE_URI}v2/transactions/approve.json`,
@@ -295,10 +300,9 @@ const actions = {
     // commit(SET_CURRENT_TRANSACTION, trans)
     commit(SET_CURRENT_TRANSACTION_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
-      apiCall({
-        url: `${GET_BASE_URI}/v1/rekt_transacts/${id}`,
-        method: 'GET',
-        token: rootGetters.token
+      ctrlCall({
+        url: `${GET_BASE_URI}v1/rekt_transacts/${id}`,
+        method: 'GET'
       }).then((response) => {
         commit(SET_CURRENT_TRANSACTION_STATE, 'DATA')
         commit(SET_CURRENT_TRANSACTION, response.data.response.data)

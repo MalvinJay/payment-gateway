@@ -32,8 +32,8 @@
                     <!-- JOB SERVICE CODE -->
                     <el-form-item label="Service Code">
                         <el-select v-model="form.service_code">
-                            <el-option label="Cash In" value="cashin"></el-option>
-                            <el-option label="Cash Out" value="cashout"></el-option>
+                            <el-option label="Payout" value="cashin"></el-option>
+                            <el-option label="Payment" value="cashout"></el-option>
                             <el-option label="Direct Payment" value="direct_payment"></el-option>
                         </el-select>
                     </el-form-item>
@@ -69,7 +69,7 @@
                                 v-model="schedule.time"
                                 :picker-options="{
                                     start: '08:30',
-                                    step: '00:15',
+                                    step: '00:05',
                                     end: '18:30'
                                 }"
                                 placeholder="Select time">
@@ -223,7 +223,6 @@ export default {
         daterange: {
             get () {
                 var range = [this.form.start_date, this.form.termination_date]
-                console.log('range', range)
                 return range
             },
             set (val) {
@@ -284,8 +283,10 @@ export default {
                                 message: 'Job created',
                             })
                             this.$store.dispatch('getJobs', {cache: false})
-                            EventBus.$emit('tabNumber', '3')
-                            this.$router.push('/payments')
+                            this.$router.push('/jobs')
+                            // setTimeout(() => {
+                            //     EventBus.$emit('tabNumber', '3')
+                            // }, 1000)
                         } else {
                             this.$message({
                                 type: 'error',
@@ -318,7 +319,7 @@ export default {
         }
     },
     mounted () {
-        EventBus.$emit('sideNavClick', 'payments')
+        EventBus.$emit('sideNavClick', 'jobs')
     }
 }
 </script>

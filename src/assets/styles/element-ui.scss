@@ -218,6 +218,19 @@ $border: #dcdfe6;
         margin-right: 0px;
     }
 }
+.mini-menu {
+    .el-button.is-plain:hover, .el-button.is-plain:focus{
+        background: transparent !important;
+    }
+}
+.trans-icon-only-button{
+    &:active, &:hover, &:focus{
+        background: #f5f7fa;
+    }
+    i{
+        margin-right: 0px;
+    }
+}
 
 // forms
 .transaction-form{

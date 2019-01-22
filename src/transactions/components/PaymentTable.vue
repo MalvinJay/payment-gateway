@@ -5,8 +5,8 @@
                 <filter-component dispatch="setTransactionsFilters" filterType="payment"></filter-component>
             </div>
             <div>
-                <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
-                <el-button v-if="canGenerateReports" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+                <el-button v-can="'Accept Payment'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
+                <el-button v-can="'Generate Reports'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
             </div>
         </div>
         <div>
@@ -50,10 +50,10 @@
                         <template slot-scope="scope">
                             <i v-if="scope.row.has_dispute" class="exclamation icon red-text"></i>
                             <!-- <div class="status" v-if="scope.row.has_dispute"></div> -->
-                            <div class="mini-menu">
+                            <div>
                                 <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i> -->
-                                <el-dropdown @command="command => handleTableCommand(command, scope.row)" trigger="click">
-                                    <el-button class="icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
+                                <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                                    <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
                                     <el-dropdown-menu class="w-200" slot="dropdown">
                                         <el-dropdown-item disabled>
                                             <div class="table-dropdown-header bold-600 text-uppercase">
@@ -128,6 +128,7 @@
         </el-dialog>
         <export-modal type="deposit" :modalVisible.sync="exportVisible"></export-modal>
         <ticket-modal :transaction="transaction" :ticketVisible.sync="ticketVisible"></ticket-modal>
+        <add-contact :form="contact" :dialogVisible="contactVisible"></add-contact>
     </div>
 </template>
 
@@ -151,7 +152,9 @@ export default {
       },
       activeName: '1',
       transaction: {},
+      contact: {},
       date: false,
+      contactVisible: false,
       dialogVisible: false,
       exportVisible: false,
       ticketVisible: false,
@@ -185,6 +188,9 @@ export default {
     })
     EventBus.$on('ticketModal', (val) => {
         this.ticketVisible = false
+    })
+    EventBus.$on('addContact', (val) => {
+        this.contactVisible = false
     })
   },
   beforeDestroy () {
@@ -223,7 +229,7 @@ export default {
                 break
         }
     },
-    tableRowClassName({row, rowIndex}) {
+    tableRowClassName ({row, rowIndex}) {
         if (row.has_dispute) {
             return 'transactions-table-body warning-row'
         } else {
@@ -248,6 +254,8 @@ export default {
                     })
                     this.fetchTransactions()
                     this.dialogVisible = false
+                    this.$store.dispatch('getBalance')
+                    addContact(this.form)
                 } else {
                 this.$message({
                         type: 'error',
@@ -273,6 +281,12 @@ export default {
           }
         })
     },
+    addContact (form) {
+        this.contactVisible = false
+        this.contact = {
+            
+        }
+    },
     retry (row) {
         var form = Utils.retryTransactions(row, 'payment')
         form.live = !this.test
@@ -286,6 +300,7 @@ export default {
                     type: 'success'
                 })
                 this.fetchTransactions()
+                this.$store.dispatch('getBalance')
                 this.dialogVisible = false
             } else {
             this.$message({
@@ -301,7 +316,7 @@ export default {
             })
         })
     },
-    resetForm(formName) {
+    resetForm (formName) {
         this.$refs[formName].resetFields()
     }
   },
@@ -351,7 +366,8 @@ export default {
 .mini-menu{
     position: absolute;
     top: 8px;
-    padding: 2px 7px;
+    // padding: 2px 7px;
+    padding: 0;
     border-radius: 4px;
     transition: all ease;
     line-height: normal;

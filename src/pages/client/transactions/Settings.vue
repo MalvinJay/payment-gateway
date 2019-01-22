@@ -94,9 +94,7 @@ export default {
       isTest: true,
       radio: true,
       select: 1,
-      form: {
-
-      }
+      form: {}
     }
   }
 }

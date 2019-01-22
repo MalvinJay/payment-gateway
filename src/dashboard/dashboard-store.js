@@ -1,5 +1,5 @@
-import { GET_DASHBOARD_GRAPH, GET_TODAY_GRAPH, SET_TODAY_GRAPH, SET_TODAY_GRAPH_STATE, SET_DASHBOARD_FILTERS, SET_DASHBOARD_GRAPH, SET_DASHBOARD_GRAPH_STATE, GET_DASHBOARD_URI } from './dashboard-store-constants'
-import { GET_BASE_URI } from '../transactions/store/transactions-store-constants'
+import { GET_DASHBOARD_GRAPH, GET_TODAY_GRAPH, SET_TODAY_GRAPH, SET_TODAY_FILTERS, SET_TODAY_GRAPH_STATE, SET_DASHBOARD_FILTERS, SET_DASHBOARD_GRAPH, SET_DASHBOARD_GRAPH_STATE, GET_DASHBOARD_URI } from './dashboard-store-constants'
+import { GET_BASE_URI } from '../store/constants'
 import { apiCall } from '../store/apiCall'
 import Utils from '../utils/services'
 import Dashboard from './models/Dashboard'
@@ -17,7 +17,8 @@ const state = {
   today: {
     data: [],
     state: 'LOADING',
-    sum: 0
+    sum: 0,
+    filters: {}
   }
 }
 
@@ -49,6 +50,9 @@ const mutations = {
   },
   [SET_TODAY_GRAPH_STATE] (state, data) {
     state.today.state = data
+  },
+  [SET_TODAY_FILTERS] (state, data) {
+    state.today.filters = data
   },
   [SET_DASHBOARD_FILTERS] (state, data) {
     state.dashboard.filters = data
@@ -91,13 +95,15 @@ const actions = {
     cache = true
   } = {}) {
     var url = rootGetters.isAdmin ? 'v2/accounts/dashboard/graph.json' : 'v1/clients/dashboard/graph'
+    var params = state.today.filters
+    var query = Utils.createDashboardDateQuery(params)
     commit(SET_TODAY_GRAPH_STATE, 'LOADING')
     if (cache && state.today.data.length !== 0) {
       commit(SET_TODAY_GRAPH_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {
         apiCall({
-          url: `${GET_BASE_URI}${url}?time_interval=day`,
+          url: `${GET_BASE_URI}${url}${query}`,
           method: 'GET',
           token: rootGetters.token
         }).then((response) => {
@@ -118,6 +124,17 @@ const actions = {
         })
       })
     }
+  },
+  [SET_TODAY_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
+    commit(SET_TODAY_FILTERS, filters)
+    return new Promise((resolve, reject) => {
+      dispatch('getTodayGraph', {cache: false})
+        .then((response) => {
+          resolve(response)
+        }).catch((error) => {
+          reject(error)
+        })
+    })
   },
   [SET_DASHBOARD_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_DASHBOARD_FILTERS, filters)
