@@ -7,7 +7,7 @@
                         <p class="p-0 m-0">Account Balance</p>
                         <p class="p-0 m-0 bold-600 ml-16">{{ balance | money }}</p>
                     </div>
-                    <div class="flex align-items-center">
+                    <div class="flex align-items-center justify-content-between">
                         <el-date-picker class="transparent-input" ref="datePick"
                             v-model="currentDate"
                             @change="handleChange"
@@ -16,7 +16,7 @@
                             :picker-options="pickerOptions"
                             placeholder="Today">
                             </el-date-picker>
-                            <i style="font-size: 0.9em" @click="openDate" class="caret down icon"></i>
+                            <i style="font-size: 0.9em" @click="openDate" class="el-icon-arrow-down cursor"></i>
                         <!-- <p class="p-0 m-0 bold-600 little-money" style="padding-left: 16px">{{ sum | money }}</p> -->
                     </div>
                 </div>

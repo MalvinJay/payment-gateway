@@ -25,6 +25,7 @@ export default {
   name: 'Login',
   data () {
     return {
+
       form: {
         email: ''
       },
@@ -42,13 +43,16 @@ export default {
         this.loading = true
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$store.dispatch('sendEmail', this.form)
+            this.$store.dispatch('sendEmail', this.form.email)
             .then((response) => {
                 if (response.data.success) {
                    this.$message({
                         message: response.data.response.message,
                         type: 'success'
-                    }) 
+                    })
+                    setTimeout(() => {
+                        this.$router.push('/login')
+                    },2000);                    
                 } else {
                     this.$message({
                         message: response.data.response.message,
