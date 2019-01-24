@@ -109,7 +109,7 @@ export default {
                 window.open('https://developer.flopay.io/','_blank')
                 break
             case 'manual':
-                this.$router.push('/profile')
+                window.open('https://manual.flopay.io/','_blank')
                 break
             default:
                 break
