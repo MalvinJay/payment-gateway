@@ -271,9 +271,9 @@ let router = new Router({
       }
     },
     {
-      path: '/change_password',
+      path: '/reset_password',
       name: 'FirstTimeLogin',
-      component: FirstTimeLogin
+      component: FirstTimeLogin,
     },
     {
       path: '/forgot-password',

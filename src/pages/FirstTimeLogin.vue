@@ -32,7 +32,11 @@ export default {
   name: 'FirstTimeLogin',
   data () {
     return {
-      form: {},
+      form: {
+            email: '',
+            current_password: '',
+            password: '',
+      },
       loading: false,
       type: 'password',
       current_type: 'password',
@@ -49,19 +53,26 @@ export default {
       }
     }
   },
+  mounted() {
+    // console.log('QueryParams: ', this.$route.query.token)
+  },
   methods: {
     changePassword (formName) {
+        if(this.$route.query.token){
+            this.form.token = this.$route.query.token
+        }
+
         this.loading = true
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$store.dispatch('resetPassword', form)
+            this.$store.dispatch('resetPassword', this.form)
             .then((response) => {
                 if (response.data.success) {
                     this.$message({
                         message: response.data.response.message,
                         type: 'success'
                     })
-                    // this.$router.push('/')
+
                     if (this.$session.has('client')) {
                         // login sucessful
                         this.$store.dispatch('getToken')
@@ -71,6 +82,12 @@ export default {
                             this.$store.dispatch('setToken', response.data.access_token)
                             this.$router.push('/')
                         })
+                    } else {
+                        this.$message({
+                            message: 'Password reset successful, login with your new credentials',
+                            type: 'success'
+                        })      
+                        this.$router.push('/login')
                     }
                 } else {
                     this.$message({

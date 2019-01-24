@@ -168,7 +168,7 @@ export default {
         //   console.log('View foolish event!!:', ev[i].request.transaction.service_code)
         // }
 
-        console.log(`REQUEST ${ev[i].id}: `, ev[i].request)
+        // console.log(`REQUEST ${ev[i].id}: `, ev[i].request)
         
         // var status = ev[i].request.transaction.status
         // var amount = ev[i].request.transaction.amount

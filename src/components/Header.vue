@@ -26,7 +26,7 @@
                 </div>
                 <div class="v-divider"></div>
             </div>
-            <el-dropdown @command="handleDocCommand" style="height: 17px" class="mr-2" trigger="click">
+            <el-dropdown @command="handleDocCommand" style="height: 17px" class="mr-2 cursor" trigger="click">
                 <span class="el-dropdown-link">
                     <img class="img-fluid" src="../assets/images/icons/bookmark.svg" alt="">
                 </span>
@@ -35,7 +35,7 @@
                     <el-dropdown-item command="manual">User Manual</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            <el-dropdown id="v-step-0" class="logout-dropdown" @command="handleCommand" trigger="click">
+            <el-dropdown id="v-step-0" class="logout-dropdown cursor" @command="handleCommand" trigger="click">
                 <span class="el-dropdown-link">
                     <!-- <img class="img-big circle" src="../assets/images/profile/profile.jpg" alt=""> -->
                     <avatar :size="28" :username="clientName"></avatar>

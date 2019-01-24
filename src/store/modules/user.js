@@ -121,17 +121,22 @@ const user = {
         }
         axios.post(url)
           .then((response) => {
-            localStorage.setItem('login', true)
-            // localStorage.setItem('isAdmin', false)
-            // commit(SET_CLIENT, response.data.response.data.client)
-            // localStorage.setItem('name', response.data.response.data.client.full_name)
-            // localStorage.setItem('company', response.data.response.data.client.company_name)
-            // localStorage.setItem('email', response.data.response.data.client.email)
-            // localStorage.setItem('balance', response.data.response.data.available_balance)
-            // commit(SET_CLIENT_CRED, response.data.response.data.access_key)
-            localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
-            localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
-            resolve(response)
+            console.log('Data after login: ', response.data.response.data)
+            if(response.data.response.data != null) {
+              localStorage.setItem('login', true)
+              // localStorage.setItem('isAdmin', false)
+              // commit(SET_CLIENT, response.data.response.data.client)
+              // localStorage.setItem('name', response.data.response.data.client.full_name)
+              // localStorage.setItem('company', response.data.response.data.client.company_name)
+              // localStorage.setItem('email', response.data.response.data.client.email)
+              // localStorage.setItem('balance', response.data.response.data.available_balance)
+              // commit(SET_CLIENT_CRED, response.data.response.data.access_key)
+              localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
+              localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
+              resolve(response)
+            } else {
+              resolve(response)
+            }
           }).catch((error) => {
             console.log(error)
             reject(error)
@@ -213,14 +218,14 @@ const user = {
     // RESET PASSWORD
     [RESET_PASSWORD] ({ state, commit, rootGetters }, form) {
       return new Promise((resolve, reject) => {
-        var url = `${GET_BASE_URI}v2/accounts/send_password_reset_link`
+        var url = `${GET_BASE_URI}v2/accounts/reset_password?token=${form.token}`
         apiCall({
           url: url,
-          method: 'POST',
+          method: 'PUT',
           token: rootGetters.token,
           data: form
         }).then((response) => {
-          commit(SET_BALANCE, response.data)
+          // commit(SET_BALANCE, response.data)
           resolve(response)
         }).catch((error) => {
           console.log(error)
@@ -231,7 +236,8 @@ const user = {
     // EMAIL
     [SEND_EMAIL] ({ state, commit }, email) {
       return new Promise((resolve, reject) => {
-        var url = `${GET_BASE_URI}v1/flopay_platform/login.json?email=${email}`
+        var origin = window.location.origin;
+        var url = `${GET_BASE_URI}v2/accounts/send_password_reset_link.json?email=${email}&origin=${origin}`
         axios.post(url)
           .then((response) => {
             resolve(response)
