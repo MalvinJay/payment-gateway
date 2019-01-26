@@ -16,6 +16,7 @@
                     <el-date-picker
                     v-model="dateColumns"
                     type="daterange"
+                    @change="dateRangeClicked"
                     start-placeholder="Start date"
                     end-placeholder="End date">
                     </el-date-picker>
@@ -90,11 +91,16 @@ export default {
       }
     },
     methods: {
-      handleCheckAllChange (val) {
+      dateRangeClicked(){
+        this.reset()
+      },
+      handleCheckAllChange (val) {    
+        this.reset()     
         this.form.payment_types = val ? this.types.map(el => el.value) : []
         this.isIndeterminate = false
       },
-      handleCheckedTypesChange (value) {
+      handleCheckedTypesChange (value) {   
+        this.reset()      
         let checkedCount = value.length
         this.checkAll = checkedCount === this.types.length
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.types.length
@@ -121,7 +127,9 @@ export default {
             this.$store.dispatch('submitReport', query)
             .then((response) => {
                 if (response.data.success) {
-                    this.ready = true
+                    // if(this.link)
+                    // this.ready = true
+
                     this.$message({
                         type: 'success',
                         message: response.data.response.message,
@@ -129,12 +137,12 @@ export default {
                     // var link = document.getElementById('dwnl').href = response.data.response.data.file_name
                     // link.href = this.link
                 } else {
+                    this.loading = false
                     this.$message({
                         type: 'error',
                         message: response.data.response.message
                     })
                 }
-                this.loading = false
             }).catch((error) => {
                 this.loading = false
                 const response = error.response
@@ -153,6 +161,14 @@ export default {
           }
         })
       },
+      toggleDownload() {
+        this.loading = false
+        this.ready = true
+      },
+      reset() {
+        this.loading = false
+        this.ready = false           
+      }
     //   download () {
     //     var link = document.getElementById('dwnl')
     //     link.href = `https://api.flopay.io/v1/clients/reports/download?access_token=${this.token}&file_name=${this.link}`
@@ -163,7 +179,10 @@ export default {
     //     })
     //   }
     },
-    created () {
+    created() {
+    },
+    mounted() {
+        EventBus.$on('toggleDownload', this.toggleDownload)
     },
     computed: {
         ...mapGetters({

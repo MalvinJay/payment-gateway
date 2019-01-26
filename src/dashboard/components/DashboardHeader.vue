@@ -15,8 +15,8 @@
                             value-format="yyyy-MM-dd"
                             :picker-options="pickerOptions"
                             placeholder="Today">
-                            </el-date-picker>
-                            <i style="font-size: 0.9em" @click="openDate" class="el-icon-arrow-down cursor"></i>
+                        </el-date-picker>
+                        <i style="font-size: 0.9em" @click="openDate" class="el-icon-arrow-down cursor"></i>
                         <!-- <p class="p-0 m-0 bold-600 little-money" style="padding-left: 16px">{{ sum | money }}</p> -->
                     </div>
                 </div>
@@ -289,7 +289,22 @@ export default {
                 date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
                 picker.$emit('pick', date);
             }
-            }]
+            }, {
+            text: 'A month ago',
+            onClick(picker) {
+                const date = new Date();
+                date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
+                picker.$emit('pick', date);
+            }
+            }, {
+            text: 'A year ago',
+            onClick(picker) {
+                const date = new Date();
+                date.setTime(date.getTime() - 3600 * 1000 * 24 * 365);
+                picker.$emit('pick', date);
+            }
+            }
+            ]
         },
         currentDate: ''
     }

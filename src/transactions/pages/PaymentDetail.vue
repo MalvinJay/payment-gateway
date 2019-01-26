@@ -249,7 +249,10 @@ export default {
                 {label: 'message id', dataField: 'response_id', align: 'center'},
                 {label: 'delivery status', dataField: 'response_message', align: 'left'},
                 {label: 'recipient', dataField: 'recipient_no', align: 'left'}
-            ]
+            ],
+            styleObject: {
+                
+            }
         }
     },
     created () {
