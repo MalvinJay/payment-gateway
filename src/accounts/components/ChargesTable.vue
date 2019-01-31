@@ -107,11 +107,11 @@ data() {
     }
 },   
 
-created() {
+created () {
     this.$store.dispatch('getFees');
 },
 
-mounted() {
+mounted () {
     EventBus.$emit('sideNavClick', 'view');
     EventBus.$on('exportModal', (val) => {
         this.exportVisible = false
