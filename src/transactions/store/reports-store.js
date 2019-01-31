@@ -2,6 +2,7 @@ import { GET_FIELDS, SET_FIELDS, SET_DOWNLOAD_LINK, SET_FIELDS_STATE,
   SUBMIT_REPORT, DOWNLOAD_REPORT, SUBMIT_JOB_REPORT, GET_REPORT } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import { GET_BASE_URI } from '../../store/constants'
+import bus from '@/event-bus'
 
 // state
 const state = {
@@ -88,17 +89,20 @@ const actions = {
         token: rootGetters.token
       }).then((response) => {
         if (response.data.success) {
-          state.job_id = response.data.response.data.job_id
+          state.job_id = response.data.response.data.job_id          
           dispatch(GET_REPORT, state.job_id)
-            .then((response) => {
-              resolve(response)
-            }).catch((error) => {
-              reject(error)
-            })
+          .then((response) => {
+            resolve(response)
+          }).catch((error) => {
+            reject(error)
+          })
+
+          resolve(response)
         }
       }).catch((error) => {
         commit(SET_FIELDS_STATE, 'ERROR')
         console.log(error)
+
         reject(error)
       })
     })
@@ -112,11 +116,19 @@ const actions = {
       }).then((response) => {
         if (response.data.response.data.done) {
           commit(SET_DOWNLOAD_LINK, response.data.response.data.file_name)
+          // trigger an event to set the 'download' button active
+          bus.$emit('toggleDownload')
+
           resolve(response)
         } else {
           reject(response)
           setTimeout(() => {
             dispatch(GET_REPORT, jobId)
+            .then((response) => {
+              resolve(response)
+            }).catch((error) => {
+              reject(error)
+            })            
           }, 5000)
         }
       }).catch((error) => {
