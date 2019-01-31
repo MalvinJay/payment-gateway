@@ -11,6 +11,14 @@
             <div class="p-20">
                 <!-- JOB FORM -->
                 <el-form size="mini" class="default-form" label-position="right" :rules="rules" ref="form" :model="form" label-width="250px">
+                    <!-- JOB SERVICE CODE -->
+                    <el-form-item label="Service Code">
+                        <el-select v-model="form.service_code">
+                            <el-option label="Payout" value="cashin"></el-option>
+                            <el-option label="Payment" value="cashout"></el-option>
+                            <el-option label="Direct Payment" value="direct_payment"></el-option>
+                        </el-select>
+                    </el-form-item>
                     <!-- NAME -->
                     <el-form-item label="Job name" prop="description">
                         <el-input class="w-25" v-model="form.description"></el-input>
@@ -26,17 +34,10 @@
                         </el-input>
                     </el-form-item> -->
                     <!-- JOB LIMIT -->
-                    <el-form-item label="Retry Limit">
+                    <el-form-item v-if="form.service_code !== 'direct_payment'" label="Retry Limit">
                         <el-input class="w-25" v-model.number="form.retry_limit"></el-input>
                     </el-form-item>
-                    <!-- JOB SERVICE CODE -->
-                    <el-form-item label="Service Code">
-                        <el-select v-model="form.service_code">
-                            <el-option label="Payout" value="cashin"></el-option>
-                            <el-option label="Payment" value="cashout"></el-option>
-                            <el-option label="Direct Payment" value="direct_payment"></el-option>
-                        </el-select>
-                    </el-form-item>
+                    
                     <!-- START TO END DATE -->
                     <el-form-item label="Start to End Date">
                         <el-date-picker v-model="daterange" type="daterange"></el-date-picker>
