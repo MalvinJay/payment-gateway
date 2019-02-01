@@ -34,7 +34,7 @@
                         </el-input>
                     </el-form-item> -->
                     <!-- JOB LIMIT -->
-                    <el-form-item label="Retry Limit">
+                    <el-form-item v-if="form.service_code !== 'direct_payment'" label="Retry Limit">
                         <el-input class="w-25" v-model.number="form.retry_limit"></el-input>
                     </el-form-item>
                     <!-- START TO END DATE -->
