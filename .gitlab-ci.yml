@@ -6,7 +6,7 @@ deploy to production:
   image: python:latest
   script:
   - pip install awscli
-  - aws s3 cp dist/ s3://$S3_BUCKET_NAME/ --recursive --include "*" --exclude ".gitlab-ci.yml*" --exclude "*.git*" --exclude "*.sass-cache*" --include "*.html"
+  - aws s3 cp dist/ s3://$S3_BUCKET_NAME/ --recursive --include "*" --exclude ".gitlab-ci.yml" --exclude "*.git*" --exclude "*.sass-cache*" --include "*.html" --include "*.js" "static/js/*"
   only:
   - master
 
