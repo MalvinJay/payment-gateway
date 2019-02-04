@@ -23,7 +23,7 @@
                                 </el-upload>
                             </el-form-item> -->
                             <el-form-item v-for="(item, index) in columns" :key="index" :label="item.label">
-                                <el-input v-if="item.type === 'input'" v-model="user.client[item.model]"></el-input>
+                                <el-input :disabled="item.editable" v-if="item.type === 'input'" v-model="user.client[item.model]"></el-input>
                                 <p v-if="item.subtext" class="my-1">
                                     <span class="info s-12 pl-6">{{item.subtext}}</span>
                                 </p>
@@ -170,7 +170,7 @@ export default {
       fileList: [],
       columns: [
         { label: 'Client Name', type: 'input', model: 'full_name', subtext: 'Enter your client name.'},
-        { label: 'Client Till', type: 'input', model: 'code'},
+        { label: 'Client Till', type: 'input', model: 'code', editable: true},
         { label: 'Client Company', type: 'input', model: 'company_name', subtext: `Enter your company's name.`},
         { label: 'Phone Number', type: 'input', model: 'msisdn'},
         { label: 'Email', type: 'input', model: 'email', subtext: 'We also use email for avatar detection if no photo is uploaded.'},

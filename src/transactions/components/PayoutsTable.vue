@@ -5,7 +5,7 @@
                 <filter-component dispatch="setPayoutsFilters" filterType="payouts"></filter-component>
             </div>
             <div>
-                <el-button v-can="'Make Payout'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New</el-button>
+                <el-button v-can="'Make Payout'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> Make Payment</el-button>
                 <el-button v-can="'Generate Reports'" @click="exportVisible = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button>
             </div>
         </div>
@@ -97,14 +97,14 @@
         </div>
         <!-- New Payout -->
         <el-dialog custom-class="new-transaction"
-            title="Create New Payout - Mobile Money"
+            title="Create New Payment - Mobile Money"
             :visible.sync="dialogVisible"
             width="30%">
             <div class="flex justify-content-center new-transaction-bg">
                 <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="120px">
                     <el-form-item label="Type of transaction">
                         <el-select v-model="form.service_code">
-                            <el-option label="Payout" value="cashin"></el-option>
+                            <el-option label="Make Payment" value="cashin"></el-option>
                             <el-option v-service="'Airtime'" label="Airtime" value="airtime"></el-option>
                             <el-option v-service="'Billpay'" label="Bill Payment" value="bill"></el-option>
                         </el-select>
@@ -167,7 +167,7 @@
             <span slot="footer" class="dialog-footer">
                 <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="close">Cancel</el-button>
                 <el-button v-if="form.service_code === 'bill'" size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="billPayment('form')">Initiate Bill Payment</el-button>
-                <el-button v-else size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Initiate Payout</el-button>
+                <el-button v-else size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="submitForm('form')">Initiate Payment</el-button>
             </span>
         </el-dialog>
         <export-modal type="withdrawal" :modalVisible.sync="exportVisible"></export-modal>
