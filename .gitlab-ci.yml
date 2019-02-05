@@ -1,4 +1,4 @@
-mage: alpine
+image: alpine
 
 deploy:
   script:
