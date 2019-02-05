@@ -20,7 +20,7 @@
                     <!-- <div class="v-step-1">A DOM element on your page. The second step will pop on this element because its ID is 'v-step-1'.</div>
                     <div data-v-step="2">A DOM element on your page. The third and final step will pop on this element because its ID is 'v-step-2'.</div> -->
 
-                    <v-tour name="myTour" :steps="steps"></v-tour>
+                    <!-- <v-tour name="myTour" :steps="steps"></v-tour> -->
                 </div>
             </el-main>
         </el-container>
@@ -93,6 +93,7 @@ export default {
         this.$store.dispatch('getJobs', {cache: false})
         this.$store.dispatch('getQueues', {cache: false})
         this.$store.dispatch('getPayouts', {cache: false})
+        this.$store.dispatch('getFields', {cache: false})
         this.$store.dispatch('getBalance')
     },
     leaving () {

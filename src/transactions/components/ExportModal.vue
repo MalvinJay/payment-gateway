@@ -91,7 +91,7 @@ export default {
       }
     },
     methods: {
-      dateRangeClicked(){
+      dateRangeClicked () {
         this.reset()
       },
       handleCheckAllChange (val) {    
@@ -120,6 +120,7 @@ export default {
       submitExport (formName) {
         this.loading = true
         this.form.cash_flow = this.type
+        this.form.payment_types = this.form.payment_types.length === 3 ? [] : this.form.payment_types
         this.form.fields = this.column === 'all' ? this.fieldSet.map(el => el.key).join(',') : this.form.fields
         var query = Utils.createExportQuery(this.form)
         this.$refs[formName].validate((valid) => {
@@ -128,7 +129,7 @@ export default {
             .then((response) => {
                 if (response.data.success) {
                     // if(this.link)
-                    // this.ready = true
+                    this.ready = true
 
                     this.$message({
                         type: 'success',
@@ -161,11 +162,11 @@ export default {
           }
         })
       },
-      toggleDownload() {
+      toggleDownload () {
         this.loading = false
         this.ready = true
       },
-      reset() {
+      reset () {
         this.loading = false
         this.ready = false           
       }
@@ -179,9 +180,9 @@ export default {
     //     })
     //   }
     },
-    created() {
+    created () {
     },
-    mounted() {
+    mounted () {
         EventBus.$on('toggleDownload', this.toggleDownload)
     },
     computed: {
