@@ -7,7 +7,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css'
 import 'element-ui/lib/theme-chalk/base.css'
-import './assets/styles/element-variables.scss' 
+import './assets/styles/element-variables.scss'
 import locale from 'element-ui/lib/locale/lang/en'
 import '@/assets/styles/app.scss'
 import components from './components'
@@ -16,18 +16,18 @@ import store from './store/store.js'
 import VueMoment from 'vue-moment'
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 import IdleVue from 'idle-vue'
-import VueLocalStorage from 'vue-localstorage'
+// import VueLocalStorage from 'vue-localstorage'
 import VueSession from 'vue-session'
 import highlightJs from 'highlight.js'
-import VueTour from 'vue-tour'
+// import VueTour from 'vue-tour'
 
-require('vue-tour/dist/vue-tour.css')
+// require('vue-tour/dist/vue-tour.css')
 
-Vue.use(VueTour)
+// Vue.use(VueTour)
 
 Vue.use(highlightJs)
 Vue.use(VueSession)
-Vue.use(VueLocalStorage)
+// Vue.use(VueLocalStorage)
 Vue.use(ElementUI, {locale})
 Vue.use(VueMoment)
 Vue.component(components)
@@ -66,7 +66,7 @@ Vue.filter('capitalize', function (value) {
 })
 
 Vue.directive('can', {
-  bind: function (el, binding, vnode) {
+  bind: function (el, binding) {
     if (store.getters.permissions.find(el => el.action.toLowerCase() === binding.value.toLowerCase())) {
       return true
     } else {
@@ -76,7 +76,7 @@ Vue.directive('can', {
 })
 
 Vue.directive('service', {
-  bind: function (el, binding, vnode) {
+  bind: function (el, binding) {
     if (store.getters.services.find(el => el.name.toLowerCase() === binding.value.toLowerCase())) {
       return true
     } else {

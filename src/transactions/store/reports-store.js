@@ -89,14 +89,13 @@ const actions = {
         token: rootGetters.token
       }).then((response) => {
         if (response.data.success) {
-          state.job_id = response.data.response.data.job_id          
+          state.job_id = response.data.response.data.job_id
           dispatch(GET_REPORT, state.job_id)
-          .then((response) => {
-            resolve(response)
-          }).catch((error) => {
-            reject(error)
-          })
-
+            .then((response) => {
+              resolve(response)
+            }).catch((error) => {
+              reject(error)
+            })
           resolve(response)
         }
       }).catch((error) => {
@@ -124,11 +123,11 @@ const actions = {
           reject(response)
           setTimeout(() => {
             dispatch(GET_REPORT, jobId)
-            .then((response) => {
-              resolve(response)
-            }).catch((error) => {
-              reject(error)
-            })            
+              .then((response) => {
+                resolve(response)
+              }).catch((error) => {
+                reject(error)
+              })
           }, 5000)
         }
       }).catch((error) => {

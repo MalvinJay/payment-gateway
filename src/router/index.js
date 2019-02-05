@@ -3,52 +3,63 @@ import Router from 'vue-router'
 import store from '../store/store'
 import Client from '@/pages/Client'
 import Login from '@/pages/Login'
-import NotFound from '@/pages/NotFound'
 import Dashboard from '@/dashboard/pages/Dashboard'
 import ViewTransactions from '../transactions/pages/ViewTransactions'
-import PaymentDetail from '../transactions/pages/PaymentDetail'
-import ContactDetails from '../contacts/pages/ContactDetails'
-import Settings from '@/pages/client/transactions/Settings'
-import NewProduct from '@/pages/client/transactions/NewProduct'
-import BsSettings from '@/business/pages/BsSettings'
-import Taxation from '@/business/pages/Taxation'
-import Teams from '@/business/pages/Teams'
-import Roles from '@/business/pages/Roles'
-import Branches from '@/business/pages/Branches'
-import Reports from '@/business/pages/Reports'
+
+const PaymentDetail = () => import(/* webpackChunkName: "payment" */ '../transactions/pages/PaymentDetail')
+const ContactDetails = () => import(/* webpackChunkName: "payment" */ '../contacts/pages/ContactDetails')
+const NotFound = () => import(/* webpackChunkName: "payment" */ '../pages/NotFound')
+const BsSettings = () => import(/* webpackChunkName: "payment" */ '../business/pages/BsSettings')
+const Teams = () => import(/* webpackChunkName: "payment" */ '../business/pages/Teams')
+const Roles = () => import(/* webpackChunkName: "payment" */ '../business/pages/Roles')
+const Branches = () => import(/* webpackChunkName: "payment" */ '../business/pages/Branches')
+const Jobs = () => import(/* webpackChunkName: "payment" */ '../transactions/pages/Jobs')
+// import PaymentDetail from '../transactions/pages/PaymentDetail'
+// import ContactDetails from '../contacts/pages/ContactDetails'
+
+// import NotFound from '@/pages/NotFound'
+
+// import Settings from '@/pages/client/transactions/Settings'
+// import NewProduct from '@/pages/client/transactions/NewProduct'
+// import BsSettings from '@/business/pages/BsSettings'
+// import Taxation from '@/business/pages/Taxation'
+// import Teams from '@/business/pages/Teams'
+// import Roles from '@/business/pages/Roles'
+// import Branches from '@/business/pages/Branches'
+// import Reports from '@/business/pages/Reports'
 // import JobDetails from '../transactions/pages/JobDetails'
-import Jobs from '../transactions/pages/Jobs'
+// import Jobs from '../transactions/pages/Jobs'
 
-const Customers = () => import('../contacts/pages/Customers')
-const Payouts = () => import('../transactions/pages/Payouts')
-const NewJob = () => import('../transactions/pages/NewJob')
-const Disputes = () => import('../transactions/pages/Disputes')
-const JobDetails = () => import('../transactions/pages/JobDetails')
-const JobContactDetails = () => import('../contacts/pages/JobContactDetails')
-const RunDetails = () => import('../transactions/pages/RunDetails')
+const Customers = () => import(/* webpackChunkName: "customer" */ '../contacts/pages/Customers')
+const Payouts = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/Payouts')
+const NewJob = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/NewJob')
+const Disputes = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/Disputes')
+const JobDetails = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/JobDetails')
+const JobContactDetails = () => import(/* webpackChunkName: "customer" */ '../contacts/pages/JobContactDetails')
+const RunDetails = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/RunDetails')
 
-const FirstTimeLogin = () => import('../pages/FirstTimeLogin')
-const ResetPassword = () => import('../pages/ResetPassword')
-const Profile = () => import('../pages/client/Profile')
+const FirstTimeLogin = () => import(/* webpackChunkName: "fone" */ '../pages/FirstTimeLogin')
+const ResetPassword = () => import(/* webpackChunkName: "fone" */ '../pages/ResetPassword')
+const Profile = () => import(/* webpackChunkName: "fone" */ '../pages/client/Profile')
 
-const FoneMessenger = () => import('../fonemessenger/pages/FoneMessenger')
-const Fees = () => import('../accounts/pages/Fees')
-const FeesDetail = () => import('../accounts/pages/FeesDetail')
-const TopUps = () => import('../accounts/pages/TopUps')
-const Settlements = () => import('../accounts/pages/Settlements')
-const Account = () => import('../connect/pages/Account')
-const AccountDetail = () => import('../connect/pages/AccountDetail')
-const AccountSettlements = () => import('../connect/pages/AccountSettlements')
-const AccountFees = () => import('../connect/pages/AccountFees')
+const FoneMessenger = () => import(/* webpackChunkName: "fone" */ '../fonemessenger/pages/FoneMessenger')
+const Fees = () => import(/* webpackChunkName: "fone" */ '../accounts/pages/Fees')
+const FeesDetail = () => import(/* webpackChunkName: "fone" */ '../accounts/pages/FeesDetail')
+const TopUps = () => import(/* webpackChunkName: "account" */ '../accounts/pages/TopUps')
+const Settlements = () => import(/* webpackChunkName: "account" */ '../accounts/pages/Settlements')
+const Account = () => import(/* webpackChunkName: "connect" */ '../connect/pages/Account')
+const AccountDetail = () => import(/* webpackChunkName: "connect" */ '../connect/pages/AccountDetail')
+const AccountSettlements = () => import(/* webpackChunkName: "connect" */ '../connect/pages/AccountSettlements')
+const AccountFees = () => import(/* webpackChunkName: "connect" */ '../connect/pages/AccountFees')
 
-const Logs = () => import('../developers/pages/Logs')
-const LogsDetails = () => import('../developers/pages/LogsDetails')
-const Events = () => import('../developers/pages/events')
-const EventsDetails = () => import('../developers/pages/EventsDetails')
-const Webhooks = () => import('../developers/pages/Webhooks')
-const WebhookDetails = () => import('../developers/pages/WebhookDetails')
-const APIKeys = () => import('../developers/pages/APIKeys')
-const Sandbox = () => import('../developers/pages/Sandbox')
+const Logs = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Logs')
+const LogsDetails = () => import(/* webpackChunkName: "developer" */ '../developers/pages/LogsDetails')
+const Events = () => import(/* webpackChunkName: "developer" */ '../developers/pages/events')
+const EventsDetails = () => import(/* webpackChunkName: "developer" */ '../developers/pages/EventsDetails')
+const Webhooks = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Webhooks')
+const WebhookDetails = () => import(/* webpackChunkName: "developer" */ '../developers/pages/WebhookDetails')
+const APIKeys = () => import(/* webpackChunkName: "developer" */ '../developers/pages/APIKeys')
+const Sandbox = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Sandbox')
 
 Vue.use(Router)
 
@@ -170,16 +181,6 @@ let router = new Router({
           component: FeesDetail
         },
         {
-          path: '/settings',
-          name: 'Settings',
-          component: Settings
-        },
-        {
-          path: '/product',
-          name: 'NewProduct',
-          component: NewProduct
-        },
-        {
           path: '/contacts',
           name: 'Customers',
           component: Customers
@@ -201,11 +202,6 @@ let router = new Router({
           component: BsSettings
         },
         {
-          path: '/taxation',
-          name: 'Taxation',
-          component: Taxation
-        },
-        {
           path: '/teams',
           name: 'Teams',
           component: Teams
@@ -219,11 +215,6 @@ let router = new Router({
           path: '/branches',
           name: 'Branches',
           component: Branches
-        },
-        {
-          path: '/reports',
-          name: 'Reports',
-          component: Reports
         },
         // disputes
         {
@@ -273,7 +264,7 @@ let router = new Router({
     {
       path: '/reset_password',
       name: 'FirstTimeLogin',
-      component: FirstTimeLogin,
+      component: FirstTimeLogin
     },
     {
       path: '/forgot-password',
