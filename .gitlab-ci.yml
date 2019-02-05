@@ -1,14 +1,15 @@
-variables:
-  S3_BUCKET_NAME: "dashboard.flopay.io"
+image: alpine
 
-deploy to production:
-  environment: production
-  image: python:latest
+deploy:
   script:
-  - pip install awscli
-  - aws s3 cp dist/* s3://$S3_BUCKET_NAME/ --recursive --include "*"
+    - apk add --no-cache rsync openssh
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - sudo rsync -rav --delete  dist/ $USER@$SERVER_IP:/var/www/dashboard.flopay.io
   only:
-  - master
+    - master
 
 pages:
   image: alpine:latest
