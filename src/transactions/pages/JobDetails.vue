@@ -22,7 +22,7 @@
                     </div>
                     </div>
                     <div>
-                        <el-button :loading="runLoading" @click="runJob" v-if="!form.scheduled" icon="undo icon" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain>Run Job</el-button>
+                        <el-button :loading="runLoading" @click="runJob" v-if="!form.scheduled && !form.is_mandate" icon="undo icon" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain>Run Job</el-button>
                     </div>
                 </div>
                 <div class="border-top px-20 py-10">

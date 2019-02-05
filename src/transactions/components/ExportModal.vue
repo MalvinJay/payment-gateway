@@ -122,6 +122,8 @@ export default {
         this.form.cash_flow = this.type
         this.form.fields = this.column === 'all' ? this.fieldSet.map(el => el.key).join(',') : this.form.fields
         var query = Utils.createExportQuery(this.form)
+        console.log('form fields', this.form)
+        console.log('report query', query)
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$store.dispatch('submitReport', query)
@@ -161,11 +163,11 @@ export default {
           }
         })
       },
-      toggleDownload() {
+      toggleDownload () {
         this.loading = false
         this.ready = true
       },
-      reset() {
+      reset () {
         this.loading = false
         this.ready = false           
       }
