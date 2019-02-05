@@ -14,9 +14,9 @@
                     <!-- JOB SERVICE CODE -->
                     <el-form-item label="Service Code">
                         <el-select v-model="form.service_code">
-                            <el-option label="Payout" value="cashin"></el-option>
-                            <el-option label="Payment" value="cashout"></el-option>
-                            <el-option label="Direct Payment" value="direct_payment"></el-option>
+                            <el-option label="Payment" value="cashin"></el-option>
+                            <el-option label="Receipt" value="cashout"></el-option>
+                            <el-option label="Direct Debit" value="direct_payment"></el-option>
                         </el-select>
                     </el-form-item>
                     <!-- NAME -->
@@ -37,7 +37,6 @@
                     <el-form-item v-if="form.service_code !== 'direct_payment'" label="Retry Limit">
                         <el-input class="w-25" v-model.number="form.retry_limit"></el-input>
                     </el-form-item>
-                    
                     <!-- START TO END DATE -->
                     <el-form-item label="Start to End Date">
                         <el-date-picker v-model="daterange" type="daterange"></el-date-picker>

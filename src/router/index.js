@@ -85,7 +85,7 @@ let router = new Router({
           component: Dashboard
         },
         {
-          path: '/payments',
+          path: '/receipts',
           name: 'ViewTransactions',
           component: ViewTransactions
         },
@@ -110,7 +110,7 @@ let router = new Router({
           component: NewJob
         },
         {
-          path: '/payouts',
+          path: '/payments',
           name: 'Payouts',
           component: Payouts
         },

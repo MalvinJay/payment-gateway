@@ -2,7 +2,7 @@
     <div>
         <el-tabs class="default-tab" :class="[{'test-data': test}, 'position-relative']" stretch type="border-card">
             <!-- <div v-show="test" class="position-absolute bg-orange test">TEST DATA</div> -->
-            <el-tab-pane label="Payouts">
+            <el-tab-pane label="Payments">
                 <!-- FOUND IN TRANSACTIONS/COMPONENTS -->
                 <payouts-table type="payout"></payouts-table>
             </el-tab-pane>

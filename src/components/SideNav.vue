@@ -25,9 +25,9 @@
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/payment.svg" alt="">Transactions
                 </template>
-                <el-menu-item route="/payments" index="payments">Payments</el-menu-item>
-                <el-menu-item route="/payouts" index="payouts">Payouts</el-menu-item>
-                <el-menu-item route="/jobs" index="jobs">Jobs</el-menu-item>
+                <el-menu-item route="/receipts" index="payments">Receipts</el-menu-item>
+                <el-menu-item route="/payments" index="payouts">Payments</el-menu-item>
+                <el-menu-item route="/jobs" index="jobs">Jobs and Bulk Payment</el-menu-item>
                 <el-menu-item route="/disputes" index="disputes">Disputes</el-menu-item>
                 <el-menu-item v-if="false" class="v-step-1" index="2-4">Settings</el-menu-item>
             </el-submenu>
