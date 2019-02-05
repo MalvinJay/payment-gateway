@@ -292,7 +292,16 @@
                             <template slot-scope="scope">
                                 {{scope.row.amount | money}}
                             </template>
-                        </el-table-column>
+                        </el-table-column>     
+                        <el-table-column prop="status" label="status" >
+                            <template slot-scope="scope">
+                                <div class="flex">
+                                    <the-tag v-if="scope.row.status === 'success'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-if="scope.row.status === 'pending'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-if="scope.row.status === 'failed'" status="failed" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                </div>
+                            </template>
+                        </el-table-column>                                           
                         <el-table-column prop="updated_at" label="date">
                             <template slot-scope="scope">
                                 {{scope.row.updated_at | moment("MMM Do, YYYY")}}
@@ -631,6 +640,7 @@ export default {
         },
         data2 () {
             var nForm = {
+                'reference': this.form.name ? this.form.name : '-',
                 'retry limit': this.form.retry_limit ? this.form.retry_limit : '-',
                 'last run': this.form.last_run  ? this.form.last_run : 'No previous run',
                 'next run': this.form.next_run  ? this.form.next_run : 'No run scheduled',
