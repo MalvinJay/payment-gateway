@@ -103,9 +103,9 @@ const actions = {
         }).then((response) => {
           commit(SET_JOBS_STATE, 'DATA')
           commit(SET_JOBS, response.data.response.data)
-          if (response.data.response.data.jobs.length === 0 && Utils.empty(state.currentJob.data)) {
-            dispatch('getCurrentJob', {id: response.data.response.data.jobs[0].id})
-          }
+          //   if (response.data.response.data.jobs.length === 0 && Utils.empty(state.currentJob.data)) {
+          //     dispatch('getCurrentJob', {id: response.data.response.data.jobs[0].id})
+          //   }
           resolve(response)
         }).catch((error) => {
           commit(SET_JOBS_STATE, 'ERROR')
