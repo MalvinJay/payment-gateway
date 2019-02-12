@@ -93,7 +93,9 @@ export default {
         this.$store.dispatch('getJobs', {cache: false})
         this.$store.dispatch('getQueues', {cache: false})
         this.$store.dispatch('getPayouts', {cache: false})
+        // table columns for reports
         this.$store.dispatch('getFields', {cache: false})
+        // account balance
         this.$store.dispatch('getBalance')
     },
     leaving () {

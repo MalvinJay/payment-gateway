@@ -262,6 +262,11 @@
                     header-row-class-name="transactions-table-header"
                     :data="form.contacts.slice((page * 12) - 12, page * 12)">
                         <el-table-column type="index"></el-table-column>
+                        <el-table-column label="#">
+                            <template slot-scope="scope">
+                                {{scope.row.amount | money}}
+                            </template>
+                        </el-table-column>
                         <!-- <el-table-column type="expand">
                             <template slot-scope="props">
                                 <div>
@@ -296,7 +301,7 @@
                         <el-table-column prop="status" label="status" >
                             <template slot-scope="scope">
                                 <div class="flex">
-                                    <the-tag v-if="scope.row.status === 'success'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-if="scope.row.status === 'success' || scope.row.status === 'completed'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
                                     <the-tag v-if="scope.row.status === 'pending'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag>
                                     <the-tag v-if="scope.row.status === 'failed'" status="failed" :title="scope.row.status" icon="detail check icon"></the-tag>
                                 </div>
