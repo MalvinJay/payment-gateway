@@ -272,10 +272,10 @@ export default {
     options () {
         var analytics = [
             {title: 'Gross Volume', id: 'line-chart', volume: this.grossVolume, chartData: this.chartData, chartOptions: this.chartOptions, popover: false},
-            {title: 'Payments', id: 'line-chart1', volume: this.depositVolume, chartData: this.chartDataDep, chartOptions: this.chartOptions, popover: true,
-            popoverContent: 'All payments recorded within the specified filters'},
-            {title: 'Payouts', id: 'line-chart2', volume: this.withVolume, chartData: this.chartDataWith, chartOptions: this.chartOptions, popover: true,
-            popoverContent: 'All payouts recorded within the specified filters'}
+            {title: 'Receipts', id: 'line-chart1', volume: this.depositVolume, chartData: this.chartDataDep, chartOptions: this.chartOptions, popover: true,
+            popoverContent: 'All receipts recorded within the specified filters'},
+            {title: 'Payments', id: 'line-chart2', volume: this.withVolume, chartData: this.chartDataWith, chartOptions: this.chartOptions, popover: true,
+            popoverContent: 'All payments recorded within the specified filters'}
         ]
         return analytics
     },

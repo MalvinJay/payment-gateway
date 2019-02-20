@@ -296,9 +296,12 @@
                         <el-table-column prop="status" label="status" >
                             <template slot-scope="scope">
                                 <div class="flex">
-                                    <the-tag v-if="scope.row.status === 'success'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
-                                    <the-tag v-if="scope.row.status === 'pending'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag>
-                                    <the-tag v-if="scope.row.status === 'failed'" status="failed" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-if="scope.row.status === 'failed'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-else status="pending" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    
+                                    <!-- <the-tag v-if="scope.row.status === 'success'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag> -->
+                                    <!-- <the-tag v-if="scope.row.status === 'completed'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag> -->
+                                    <!-- <the-tag v-if="scope.row.status === 'pending'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag> -->
                                 </div>
                             </template>
                         </el-table-column>                                           
