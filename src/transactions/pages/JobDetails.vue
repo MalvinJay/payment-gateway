@@ -21,7 +21,7 @@
                         <!-- <el-button size="mini" type="primary" :loading="runLoading" @click="runJob" v-else>Run Job</el-button> -->
                     </div>
                     </div>
-                    <div>
+                    <div v-can="'Approve Transactions'">
                         <el-button :loading="runLoading" @click="runJob" v-if="!form.scheduled && !form.is_mandate" icon="undo icon" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain>Run Job</el-button>
                     </div>
                 </div>
