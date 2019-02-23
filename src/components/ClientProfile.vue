@@ -106,7 +106,7 @@
                     <div class="w-50">
                         <el-row type="flex" align="middle" v-for="(value, key, index) in privileges.slice(0, privileges.length / 2 + 1)" :key="index" class="mb-1">
                             <el-col :span="12">
-                                <p class="m-0 text-capitalize menu-gray-text s-12">{{value.action}}</p>
+                                <p class="m-0 text-capitalize menu-gray-text s-13">{{value.action}}</p>
                             </el-col>
                             <el-col :span="12">
                                 <!-- <el-switch :active-value="value.value" v-model="value.value"></el-switch> -->
@@ -198,7 +198,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['user', 'pageSize']),
+    ...mapGetters(['user', 'permissions', 'pageSize']),
     services () {
         return this.user.account_services.map(el => {
             el.date = moment(el.created_at).format('D MMM,YY hh:mm A')
@@ -208,7 +208,8 @@ export default {
         })
     },
     privileges () {
-        return this.user.client.privileges
+        // return this.user.client.privileges
+        return this.permissions
     },
     deposit () {
         return this.user.deposit_accounts

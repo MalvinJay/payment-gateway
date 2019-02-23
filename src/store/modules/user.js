@@ -58,7 +58,7 @@ const user = {
     // client data
     [SET_CLIENT] (state, data) {
       if (!state.isAdmin) {
-        state.permissions.data = data.client.privileges
+        state.permissions.data = data.is_sub_user ? data.sub_user.user_group.privileges : data.client.privileges
         state.services.data = data.account_services
         state.banks = data.deposit_accounts[2].providers
         state.bills = data.deposit_accounts[1].providers
