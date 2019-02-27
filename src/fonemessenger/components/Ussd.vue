@@ -23,13 +23,14 @@
                 <div class="ussd_session" v-else>
                     <el-table ref="fone" @row-click="clickRow" empty-text="No ussd session available to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="ussd">
                         <el-table-column type="expand" width="55">
-                            <template slot-scope="scope">
+                            <template>
                                 <el-table
                                     empty-text="No ussd session available for this session_Id" 
                                     tooltip-effect="light" 
                                     header-row-class-name="transactions-table-header" 
                                     row-class-name="transactions-table-body ussd_session"
-                                    :data="currentUssdSession">
+                                    v-loading="loading"
+                                    :data="currentUssd">
                                         <el-table-column prop="message" label="Message"></el-table-column>
                                         <el-table-column prop="response" label="Response">
                                             <template slot-scope="scope">
@@ -53,11 +54,11 @@
                                 {{scope.row.timestamp | moment("D MMM,YY hh:mm A")}}
                             </template>
                         </el-table-column>
-                        <el-table-column label="ussd code" prop="ussdcode" width="auto">
+                        <!-- <el-table-column label="ussd code" prop="ussdcode" width="auto">
                             <template slot-scope="scope">
                                 {{scope.row.ussdcode}}
                             </template>
-                        </el-table-column>
+                        </el-table-column> -->
                     </el-table>
 
                     <div class="flex justify-content-between align-items-center px-10">
@@ -95,7 +96,7 @@ export default {
       test: true,
       columns: [
         {label: 'session id', dataField: 'sessionid', align: 'center', width: 'auto'},
-        {label: 'msisdn', dataField: 'msisdn', align: 'left', width: 'auto'},
+        {label: 'phone number', dataField: 'msisdn', align: 'left', width: 'auto'},
         {label: 'network', dataField: 'network', align: 'left', width: 'auto'},
         
       ],
@@ -128,8 +129,12 @@ export default {
     },
     clickRow (row, event, column) {
         // make a single ussd call
-
-        // this.$refs.fone.toggleRowExpansion(row)
+        this.$store.dispatch('getCurrentUssdSession', row.sessionid)
+        .then((response)=> {
+            console.log('CurrentUssd: ', this.currentUssdSession)
+            // this.$refs.fone.toggleRowExpansion(row)
+        })
+        this.$refs.fone.toggleRowExpansion(row)
     },
     fetchMessages () {
       this.$store.dispatch('getUssdSessions')
@@ -176,6 +181,9 @@ export default {
     },
     loading () {
       return this.state === 'LOADING'
+    },
+    currentUssd() {
+        return this.currentUssdSession
     }
   }
 }
