@@ -179,7 +179,7 @@ export default {
             isTest: true,
             form: {
                 name: '',
-                scheduled: true,
+                // scheduled: false,
                 schedule: "daily",
                 // beneficiaries: 'upload',
                 // times: [],

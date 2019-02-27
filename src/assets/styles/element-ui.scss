@@ -423,7 +423,7 @@ $border: #dcdfe6;
     }
 }
 
-.default-table-expanded{
+.default-table-expanded {
     .el-table__expanded-cell{
         padding: 0 20px;
     }
@@ -736,4 +736,10 @@ td.hljs-ln-code {
 
 .el-radio__label {
     display: none;
+}
+
+.ussd_session {
+    .el-table__expanded-cell {
+        padding: 10px;
+    }
 }
