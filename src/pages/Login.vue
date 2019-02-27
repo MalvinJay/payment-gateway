@@ -75,25 +75,16 @@ export default {
                     this.$session.start()
                     this.$session.set('client', JSON.stringify(response.data.response.data))
                     this.$session.set('email', this.form.email)
-                    // this.$store.dispatch('setClient', response.data.response.data)
 
-                    // if (!response.data.response.data.is_login_before && !this.admin) 
                     if(response.data.response.data.is_sub_user) {
-                        // axios.defaults.data.common["sub_user_id"] = response.data.response.data.sub_user.sub_user_id
                         if(!response.data.response.data.sub_user.is_login_before) {
                             this.$router.push('/reset_password')
                         } else {
                             if (this.$session.has('client')) {
-                                // login sucessful
                                 this.$store.dispatch('getToken')
                                 .then((response) => {
-                                    // SETTING TOKEN
                                     this.$session.set('token', response.data.access_token)
                                     this.$store.dispatch('setToken', response.data.access_token)
-                                    // this.$message({
-                                    //     message: 'Login successful',
-                                    //     type: 'success'
-                                    // })
                                     this.$router.push('/')
                                 })
                             } else {
@@ -101,19 +92,13 @@ export default {
                             }                            
                         }
                     } else if (!response.data.response.data.is_login_before) {
-                            this.$router.push('/reset_password')
+                                this.$router.push('/reset_password')
                             } else {
                                 if (this.$session.has('client')) {
-                                    // login sucessful
                                     this.$store.dispatch('getToken')
                                     .then((response) => {
-                                        // SETTING TOKEN
                                         this.$session.set('token', response.data.access_token)
                                         this.$store.dispatch('setToken', response.data.access_token)
-                                        // this.$message({
-                                        //     message: 'Login successful',
-                                        //     type: 'success'
-                                        // })
                                         this.$router.push('/')
                                     })
                                 } else {

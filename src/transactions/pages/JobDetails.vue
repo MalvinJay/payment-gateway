@@ -21,7 +21,7 @@
                         <!-- <el-button size="mini" type="primary" :loading="runLoading" @click="runJob" v-else>Run Job</el-button> -->
                     </div>
                     </div>
-                    <div>
+                    <div v-can="'Approve Transactions'">
                         <el-button :loading="runLoading" @click="runJob" v-if="!form.scheduled && !form.is_mandate" icon="undo icon" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain>Run Job</el-button>
                     </div>
                 </div>
@@ -301,9 +301,15 @@
                         <el-table-column prop="status" label="status" >
                             <template slot-scope="scope">
                                 <div class="flex">
-                                    <the-tag v-if="scope.row.status === 'success' || scope.row.status === 'completed'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <!-- <the-tag v-if="scope.row.status === 'success' || scope.row.status === 'completed'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
                                     <the-tag v-if="scope.row.status === 'pending'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag>
-                                    <the-tag v-if="scope.row.status === 'failed'" status="failed" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-if="scope.row.status === 'failed'" status="failed" :title="scope.row.status" icon="detail check icon"></the-tag> -->
+                                    <the-tag v-if="scope.row.status === 'failed'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-else status="pending" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    
+                                    <!-- <the-tag v-if="scope.row.status === 'success'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag> -->
+                                    <!-- <the-tag v-if="scope.row.status === 'completed'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag> -->
+                                    <!-- <the-tag v-if="scope.row.status === 'pending'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag> -->
                                 </div>
                             </template>
                         </el-table-column>                                           

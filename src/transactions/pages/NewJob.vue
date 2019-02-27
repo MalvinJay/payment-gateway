@@ -44,7 +44,7 @@
                     <!-- JOB MODE -->
                     <el-form-item label="Mode">
                         <el-select v-model="form.scheduled">
-                            <el-option label="Automatic" :value="true"></el-option>
+                            <el-option v-can="'Approve Transactions'" label="Automatic" :value="true"></el-option>
                             <el-option v-if="form.service_code === 'cashin' || form.service_code === 'cashout'" label="Manual" :value="false"></el-option>
                         </el-select>
                     </el-form-item>
@@ -179,7 +179,6 @@ export default {
             isTest: true,
             form: {
                 name: '',
-                scheduled: true,
                 schedule: "daily",
                 // beneficiaries: 'upload',
                 // times: [],

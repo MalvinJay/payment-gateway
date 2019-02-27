@@ -111,7 +111,7 @@ export default {
         })
     }
   },
-  onIdle() {
+  onIdle() {    
     this.$store.dispatch('logout')
     .then(() => {
       this.$router.push('/login')
