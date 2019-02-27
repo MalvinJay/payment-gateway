@@ -8,10 +8,8 @@
             <el-form size="mini" class="my-2" style="width: 90%" ref="form" :model="form" label-position="top">
                 <el-form-item label="Type of Transaction">
                     <div class="flex justify-content-between align-items-center">
-                        <!-- <el-checkbox-group class="flex justify-content" > -->
-                            <el-checkbox v-model="form.payment_types" @change="handleCheckedTypesChange" v-for="payment in types" :label="payment.value" :key="payment.value">{{payment.label}}</el-checkbox>
-                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox>
-                        <!-- </el-checkbox-group> -->
+                        <el-checkbox v-model="form.payment_types" @change="handleCheckedTypesChange" v-for="payment in types" :label="payment.value" :key="payment.value">{{payment.label}}</el-checkbox>
+                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox>
                     </div>
                 </el-form-item>
                 <el-form-item label="Date Range">

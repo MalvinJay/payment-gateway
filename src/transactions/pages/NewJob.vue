@@ -179,6 +179,7 @@ export default {
             isTest: true,
             form: {
                 name: '',
+                // scheduled: false,
                 schedule: "daily",
                 // beneficiaries: 'upload',
                 // times: [],

@@ -3,7 +3,12 @@
         <div class="transactions">
             <div class="trans-div flex justify-content-between">
                 <div class="flex align-items-baseline">
-                    <p class="blue-text bold-600 s-16 m-0 p-0">USSD</p>
+                    <p class="blue-text bold-600 s-16 m-0 p-0">Fone Messenger</p>
+                </div>
+                <div class="flex align-items-center">
+                    <p class="balance-info gray-text border-right">{{balance.fon_messanger_balance | money }}</p>
+                    <el-button @click="topupDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Topup</el-button>
+                    <el-button @click="logDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
                 </div>
             </div>
             <div>
@@ -14,7 +19,7 @@
                     </div>
                 </div>
                 <div v-else>
-                    <el-table ref="ussd" @row-click="clickRow" empty-text="No USSD messages to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="ussd">
+                    <el-table ref="fone" @row-click="clickRow" empty-text="No fone messengers to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="messages">
                         <el-table-column type="expand" width="55">
                             <template slot-scope="props">
                                 <div class="pl-15">
@@ -37,10 +42,10 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <!-- FOOTER -->
+
                     <div class="flex justify-content-between align-items-center px-10">
                         <div class="s-12">
-                            {{count}} results
+                            {{messages.length}} results
                         </div>
                         <el-pagination class="my-2 flex justify-content-end"
                             @current-change="handleCurrentChange"
@@ -52,15 +57,24 @@
                 </div>
             </div>
         </div>
-    </el-card>
+        <log-dialog :modalVisible="logDialog"></log-dialog>
+        <topup-account :modalVisible="topupDialog"></topup-account>
+    </el-card>  
 </template>
 
 <script>
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
+import LogDialog from '../components/LogDialog'
+import TopupAccount from '../components/TopupAccount'
 
 export default {
-  name: 'USSD',
+  name: 'Sms',
+  props: ['type'],
+  components: {
+    LogDialog,
+    TopupAccount
+  },
   data () {
     return {
       test: true,
@@ -69,43 +83,76 @@ export default {
         {label: 'delivery status', dataField: 'response_message', align: 'left'},
         {label: 'recipient', dataField: 'recipient_no', align: 'left'}
       ],
+      logDialog: false,
+      topupDialog: false,
       styleObject: {
         fontSize: '12px'
       }
     }
   },
   created () {
-    this.$store.dispatch('getUssd')
+    this.$store.dispatch('getFoneMessengers')
   },
   mounted () {
-    EventBus.$emit('sideNavClick', 'ussd')
+    EventBus.$on('logModal', () => {
+       this.logDialog = false
+    })
+    EventBus.$on('topupModal', () => {
+       this.topupDialog = false
+    })
+  },
+  beforeDestroy () {
+    EventBus.$off('logModal', () => {
+       this.logDialog = false
+    })
   },
   methods: {
     handleCurrentChange (val) {
-        this.$store.dispatch('getUssd', {page: val, cache: false})
+        this.$store.dispatch('getFoneMessengers', {page: val, cache: false})
     },
     clickRow (row, event, column) {
-        this.$refs.ussd.toggleRowExpansion(row)
+        this.$refs.fone.toggleRowExpansion(row)
     },
     fetchMessages () {
-      this.$store.dispatch('getUssd')
+      this.$store.dispatch('getFoneMessengers')
+    },
+    topUpAccount () {
+      
+    },
+    submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$store.dispatch('createTransactions', this.form)
+            .then((response) => {
+                this.$message({
+                    message: 'Payment successful',
+                    type: 'success'
+                })
+            })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+    },
+    resetForm(formName) {
+        this.$refs[formName].resetFields()
     }
   },
   computed: {
     ...mapGetters({
-      ussd: 'ussd',
-      state: 'ussdState',
-      total: 'ussdCount',
-      pageSize: 'pageSize'
+      messages: 'messages',
+      state: 'messagesState',
+      total: 'messagesCount',
+      providers: 'providers',
+      pageSize: 'pageSize',
+      balance: 'balance'
     }),
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'
     },
     loading () {
       return this.state === 'LOADING'
-    },
-    count () {
-      return this.ussd.count
     }
   }
 }
@@ -186,4 +233,3 @@ export default {
     }
 }
 </style>
-

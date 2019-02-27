@@ -31,7 +31,7 @@
                 <div v-else class="breathe">
                     <el-table
                     @row-click="clickRow"
-                    empty-text="No team found, create team"
+                    empty-text="No teams available, create a new team"
                     v-loading="loading"
                     :row-style="styleObject"
                     row-class-name="transactions-table-body"

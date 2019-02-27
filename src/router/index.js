@@ -43,7 +43,6 @@ const ResetPassword = () => import(/* webpackChunkName: "fone" */ '../pages/Rese
 const Profile = () => import(/* webpackChunkName: "fone" */ '../pages/client/Profile')
 
 const FoneMessenger = () => import(/* webpackChunkName: "fone" */ '../fonemessenger/pages/FoneMessenger')
-const USSD = () => import(/* webpackChunkName: "fone" */ '../ussd/pages/USSD')
 const Fees = () => import(/* webpackChunkName: "account" */ '../accounts/pages/Fees')
 const FeesDetail = () => import(/* webpackChunkName: "account" */ '../accounts/pages/FeesDetail')
 const TopUps = () => import(/* webpackChunkName: "account" */ '../accounts/pages/TopUps')
@@ -228,12 +227,6 @@ let router = new Router({
           path: '/fonemessenger',
           name: 'FoneMessenger',
           component: FoneMessenger
-        },
-        // ussd
-        {
-          path: '/ussd',
-          name: 'USSD',
-          component: USSD
         },
         // connect
         {

@@ -68,11 +68,6 @@
                     <img class="mr-10" src="../assets/images/icons/radar.svg" alt="">FoneMessenger
                 </template>
             </el-menu-item>
-            <el-menu-item v-if="!isAdmin" route="/ussd" index="ussd">
-                <template slot="title">
-                    <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">USSD
-                </template>
-            </el-menu-item>
             <el-submenu ref="sideMenu" index="9">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/developer.svg" alt="">Developers
