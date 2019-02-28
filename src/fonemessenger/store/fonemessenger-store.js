@@ -124,8 +124,8 @@ const actions = {
       // var query = Utils.createQueryParams(filters, page)
       return new Promise((resolve, reject) => {       
         axios.get(
-          `https://3faa62d9.ngrok.io/v1/query/ussd-logs-status`,
-          // `https://ussd8cooper.herokuapp.com/v1/query/ussd-logs-status`,
+          // `https://3faa62d9.ngrok.io/v1/query/ussd-logs-status`,
+          `https://ussd-log-status.nfortics.com/v1/query/ussd-logs-status`,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ const actions = {
           },          
         ).then((response) => {
           commit(SET_USSD_SESSIONS_STATE, 'DATA')
-          commit(SET_USSD_SESSIONS, response.data)
+          commit(SET_USSD_SESSIONS, response.data.filtered_records)
           resolve(response)
         }).catch((error) => {
           commit(SET_USSD_SESSIONS_STATE, 'ERROR')
@@ -165,11 +165,18 @@ const actions = {
     commit(SET_USSD_SESSIONS_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
       axios.get(
-          `https://3faa62d9.ngrok.io/v1/query/ussd-logs-status?session_id=${sessionId}`,
-          // `https://ussd8cooper.herokuapp.com/v1/query/ussd-logs-status?session_id=${sessionId}`,        
+          // `https://3faa62d9.ngrok.io/v1/query/ussd-logs-status?session_id=${sessionId}`,
+          `https://ussd-log-status.nfortics.com/v1/query/ussd-logs-status?session_id=${sessionId}`,        
       ).then((response) => {
-        console.log('Current UUUU: ', response.data)
-        commit(SET_CURRENT_USSD_SESSION, response.data)
+        let arrayData = []
+        response.data.map((el) => {
+          arrayData.push(el)
+        })
+        if(response.data) 
+        commit(SET_CURRENT_USSD_SESSION, arrayData)
+
+        state.currentUssd.data = arrayData
+
         commit(SET_USSD_SESSIONS_STATE, 'DATA')
         resolve(response)
       }).catch((error) => {
