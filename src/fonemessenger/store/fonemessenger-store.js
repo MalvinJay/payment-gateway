@@ -21,7 +21,7 @@ const state = {
   currentUssd: {
     data: [],
     state: 'LOADING'
-  }  
+  }
 }
 
 // getters
@@ -45,18 +45,22 @@ const mutations = {
     state.messages.state = payload
   },
   [SET_USSD_SESSIONS] (state, payload) {
-    state.ussds.data = payload
+    payload.filtered_records.map(el => {
+      el.children = []
+      return el
+    })
+    state.ussds.data = payload.filtered_records
     state.ussds.count = payload.length
   },
   [SET_USSD_SESSIONS_STATE] (state, payload) {
     state.ussds.state = payload
-  } ,
+  },
   [SET_CURRENT_USSD_SESSION] (state, payload) {
     state.currentUssd.data = payload
   },
   [SET_CURRENT_USSD_SESSION_STATE] (state, data) {
     state.currentUssd.state = data
-  }  
+  }
 }
 
 // actions
@@ -122,7 +126,7 @@ const actions = {
     } else {
       var filters = {}
       // var query = Utils.createQueryParams(filters, page)
-      return new Promise((resolve, reject) => {       
+      return new Promise((resolve, reject) => {
         axios.get(
           `https://3faa62d9.ngrok.io/v1/query/ussd-logs-status`,
           // `https://ussd8cooper.herokuapp.com/v1/query/ussd-logs-status`,
@@ -130,9 +134,9 @@ const actions = {
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
-              'Access-Control-Allow-Origin': '*/*',
+              'Access-Control-Allow-Origin': '*/*'
             }
-          },          
+          }
         ).then((response) => {
           commit(SET_USSD_SESSIONS_STATE, 'DATA')
           commit(SET_USSD_SESSIONS, response.data)
@@ -159,17 +163,26 @@ const actions = {
         reject(error)
       })
     })
-  }, 
+  },
   [GET_CURRENT_USSD_SESSION] ({ state, commit, rootGetters }, sessionId) {
-    var query = ''
     commit(SET_USSD_SESSIONS_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
       axios.get(
-          `https://3faa62d9.ngrok.io/v1/query/ussd-logs-status?session_id=${sessionId}`,
-          // `https://ussd8cooper.herokuapp.com/v1/query/ussd-logs-status?session_id=${sessionId}`,        
+        `https://3faa62d9.ngrok.io/v1/query/ussd-logs-status?session_id=${sessionId}`
+        // `https://ussd8cooper.herokuapp.com/v1/query/ussd-logs-status?session_id=${sessionId}`,
       ).then((response) => {
         console.log('Current UUUU: ', response.data)
-        commit(SET_CURRENT_USSD_SESSION, response.data)
+        var newUssds = state.ussds.data.map(el => {
+          if (sessionId === el.sessionid) {
+            console.log('el', el)
+            console.log(response.data)
+            el.children = response.data
+          }
+          //   el.children = sessionId === el.sessionid ? response.data : []
+          return el
+        })
+        commit(SET_USSD_SESSIONS, newUssds)
+        // commit(SET_CURRENT_USSD_SESSION, response.data)
         commit(SET_USSD_SESSIONS_STATE, 'DATA')
         resolve(response)
       }).catch((error) => {
@@ -177,7 +190,7 @@ const actions = {
         reject(error)
       })
     })
-  }  
+  }
 }
 
 export default {
