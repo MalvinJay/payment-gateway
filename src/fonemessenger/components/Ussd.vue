@@ -22,36 +22,42 @@
                 </div>
                 <div class="ussd_session" v-else>
                     <el-table ref="fone" @row-click="clickRow" empty-text="No ussd session available to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="ussd">
-                        <el-table-column type="expand" width="55">
-                            <template>
-                                <el-table
-                                    empty-text="No ussd session available for this session_Id" 
-                                    tooltip-effect="light" 
-                                    header-row-class-name="transactions-table-header" 
-                                    row-class-name="transactions-table-body ussd_session"
-                                    v-loading="loading"
-                                    :data="currentUssd">
-                                        <el-table-column prop="message" label="Message"></el-table-column>
-                                        <el-table-column prop="response" label="Response">
-                                            <template slot-scope="scope">
-                                                {{ scope.row.charged_amount}}
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column prop="timestamp" label="Timestamp">
-                                            <template slot-scope="scope">
-                                                {{ scope.row.timestamp}}
-                                            </template>
-                                        </el-table-column>
-                                        <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label" :width="column.width"></el-table-column>                            
+                        <el-table-column type="expand" width="55" @click="clickRow">
+                            <template slot-scope="props">
+                                <el-card>                                
+                                    <el-table
+                                        empty-text="No ussd session available for this session_Id" 
+                                        tooltip-effect="light" 
+                                        header-row-class-name="transactions-table-header" 
+                                        row-class-name="transactions-table-body ussd_session"
+                                        :data="currentUssd">
+                                            <el-table-column prop="message" label="Input" width="200"></el-table-column>
+                                            <el-table-column prop="response" label="Response" width="auto">
+                                                <template slot-scope="scope">
+                                                    {{ scope.row.response}}
+                                                </template>
+                                            </el-table-column>   
+                                            <!-- <el-table-column prop="messagetype" label="Message Type" width="200">
+                                                <template slot-scope="scope">
+                                                    {{ scope.row.messagetype}}
+                                                </template>
+                                            </el-table-column>                                                                                 -->
+                                            <el-table-column prop="timestamp" label="Timestamp" width="300">
+                                                <template slot-scope="scope">
+                                                    {{ scope.row.timestamp  | moment("D MMM,YY hh:mm:ss A")}}
+                                                </template>
+                                            </el-table-column>
+                                        <!-- <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label" :width="column.width"></el-table-column>                             -->
                                     </el-table>
+                                </el-card>
                             </template>
                         </el-table-column>
 
                         <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label" :width="column.width"></el-table-column>
                         
-                        <el-table-column prop="timestamp" label="Timestamp" width="auto">
+                        <el-table-column prop="timestamp" label="Timestamp" width="200">
                             <template slot-scope="scope">
-                                {{scope.row.timestamp | moment("D MMM,YY hh:mm A")}}
+                                {{scope.row.timestamp | moment("D MMM,YY hh:mm:ss A")}}
                             </template>
                         </el-table-column>
                         <!-- <el-table-column label="ussd code" prop="ussdcode" width="auto">
@@ -106,7 +112,8 @@ export default {
       styleObject: {
         fontSize: '12px'
       },
-      ready: false
+      ready: false,
+      expanded: false
     }
   },
   created () {
@@ -127,14 +134,15 @@ export default {
     handleCurrentChange (val) {
         this.$store.dispatch('getUssdSessions', {page: val, cache: false})
     },
-    clickRow (row, event, column) {
-        // make a single ussd call
-        this.$store.dispatch('getCurrentUssdSession', row.sessionid)
-        .then((response)=> {
-            console.log('CurrentUssd: ', this.currentUssdSession)
-            // this.$refs.fone.toggleRowExpansion(row)
-        })
-        this.$refs.fone.toggleRowExpansion(row)
+    clickRow (row, event, column, expanded) {
+        // if(!this.expanded) {
+            console.log('expanded:', expanded)
+            this.$store.dispatch('getCurrentUssdSession', row.sessionid)
+            .then((response) => {
+                this.$refs.fone.toggleRowExpansion(row)
+                this.expanded = true
+            })
+        // }
     },
     fetchMessages () {
       this.$store.dispatch('getUssdSessions')
