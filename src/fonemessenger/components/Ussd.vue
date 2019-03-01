@@ -7,10 +7,12 @@
                     <!-- <filter-component dispatch="setUssdFilters" filterType="payouts"></filter-component> -->
                 </div>
                 <div class="flex align-items-center">
-
-                    <el-button v-can="'Generate Reports'" @click="generateReport" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text">
+                    <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
+                        <el-button @click.prevent="fetchMessages" icon="undo icon" type="text"></el-button>
+                    </el-tooltip>
+                    <!-- <el-button v-can="'Generate Reports'" @click="generateReport" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text">
                         <i class="download icon"></i> Export
-                    </el-button>
+                    </el-button> -->
                 </div>
             </div>
             <div>
@@ -21,7 +23,13 @@
                     </div>
                 </div>
                 <div class="ussd_session" v-else>
-                    <el-table ref="fone" @row-click="clickRow" empty-text="No ussd session available to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="ussd">
+                    <el-table ref="fone"
+                    @row-click="clickRow"
+                    empty-text="No ussd session available to display"
+                    v-loading="loading" :row-style="styleObject"
+                    row-class-name="transactions-table-body"
+                    header-row-class-name="transactions-table-header"
+                    :data="ussd.slice((page * 12) - 12, page * 12)">
                         <el-table-column type="expand" width="55" @click="clickRow">
                             <template slot-scope="props">
                                 <el-card>                                
@@ -69,7 +77,7 @@
 
                     <div class="flex justify-content-between align-items-center px-10">
                         <div class="s-12">
-                            {{ussd.length}} results
+                            {{ussd.slice((page * 12) - 12, page * 12).length}} results
                         </div>
                         <el-pagination class="my-2 flex justify-content-end"
                             @current-change="handleCurrentChange"
@@ -91,7 +99,7 @@ import LogDialog from '../components/LogDialog'
 import TopupAccount from '../components/TopupAccount'
 
 export default {
-  name: 'Sms',
+  name: 'USSD',
   props: ['type'],
   components: {
     LogDialog,
@@ -106,6 +114,7 @@ export default {
         {label: 'network', dataField: 'network', align: 'left', width: 'auto'},
         
       ],
+      page: 1,
       logDialog: false,
       topupDialog: false,
       exportVisible: false,
@@ -131,8 +140,11 @@ export default {
     })
   },
   methods: {
-    handleCurrentChange (val) {
-        this.$store.dispatch('getUssdSessions', {page: val, cache: false})
+    // handleCurrentChange (val) {
+    //     this.$store.dispatch('getUssdSessions', {page: val, cache: false})
+    // },
+    handleCurrentChange (page) {
+        this.page = page
     },
     clickRow (row, event, column, expanded) {
         // if(!this.expanded) {
@@ -145,7 +157,7 @@ export default {
         // }
     },
     fetchMessages () {
-      this.$store.dispatch('getUssdSessions')
+      this.$store.dispatch('getUssdSessions', {cache: false})
     },
     topUpAccount () {
       
@@ -181,7 +193,7 @@ export default {
       ussd: 'ussdSessions',
       state: 'ussdSessionsState',
       total: 'ussdSessionsCount',
-      pageSize: 'ussdSessionsCount',
+      pageSize: 'pageSize',
       currentUssdSession: 'currentUssdSession'
     }),
     error () {

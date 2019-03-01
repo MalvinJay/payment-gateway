@@ -5,6 +5,9 @@
                 <filter-component dispatch="setTransactionsFilters" filterType="payment"></filter-component>
             </div>
             <div>
+                <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
+                    <el-button @click.prevent="fetchTransactions" icon="undo icon" type="text"></el-button>
+                </el-tooltip>
                 <el-button v-can="'Accept Payment'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i>Receive Payment</el-button>
                 <el-button v-can="'Generate Reports'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
             </div>
@@ -164,6 +167,7 @@ export default {
         customer_no: '',
         country_code: 'GH',
         service_code: 'cashout',
+        // integration_type: 'WAEC_RESULTS_USSD',
         live: false,
         dummy: true
       },

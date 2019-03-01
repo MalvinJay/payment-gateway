@@ -5,6 +5,9 @@
                 <filter-component dispatch="setPayoutsFilters" filterType="payouts"></filter-component>
             </div>
             <div>
+                <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
+                    <el-button @click.prevent="fetchTransactions" icon="undo icon" type="text"></el-button>
+                </el-tooltip>
                 <el-button v-can="'Make Payout'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> Make Payment</el-button>
                 <el-button v-can="'Generate Reports'" @click="exportVisible = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="file alternate outline icon"></i> Export</el-button>
             </div>

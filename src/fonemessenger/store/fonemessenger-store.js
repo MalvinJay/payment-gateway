@@ -45,11 +45,7 @@ const mutations = {
     state.messages.state = payload
   },
   [SET_USSD_SESSIONS] (state, payload) {
-    payload.filtered_records.map(el => {
-      el.children = []
-      return el
-    })
-    state.ussds.data = payload.filtered_records
+    state.ussds.data = payload
     state.ussds.count = payload.length
   },
   [SET_USSD_SESSIONS_STATE] (state, payload) {
@@ -165,6 +161,7 @@ const actions = {
     })
   },
   [GET_CURRENT_USSD_SESSION] ({ state, commit, rootGetters }, sessionId) {
+    var query = ''
     commit(SET_USSD_SESSIONS_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
       axios.get(
@@ -175,8 +172,7 @@ const actions = {
         response.data.map((el) => {
           arrayData.push(el)
         })
-        if (response.data)
-          {commit(SET_CURRENT_USSD_SESSION, arrayData)}
+        if (response.data) { commit(SET_CURRENT_USSD_SESSION, arrayData) }
 
         state.currentUssd.data = arrayData
 

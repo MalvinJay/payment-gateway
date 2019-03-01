@@ -161,6 +161,7 @@
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 import initState from '../utils/initState'
+import TransactionsChannel from '../channels/TransactionsChannel';
 
 export default {
   name: 'Profile',
@@ -272,6 +273,7 @@ export default {
             this.$session.remove('token')
             this.$session.destroy()
             this.$router.push('/login')
+            // TransactionsChannel.close()
         })
     },
     handleCurrentChange (page) {
