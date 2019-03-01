@@ -12,6 +12,7 @@ import settlements from '../accounts/store/settlements-store'
 import disputes from '../transactions/store/disputes-store'
 import contacts from '../contacts/contacts-store'
 import fonemessenger from '../fonemessenger/store/fonemessenger-store'
+import ussd from '../ussd/store/ussd-store'
 import teams from '../business/store/team-store'
 import roles from '../business/store/role-store'
 import branches from '../business/store/branch-store'
@@ -41,6 +42,7 @@ export default new Vuex.Store({
     roles,
     branches,
     fonemessenger,
+    ussd,
     disputes,
     topups,
     settlements,

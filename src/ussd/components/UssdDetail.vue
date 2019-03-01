@@ -200,12 +200,10 @@ export default {
     name: 'PaymentDetail',
     data () {
         return {
-            test: true,
             status: 'failed',
             edit: false,
             remarks: '',
             page: this.$route.path,
-            ticketVisible: false,
             loading: false,
             columns: [
                 {label: 'Customer', dataField: 'name', width: 'auto'},
@@ -224,7 +222,7 @@ export default {
         }
     },
     created () {
-        // EventBus.$emit('sideNavClick', 'payments')
+        EventBus.$emit('sideNavClick', 'ussd')
     },
     methods: {
         handleTableCommand (command, row) {
@@ -240,11 +238,9 @@ export default {
                     break
             }
         },
-
         fetchTransactions () {
-           this.$store.dispatch('getCurrentUSSD', this.$route.params.id) 
+           this.$store.dispatch('getCurrentTransaction', this.$route.params.id) 
         },
-
         refund () {
             this.loading = true
             this.$store.dispatch('createRefund', this.form.reference)
@@ -272,13 +268,11 @@ export default {
                 })
             })            
         },
-
         clickRow (row, event, column) {
             if (column.property) {
             this.$router.push(`/events/${row.id}`)
             }
         },
-
         clickLogs (row, event, column) {
             if (column.property) {
                 this.$router.push(`/logs/${row.id}`)
@@ -286,14 +280,12 @@ export default {
         },
     },
     mounted () {
-        this.$store.dispatch('getCurrentTransaction', this.$route.params.id)
-        EventBus.$on('ticketModal', (val) => {
-            this.ticketVisible = val
-        })
+        this.$store.dispatch('getCurrentUssdSession', this.$route.params.id)
+        EventBus.$emit('sideNavClick', 'ussd')
     },
     computed: {
         ...mapGetters({
-            form: 'currentTransaction',
+            form: 'currentUssdSession',
             state: 'currentTransactionState'
         }),
         events () {

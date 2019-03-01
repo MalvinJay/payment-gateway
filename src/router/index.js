@@ -32,10 +32,10 @@ const Jobs = () => import(/* webpackChunkName: "payment" */ '../transactions/pag
 
 const Customers = () => import(/* webpackChunkName: "customer" */ '../contacts/pages/Customers')
 const Payouts = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/Payouts')
-const NewJob = () => import(/* webpackChunkName: "payment" */ '../transactions/pages/NewJob')
+const NewJob = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/NewJob')
 const Disputes = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/Disputes')
-const JobDetails = () => import(/* webpackChunkName: "payment" */ '../transactions/pages/JobDetails')
-const JobContactDetails = () => import(/* webpackChunkName: "payment" */ '../contacts/pages/JobContactDetails')
+const JobDetails = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/JobDetails')
+const JobContactDetails = () => import(/* webpackChunkName: "customer" */ '../contacts/pages/JobContactDetails')
 const RunDetails = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/RunDetails')
 
 const FirstTimeLogin = () => import(/* webpackChunkName: "fone" */ '../pages/FirstTimeLogin')
@@ -43,8 +43,10 @@ const ResetPassword = () => import(/* webpackChunkName: "fone" */ '../pages/Rese
 const Profile = () => import(/* webpackChunkName: "fone" */ '../pages/client/Profile')
 
 const FoneMessenger = () => import(/* webpackChunkName: "fone" */ '../fonemessenger/pages/FoneMessenger')
-const Fees = () => import(/* webpackChunkName: "account" */ '../accounts/pages/Fees')
-const FeesDetail = () => import(/* webpackChunkName: "account" */ '../accounts/pages/FeesDetail')
+const Ussd = () => import(/* webpackChunkName: "fone" */ '../ussd/pages/Ussd')
+const UssdDetails = () => import(/* webpackChunkName: "fone" */ '../ussd/components/UssdDetail')
+const Fees = () => import(/* webpackChunkName: "fone" */ '../accounts/pages/Fees')
+const FeesDetail = () => import(/* webpackChunkName: "fone" */ '../accounts/pages/FeesDetail')
 const TopUps = () => import(/* webpackChunkName: "account" */ '../accounts/pages/TopUps')
 const Settlements = () => import(/* webpackChunkName: "account" */ '../accounts/pages/Settlements')
 const Account = () => import(/* webpackChunkName: "connect" */ '../connect/pages/Account')
@@ -228,6 +230,17 @@ let router = new Router({
           name: 'FoneMessenger',
           component: FoneMessenger
         },
+        // ussd sessiond & transactions
+        {
+          path: '/ussd',
+          name: 'Ussd',
+          component: Ussd
+        },   
+        {
+          path: '/ussd/:id',
+          name: 'UssdDetails',
+          component: UssdDetails
+        },             
         // connect
         {
           path: '/accounts',
