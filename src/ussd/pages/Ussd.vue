@@ -2,12 +2,22 @@
     <el-card class="card-0">
         <div class="transactions">
             <div class="trans-div flex justify-content-between">
-                <div class="flex align-items-baseline">
-                    <p class="blue-text bold-600 s-16 m-0 p-0">Ussd Sessions</p>
-                    <!-- <filter-component dispatch="setUssdFilters" filterType="payouts"></filter-component> -->
-                </div>
+                <div class="search_n_roles flex justify-content-between w-50">
+                    <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" size="mini" placeholder="Filter by year..."></el-input>
+                    
+                    <div class="roles">
+                        <el-select 
+                            v-model="value" 
+                            size="mini"
+                            filterable
+                            @change="filterByName"
+                            placeholder="Select an exams type">
+                            <el-option v-model="all" label="all"></el-option>
+                            <el-option v-for="item in filteredExamsTypes" :key="item.code" :label="item.name" :value="item.code"></el-option>
+                        </el-select>                    
+                    </div>
+                </div>  
                 <div class="flex align-items-center">
-
                     <el-button v-can="'Generate Reports'" @click="generateReport" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text">
                         <i class="download icon"></i> Export
                     </el-button>
@@ -21,7 +31,7 @@
                     </div>
                 </div>
                 <div class="ussd_session" v-else>
-                    <el-table ref="fone" @row-click="clickRow" empty-text="No ussd session available to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="ussd">
+                    <el-table ref="fone" @row-click="clickRow" empty-text="No ussd session available to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="ussds">
                         <el-table-column type="expand" width="55" @click="clickRow">
                             <template slot-scope="props">
                                 <el-card>                                
@@ -60,16 +70,11 @@
                                 {{scope.row.timestamp | moment("D MMM,YY hh:mm:ss A")}}
                             </template>
                         </el-table-column>
-                        <!-- <el-table-column label="ussd code" prop="ussdcode" width="auto">
-                            <template slot-scope="scope">
-                                {{scope.row.ussdcode}}
-                            </template>
-                        </el-table-column> -->
                     </el-table>
 
                     <div class="flex justify-content-between align-items-center px-10">
                         <div class="s-12">
-                            {{ussd.length}} results
+                            {{ussds.length}} results
                         </div>
                         <el-pagination class="my-2 flex justify-content-end"
                             @current-change="handleCurrentChange"
@@ -87,24 +92,22 @@
 <script>
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
-import LogDialog from '../components/LogDialog'
-import TopupAccount from '../components/TopupAccount'
+// import LogDialog from '../components/LogDialog'
+// import TopupAccount from '../components/TopupAccount'
 
 export default {
-  name: 'Sms',
+  name: 'FoneMessenger',
   props: ['type'],
-  components: {
-    LogDialog,
-    TopupAccount
-  },
   data () {
     return {
       test: true,
       columns: [
         {label: 'session id', dataField: 'sessionid', align: 'center', width: 'auto'},
         {label: 'phone number', dataField: 'msisdn', align: 'left', width: 'auto'},
-        {label: 'network', dataField: 'network', align: 'left', width: 'auto'},
-        
+        {label: 'exams type', dataField: 'exams_type', align: 'left', width: 'auto'},
+        {label: 'year', dataField: 'year', align: 'left', width: 'auto'},
+        {label: 'index no', dataField: 'index_no', align: 'left', width: 'auto'},
+        {label: 'paid?', dataField: 'index_no', align: 'left', width: 'auto'},
       ],
       logDialog: false,
       topupDialog: false,
@@ -113,7 +116,23 @@ export default {
         fontSize: '12px'
       },
       ready: false,
-      expanded: false
+      expanded: false,
+      search: '',
+      value: 'all',
+      all: 'all exams types',
+      filter: {
+        name: ''
+      },
+      filteredExamsTypes: [
+        {
+          name: 'B.E.C.E',
+          code: '01'
+        },
+        {
+          name: 'W.A.S.C.E',
+          code: '02'
+        }
+      ]
     }
   },
   created () {
@@ -121,32 +140,34 @@ export default {
   },
   mounted () {
     this.$store.dispatch('getUssdSessions')
+    EventBus.$emit('sideNavClick', 'ussd')
     EventBus.$on('exportModal', (val) => {
         this.exportVisible = false
     })    
-  },
-  beforeDestroy () {
-    EventBus.$off('logModal', () => {
-       this.logDialog = false
-    })
   },
   methods: {
     handleCurrentChange (val) {
         this.$store.dispatch('getUssdSessions', {page: val, cache: false})
     },
-    clickRow (row, event, column, expanded) {
-        // if(!this.expanded) {
-            console.log('expanded:', expanded)
-            this.$store.dispatch('getCurrentUssdSession', row.sessionid)
-            .then((response) => {
-                this.$refs.fone.toggleRowExpansion(row)
-                this.expanded = true
-            })
-        // }
+    clickRow (row, event, column) {
+        this.$store.dispatch('getCurrentUssdSession', row.sessionid)
+        .then((response) => {
+            // this.$refs.fone.toggleRowExpansion(row)
+        })
+        if (column.property || !column.status === 'error') {
+            this.$router.push(`/ussd/${row.sessionid}`)
+        }        
     },
     fetchMessages () {
       this.$store.dispatch('getUssdSessions')
     },
+    searchButton () {
+
+    },  
+    filterByName (val) {
+        this.filter.name = val
+        // this.$store.dispatch('setTeamsFilters', this.filter)
+    },      
     topUpAccount () {
       
     },
@@ -178,12 +199,15 @@ export default {
   },
   computed: {
     ...mapGetters({
-      ussd: 'ussdSessions',
+      ussds: 'ussdSessions',
       state: 'ussdSessionsState',
       total: 'ussdSessionsCount',
       pageSize: 'ussdSessionsCount',
       currentUssdSession: 'currentUssdSession'
     }),
+    // filteredExamsTypes () {
+    //   return this.ussd;
+    // },    
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'
     },
@@ -191,7 +215,7 @@ export default {
       return this.state === 'LOADING'
     },
     currentUssd() {
-        return this.currentUssdSession
+      return this.currentUssdSession
     }
   }
 }

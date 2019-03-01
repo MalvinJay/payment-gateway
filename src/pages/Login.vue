@@ -112,10 +112,29 @@ export default {
                     })
                 }
                 this.loading = false
-            }).catch((error) => {
+                })
+            .catch((error) => {
                 this.loading = false
+                let resp = '';
+
+                if(error.response != undefined) {
+                    switch (error.response.status) {
+                        case 400:
+                            resp = error.response.data.message
+                            break;
+                        case 500:
+                            resp = error.response.data.error
+                            break;
+                        default:
+                            resp = 'An error occured, please try again'
+                            break;
+                    }
+                }
+                else
+                    resp = '500 - (Internal Server Error)'
+
                 this.$message({
-                    message: 'Error. Please try again later',
+                    message: resp,
                     type: 'error'
                 })
             })

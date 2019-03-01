@@ -3,7 +3,7 @@
         <div class="transactions">
             <div class="flex justify-content-between align-items-center px-20 py-16">
                 <div class="search_n_roles flex justify-content-between w-50">
-                    <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" size="mini" placeholder="Filter by name or email..."></el-input>
+                    <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" size="mini" placeholder="Filter by z or email..."></el-input>
                     
                     <div class="roles">
                         <el-select 

@@ -128,7 +128,7 @@
         </el-dialog>
         <export-modal type="deposit" :modalVisible.sync="exportVisible"></export-modal>
         <ticket-modal :transaction="transaction" :ticketVisible.sync="ticketVisible"></ticket-modal>
-        <add-contact :form="contact" :dialogVisible="contactVisible"></add-contact>
+        <!-- <add-contact :form="contact" :dialogVisible="contactVisible"></add-contact> -->
     </div>
 </template>
 
@@ -145,7 +145,7 @@ export default {
       columns: [
         {label: 'Customer', dataField: 'customer', width: 'auto'},
         {label: 'Reference', dataField: 'reference', width: 'auto'},
-        // {label: 'type', dataField: 'transaction_type', width: '100px'}
+        {label: 'type', dataField: 'transaction_type', width: '100px'}
       ],
       styleObject: {
         fontSize: '12px'
