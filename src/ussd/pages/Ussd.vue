@@ -32,7 +32,7 @@
                 </div>
                 <div class="ussd_session" v-else>
                     <el-table ref="fone" @row-click="clickRow" empty-text="No ussd session available to display" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="ussds">
-                        <el-table-column type="expand" width="55" @click="clickRow">
+                        <!-- <el-table-column type="expand" width="55" @click="clickRow">
                             <template slot-scope="props">
                                 <el-card>                                
                                     <el-table
@@ -46,22 +46,16 @@
                                                 <template slot-scope="scope">
                                                     {{ scope.row.response}}
                                                 </template>
-                                            </el-table-column>   
-                                            <!-- <el-table-column prop="messagetype" label="Message Type" width="200">
-                                                <template slot-scope="scope">
-                                                    {{ scope.row.messagetype}}
-                                                </template>
-                                            </el-table-column>                                                                                 -->
+                                            </el-table-column>
                                             <el-table-column prop="timestamp" label="Timestamp" width="300">
                                                 <template slot-scope="scope">
                                                     {{ scope.row.timestamp  | moment("D MMM,YY hh:mm:ss A")}}
                                                 </template>
                                             </el-table-column>
-                                        <!-- <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label" :width="column.width"></el-table-column>                             -->
                                     </el-table>
                                 </el-card>
                             </template>
-                        </el-table-column>
+                        </el-table-column> -->
 
                         <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label" :width="column.width"></el-table-column>
                         
@@ -152,11 +146,31 @@ export default {
     clickRow (row, event, column) {
         this.$store.dispatch('getCurrentUssdSession', row.sessionid)
         .then((response) => {
-            // this.$refs.fone.toggleRowExpansion(row)
+            this.$store.dispatch('getCurrentUssdSessionPayment', row.sessionid)
+            .then((response)=> {
+                if(!response.data.success){
+                    this.$message({
+                        message: response.data.response.message,
+                        type: 'error'
+                    })                    
+                }
+                if (column.property || !column.status === 'error') {
+                    this.$router.push(`/ussd/${row.sessionid}`)
+                }
+            })
+            .catch(()=>{
+                this.$message({
+                    message: "Couldn't load Payment Details of Ussd Session",
+                    type: 'error'
+                })            
+            })            
         })
-        if (column.property || !column.status === 'error') {
-            this.$router.push(`/ussd/${row.sessionid}`)
-        }        
+        .catch(()=>{
+            this.$message({
+                message: "Couldn't load Ussd Details",
+                type: 'error'
+            })            
+        })
     },
     fetchMessages () {
       this.$store.dispatch('getUssdSessions')

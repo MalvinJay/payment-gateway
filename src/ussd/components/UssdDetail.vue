@@ -20,8 +20,8 @@
                     </div>
                     <div>
                         <el-button :disabled="error" @click="refund" :loading="loading" v-if="status === 'failed' &&  form.trans_type === 'cashout'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Refund</el-button>
-                        <el-button v-if="!form.has_dispute" @click="ticketVisible = true" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Open Ticket</el-button>
-                        <el-dropdown class="ml-10" @command="command => handleTableCommand(command, form)" trigger="click">
+                        <el-button @click="ticketVisible = true" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Open Ticket</el-button>
+                        <!-- <el-dropdown class="ml-10" @command="command => handleTableCommand(command, form)" trigger="click">
                             <el-button size="mini" class="mr-0 cursor z-depth-button bold-600 s-13 open-sans mini-button b-0" plain icon="ellipsis horizontal icon"></el-button>
                             <el-dropdown-menu class="w-200" slot="dropdown">
                                 <el-dropdown-item disabled>
@@ -31,7 +31,7 @@
                                 </el-dropdown-item>
                                 <el-dropdown-item class="s-12">Retry</el-dropdown-item>
                             </el-dropdown-menu>
-                        </el-dropdown>
+                        </el-dropdown> -->
                     </div>
                 </div>
                 <!-- :class="[{success ? 'green': 'gray' }]" -->
@@ -42,8 +42,8 @@
                             <i v-else class="exclamation circle s-12 icon gray" ></i>
                         </div>
                         <div class="flex flex-column ml-1">
-                            <p v-if="form.payment_status == 'paid'" class="light mb-1 s-13">{{header}} succeeded</p>
-                            <p v-else class="light mb-1 s-13">{{header}} failed</p>
+                            <p v-if="form.payment_status == 'paid'" class="light mb-1 s-13">{{header}} payment succeeded</p>
+                            <p v-else class="light mb-1 s-13">{{header}} payment failed</p>
                             <p class="light mb-1 s-12 gray">{{form.date | moment("D MMM,YY hh:mm A")}}</p>
                         </div>
                     </div>
@@ -52,7 +52,10 @@
             <!-- details -->
             <el-card class="my-2">
                 <div slot="header">
-                    <span class="blue-text bold-600 s-16">{{header}} details</span>
+                    <div class="blue-text bold-600 s-16 flex">
+                        <div class="w-50">{{header}} Payments Details</div>
+                        <div class="w-50">Customer Details</div>
+                    </div>
                 </div>
                 <div>
                     <div v-if="hasNoData" class="center h-80">
@@ -129,10 +132,38 @@
                     </el-table>
                 </div>
             </el-card>
+
+            <!-- Ussd Sessions -->
+            <el-card class="my-2 card-0">         
+                <div slot="header">
+                    <span class="blue-text bold-600 s-16">{{header}} Session Details</span>
+                </div>
+                <div>
+                    <el-table
+                        empty-text="No ussd session available for this session_Id" 
+                        tooltip-effect="light" 
+                        header-row-class-name="transactions-table-header" 
+                        row-class-name="transactions-table-body ussd_session"
+                        :data="currentUssdSession">
+                            <el-table-column prop="message" label="Input" width="200"></el-table-column>
+                            <el-table-column prop="response" label="Response" width="auto">
+                                <template slot-scope="scope">
+                                    {{ scope.row.response}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="timestamp" label="Timestamp" width="300">
+                                <template slot-scope="scope">
+                                    {{ scope.row.timestamp  | moment("D MMM,YY hh:mm:ss A")}}
+                                </template>
+                            </el-table-column>
+                    </el-table>
+                    </div>                                       
+            </el-card>  
+
             <!-- logs -->
             <el-card class="my-2 card-0">
                 <div slot="header">
-                    <span class="blue-text bold-600 s-16">{{header}} Logs</span>
+                    <span class="blue-text bold-600 s-16">{{header}} Payment Logs</span>
                 </div>
                 <div>
                     <el-table @row-click="clickLogs" empty-text="No logs found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="logs">
@@ -160,7 +191,7 @@
             <!-- events -->
             <el-card class="my-2 card-0">
                 <div slot="header">
-                    <span class="blue-text bold-600 s-16">{{header}} events</span>
+                    <span class="blue-text bold-600 s-16">{{header}} Payment Events</span>
                 </div>
                 <div>
                     <el-table
@@ -217,7 +248,7 @@
                         <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                     </el-table>
                 </div>
-            </el-card>
+            </el-card>          
         </div>
         <ticket-modal :transaction="form" :ticketVisible.sync="ticketVisible"></ticket-modal>
     </div>
@@ -229,7 +260,7 @@ import EventBus from '../../event-bus.js'
 import moment from 'moment'
 
 export default {
-    name: 'PaymentDetail',
+    name: 'UssdDetail',
     data () {
         return {
             test: true,
@@ -256,7 +287,7 @@ export default {
         }
     },
     created () {
-        // EventBus.$emit('sideNavClick', 'payments')
+        EventBus.$emit('sideNavClick', 'ussd')
     },
     methods: {
         handleTableCommand (command, row) {
@@ -273,7 +304,8 @@ export default {
             }
         },
         fetchTransactions () {
-           this.$store.dispatch('getCurrentTransaction', this.$route.params.id) 
+        //    this.$store.dispatch('getCurrentTransaction', this.$route.params.id)
+            this.$store.dispatch('getUssdSessions')
         },
         refund () {
             this.loading = true
@@ -314,15 +346,21 @@ export default {
         },
     },
     mounted () {
-        this.$store.dispatch('getCurrentTransaction', this.$route.params.id)
+        // this.$store.dispatch('getCurrentUssdSessionPayment', this.currentUssdSession[0].sessionid)
+        // .then((response)=> {
+        //     console.log('currentUssdSessionPayment:', currentUssdSessionPayment)
+        // })
+
         EventBus.$on('ticketModal', (val) => {
             this.ticketVisible = val
         })
     },
     computed: {
         ...mapGetters({
-            form: 'currentTransaction',
-            state: 'currentTransactionState'
+            form: 'currentUssdSession',
+            state: 'ussdSessionsState',
+            currentUssdSession: 'currentUssdSession',
+            currentUssdSessionPayment: 'currentUssdSessionPayment'
         }),
         events () {
            return this.form.events
@@ -355,23 +393,36 @@ export default {
             if (this.form.currency === 'GHs') {
                symbol = 'GHs'
             }
+            // var nForm = {
+            //     name: this.form.company? this.form.company: 'N/A',
+            //     'phone number': this.form.customer_no? this.form.customer_no: 'N/A',
+            //     email: this.form.emails[0]? this.form.emails[0]: 'N/A',
+            //     reference: this.form.reference? this.form.reference : 'N/A',
+            //     amount: this.form.amount? `${symbol}${this.form.amount}` : 'N/A',
+            //     fee: this.form.charged_amount? `${symbol}${this.form.charged_amount}` : 'N/A',
+            //     date: this.form.date? this.form.date : 'N/A',
+            //     time: this.form.time? this.form.time: 'N/A',
+            //     remarks: this.form.remarks ? this.form.remarks : '-'
+            // }
+
             var nForm = {
-                name: this.form.company,
-                'phone number': this.form.customer_no,
-                email: this.form.emails[0],
-                reference: this.form.reference,
-                amount: `${symbol}${this.form.amount}`,
-                fee: `${symbol}${this.form.charged_amount}`,
-                date: this.form.date,
-                time: this.form.time,
+                name:'N/A',
+                'phone n': 'N/A',
+                // email:'N/A',
+                reference:'N/A',
+                amount:'N/A',
+                fee:'N/A',
+                date:'N/A',
+                time:'N/A',
                 remarks: this.form.remarks ? this.form.remarks : '-'
             }
             return nForm
         },
         data2 () {
             var nForm = {
-                'billing address': this.form.address ? this.form.address : 'Not Provided',
-                origin: this.form.currency === 'GHs' ? 'Ghana' : 'Not Provided'
+                'Candidate Name': 'N/A',
+                'Index Number': 'N/A',
+                'Year': 'N/A',
             }
             return nForm
         },
@@ -379,12 +430,14 @@ export default {
             return typeof this.form === 'undefined'
         },
         header () {
-            if (this.form.trans_type === 'cashin') {
-                EventBus.$emit('sideNavClick', 'payouts')
-            } else {
-                EventBus.$emit('sideNavClick', 'payments')
-            }
-            var header = this.form.trans_type === 'cashout' ? 'Receipt' : 'Payment'
+            // if (this.form.trans_type === 'cashin') {
+            //     EventBus.$emit('sideNavClick', 'payouts')
+            // } else {
+            //     EventBus.$emit('sideNavClick', 'ussd')
+            // }
+            EventBus.$emit('sideNavClick', 'ussd')
+            // var header = this.form.trans_type === 'cashout' ? 'Receipt' : 'Payment'
+            var header = 'Ussd'
 
             return header
         }
