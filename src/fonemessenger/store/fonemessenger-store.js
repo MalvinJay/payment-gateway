@@ -29,7 +29,7 @@ const mutations = {
   },
   [SET_FONE_MESSENGERS_STATE] (state, payload) {
     state.messages.state = payload
-  }  
+  }
 }
 
 // actions

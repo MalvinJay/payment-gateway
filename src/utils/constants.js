@@ -12,5 +12,5 @@ export const NGROK_URL_v2 = `${NGROK_BASE_URL}/api/v1/`
 //     ? 'lemon-batchstore'
 //     : 'lemon-development-batchstore'
 
-export const WS_URL = `wss://${BASE_URL}/websocket`
-export const CURRENT_URLv2 = CURRENT_URL.replace('v1', 'v2')
+export const WS_URL = `ws://d24046cf.ngrok.io/websocket`
+export const CURRENT_URLv2 = BASE_URL.replace('v1', 'v2')

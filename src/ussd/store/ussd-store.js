@@ -33,12 +33,27 @@ const getters = {
 // mutations
 const mutations = {
   [SET_USSD_SESSIONS] (state, payload) {
-    state.ussds.data = payload
+    if (payload) {
+      var exams = ['BECE', 'WASSCE']
+      var status = ['paid', 'failed']
+      var years = ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019']
+      var ussd = payload.map(ussd => {
+        var rand = Math.floor(Math.random() * 2)
+        var yRand = Math.floor(Math.random() * 10)
+        var sRand = Math.floor(Math.random() * 2)
+        ussd.exam_type = exams[rand]
+        ussd.year = years[yRand]
+        ussd.index_no = Math.floor(Math.random() * 9999999999)
+        ussd.status = status[sRand]
+        return ussd
+      })
+    }
+    state.ussds.data = ussd
     state.ussds.count = payload.length
   },
   [SET_USSD_SESSIONS_STATE] (state, payload) {
     state.ussds.state = payload
-  } ,
+  },
   [SET_CURRENT_USSD_SESSION] (state, payload) {
     state.currentUssd.data = payload
   },
@@ -47,7 +62,7 @@ const mutations = {
   },  
   [SET_CURRENT_USSD_SESSION_STATE] (state, data) {
     state.currentUssd.state = data
-  }  
+  }
 }
 
 // actions
@@ -59,7 +74,7 @@ const actions = {
     } else {
       var filters = {}
       // var query = Utils.createQueryParams(filters, page)
-      return new Promise((resolve, reject) => {       
+      return new Promise((resolve, reject) => {
         axios.get(
           // `https://3faa62d9.ngrok.io/v1/query/ussd-logs-status`,
           `https://ussd-log-status.nfortics.com/v1/query/ussd-logs-status`,
@@ -67,9 +82,9 @@ const actions = {
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
-              'Access-Control-Allow-Origin': '*/*',
+              'Access-Control-Allow-Origin': '*/*'
             }
-          },          
+          }
         ).then((response) => {
           commit(SET_USSD_SESSIONS_STATE, 'DATA')
           commit(SET_USSD_SESSIONS, response.data.filtered_records)
@@ -115,7 +130,7 @@ const actions = {
         reject(error)
       })
     })
-  }, 
+  },
   [GET_CURRENT_USSD_SESSION] ({ state, commit, rootGetters }, sessionId) {
     var query = ''
     commit(SET_USSD_SESSIONS_STATE, 'LOADING')
@@ -129,8 +144,8 @@ const actions = {
         response.data.map((el) => {
           arrayData.push(el)
         })
-        if(response.data) 
-        commit(SET_CURRENT_USSD_SESSION, arrayData)
+        if (response.data) { commit(SET_CURRENT_USSD_SESSION, arrayData) }
+
         state.currentUssd.data = arrayData
         commit(SET_USSD_SESSIONS_STATE, 'DATA')
         resolve(response)
@@ -139,7 +154,7 @@ const actions = {
         reject(error)
       })
     })
-  }  
+  }
 }
 
 export default {

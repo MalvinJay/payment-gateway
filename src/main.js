@@ -19,6 +19,7 @@ import IdleVue from 'idle-vue'
 // import VueLocalStorage from 'vue-localstorage'
 import VueSession from 'vue-session'
 import highlightJs from 'highlight.js'
+// import ActionCableVue from 'actioncable-vue'
 // import VueTour from 'vue-tour'
 
 // require('vue-tour/dist/vue-tour.css')
@@ -89,6 +90,12 @@ Vue.directive('service', {
 //   setTimeout(function () {
 //     resolve(require('@/transactions/components/PaymentTable.vue'))
 //   }, 5000)
+// })
+
+// Vue.use(ActionCableVue, {
+//   debug: true,
+//   debugLevel: 'error',
+//   connectionUrl: 'wss://api.flopay.io/websocket'
 // })
 
 Vue.config.devtools = process.env.NODE_ENV === 'development'

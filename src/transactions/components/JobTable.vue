@@ -31,8 +31,8 @@
                         <el-table-column prop="scheduled" label="">
                             <template slot-scope="scope">
                                 <div class="flex">
-                                    <the-tag v-if="scope.row.scheduled" status="success" title="Automatic" icon="detail check icon"></the-tag>
-                                    <the-tag v-else status="failed" title="Manual" icon="reply icon"></the-tag>
+                                    <the-tag v-if="scope.row.type === 'automatic'" status="success" :title="scope.row.type" icon="detail check icon"></the-tag>
+                                    <the-tag v-else status="failed" :title="scope.row.type" icon="reply icon"></the-tag>
                                 </div>
                             </template>
                         </el-table-column>
