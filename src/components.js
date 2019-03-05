@@ -16,6 +16,7 @@ import Avatar from '@/components/Avatar'
 import EventWebhook from '@/developers/components/EventWebhook'
 const TicketModal = () => import('./transactions/components/TicketModal')
 const AddGroup = () => import('./business/components/AddGroup')
+const AddContact = () => import('./contacts/components/AddContact')
 
 Vue.component('side-nav', SideNav)
 Vue.component('the-header', Header)
@@ -34,6 +35,7 @@ Vue.component('ticket-modal', TicketModal)
 Vue.component('avatar', Avatar)
 Vue.component('event-webhook', EventWebhook)
 Vue.component('add-group', AddGroup)
+Vue.component('add-contact', AddContact)
 
 export default {
   SideNav: SideNav,
@@ -52,5 +54,6 @@ export default {
   PayoutsTable: PayoutsTable,
   Avatar: Avatar,
   EventWebhook: EventWebhook,
-  AddGroup: AddGroup
+  AddGroup: AddGroup,
+  AddContact: AddContact
 }

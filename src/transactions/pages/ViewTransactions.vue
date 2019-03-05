@@ -34,10 +34,28 @@ export default {
       styleObject: {
         fontSize: '12px'
       },
-      tabValue: ''
+      tabValue: '',
+      message: 'blah'
     }
   },
+//   channels: {
+//         ChatChannel: {
+//             connected() {
+//                 console.log('I am connected.')
+//             },
+//             rejected() {
+//                 console.log('rejected')
+//             },
+//             received(data) {
+//                 console.log('data', data)
+//             },
+//             disconnected() {
+//                 console.log('I am disconnected.')
+//             }
+//         }
+//   },
   mounted () {
+    // this.$cable.subscribe({ channel: 'ChatChannel' })
     EventBus.$emit('sideNavClick', 'payments')
     EventBus.$on('tabNumber', (val) => {
         this.activeName = val
@@ -53,7 +71,14 @@ export default {
   methods: {
     updateTab (val) {
         this.activeName = val
-    }  
+    },
+    sendMessage () {
+        this.$cable.perform({
+            channel: 'ChatChannel',
+            action: 'send_message',
+            data: { content: this.message }
+        })
+    }
   },
   computed: {
     ...mapGetters({

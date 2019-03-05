@@ -30,6 +30,7 @@
 <script>
 import EventBus from '../event-bus.js'
 import { mapGetters } from 'vuex'
+import TransactionsChannel from '../channels/TransactionsChannel.js'
 export default {
   name: 'Client',
   data () {
@@ -53,13 +54,33 @@ export default {
       ]
     }
   },
+//     channels: {
+//         transactions: {
+//             connected() {
+//                 console.log('I am connected.')
+//             },
+//             rejected() {
+//                 console.log('rejected')
+//             },
+//             received(data) {
+//                 console.log('data', data)
+//             },
+//             disconnected() {
+//                 console.log('I am disconnected.')
+//             }
+//         }
+//   },
   mounted () {
     // if (!this.user.is_login_before) {
     //     this.$tours['myTour'].start()
     // }
+    // this.$cable.subscribe({ channel: 'transactions', room: 'public' })
+    // this.initialDataState()
     if (!this.$session.exists()) {
         this.logout()
     }
+
+    EventBus.$on('WS_TRANSACTION_CREATED', this.newTransaction)
   },
   created () {
     this.init()
@@ -93,8 +114,14 @@ export default {
         this.$store.dispatch('getJobs', {cache: false})
         this.$store.dispatch('getQueues', {cache: false})
         this.$store.dispatch('getPayouts', {cache: false})
+        // table columns for reports
         this.$store.dispatch('getFields', {cache: false})
+        // account balance
         this.$store.dispatch('getBalance')
+    },
+    initialDataState () {
+        // open all channells
+        TransactionsChannel.open()
     },
     leaving () {
         this.$store.dispatch('getToken')
@@ -107,6 +134,14 @@ export default {
             this.$session.destroy()
             this.$router.push('/login')
         })
+    },
+    newTransaction (data) {
+        this.$notify({
+          title: 'Alert',
+          message: 'A new transaction has been created',
+          type: 'success'
+        })
+        this.$store.dispatch('addTransaction', data)
     }
   },
   onIdle() {    

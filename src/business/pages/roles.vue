@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div v-else class=""> 
-                    <el-table :show-header="false" class="no-header" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" :data="roles">
+                    <el-table :show-header="false" class="no-header" empty-text="No roles available, create a new role" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" :data="roles">
                         <el-table-column v-for="(column, index) in columns" :key="index" :prop="column" :formatter="formatter" width="300"></el-table-column>
                         <el-table-column align="right">
                             <template slot-scope="scope">

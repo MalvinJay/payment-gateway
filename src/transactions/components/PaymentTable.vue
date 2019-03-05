@@ -5,6 +5,9 @@
                 <filter-component dispatch="setTransactionsFilters" filterType="payment"></filter-component>
             </div>
             <div>
+                <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
+                    <el-button @click.prevent="fetchTransactions" icon="undo icon" type="text"></el-button>
+                </el-tooltip>
                 <el-button v-can="'Accept Payment'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i>Receive Payment</el-button>
                 <el-button v-can="'Generate Reports'" class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
             </div>
@@ -128,7 +131,7 @@
         </el-dialog>
         <export-modal type="deposit" :modalVisible.sync="exportVisible"></export-modal>
         <ticket-modal :transaction="transaction" :ticketVisible.sync="ticketVisible"></ticket-modal>
-        <add-contact :form="contact" :dialogVisible="contactVisible"></add-contact>
+        <!-- <add-contact :form="contact" :dialogVisible="contactVisible"></add-contact> -->
     </div>
 </template>
 
@@ -145,7 +148,7 @@ export default {
       columns: [
         {label: 'Customer', dataField: 'customer', width: 'auto'},
         {label: 'Reference', dataField: 'reference', width: 'auto'},
-        // {label: 'type', dataField: 'transaction_type', width: '100px'}
+        {label: 'type', dataField: 'transaction_type', width: '100px'}
       ],
       styleObject: {
         fontSize: '12px'
@@ -164,6 +167,7 @@ export default {
         customer_no: '',
         country_code: 'GH',
         service_code: 'cashout',
+        // integration_type: 'WAEC_RESULTS_USSD',
         live: false,
         dummy: true
       },

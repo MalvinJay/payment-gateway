@@ -29,7 +29,6 @@
                             </template>
                         </el-table-column>
                         <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
-                        <!-- <el-table-column show-overflow-tooltip label="Message text" prop="message"></el-table-column> -->
                         <el-table-column width="80">
                             <template slot-scope="scope">
                                 <div class="flex">
@@ -43,7 +42,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    <!-- FOOTER -->
+
                     <div class="flex justify-content-between align-items-center px-10">
                         <div class="s-12">
                             {{messages.length}} results
@@ -60,7 +59,7 @@
         </div>
         <log-dialog :modalVisible="logDialog"></log-dialog>
         <topup-account :modalVisible="topupDialog"></topup-account>
-    </el-card>
+    </el-card>  
 </template>
 
 <script>
@@ -70,7 +69,8 @@ import LogDialog from '../components/LogDialog'
 import TopupAccount from '../components/TopupAccount'
 
 export default {
-  name: 'FoneMessenger',
+  name: 'Sms',
+  props: ['type'],
   components: {
     LogDialog,
     TopupAccount
@@ -234,4 +234,3 @@ export default {
     }
 }
 </style>
-

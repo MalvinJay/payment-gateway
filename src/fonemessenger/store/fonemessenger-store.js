@@ -1,8 +1,9 @@
 import { GET_BASE_URI } from '../../store/constants'
 import { GET_FONE_MESSENGERS, CREATE_LOG, SET_FONE_MESSENGERS,
-  SET_FONE_MESSENGERS_STATE, TOPUP_OVA } from './fonemessenger-store-constants'
+ SET_FONE_MESSENGERS_STATE, TOPUP_OVA,} from './fonemessenger-store-constants'
 import { apiCall } from '../../store/apiCall'
 import Utils from '../../utils/services'
+import axios from 'axios'
 
 // state
 const state = {
@@ -17,7 +18,7 @@ const state = {
 const getters = {
   messages: state => state.messages.data,
   messagesState: state => state.messages.state,
-  messagesCount: state => state.messages.count
+  messagesCount: state => state.messages.count,
 }
 
 // mutations
@@ -86,7 +87,7 @@ const actions = {
         reject(error)
       })
     })
-  }
+  } 
 }
 
 export default {

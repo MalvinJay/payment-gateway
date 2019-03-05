@@ -80,7 +80,10 @@ const actions = {
         }).then((response) => {
           commit(SET_TEAMS_STATE, 'DATA')
           commit(SET_TEAMS_META, response.data.response.data)
-          commit(SET_TEAMS, response.data.response.data.users)
+          
+          if(Utils.present(response.data.response.data)){
+            commit(SET_TEAMS, response.data.response.data.users)
+          }
           resolve(response)
         }).catch((error) => {
           commit(SET_TEAMS_STATE, 'ERROR')

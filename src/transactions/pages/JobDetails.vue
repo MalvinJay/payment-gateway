@@ -7,7 +7,7 @@
                 <el-button @click.prevent="fetchTransactions" icon="sync icon" type="text">Retry</el-button>
             </div>
         </div>
-        <!--  v-loading="loadingPage" -->
+
         <div v-else>
             <!-- BRIEF INFO -->
             <el-card class="card-0 position-relative">
@@ -219,7 +219,9 @@
                         <el-table-column min-width="80" align="center">
                             <template slot-scope="scope">
                                 <a :href="`${GET_BASE_URI}v1/clients/reports/download?access_token=${token}&file_name=${link}`"
-                                    class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" v-if="ready" download>Download</a>
+                                    class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" v-if="ready" download>
+                                    Download
+                                </a>
                                 <el-button @click="submitExport(scope.row.id)" :loading="exportLoading" v-else type="text" class="p-0 m-0" icon="download icon"></el-button>
                             </template>
                         </el-table-column>
@@ -262,6 +264,11 @@
                     header-row-class-name="transactions-table-header"
                     :data="form.contacts.slice((page * 12) - 12, page * 12)">
                         <el-table-column type="index"></el-table-column>
+                        <el-table-column label="#">
+                            <template slot-scope="scope">
+                                {{scope.row.amount | money}}
+                            </template>
+                        </el-table-column>
                         <!-- <el-table-column type="expand">
                             <template slot-scope="props">
                                 <div>
@@ -296,6 +303,9 @@
                         <el-table-column prop="status" label="status" >
                             <template slot-scope="scope">
                                 <div class="flex">
+                                    <!-- <the-tag v-if="scope.row.status === 'success' || scope.row.status === 'completed'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-if="scope.row.status === 'pending'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                    <the-tag v-if="scope.row.status === 'failed'" status="failed" :title="scope.row.status" icon="detail check icon"></the-tag> -->
                                     <the-tag v-if="scope.row.status === 'failed'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
                                     <the-tag v-else status="pending" :title="scope.row.status" icon="detail check icon"></the-tag>
                                     
