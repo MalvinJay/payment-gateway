@@ -315,8 +315,6 @@ export default {
                         type: 'success',
                         message: 'Payment Refunded',
                     })
-                    // EventBus.$emit('tabNumber', '3')
-                    // this.$router.push('/payments')
                 } else {
                     this.$message({
                         type: 'error',
@@ -345,19 +343,14 @@ export default {
         },
     },
     mounted () {       
-        // this.$store.dispatch('getCurrentUssdSession',)
-        // .then((response)=> {   
-        //     console.log('CurrentSession: ', this.currentUssdSession)
-        //     this.$store.dispatch('getCurrentUssdSessionPayment', this.currentUssdSession[0].sessionid)
-        //     .then((response)=> {
-        //         console.log('currentUssdSessionPayment:', currentUssdSessionPayment)
-        //     })            
-        // })
-
-        this.$store.dispatch('getCurrentUssdSessionPayment', this.currentUssdSession[0].sessionid)
-        .then((response)=> {
-            console.log('currentUssdSessionPayment:', currentUssdSessionPayment)
-        })     
+        this.$store.dispatch('getCurrentUssdSession', this.$route.params.id)
+        .then((response) => {   
+            console.log('CurrentSession: ', this.currentUssdSession)
+            this.$store.dispatch('getCurrentUssdSessionPayment', this.currentUssdSession[0].sessionid)
+            .then((response) => {
+                console.log('currentUssdSessionPayment:', this.currentUssdSessionPayment)
+            })            
+        })
 
         console.log('Form!!: ', this.form)
 
@@ -367,9 +360,9 @@ export default {
     },
     computed: {
         ...mapGetters({
+            currentUssdSession: 'currentUssdSession',
             form: 'currentUssdSessionPayment',
             state: 'ussdSessionsState',
-            currentUssdSession: 'currentUssdSession',
             currentUssdSessionPayment: 'currentUssdSessionPayment'
         }),
         events () {

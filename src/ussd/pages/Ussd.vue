@@ -164,36 +164,24 @@ export default {
         this.page = page
     },
     clickRow (row, event, column) {
-        this.$store.dispatch('getCurrentUssdSession', row.sessionid)
-        .then((response) => {
-            this.$store.dispatch('getCurrentUssdSessionPayment', row.sessionid)
-            .then((response)=> {
-                if(!response.data.success){
-                    // this.$message({
-                    //     message: response.data.response.message,
-                    //     type: 'error'
-                    // })                    
-                }
-                // if (column.property || !column.status === 'error') {
-                //     this.$router.push(`/ussd/${row.sessionid}`)
-                // }
-            })
-            .catch(()=>{
-                this.$message({
-                    message: "Couldn't load Payment Details of Ussd Session",
-                    type: 'error'
-                })            
-            })   
-            if (column.property || !column.status === 'error') {
-                this.$router.push(`/ussd/${row.sessionid}`)
-            }                     
-        })
-        .catch(()=>{
-            this.$message({
-                message: "Couldn't load Ussd Details",
-                type: 'error'
-            })            
-        })
+        if (column.property || !column.status === 'error') {
+            this.$router.push(`/ussd/${row.sessionid}`)
+        }
+
+        // this.$store.dispatch('getCurrentUssdSession', row.sessionid)
+        // .then((response) => {
+        //     this.$store.dispatch('getCurrentUssdSessionPayment', row.sessionid)
+
+        //     if (column.property || !column.status === 'error') {
+        //         this.$router.push(`/ussd/${row.sessionid}`)
+        //     }                     
+        // })
+        // .catch(()=>{
+        //     this.$message({
+        //         message: "Couldn't load Ussd Details",
+        //         type: 'error'
+        //     })            
+        // })
     },
     fetchMessages () {
       this.$store.dispatch('getUssdSessions', {cache: false})
