@@ -2,7 +2,6 @@ image: alpine
 
 deploy:
   script:
-    - apk add scp
     - apk add --no-cache rsync openssh
     - mkdir -p ~/.ssh
     - echo "$AWS_SSH_PRIVATE_KEY" >> ~/.ssh/id_dsa
