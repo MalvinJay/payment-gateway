@@ -7,7 +7,7 @@ deploy:
     - echo "$AWS_SSH_PRIVATE_KEY" >> ~/.ssh/id_dsa
     - chmod 600 ~/.ssh/id_dsa
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - scp -P 7198  dist/* $AWS_USER@$AWS_SERVER_IP:/var/www/dashboard.flopay.io
+    - scp -P 7198 -r dist/* $AWS_USER@$AWS_SERVER_IP:/var/www/dashboard.flopay.io
   only:
     - master
 
