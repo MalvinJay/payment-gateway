@@ -78,6 +78,8 @@ export default {
 
                     if(response.data.response.data.is_sub_user) {
                         if(!response.data.response.data.sub_user.is_login_before) {
+                            localStorage.setItem('FTloginToken', response.data.response.data.sub_user.token)
+                            this.$store.dispatch('getToken')
                             this.$router.push('/reset_password')
                         } else {
                             if (this.$session.has('client')) {
@@ -89,33 +91,44 @@ export default {
                                 })
                             } else {
                                 this.$store.dispatch('setClient', response.data.response.data)
+                                .then(()=> {
+                                    this.$router.push('/')
+                                })                              
                             }                            
                         }
-                    } else if (!response.data.response.data.is_login_before) {
-                                this.$router.push('/reset_password')
+                    } else {
+                        if (!response.data.response.data.is_login_before) {
+                            localStorage.setItem('FTloginToken', response.data.response.data.token)
+                            this.$store.dispatch('getToken')
+                            this.$router.push('/reset_password')
+                        } else {
+                            if (this.$session.has('client')) {
+                                this.$store.dispatch('getToken')
+                                .then((response) => {
+                                    this.$session.set('token', response.data.access_token)
+                                    this.$store.dispatch('setToken', response.data.access_token)
+                                    this.$router.push('/')
+                                })
                             } else {
-                                if (this.$session.has('client')) {
-                                    this.$store.dispatch('getToken')
-                                    .then((response) => {
-                                        this.$session.set('token', response.data.access_token)
-                                        this.$store.dispatch('setToken', response.data.access_token)
-                                        this.$router.push('/')
-                                    })
-                                } else {
-                                    this.$store.dispatch('setClient', response.data.response.data)
-                                }
+                                this.$store.dispatch('setClient', response.data.response.data)
+                                .then(()=> {
+                                    this.$router.push('/')
+                                })
                             }
+                        }
+                    }
                 } else {
                     this.$message({
                         message: response.data.response.message,
                         type: 'error'
                     })
                 }
-                this.loading = false
+                    this.loading = false
                 })
             .catch((error) => {
                 this.loading = false
-                let resp = '';
+                let resp = ''
+                console.log('Here')
 
                 if(error.response != undefined) {
                     switch (error.response.status) {
@@ -134,7 +147,7 @@ export default {
                     resp = '500 - (Internal Server Error)'
 
                 this.$message({
-                    message: resp,
+                    message: error.response,
                     type: 'error'
                 })
             })

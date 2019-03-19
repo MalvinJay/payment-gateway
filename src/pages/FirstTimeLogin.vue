@@ -60,12 +60,29 @@ export default {
     changePassword (formName) {
         if(this.$route.query.token){
             this.form.token = this.$route.query.token
-        }
+            this.makeRequest('resetPassword', formName)
+        } else {
+            if(localStorage.getItem('FTloginToken')){
+                this.form.token = localStorage.getItem('FTloginToken')
+                console.log('Form: ', this.form)
+            }
+            else {
+                this.$message({
+                    message: 'Password reset token not available',
+                    type: 'error'
+                })                
+            }
 
+            // this.makeRequest('userPassReset', formName)
+            this.makeRequest('resetPassword', formName)
+        }        
+    },
+    makeRequest(url, formName){
         this.loading = true
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$store.dispatch('resetPassword', this.form)
+              console.log('Url to sent: ', url)
+            this.$store.dispatch(`${url}`, this.form)
             .then((response) => {
                 if (response.data.success) {
                     this.$message({

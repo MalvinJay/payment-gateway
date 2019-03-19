@@ -274,7 +274,7 @@ export default {
                     var schedule = Utils.createJobQuery(this.form.schedule, this.schedule)
                     this.form.schedule = schedule
                     
-
+                    console.log('Recurring payment:', this.form)
                     this.$store.dispatch(job, this.form)
                     .then((response) => {
                         if (response.data.success) {
