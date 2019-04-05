@@ -264,11 +264,6 @@
                     header-row-class-name="transactions-table-header"
                     :data="form.contacts.slice((page * 12) - 12, page * 12)">
                         <el-table-column type="index"></el-table-column>
-                        <el-table-column label="#">
-                            <template slot-scope="scope">
-                                {{scope.row.amount | money}}
-                            </template>
-                        </el-table-column>
                         <!-- <el-table-column type="expand">
                             <template slot-scope="props">
                                 <div>
@@ -335,7 +330,7 @@
                             @current-change="handleCurrentCustomerChange"
                             :page-size="pageSize"
                             layout="prev, pager, next"
-                            :total="totalRuns">
+                            :total="totalContacts">
                         </el-pagination>
                     </div>
                 </div>
@@ -368,6 +363,7 @@ export default {
             changedFields: {},
             deleteLoading: false,
             page: 1,
+            contactPage: 1,
             ready: false,
             exportLoading: false,
             GET_BASE_URI: GET_BASE_URI
@@ -451,6 +447,7 @@ export default {
                     })
                     this.runLoading= false
                     EventBus.$emit('tabNumber', '3')
+                    this.$router.push('/receipts')
                     setTimeout(() => {
                         this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
                         this.$store.dispatch('getBalance')
@@ -629,6 +626,9 @@ export default {
         },
         totalRuns () {
             return this.totalRunsStore.length
+        },
+        totalContacts () {
+            return this.form.contacts.length
         },
         data () {
             var symbol = '\u20B5'
