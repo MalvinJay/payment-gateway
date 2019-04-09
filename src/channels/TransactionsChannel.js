@@ -16,24 +16,24 @@ TransactionsChannel.open = function () {
     let client_code = store.getters.user.client_code
     channel = cable.subscriptions.create({ channel: 'TransactionsChannel' }, {
       received (data) {
-        console.log('received the websocket steeze', data)
-        let message, action
-        switch (data.action) {
-          case 'create':
-            // message = i18n.t('notifications.newCreated', {model: i18n.tc('agent', 1)})
-            action = 'TRANSACTION_CREATED'
-            break
-          case 'update':
-            action = 'TRANSACTION_UPDATED'
-            break
-        }
+        // console.log('received the websocket steeze', data)
+        // let message, action
+        // switch (data.action) {
+        //   case 'create':
+        //     // message = i18n.t('notifications.newCreated', {model: i18n.tc('agent', 1)})
+        //     action = 'TRANSACTION_CREATED'
+        //     break
+        //   case 'update':
+        //     action = 'TRANSACTION_UPDATED'
+        //     break
+        // }
         // if (message) {
         // //   notify.info(message)
         // }
-        console.log('received the websocket steeze', action)
-        if (action) {
-          EventBus.$emit(`WS_${action}`, data.data)
-        }
+        // console.log('received the websocket steeze', action)
+        // if (action) {
+        //   EventBus.$emit(`WS_${action}`, data.data)
+        // }
       }
     })
   }

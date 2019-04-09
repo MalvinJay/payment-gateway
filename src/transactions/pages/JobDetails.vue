@@ -447,7 +447,7 @@ export default {
                     })
                     this.runLoading= false
                     EventBus.$emit('tabNumber', '3')
-                    this.$router.push('/receipts')
+                    this.$router.replace('/receipts')
                     setTimeout(() => {
                         this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
                         this.$store.dispatch('getBalance')

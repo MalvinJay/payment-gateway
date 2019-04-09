@@ -107,6 +107,9 @@ const getEditView = (dashboard, type) => {
   } else if (type === 'quarter') {
     var arr = []
     dashboard.map(el => {
+      var count_sum = Utils.sum(el.map(element => element.count_sum))
+      var deposit_count_sum = Utils.sum(el.map(element => element.deposit_count_sum))
+      var withdrawal_count_sum = Utils.sum(el.map(element => element.withdrawal_count_sum))
       var count = Utils.sum(el.map(element => element.count))
       var deposit_count = Utils.sum(el.map(element => element.deposit_count))
       var withdrawal_count = Utils.sum(el.map(element => element.withdrawal_count))
@@ -114,8 +117,11 @@ const getEditView = (dashboard, type) => {
       var month = {
         label: el[0].month,
         count,
+        count_sum,
         deposit_count,
-        withdrawal_count
+        deposit_count_sum,
+        withdrawal_count,
+        withdrawal_count_sum
       }
       arr.push(month)
     })
