@@ -63,6 +63,10 @@ const WebhookDetails = () => import(/* webpackChunkName: "developer" */ '../deve
 const APIKeys = () => import(/* webpackChunkName: "developer" */ '../developers/pages/APIKeys')
 const Sandbox = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Sandbox')
 
+const Products = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Products')
+const Purchases = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Purchases')
+const Agent = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Agents')
+
 Vue.use(Router)
 
 let router = new Router({
@@ -120,6 +124,16 @@ let router = new Router({
           path: '/payments/:id',
           name: 'ViewTransactionsDetails',
           component: PaymentDetail
+        },
+        {
+          path: '/stock/products',
+          name: 'Products',
+          component: Products
+        },
+        {
+          path: '/stock/purchases',
+          name: 'Purchase',
+          component: Purchases
         },
         {
           path: '/fees',
@@ -235,12 +249,12 @@ let router = new Router({
           path: '/ussd',
           name: 'Ussd',
           component: Ussd
-        },   
+        },
         {
           path: '/ussd/:id',
           name: 'UssdDetails',
           component: UssdDetails
-        },             
+        },
         // connect
         {
           path: '/accounts',
