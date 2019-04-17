@@ -10,10 +10,10 @@
                     placement="top-start"
                     trigger="hover"
                     :content="client">
-                    <p slot="reference" class="text-uppercase s-16 p-0 m-0 bold-500 client_name">{{client}}</p>                
+                    <p slot="reference" class="text-uppercase s-16 p-0 m-0 bold-500 client_name">{{client}}</p>
                 </el-popover>
             </div>
-        </div> 
+        </div>
         <el-menu router :unique-opened="true" :default-active="defaultActive" active-text-color='#586ADA' text-color="#999999" background-color="#f1f6f8">
             <el-menu-item route="/" index="dashboard">
                 <template slot="title">
@@ -33,12 +33,21 @@
             </el-submenu>
             <el-submenu ref="sideMenu" index="3">
                 <template slot="title">
+                    <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">Stocks
+                </template>
+                <!-- <el-menu-item route="/stock/dashboard" index="st_dashboard">Dashboard</el-menu-item> -->
+                <el-menu-item route="/stock/products" index="products">Products</el-menu-item>
+                <el-menu-item route="/stock/purchases" index="purchases">Purchases</el-menu-item>
+                <!-- <el-menu-item route="/stock/agents" index="bulk">Agents</el-menu-item> -->
+            </el-submenu>
+            <el-submenu ref="sideMenu" index="4">
+                <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/balance.svg" alt="">Account
                 </template>
                 <el-menu-item route="/fees" index="fees">Fees</el-menu-item>
                 <el-menu-item route="/topups" index="topups">Topups</el-menu-item>
                 <el-menu-item route="/settlements" index="settlements">Settlements</el-menu-item>
-                <el-menu-item v-if="false" index="3-4">Settings</el-menu-item>
+                <el-menu-item v-if="false" index="4-4">Settings</el-menu-item>
             </el-submenu>
             <el-menu-item v-can="'Manage Contacts'" route="/contacts" index="contacts">
                 <template slot="title">
@@ -72,7 +81,7 @@
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">USSD
                 </template>
-            </el-menu-item>            
+            </el-menu-item>
             <el-submenu ref="sideMenu" index="9">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/developer.svg" alt="">Developers
@@ -92,7 +101,7 @@
                 <!-- <el-menu-item index="10-2">Verifications</el-menu-item> -->
                 <!-- <el-menu-item route="/taxation" index="taxation">Tax details</el-menu-item> -->
                 <el-menu-item v-can="'Manage Users'" route="/teams" index="teams">Teams</el-menu-item>
-                <el-menu-item v-can="'Manage Users'" route="/roles" index="roles">Roles</el-menu-item>   
+                <el-menu-item v-can="'Manage Users'" route="/roles" index="roles">Roles</el-menu-item>
                 <el-menu-item v-can="'Manage Users'" route="/branches" index="branches">Branches</el-menu-item>
                 <!-- <el-menu-item index="10-6">Integration</el-menu-item>     -->
                 <!-- <el-menu-item index="10-7">Relay</el-menu-item>     -->
@@ -140,9 +149,9 @@ export default {
         var client = ''
         // localStorage.getItem('isAdmin')
         if (this.isAdmin) {
-           client = Object.keys(this.user).length !== 0 ? this.user.company : '' 
+           client = Object.keys(this.user).length !== 0 ? this.user.company : ''
         } else {
-           client = Object.keys(this.user).length !== 0 ? this.user.client.company_name : '' 
+           client = Object.keys(this.user).length !== 0 ? this.user.client.company_name : ''
         }
         // var client = Object.keys(this.user).length !== 0 ? this.user.client.company_name : ''
         return client

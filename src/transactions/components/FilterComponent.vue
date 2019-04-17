@@ -1,8 +1,8 @@
 <template>
     <el-dropdown ref="messageDrop" placement="bottom-start" trigger="click" :hide-on-click="false">
         <el-button class="z-depth-button bold-600 el-dropdown-link s-13 open-sans mini-button" type="text">
-            <i class="filter icon"></i> 
-            Filter 
+            <i class="filter icon"></i>
+            Filter
             <!-- <span v-if="count != 0" class="border-left pl-6">{{filterCount}}</span> -->
         </el-button>
         <el-dropdown-menu class="filter-dropdown" slot="dropdown">
@@ -40,7 +40,7 @@
                         </el-date-picker>
                     </div>
                 </div>
-            </el-collapse-transition>            
+            </el-collapse-transition>
 
             <el-dropdown-item v-if="showDispute" divided>
                 <el-checkbox class="mr-10" v-model="reason"></el-checkbox> Reason
@@ -56,9 +56,9 @@
                         </el-option>
                     </el-select>
                 </div>
-            </el-collapse-transition>            
+            </el-collapse-transition>
 
-            <el-dropdown-item v-if="showStatus || showDispute" divided>
+            <el-dropdown-item v-if="showStatus || showDispute || showStocks" divided>
                 <el-checkbox class="mr-10" v-model="status"></el-checkbox> Status
             </el-dropdown-item>
             <el-collapse-transition>
@@ -88,8 +88,8 @@
                         </el-option>
                     </el-select>
                 </div>
-            </el-collapse-transition>                     
-            
+            </el-collapse-transition>
+
         </el-dropdown-menu>
     </el-dropdown>
 </template>
@@ -239,7 +239,7 @@ export default {
         console.log('focus here', this.$refs.messageDrop)
 
         // if (this.$refs.messageDrop.$refs.input.focus()) {
-            
+
         // }
         // let ref = this.$refs
         // let button = document.querySelectorAll('button')
@@ -260,6 +260,9 @@ export default {
         },
         showDispute () {
             return this.filterType === 'dispute'
+        },
+        showStocks () {
+            return this.filterType === 'stocks'
         },
         filterCount () {
             var count = 0

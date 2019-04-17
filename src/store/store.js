@@ -22,6 +22,7 @@ import accountFees from '../connect/store/connect-fees-store'
 import logs from '../developers/store/logs-store'
 import events from '../developers/store/events-store'
 import webhook from '../developers/store/webhooks-store'
+import stocks from '../stocks/store/stocks-store'
 
 // axios.defaults.baseURL = 'https://api.flopay.io/'
 
@@ -51,6 +52,7 @@ export default new Vuex.Store({
     accountFees,
     logs,
     events,
-    webhook
+    webhook,
+    stocks
   }
 })

@@ -132,7 +132,7 @@ $border: #dcdfe6;
         color: #999999;
         font-weight: 100;
     }
-    
+
 }
 .transactions-table-body{
     td{
@@ -349,11 +349,11 @@ $border: #dcdfe6;
             line-height: 25px;
             font-size: 12px;
             font-weight: 600;
-    
+
             &::placeholder{
                 color: #4e566d !important;
             }
-        } 
+        }
     }
 }
 
@@ -462,11 +462,11 @@ $border: #dcdfe6;
 .breathe {
     .cell {
         padding-left: 20px;
-    }  
+    }
     table th {
         font-weight: 100;
         font-size: 11px;
-    }  
+    }
 }
 
 .logs_custom_headers {
@@ -482,7 +482,7 @@ $border: #dcdfe6;
         }
         th:nth-child(1), th:nth-child(3), td:nth-child(3){
             text-align: right;
-        }        
+        }
     }
 }
 
@@ -499,8 +499,8 @@ $border: #dcdfe6;
         }
         // th:nth-child(2), th:nth-child(3), td:nth-child(3){
         //   text-align: right;
-        // }        
-    }    
+        // }
+    }
 }
 
 .no-padding {
@@ -535,7 +535,7 @@ $border: #dcdfe6;
     .el-input__inner {
         border-radius: 20px!important;
     }
-    .roles { 
+    .roles {
         border: 1px solid #c0c4cc;
         border-radius: 5px;
         input {
@@ -584,7 +584,7 @@ $border: #dcdfe6;
             }
             .el-table__expanded-cell {
                 padding: 10px 20px;
-            }            
+            }
         }
     }
     .el-card__body {
@@ -684,7 +684,7 @@ td.hljs-ln-code {
 
 .bsProperty {
     .hljs-ln {
-        width: 100%; 
+        width: 100%;
         tr {
             line-height: 0;
 
@@ -739,7 +739,13 @@ td.hljs-ln-code {
 }
 
 .ussd_session {
-    .el-table__expanded-cell {
-        padding: 10px;
-    }
+  .el-table__expanded-cell {
+      padding: 10px;
+  }
+}
+
+.addProduct {
+  .el-input__inner {
+    padding-right: 0!important;
+  }
 }
