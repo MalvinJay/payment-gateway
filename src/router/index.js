@@ -63,6 +63,7 @@ const WebhookDetails = () => import(/* webpackChunkName: "developer" */ '../deve
 const APIKeys = () => import(/* webpackChunkName: "developer" */ '../developers/pages/APIKeys')
 const Sandbox = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Sandbox')
 
+const stockDashboard = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Dashboard')
 const Products = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Products')
 const Purchases = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Purchases')
 const Agent = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Agents')
@@ -124,6 +125,11 @@ let router = new Router({
           path: '/payments/:id',
           name: 'ViewTransactionsDetails',
           component: PaymentDetail
+        },
+        {
+          path: '/stock/dashboard',
+          name: 'stockDashboard',
+          component: stockDashboard
         },
         {
           path: '/stock/products',

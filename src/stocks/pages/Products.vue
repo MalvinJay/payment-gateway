@@ -37,7 +37,10 @@
                         </el-table-column>
                         <el-table-column label="Unit Price">
                             <template slot-scope="scope">
-                              <p class="m-0 p-0 mr-10 s-13">{{scope.row.unit_price}}</p>
+                              <div class="d-flex">
+                                <!-- <span> Ghs </span> -->
+                                <p class="m-0 p-0 mr-10 s-13">{{scope.row.unit_price}}</p>
+                              </div>
                             </template>
                         </el-table-column>
                         <el-table-column prop="description" label="Description">

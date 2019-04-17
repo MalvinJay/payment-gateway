@@ -38,7 +38,7 @@
                 <!-- <el-menu-item route="/stock/dashboard" index="st_dashboard">Dashboard</el-menu-item> -->
                 <el-menu-item route="/stock/products" index="products">Products</el-menu-item>
                 <el-menu-item route="/stock/purchases" index="purchases">Purchases</el-menu-item>
-                <el-menu-item route="/stock/agents" index="bulk">Agents</el-menu-item>
+                <!-- <el-menu-item route="/stock/agents" index="bulk">Agents</el-menu-item> -->
             </el-submenu>
             <el-submenu ref="sideMenu" index="4">
                 <template slot="title">

@@ -286,15 +286,15 @@ export default {
         return this.user.available_balance
     },
     grossVolume () {
-        var gross = this.dashboard ? Utils.sum(this.dashboard.map(el => el.count)) : 0
+        var gross = this.dashboard ? Utils.sum(this.dashboard.map(el => el.count_sum)) : 0
         return gross
     },
     withVolume () {
-        var gross = this.dashboard ? Utils.sum(this.dashboard.map(el => el.withdrawal_count)) : 0
+        var gross = this.dashboard ? Utils.sum(this.dashboard.map(el => el.withdrawal_count_sum)) : 0
         return gross
     },
     depositVolume () {
-        var gross = this.dashboard ? Utils.sum(this.dashboard.map(el => el.deposit_count)) : 0
+        var gross = this.dashboard ? Utils.sum(this.dashboard.map(el => el.deposit_count_sum)) : 0
         return gross
     },
     chartData () {
@@ -364,17 +364,17 @@ export default {
     },
     count () {
         return this.dashboard.map((el) => {
-           return `${el.count}`
+           return `${el.count_sum}`
         })
     },
     depositCount () {
         return this.dashboard.map((el) => {
-           return `${el.deposit_count}`
+           return `${el.deposit_count_sum}`
         })
     },
     withCount () {
         return this.dashboard.map((el) => {
-           return `${el.withdrawal_count}`
+           return `${el.withdrawal_count_sum}`
         })
     },
     sData () {
