@@ -2,8 +2,8 @@
   <div class="dash h-auto">
     <div class="content mx-3">
       <div class="col-md-12 p-0">
-        <div class="row">
-          <div class="col-md-3">
+        <div class="row d-flex">
+          <div class="col-md-3" style="width: 25%">
             <div class="card card-stats card-raised border-10">
               <div class="card-body">
             <div class="statistics py-4">
@@ -14,13 +14,13 @@
                 <h3 class="info-title">
                   <span>20</span>
                 </h3>
-                <h6 class="stats-title">TOTAL VEHICLES</h6>
+                <h6 class="stats-title">PRODUCTS</h6>
               </div>
             </div>
               </div>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3" style="width: 25%">
             <div class="card card-stats card-raised border-10">
               <div class="card-body">
                 <div class="statistics py-4">
@@ -31,13 +31,13 @@
                     <h3 class="info-title">
                       <span>15</span>
                     </h3>
-                    <h6 class="stats-title">TOTAL COURIERS</h6>
+                    <h6 class="stats-title">PURCHASE</h6>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3" style="width: 25%">
             <div class="card card-stats card-raised border-10">
               <div class="card-body">
                 <div class="statistics py-4">
@@ -48,13 +48,13 @@
                     <h3 class="info-title">
                       <span>76</span>
                     </h3>
-                    <h6 class="stats-title">TOTAL DELIVERIES</h6>
+                    <h6 class="stats-title">SUCCESSFUL</h6>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-3" style="width: 25%">
             <div class="card card-stats card-raised border-10">
               <div class="card-body">
                 <div class="statistics py-4">
@@ -66,7 +66,7 @@
                       <small style="font-size: 80%">$</small>
                       <span>3521</span>
                     </h3>
-                    <h6 class="stats-title">TODAY REVENUE</h6>
+                    <h6 class="stats-title">OTHER</h6>
                   </div>
                 </div>
               </div>

@@ -18,30 +18,30 @@
                 </div>
                 <div v-else class="breathe">
                     <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredPurchases">
-                        <el-table-column label="Purchase Ref.">
+                        <el-table-column label="Purchase Ref." width="auto">
                             <template slot-scope="scope">
                               <p class="m-0 p-0 mr-10 s-13">{{scope.row.reference}}</p>
                             </template>
                         </el-table-column>
                         <!-- <el-table-column show-overflow-tooltip prop="name" label="Reference"></el-table-column> -->
-                        <el-table-column label="Status">
+                        <el-table-column label="Status" width="auto">
                             <template slot-scope="scope">
                               <p class="m-0 p-0 mr-10 s-13">{{scope.row.status}}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Prev. Quantity">
+                        <el-table-column label="Prev. Quantity" width="100">
                             <template slot-scope="scope">
                               <p class="m-0 p-0 mr-10 s-13">{{scope.row.previous_quantity}}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Cur. Quantity">
+                        <el-table-column label="Cur. Quantity" width="100">
                             <template slot-scope="scope">
                               <p class="m-0 p-0 mr-10 s-13">{{scope.row.current_quantity}}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Remarks">
+                        <el-table-column label="Branch" width="160">
                             <template slot-scope="scope">
-                              {{scope.row.remarks}}
+                              {{scope.row.branch}}
                             </template>
                         </el-table-column>
                         <el-table-column label="Customer No.">
@@ -159,7 +159,7 @@ export default {
       return this.state === 'ERROR' && this.state !== 'LOADING'
     },
     total () {
-      return this.meta.purchases
+      return this.meta.totalCount
     },
     loading () {
       return this.state === 'LOADING'
