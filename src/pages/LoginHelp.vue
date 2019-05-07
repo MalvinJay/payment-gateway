@@ -14,7 +14,7 @@
               <span class="bold-600">'{{form.email}}'</span> or password provided is not associated with any Flopay account.
             </p>
           </div>
-          <div class="flex justify-content-end align-items-center border-top s-12 p-5">
+          <div class="flex justify-content-end align-items-center border-top s-12 p-10">
             <router-link :to="{name: 'Login'}">
               <el-button size="mini" class="blue-pure white-text mr-1">Try Again</el-button>
             </router-link>
