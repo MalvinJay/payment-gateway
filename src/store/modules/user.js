@@ -1,5 +1,5 @@
 import { AUTH_REQUEST, ADMIN_LOGIN, IS_ADMIN, SET_PAGE_LOADING, SET_TEST, SET_TOKEN, SET_CLIENT,
-  SET_PERMISSIONS, LOGIN, SEND_EMAIL, UPDATE_PROFILE, LOGOUT, SET_CLIENT_CRED, SET_BALANCE, GET_BALANCE, 
+  SET_PERMISSIONS, LOGIN, SEND_EMAIL, UPDATE_PROFILE, LOGOUT, SET_CLIENT_CRED, SET_BALANCE, GET_BALANCE,
   RESET_PASSWORD, USER_PASS_RESET } from './store-constants'
 import { GET_BASE_URI, CTRL_KEY } from '../../store/constants'
 import { apiCall } from '../apiCall'
@@ -127,22 +127,17 @@ const user = {
         axios.post(url, loginData)
         .then((response) => {
           console.log('Data after login: ', response.data.response.data)
-          if (response.data.response.data != null) {
+
+          if (Utils.present(response.data.response.data)) {
             localStorage.setItem('login', true)
-            // localStorage.setItem('isAdmin', false)
-            // commit(SET_CLIENT, response.data.response.data.client)
-            // localStorage.setItem('name', response.data.response.data.client.full_name)
-            // localStorage.setItem('company', response.data.response.data.client.company_name)
-            // localStorage.setItem('email', response.data.response.data.client.email)
-            // localStorage.setItem('balance', response.data.response.data.available_balance)
-            // commit(SET_CLIENT_CRED, response.data.response.data.access_key)
             localStorage.setItem('client_id', response.data.response.data.access_key.client_id)
             localStorage.setItem('client_secret', response.data.response.data.access_key.client_secret)
-            resolve(response)
           } else {
-            reject(response)
+            console.log("Email or password error")
           }
-        }).catch((error) => {
+          resolve(response)
+        })
+        .catch((error) => {
           console.log(error)
           reject(error)
         })
@@ -269,7 +264,7 @@ const user = {
           reject(error)
         })
       })
-    },    
+    },
     [SET_TEST] ({ commit }, data) {
       commit(SET_TEST, data)
     },

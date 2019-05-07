@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import store from '../store/store'
 import Client from '@/pages/Client'
 import Login from '@/pages/Login'
+import LoginHelp from '@/pages/LoginHelp'
 import Dashboard from '@/dashboard/pages/Dashboard'
 import ViewTransactions from '../transactions/pages/ViewTransactions'
 
@@ -293,6 +294,11 @@ let router = new Router({
       meta: {
         guest: true
       }
+    },
+    {
+      path: '/help',
+      name: 'Help',
+      component: LoginHelp
     },
     {
       path: '/reset_password',

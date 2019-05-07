@@ -86,7 +86,7 @@ export default {
     this.init()
   },
   computed: {
-    ...mapGetters(['pageLoading', 'user'])  
+    ...mapGetters(['pageLoading', 'user'])
   },
   methods: {
     init () {
@@ -144,7 +144,7 @@ export default {
         this.$store.dispatch('addTransaction', data)
     }
   },
-  onIdle() {    
+  onIdle() {
     this.$store.dispatch('logout')
     .then(() => {
       this.$router.push('/login')
