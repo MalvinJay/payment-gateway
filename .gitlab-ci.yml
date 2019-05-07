@@ -10,8 +10,8 @@ stages:
 build site:
   stage: build
   script:
-    - npm install --progress=false
-    - npm run build
+    - yarn install
+    - yarn run build
   artifacts:
     #    expire_in: 1h
     paths:
