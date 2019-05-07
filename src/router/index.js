@@ -15,21 +15,6 @@ const Teams = () => import(/* webpackChunkName: "payment" */ '../business/pages/
 const Roles = () => import(/* webpackChunkName: "payment" */ '../business/pages/Roles')
 const Branches = () => import(/* webpackChunkName: "payment" */ '../business/pages/Branches')
 const Jobs = () => import(/* webpackChunkName: "payment" */ '../transactions/pages/Jobs')
-// import PaymentDetail from '../transactions/pages/PaymentDetail'
-// import ContactDetails from '../contacts/pages/ContactDetails'
-
-// import NotFound from '@/pages/NotFound'
-
-// import Settings from '@/pages/client/transactions/Settings'
-// import NewProduct from '@/pages/client/transactions/NewProduct'
-// import BsSettings from '@/business/pages/BsSettings'
-// import Taxation from '@/business/pages/Taxation'
-// import Teams from '@/business/pages/Teams'
-// import Roles from '@/business/pages/Roles'
-// import Branches from '@/business/pages/Branches'
-// import Reports from '@/business/pages/Reports'
-// import JobDetails from '../transactions/pages/JobDetails'
-// import Jobs from '../transactions/pages/Jobs'
 
 const Customers = () => import(/* webpackChunkName: "customer" */ '../contacts/pages/Customers')
 const Payouts = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/Payouts')
@@ -157,7 +142,6 @@ let router = new Router({
           name: 'Settlements',
           component: Settlements
         },
-        // Developers
         {
           path: '/logs',
           name: 'Logs',
@@ -218,7 +202,6 @@ let router = new Router({
           name: 'JobContactDetails',
           component: JobContactDetails
         },
-        // Business Settings
         {
           path: '/account',
           name: 'BsSettings',
@@ -239,19 +222,16 @@ let router = new Router({
           name: 'Branches',
           component: Branches
         },
-        // disputes
         {
           path: '/disputes',
           name: 'Disputes',
           component: Disputes
         },
-        // fone messenger
         {
           path: '/fonemessenger',
           name: 'FoneMessenger',
           component: FoneMessenger
         },
-        // ussd sessiond & transactions
         {
           path: '/ussd',
           name: 'Ussd',
@@ -262,7 +242,6 @@ let router = new Router({
           name: 'UssdDetails',
           component: UssdDetails
         },
-        // connect
         {
           path: '/accounts',
           name: 'Account',
@@ -273,13 +252,11 @@ let router = new Router({
           name: 'AccountDetail',
           component: AccountDetail
         },
-        // connect settlements
         {
           path: '/account-settlements',
           name: 'AccountSettlements',
           component: AccountSettlements
         },
-        // connect settlements
         {
           path: '/account-fees',
           name: 'AccountFees',
@@ -329,39 +306,9 @@ router.beforeEach((to, from, next) => {
     } else {
       store.dispatch('getToken')
       next()
-    //   if (localStorage.getItem('login')) {
-    //     store.dispatch('getToken')
-    //     next()
-    //   } else {
-    //     store.client = {}
-    //     store.user = {
-    //       data: {},
-    //       client_id: '',
-    //       client_secret: ''
-    //     }
-    //     store.userdata = {}
-    //     store.permissions = {
-    //       data: []
-    //     }
-    //     store.logIn = false
-    //     store.user.token = null
-    //     localStorage.removeItem('token')
-    //     localStorage.setItem('login', false) // clear your user's token from localstorage
-    //     localStorage.removeItem('client_id')
-    //     localStorage.removeItem('client_secret')
-    //     next({
-    //       path: '/login',
-    //       params: { nextUrl: to.fullPath }
-    //     })
-    //   }
-    //   console.log('app stat', this.a.app.$session.exists())
     }
   } else if (to.matched.some(record => record.meta.guest)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
-    //   next({
-    //     path: '/login',
-    //     params: { nextUrl: to.fullPath }
-    //   })
       next()
     } else {
       next({ name: 'Dashboard' })
