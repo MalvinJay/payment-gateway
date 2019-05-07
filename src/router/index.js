@@ -57,7 +57,7 @@ const AccountFees = () => import(/* webpackChunkName: "connect" */ '../connect/p
 
 const Logs = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Logs')
 const LogsDetails = () => import(/* webpackChunkName: "developer" */ '../developers/pages/LogsDetails')
-const Events = () => import(/* webpackChunkName: "developer" */ '../developers/pages/events')
+const Events = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Events')
 const EventsDetails = () => import(/* webpackChunkName: "developer" */ '../developers/pages/EventsDetails')
 const Webhooks = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Webhooks')
 const WebhookDetails = () => import(/* webpackChunkName: "developer" */ '../developers/pages/WebhookDetails')

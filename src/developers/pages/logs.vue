@@ -16,9 +16,9 @@
             <div v-else class="breathe logs_custom_headers">
                 <el-table @row-click="clickRow" empty-text="No logs found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredLogs">
                   <el-table-column label="status" prop="status" width="100">
-                        <template slot-scope="scope">
+                        <template>
                             <p class="status bold-600">201 OK</p>
-                        </template>                    
+                        </template>
                   </el-table-column>
                   <el-table-column label="description" prop="method">
                         <template slot-scope="scope">
@@ -31,8 +31,8 @@
                   <el-table-column label="date" prop="created_at" width="200">
                         <template slot-scope="scope">
                             <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("D MMM,YY hh:mm A")}}</p>
-                        </template>      
-                  </el-table-column>                                    
+                        </template>
+                  </el-table-column>
                 </el-table>
 
                 <!-- FOOTER -->
@@ -40,8 +40,8 @@
                     <div class="s-12">
                         {{logs.length}} results
                     </div>
-                    <el-pagination class="my-2 flex justify-content-end" 
-                      @current-change="handleCurrentChange" 
+                    <el-pagination class="my-2 flex justify-content-end"
+                      @current-change="handleCurrentChange"
                       layout="prev, pager, next"
                       :total="total">
                     </el-pagination>
@@ -91,19 +91,19 @@ export default {
       logs: 'logs',
       state: 'logsState',
       meta: 'logsMeta',
-    }),    
+    }),
     filteredLogs () {
         return this.logs
-    },  
+    },
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'
-    },  
+    },
     total () {
       return this.meta.totalCount
-    },        
+    },
     loading () {
       return this.state === 'LOADING'
-    }    
+    }
   }
 }
 </script>
@@ -116,7 +116,7 @@ export default {
     font-size: 11px!important;
     padding: 2px;
     width: 80%;
-    float: right;    
+    float: right;
   }
 
   .transactions-table-header {
