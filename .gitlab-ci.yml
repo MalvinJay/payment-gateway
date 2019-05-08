@@ -1,17 +1,31 @@
-image: alpine
-
-deploy:
+image: node:latest
+variables:
+  S3_BUCKET_NAME: "dashboard.flopay.io"
+stages:
+  #- build
+  - deploy
+#build site:
+#  stage: build
+#  script:
+#    # - npm install --progress=false
+#    - yarn install
+#    # - npm run build
+#    - yarn run build
+#  artifacts:
+#   #    expire_in: 1h
+#    paths:
+#      - dist
+deploy to production:
+  stage: deploy
+  environment: production
+  image: python:latest
   script:
-    - apk add --no-cache rsync openssh
-    - mkdir -p ~/.ssh
-    - echo "$AWS_SSH_PRIVATE_KEY" >> ~/.ssh/id_dsa
-    - chmod 600 ~/.ssh/id_dsa
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - scp -P 7198 -r dist/* $AWS_USER@$AWS_SERVER_IP:/var/www/dashboard.flopay.io/
+  - pip install awscli
+  - aws s3 cp dist/ s3://$S3_BUCKET_NAME/ --recursive  --include "*.html"
   only:
-    - master
-
+  - master
 pages:
+  stage: deploy
   image: alpine:latest
   environment: staging
   script:
