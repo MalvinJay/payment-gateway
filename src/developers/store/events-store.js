@@ -63,10 +63,7 @@ const mutations = {
 
 // actions
 const actions = {
-  [EVENTS_FETCH] ({state, commit, rootGetters}, {
-    page = 1,
-    cache = true
-  } = {}) {
+  [EVENTS_FETCH] ({state, commit, rootGetters}, {page = 1,cache = true} = {}) {
     var filters = state.events.filters
     var query = ''
 
@@ -135,7 +132,7 @@ const actions = {
         return error
       })
     })
-  }  
+  }
 }
 
 export default {
