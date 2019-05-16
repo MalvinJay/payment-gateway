@@ -4,6 +4,7 @@ import {
   SET_SUCCESSFUL_PURCHASES,SET_REPORT_FIELDS_STATE,
   GET_FIELDS, SET_REPORT_STATE, SET_REPORT_FIELDS,
   GENERATE_REPORTS, GET_REPORT, DOWNLOAD_REPORT, SET_DOWNLOAD_LINK,
+  AGENTS_FETCH, SET_AGENTS, SET_AGENTS_STATE, SET_AGENTS_META, CREATE_AGENT, UPDATE_AGENT, DELETE_AGENT,
   GET_BUCKET_FILE, AWS_BUCKET, ACCESS_KEY_ID, SECRET_ACCESS_KEY, SET_AWS_FILE
 } from './stocks-store-constants'
 import { GET_BASE_URI } from '@/store/constants'
@@ -38,7 +39,14 @@ const state = {
     token: '',
     job_id: null,
     aws_file: ''
-  }
+  },
+
+  // Agent
+  agents: {
+    data: [],
+    state: 'LOADING',
+    meta: {}
+  },
 }
 
 // getters
@@ -58,7 +66,12 @@ const getters = {
   stocksFields: state => state.fields.data,
   fieldsState: state => state.fields.state,
   stocksDownloadLink: state => state.fields.link,
-  awsFile: state => state.fields.aws_file
+  awsFile: state => state.fields.aws_file,
+
+    // agents
+    agents: state => state.agents.data,
+    agentsState: state => state.agents.state,
+    agentsMeta: state => state.agents.meta,
 }
 
 // mutations
@@ -118,7 +131,26 @@ const mutations = {
   },
   [SET_AWS_FILE] (state, payload) {
     state.fields.link = payload
-  }
+  },
+
+  // Agents
+  [SET_AGENTS] (state, payload) {
+    state.agents.state = 'DATA'
+    state.agents.data = payload
+  },
+  [SET_AGENTS_STATE] (state, data) {
+    state.agents.state = data
+  },
+  [SET_AGENTS_META] (state, data) {
+    var meta = {
+      totalCount: data.total,
+      limit: data.limit,
+      page: data.page,
+      agents: data.agents
+    }
+    state.agents.meta = meta
+  },
+
 }
 
 // actions
@@ -200,7 +232,7 @@ const actions = {
 
   // PURCHASE
   [PURCHASES_FETCH] ({ state, commit, rootGetters }, {page = 1, cache = true} = {}) {
-    var query = `?page=${page}&limit=20`
+    var query = `?page=${page}&limit=12`
     let count = 0;
 
     commit(SET_PURCHASES_STATE, 'LOADING')
@@ -431,6 +463,82 @@ const actions = {
         commit(SET_AWS_FILE, data)
 
         resolve(data)
+      })
+    })
+  },
+
+  // AGENTS
+  [AGENTS_FETCH] ({ state, commit, rootGetters }, {page = 1, cache = true} = {}) {
+    var query = `?page=${page}&limit=12`
+    commit(SET_AGENTS_STATE, 'LOADING')
+    if (cache && state.products.data.length !== 0) {
+      commit(SET_AGENTS_STATE, 'DATA')
+    } else {
+      return new Promise((resolve, reject) => {
+        apiCall({
+          url: `${GET_BASE_URI}v1/agents/list${query}`,
+          method: 'GET',
+          token: rootGetters.token
+        }).then((response) => {
+          commit(SET_AGENTS_STATE, 'DATA')
+          commit(SET_AGENTS_META, response.data.response.data)
+          commit(SET_AGENTS, response.data.response.data.agents)
+          resolve(response)
+        }).catch((error) => {
+          commit(SET_AGENTS_STATE, 'ERROR')
+          reject(error)
+        })
+      })
+    }
+  },
+  [CREATE_AGENT] ({ commit, rootGetters, dispatch }, product) {
+    commit(SET_AGENTS_STATE, 'LOADING')
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/agents/add.json`,
+        method: 'POST',
+        token: rootGetters.token,
+        data: product
+      }).then((response) => {
+        commit(SET_AGENTS_STATE, 'DATA')
+        dispatch('getProducts', {page: 1, cache: false})
+        resolve(response)
+      }).catch((error) => {
+        commit(SET_AGENTS_STATE, 'ERROR')
+        reject(error)
+      })
+    })
+  },
+  [UPDATE_AGENT] ({ commit, rootGetters }, product) {
+    commit(SET_AGENTS_STATE, 'LOADING')
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/agents/${product.id}/include.json`,
+        method: 'PUT',
+        token: rootGetters.token,
+        data: product
+      }).then((response) => {
+        commit(SET_AGENTS_STATE, 'DATA')
+        resolve(response)
+      }).catch((error) => {
+        commit(SET_AGENTS_STATE, 'ERROR')
+        reject(error)
+      })
+    })
+  },
+  [DELETE_AGENT] ({ commit, rootGetters }, id) {
+    commit(SET_AGENTS_STATE, 'LOADING')
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/agents/${id}/remove.json`,
+        method: 'DELETE',
+        token: rootGetters.token
+      }).then((response) => {
+        commit(SET_AGENTS_STATE, 'DATA')
+        resolve(response)
+      }).catch(error => {
+        commit(SET_AGENTS_STATE, 'ERROR')
+        reject(error)
       })
     })
   },

@@ -52,7 +52,7 @@ const Sandbox = () => import(/* webpackChunkName: "developer" */ '../developers/
 const stockDashboard = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Dashboard')
 const Products = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Products')
 const Purchases = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Purchases')
-const Agent = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Agents')
+const Agents = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Agents')
 
 Vue.use(Router)
 
@@ -124,8 +124,13 @@ let router = new Router({
         },
         {
           path: '/stock/purchases',
-          name: 'Purchase',
+          name: 'Purchases',
           component: Purchases
+        },
+        {
+          path: '/stock/agents',
+          name: 'Agents',
+          component: Agents
         },
         {
           path: '/fees',

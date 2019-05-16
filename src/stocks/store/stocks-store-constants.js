@@ -31,3 +31,12 @@ export const SET_AWS_FILE = 'setAwsFile'
 export const AWS_BUCKET = 'inventoribucket'
 export const ACCESS_KEY_ID = 'AKIATCUGATDXX574WJN5'
 export const SECRET_ACCESS_KEY = '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'
+
+// agents
+export const AGENTS_FETCH = 'getAgents'
+export const SET_AGENTS = 'setAgents'
+export const SET_AGENTS_STATE = 'setAgentsState'
+export const SET_AGENTS_META = 'setAgentsMeta'
+export const CREATE_AGENT = 'createAgent'
+export const UPDATE_AGENT = 'updateAgent'
+export const DELETE_AGENT = 'deleteAgent'
