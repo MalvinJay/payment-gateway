@@ -3,7 +3,7 @@
         <div class="transactions">
             <div class="trans-div flex justify-content-between">
                 <div>
-                    <filter-component dispatch="setPurchasesFilters" filterType="purchases"></filter-component>
+                    <filter-component dispatch="setPurchasesFilters" filterType="stocks"></filter-component>
                 </div>
                 <div>
                     <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
@@ -19,45 +19,45 @@
                 <div v-else class="breathe">
                     <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredPurchases">
                         <el-table-column label="Purchase Ref." width="auto">
-                            <template slot-scope="scope">
-                              <p class="m-0 p-0 mr-10 s-13">{{scope.row.reference}}</p>
-                            </template>
+                          <template slot-scope="scope">
+                            <p class="m-0 p-0 mr-10 s-13">{{scope.row.reference}}</p>
+                          </template>
                         </el-table-column>
                         <!-- <el-table-column show-overflow-tooltip prop="name" label="Reference"></el-table-column> -->
-                        <el-table-column label="Status" width="auto">
-                            <template slot-scope="scope">
-                              <p class="m-0 p-0 mr-10 s-13">{{scope.row.status}}</p>
-                            </template>
+                        <el-table-column label="Status" width="120">
+                          <template slot-scope="scope">
+                            <p class="m-0 p-0 mr-10 s-13">{{scope.row.status}}</p>
+                          </template>
                         </el-table-column>
-                        <el-table-column label="Prev. Quantity" width="100">
-                            <template slot-scope="scope">
-                              <p class="m-0 p-0 mr-10 s-13">{{scope.row.previous_quantity}}</p>
-                            </template>
+                        <el-table-column label="Prev. Quantity" width="130">
+                          <template slot-scope="scope">
+                            <p class="m-0 p-0 mr-10 s-13">{{scope.row.previous_quantity}}</p>
+                          </template>
                         </el-table-column>
-                        <el-table-column label="Cur. Quantity" width="100">
-                            <template slot-scope="scope">
-                              <p class="m-0 p-0 mr-10 s-13">{{scope.row.current_quantity}}</p>
-                            </template>
+                        <el-table-column label="Cur. Quantity" width="130">
+                          <template slot-scope="scope">
+                            <p class="m-0 p-0 mr-10 s-13">{{scope.row.current_quantity}}</p>
+                          </template>
                         </el-table-column>
-                        <el-table-column label="Branch" width="160">
+                        <!-- <el-table-column label="Branch" width="160">
                             <template slot-scope="scope">
                               {{scope.row.branch}}
                             </template>
-                        </el-table-column>
+                        </el-table-column> -->
                         <el-table-column label="Customer No.">
-                            <template slot-scope="scope">
-                              {{scope.row.customer_number}}
-                            </template>
+                          <template slot-scope="scope">
+                            {{scope.row.customer_number}}
+                          </template>
                         </el-table-column>
                         <el-table-column label="Product">
-                            <template slot-scope="scope">
-                              {{scope.row.product.name}}
-                            </template>
+                          <template slot-scope="scope">
+                            {{scope.row.product.name}}
+                          </template>
                         </el-table-column>
-                        <el-table-column label="Date">
-                            <template slot-scope="scope">
-                              {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
-                            </template>
+                        <el-table-column label="Date" width="auto">
+                          <template slot-scope="scope">
+                            {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
+                          </template>
                         </el-table-column>
                     <el-table-column width="80px">
                         <template slot-scope="scope">
@@ -74,9 +74,9 @@
                     </el-table>
 
                     <!-- FOOTER -->
-                    <div class="flex justify-content-between align-items-center px-10">
+                    <div class="flex justify-content-between align-items-center px-20">
                         <div class="s-12">
-                            <span class="bold-600">{{purchases.length}}</span> results
+                          <span class="bold-600">{{purchases.length}}</span> results
                         </div>
                         <el-pagination class="my-2 flex justify-content-end"
                             @current-change="handleCurrentChange"

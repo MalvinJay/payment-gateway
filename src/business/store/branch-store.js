@@ -1,5 +1,5 @@
 import {
-  GET_BRANCHES, CREATE_BRANCH, SET_BRANCHES, SET_BRANCHES_STATE, DELETE_BRANCH, GET_CURRENT_BRANCH, SET_CURRENT_BRANCH
+  GET_BRANCHES, CREATE_BRANCH, UPDATE_BRANCH, SET_BRANCHES, SET_BRANCHES_STATE, DELETE_BRANCH, GET_CURRENT_BRANCH, SET_CURRENT_BRANCH
 } from './branch-store-constants'
 import { GET_BASE_URI } from '../../store/constants'
 import { apiCall } from '../../store/apiCall'
@@ -74,6 +74,21 @@ const actions = {
         method: 'POST',
         token: rootGetters.token,
         data: branch
+      }).then((response) => {
+        resolve(response)
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  [UPDATE_BRANCH] ({ state, commit, rootGetters }, update) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/branch.json`,
+        method: 'PUT',
+        token: rootGetters.token,
+        data: update
       }).then((response) => {
         resolve(response)
       }).catch((error) => {

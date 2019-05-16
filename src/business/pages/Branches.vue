@@ -4,7 +4,7 @@
             <div class="flex justify-content-between align-items-center px-20 py-16">
                 <div class="search_n_roles flex justify-content-between w-25">
                     <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" size="mini" placeholder="Filter branch by name or code"></el-input>
-                </div>            
+                </div>
                 <div>
                     <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="addBranch" type="text"><i class="plus icon"></i> New branch</el-button>
                 </div>
@@ -29,17 +29,17 @@
                                 <div class="flex flex-column justify-content-center">
                                     <span>{{scope.row.name}}</span>
                                 </div>
-                            </template>                            
+                            </template>
                         </el-table-column>
                         <el-table-column prop="branch_code" label="CODE">
                             <template slot-scope="scope">
                                 {{scope.row.branch_code || 'N/A'}}
-                            </template>                            
+                            </template>
                         </el-table-column>
                         <el-table-column prop="location" label="LOCATION">
                             <template slot-scope="scope">
                                 {{scope.row.location || 'N/A'}}
-                            </template>                            
+                            </template>
                         </el-table-column>
                         <el-table-column width="80px">
                             <template slot-scope="scope">
@@ -51,14 +51,14 @@
                                                 <div class="table-dropdown-header blue-text bold-600 text-uppercase">
                                                     action
                                                 </div>
-                                            </el-dropdown-item>                                            
-                                            <el-dropdown-item command="view" class="s-12">View Branch Details</el-dropdown-item>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item command="edit" class="s-12">Edit Branch</el-dropdown-item>
                                             <el-dropdown-item command="delete" class="s-12">Delete Branch</el-dropdown-item>
                                         </el-dropdown-menu>
                                     </el-dropdown>
                                 </div>
                             </template>
-                        </el-table-column>                         
+                        </el-table-column>
                     </el-table>
                     <!-- FOOTER -->
                     <div class="flex justify-content-between align-items-center px-20">
@@ -72,38 +72,42 @@
                             :total="total">
                         </el-pagination>
                     </div>
-                </div>   
-            </div>  
+                </div>
+            </div>
 
         <!-- New Branch -->
         <el-dialog custom-class="new-transaction"
-            title="Create New Branch"
+            :title="title"
             :visible.sync="dialogVisible"
             width="30%">
             <div class="flex justify-content-center new-transaction-bg">
                 <el-form size="mini" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="100px">
                     <el-form-item label="Name">
-                        <el-input v-model="form.name"></el-input>
+                        <el-input v-model="form.name" placeholder="Branch Name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Branch Code">
+                        <el-input v-model="form.branch_code" placeholder="Branch Code"></el-input>
                     </el-form-item>
                     <el-form-item label="Phone Number" prop="phone_numbers">
-                        <el-input v-model="phone"></el-input>
+                        <el-input v-model="phone" placeholder="Phone Number(s)"></el-input>
                     </el-form-item>
                     <el-form-item label="Location">
-                        <el-input v-model="form.location"></el-input>
+                        <el-input v-model="form.location" placeholder="Location"></el-input>
                     </el-form-item>
                     <el-form-item label="Email">
-                        <el-input v-model="form.email"></el-input>
-                    </el-form-item>                      
+                        <el-input v-model="form.email" placeholder="Email"></el-input>
+                    </el-form-item>
                     <el-form-item label="Bank Account">
-                        <el-input v-model="form.bank_account_no"></el-input>
-                    </el-form-item>                    
+                        <el-input v-model="form.bank_account_no" placeholder="Bank Account (Optional)"></el-input>
+                    </el-form-item>
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
-                <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="saveBranch">Save Branch</el-button>
+                <el-button v-if="save" size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="saveBranch">Save Branch</el-button>
+                <el-button v-else size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="updateBranch">Update Branch</el-button>
             </span>
-        </el-dialog>             
+        </el-dialog>
         </div>
     </el-card>
 </template>
@@ -121,11 +125,12 @@ export default {
             form: {},
             emptyForm: {
                 name: '',
+                branch_code: '',
                 bank_account_no: '',
                 location: '',
                 phone_numbers: [],
                 email: ''
-            },            
+            },
             dialogVisible: false,
             dialogVisible1: false,
             exportVisible: false,
@@ -134,12 +139,12 @@ export default {
             styleObject: {
                 fontSize: '12px'
             },
-            rules: {    
+            rules: {
                 phone_numbers: [
                     { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
                 ]
-            },                      
-            search: '',       
+            },
+            search: '',
             options: [
                 {
                     value: 'all',
@@ -161,9 +166,11 @@ export default {
                 {
                     value: 'view_only',
                     label: 'View Only'
-                }        
+                }
             ],
-            value: 'all',                
+            value: 'all',
+            title: "Create New Branch",
+            save: true
         }
     },
     mounted () {
@@ -171,123 +178,169 @@ export default {
         this.$store.dispatch('getBranches')
     },
     methods: {
-        clickRow (row, event, column) {
-            if (column.property) {
-                // this.$router.push(`/branches/${row.reference}`)
-            }        
-        }, 
-        handleCurrentChange (val) {
-            this.$store.dispatch('getBranches', {page: val, cached: false })
-        },
-        editBranch (row) {
-            this.dialogVisible = true
-            this.form = row
-            this.phone = this.form.phone_numbers.join()
-        },
-        addBranch () {
-            this.dialogVisible = true
-            this.phone = ''
-            this.form = this.emptyForm
-        },
-        handleTableCommand (command, row) {
-            switch (command) {
-                case 'view':
-                    // this.$router.push(`/branches/${row.reference}`)
-                    this.editBranch(row)
-                    break
-                case 'delete':
-                    this.deleteJob(row.branch_code)
-                break
-                default:
-                    break
+      clickRow (row, event, column) {
+          if (column.property) {
+              // this.$router.push(`/branches/${row.reference}`)
+          }
+      },
+      handleCurrentChange (val) {
+          this.$store.dispatch('getBranches', {page: val, cached: false })
+      },
+      editBranch (row) {
+        this.save = false
+        this.title = "Edit A Branch"
+        this.dialogVisible = true
+        this.form = row
+        this.phone = this.form.phone_numbers.join()
+        // this.updateBranch()
+      },
+      addBranch () {
+        this.dialogVisible = true
+        this.phone = ''
+        this.form = this.emptyForm
+      },
+      handleTableCommand (command, row) {
+        switch (command) {
+            case 'edit':
+              this.editBranch(row)
+              break
+            case 'delete':
+              this.deleteJob(row.branch_code)
+            break
+            default:
+              break
+        }
+      },
+      fetchBranches () {
+        this.$store.dispatch('getBranches', {cache: false})
+      },
+      searchButton () {
+
+      },
+      deleteJob (code) {
+          this.$confirm('This will permanently delete this branch. Continue?', 'Warning', {
+              confirmButtonText: 'Delete',
+              cancelButtonText: 'Cancel',
+              type: 'warning'
+          }).then(() => {
+              this.$store.dispatch('deleteBranch', code)
+              .then((response) => {
+              if (response.data.success) {
+                  this.$message({
+                      type: 'success',
+                      message: 'Branch deleted'
+                  })
+                  this.$store.dispatch('getBranches', {cache: false})
+              } else {
+                  this.$message({
+                      type: 'error',
+                      message: response.data.response.message
+                  })
+              }
+              }).catch((error) => {
+                  this.$message({
+                      type: 'error',
+                      message: 'Branch not deleted'
+                  })
+              })
+          }).catch(() => {
+              this.$message({
+                  type: 'error',
+                  message: 'Branch not deleted'
+              })
+          })
+      },
+      saveBranch() {
+        this.createLoading = true
+        var temp = new Array()
+        temp = this.phone.split(',')
+
+        this.form.phone_numbers.push(temp)
+        this.$store.dispatch('createBranch', this.form)
+        .then((response) => {
+            if (response.data.success) {
+                this.$message({
+                    type: 'success',
+                    message: response.data.response.message
+                })
+                this.fetchBranches()
+                this.dialogVisible = false
+            } else {
+            this.$message({
+                    type: 'error',
+                    message: response.data.response.message.message
+                })
             }
-        },                  
-        fetchBranches () {
-            this.$store.dispatch('getBranches', {cache: false})
-        },        
-        searchButton () {
-
-        },
-        deleteJob (code) {
-            this.$confirm('This will permanently delete this branch. Continue?', 'Warning', {
-                confirmButtonText: 'Delete',
-                cancelButtonText: 'Cancel',
-                type: 'warning'
-            }).then(() => {
-                this.$store.dispatch('deleteBranch', code)
-                .then((response) => {
-                if (response.data.success) {
-                    this.$message({
-                        type: 'success',
-                        message: 'Branch deleted'
-                    })
-                    this.$store.dispatch('getBranches', {cache: false})
-                } else {
-                    this.$message({
-                        type: 'error',
-                        message: response.data.response.message
-                    })
-                }  
-                }).catch((error) => {
-                    this.$message({
-                        type: 'error',
-                        message: 'Branch not deleted'
-                    })
-                })
-            }).catch(() => {
-                this.$message({
-                    type: 'error',
-                    message: 'Branch not deleted'
-                })                        
+            this.createLoading = false
+        }).catch((error) => {
+            this.createLoading = false
+            const response = error.response
+            this.$message({
+                type: 'error',
+                message: response.data.error
             })
-        },        
-        saveBranch () {
-            this.createLoading = true         
-            var temp = new Array()
-            temp = this.phone.split(',')
+        })
+      },
+      updateBranch() {
+        this.createLoading = true
+        var temp = new Array()
+        temp = this.phone.split(',')
 
-            this.form.phone_numbers.push(temp)
-            this.$store.dispatch('createBranch', this.form)
-            .then((response) => {
-                if (response.data.success) {
-                    this.$message({
-                        type: 'success',
-                        message: response.data.response.message
-                    })
-                    this.fetchBranches()
-                    this.dialogVisible = false
-                } else {
+        this.form.phone_numbers.push(temp)
+        delete this.form.key
+        delete this.form.bucket
+        this.form.branch_id = this.form.id
+        delete this.form.id
+        console.log('Final branch state', this.form)
+
+        this.$store.dispatch('updateBranch', this.form)
+        .then((response) => {
+            if (response.data.success) {
                 this.$message({
-                        type: 'error',
-                        message: response.data.response.message.message
-                    })
-                }
-                this.createLoading = false
-            }).catch((error) => {
-                this.createLoading = false
-                const response = error.response
-                this.$message({
-                    type: 'error',
-                    message: response.data.error
+                  type: 'success',
+                  message: response.data.response.message
                 })
+                this.fetchBranches()
+                this.dialogVisible = false
+            } else {
+            this.$message({
+                  type: 'error',
+                  message: response.data.response.message.message
+                })
+            }
+            this.createLoading = false
+            this.save = true
+            this.title = "Create New Branch"
+        })
+        .catch((error) => {
+            this.createLoading = false
+            const response = error.response
+            this.$message({
+                type: 'error',
+                message: response.data.error
             })
-        }      
+
+          // this.save = true
+          // this.title = "Create New Branch"
+        })
+
+      }
     },
     computed: {
         ...mapGetters({
             branches: 'branches',
             pageSize: 'pageSize',
             state: 'branchesState'
-        }),  
+        }),
         error () {
             return this.state === 'ERROR' && this.state !== 'LOADING'
-        },              
+        },
         total () {
             return this.branches.length
-        },    
+        },
         loading () {
             return this.state === 'LOADING'
-        }, 
+        },
         filteredBranches () {
             return this.branches
         }
@@ -298,7 +351,7 @@ export default {
 <style lang="scss" scoped>
 .custom {
     width: 100%;
-    
+
     .transactions-table-header {
         display: none;
     }
