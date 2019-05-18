@@ -1,5 +1,5 @@
 <template>
-  <div :class="[{success: isSuccess}, 'tag-success', 'flex', 'justify-content-center']">
+  <div :class="[{success: isSuccess}, 'tag-success', 'flex', 'justify-content-center']" :style="{width: width + 'px'}">
     <p class="p-0 m-0">{{title}}</p>
   </div>
 </template>
@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'Tag',
-  props: ['title', 'status', 'icon'],
+  props: ['title', 'status', 'icon', 'width'],
   data () {
     return {
     }

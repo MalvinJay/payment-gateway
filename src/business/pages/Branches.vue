@@ -31,12 +31,22 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="branch_code" label="CODE">
+                        <el-table-column prop="branch_code" label="CODE" width="100">
                             <template slot-scope="scope">
                                 {{scope.row.branch_code || 'N/A'}}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="location" label="LOCATION">
+                        <el-table-column prop="location" label="PHONE NUMBER(s)">
+                            <template slot-scope="scope">
+                              <div class="flex">
+                                <the-tag  status="pending" :title="phone" :width="100" icon="detail check icon" v-for="(phone, index) in scope.row.phone_numbers" :key="index" class="mr-2"></the-tag>
+                              </div>
+                              <!-- <div v-for="(phone, index) in scope.row.phone_numbers" :key="index">
+                                {{phone || 'N/A'}}
+                              </div> -->
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="location" label="LOCATION" width="180">
                             <template slot-scope="scope">
                                 {{scope.row.location || 'N/A'}}
                             </template>
@@ -81,15 +91,15 @@
             :visible.sync="dialogVisible"
             width="30%">
             <div class="flex justify-content-center new-transaction-bg">
-                <el-form size="mini" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="100px">
+                <el-form size="mini" hide-required-asterisk class="transaction-form" :rules="rules" :model="form" label-width="120px">
                     <el-form-item label="Name">
                         <el-input v-model="form.name" placeholder="Branch Name"></el-input>
                     </el-form-item>
                     <el-form-item label="Branch Code">
                         <el-input v-model="form.branch_code" placeholder="Branch Code"></el-input>
                     </el-form-item>
-                    <el-form-item label="Phone Number" prop="phone_numbers">
-                        <el-input v-model="phone" placeholder="Phone Number(s)"></el-input>
+                    <el-form-item label="Phone Number(s)" prop="phone_numbers">
+                        <el-input v-model="phone" type="textarea" placeholder="Phone Number(s)"></el-input>
                     </el-form-item>
                     <el-form-item label="Location">
                         <el-input v-model="form.location" placeholder="Location"></el-input>
@@ -139,10 +149,11 @@ export default {
             styleObject: {
                 fontSize: '12px'
             },
+            maxVal: 0,
             rules: {
-                phone_numbers: [
-                    { required: true, min: 10, max: 10, message: 'Length should be 10', trigger: 'blur' }
-                ]
+              phone_numbers: [
+                { required: true, min: 10, max: maxVal, message: 'Length should be 10', trigger: 'blur' }
+              ]
             },
             search: '',
             options: [
@@ -180,7 +191,7 @@ export default {
     methods: {
       clickRow (row, event, column) {
           if (column.property) {
-              // this.$router.push(`/branches/${row.reference}`)
+            // this.$router.push(`/branches/${row.reference}`)
           }
       },
       handleCurrentChange (val) {
@@ -190,9 +201,9 @@ export default {
         this.save = false
         this.title = "Edit A Branch"
         this.dialogVisible = true
+
         this.form = row
         this.phone = this.form.phone_numbers.join()
-        // this.updateBranch()
       },
       addBranch () {
         this.dialogVisible = true
@@ -283,10 +294,14 @@ export default {
       },
       updateBranch() {
         this.createLoading = true
+        
+        this.form.phone_numbers = []
         var temp = new Array()
+        console.log('Display all phones', this.phone)
         temp = this.phone.split(',')
+        console.log('Display splited', temp)
 
-        this.form.phone_numbers.push(temp)
+        this.form.phone_numbers = temp
         delete this.form.key
         delete this.form.bucket
         this.form.branch_id = this.form.id
