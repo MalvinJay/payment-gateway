@@ -1,5 +1,5 @@
 import {
-  TEAMS_FETCH, SET_TEAMS, SET_TEAMS_STATE, SET_TEAMS_META, SET_TEAMS_FILTERS, CREATE_USER, DELETE_USER
+  TEAMS_FETCH, SET_TEAMS, SET_TEAMS_STATE, SET_TEAMS_META, SET_TEAMS_FILTERS, CREATE_USER, UPDATE_USER, DELETE_USER
 } from './team-store-constants'
 import { GET_BASE_URI } from '../../store/constants'
 import { apiCall } from '../../store/apiCall'
@@ -80,7 +80,7 @@ const actions = {
         }).then((response) => {
           commit(SET_TEAMS_STATE, 'DATA')
           commit(SET_TEAMS_META, response.data.response.data)
-          
+
           if(Utils.present(response.data.response.data)){
             commit(SET_TEAMS, response.data.response.data.users)
           }
@@ -112,6 +112,21 @@ const actions = {
       })
     })
   },
+  [UPDATE_USER] ({ state, commit, rootGetters }, user) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/users/${user.user_id}.json`,
+        method: 'PUT',
+        token: rootGetters.token,
+        data: user
+      }).then((response) => {
+        resolve(response)
+      }).catch((error) => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
   [DELETE_USER] ({ rootGetters }, msisdn) {
     return new Promise((resolve, reject) => {
       apiCall({
@@ -125,7 +140,7 @@ const actions = {
         return error
       })
     })
-  },  
+  },
 }
 
 export default {
