@@ -3,7 +3,7 @@
         <div class="transactions">
             <div class="flex justify-content-between align-items-center px-20 py-16">
                 <div class="search_n_roles flex justify-content-between w-25">
-                    <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" size="mini" placeholder="Filter branch by name or code"></el-input>
+                    <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" size="mini" placeholder="Search branch by name, phone or code"></el-input>
                 </div>
                 <div>
                     <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="addBranch" type="text"><i class="plus icon"></i> New branch</el-button>
@@ -23,7 +23,11 @@
                     v-loading="loading" :row-style="styleObject"
                     row-class-name="transactions-table-body"
                     header-row-class-name="transactions-table-header"
-                    :data="filteredBranches.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) ||  data.location.toLowerCase().includes(search.toLowerCase()))">
+                      :data="filteredBranches.filter(data => !search ||
+                      data.name.toLowerCase().includes(search.toLowerCase()) ||
+                      data.location.toLowerCase().includes(search.toLowerCase()) ||
+                      data.branch_code.toLowerCase().includes(search.toLowerCase())
+                      )">
                         <el-table-column prop="name" label="NAME">
                             <template slot-scope="scope">
                                 <div class="flex flex-column justify-content-center">
@@ -152,7 +156,7 @@ export default {
             maxVal: 0,
             rules: {
               phone_numbers: [
-                { required: true, min: 10, max: maxVal, message: 'Length should be 10', trigger: 'blur' }
+                { required: true, min: 10, max: 44, message: 'Length should be 10', trigger: 'blur' }
               ]
             },
             search: '',
@@ -294,7 +298,7 @@ export default {
       },
       updateBranch() {
         this.createLoading = true
-        
+
         this.form.phone_numbers = []
         var temp = new Array()
         console.log('Display all phones', this.phone)
