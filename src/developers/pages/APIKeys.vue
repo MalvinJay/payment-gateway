@@ -9,8 +9,8 @@
                 <p>To you use our web API, you need to use the client_id and client_secret to get an access_token.
                     The access_token would serve as a master key to unlock all the endpoints you would like to access on our platform</p>
                 <h3>API documentation</h3>
-                <p>Flopay provides you with an interactive API documentation which would reduce the amount of time you would have to spend to reading a long text of instructions. 
-                    Access the API documentation from this link: <a target="_blank" href="https://developer.flopay.io"> flopay.io/docs</a></p>
+                <p>Flopay provides you with an interactive API documentation which would reduce the amount of time you would have to spend to reading a long text of instructions.
+                    Access the API documentation from this link: <a target="_blank" href="https://developer.flopay.io"> developer.flopay.io</a></p>
             </div>
         </el-card>
         <el-card v-can="'View API Credentials'" class="my-2">
