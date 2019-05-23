@@ -40,7 +40,7 @@
                         </el-row>
                     </div>
                 </div>
-                <el-button size="mini" v-else class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text">Reveal credentials</el-button>
+                <el-button size="mini" v-else class="z-depth-button bold-600 s-13 open-sans mini-button px-10" @click="dialogVisible = true" type="text">Reveal credentials</el-button>
             </div>
         </el-card>
         <el-card class="my-2">

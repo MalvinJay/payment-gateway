@@ -10,3 +10,5 @@ export const SET_CURRENT_USSD_SESSION_PAYMENT = 'setCurrentUssdSessionPayment'
 
 export const SET_CURRENT_USSD_SESSION = 'setCurrentUssdSession'
 export const SET_CURRENT_USSD_SESSION_STATE = 'setCurrentUssdSessionState'
+
+export const SET_USSD_FILTERS = 'setUssdFilters'

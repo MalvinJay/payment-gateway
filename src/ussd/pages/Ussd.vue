@@ -3,14 +3,15 @@
         <div class="transactions">
             <div class="trans-div flex justify-content-between">
                 <div class="search_n_roles flex justify-content-between w-50">
-                  <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2 w-50" size="mini" placeholder="Filter by year or exam type..."></el-input>
+                  <filter-component dispatch="setUssdFilters" filterType="payment"></filter-component>
+                  <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" style="width: 70%;" size="mini" placeholder="Search by year or exam type..."></el-input>
                 </div>
                 <div class="flex align-items-center">
                     <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
                       <el-button @click.prevent="fetchMessages" icon="undo icon" type="text"></el-button>
                     </el-tooltip>
                     <el-button v-can="'Generate Reports'" @click="generateReport" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text">
-                      <i class="download icon"></i> Export
+                      <i class="download icon"></i>Export
                     </el-button>
                 </div>
             </div>
@@ -24,8 +25,8 @@
                 <div class="ussd_session" v-else>
                     <el-table ref="fone"
                     @row-click="clickRow"
-                    empty-text="No ussd session available to display"
-                    v-loading="loading" 
+                    empty-text="No ussd session available today"
+                    v-loading="loading"
                     :row-style="styleObject"
                     row-class-name="transactions-table-body"
                     header-row-class-name="transactions-table-header"
@@ -36,7 +37,7 @@
                         <el-table-column show-overflow-tooltip prop="transaction" label="exams type" :filters="[{text: 'BECE', value: 'bece'},{text: 'WASSCE', value: 'wassce'}]" :filter-method="filterHandler">
                           <template slot-scope="scope">
                             {{scope.row.transaction.response.data.extra_data.type}}
-                          </template>                          
+                          </template>
                         </el-table-column>
                         <el-table-column show-overflow-tooltip prop="transaction" label="year" width="100">
                           <template slot-scope="scope">
@@ -46,7 +47,7 @@
                         <el-table-column show-overflow-tooltip prop="transaction" label="index no" width="auto">
                           <template slot-scope="scope">
                             {{scope.row.transaction.response.data.extra_data.index_no}}
-                          </template>                          
+                          </template>
                         </el-table-column>
                         <!-- <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label" :width="column.width"></el-table-column> -->
                         <el-table-column prop="transaction" label="Payment status" width="auto">
@@ -100,12 +101,12 @@
                         <el-button @click="close">Cancel</el-button>
 
                         <a :href="`https://ussd-log-status.nfortics.com/reports/index?${generateQueryParams}`"
-                        class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" @click="close" download>Download</a>                          
+                        class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" @click="close" download>Download</a>
                     </div>
                 </el-form-item>
             </el-form>
           </div>
-      </el-dialog>        
+      </el-dialog>
     </el-card>
 </template>
 
@@ -153,7 +154,7 @@ export default {
       form: {
         from: '',
         to: ''
-      },      
+      },
       ready: false,
     }
   },
@@ -215,7 +216,7 @@ export default {
       //   message: 'Generating link in background',
       //   type: 'success'
       // })
-      
+
       this.exportVisible = true;
     },
     close () {
@@ -225,15 +226,15 @@ export default {
       },
       this.exportVisible = false
       this.ready = false
-    },    
+    },
     reset () {
       this.exportVisible = false
       // this.loading = false
-      this.ready = false           
-    },    
+      this.ready = false
+    },
     dateRangeClicked () {
       // this.reset()
-    }   
+    }
   },
   computed: {
     ...mapGetters({
@@ -243,23 +244,27 @@ export default {
       pageSize: 'pageSize',
       currentUssdSession: 'currentUssdSession',
       fields: 'fields',
-      link: 'downloadLink',      
+      link: 'downloadLink',
       token: 'token',
       user: 'user',
     }),
     filteredUSSD () {
-      console.log('User:', this.user)
       let PreferredArray = []
-      var ussdSessions = this.ussds.map(ussd => {      
+      var ussdSessions = this.ussds.map(ussd => {
         if(Utils.present(ussd.transaction.response.data)) {
           if(this.user.client.code === ussd.transaction.response.data.till) {
-            console.log('Till Numbers match!')
+            let type = ussd.transaction.response.data.extra_data.type
+            if(type === 'BECE') {
+              ussd.transaction.response.data.extra_data.type = 'BECE(School)';
+            }
+            if(type === 'PBEC') {
+              ussd.transaction.response.data.extra_data.type = 'BECE(Private)';
+            }
             PreferredArray.push(ussd)
           }
-        }        
+        }
       })
 
-      console.log('Full UssdSessions', PreferredArray)
       return PreferredArray
     },
     error () {
@@ -286,7 +291,7 @@ export default {
     generateQueryParams() {
       console.log('Query Params:', Utils.createExportQuery(this.form))
       return Utils.createExportQuery(this.form)
-    }       
+    }
   }
 }
 </script>
@@ -302,9 +307,6 @@ export default {
     line-height: normal;
     right: 20px;
 
-    &:hover{
-        // background: red;
-    }
     .first-icon{
         opacity: 0;
     }

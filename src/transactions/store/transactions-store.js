@@ -148,10 +148,7 @@ const mutations = {
 
 // actions
 const actions = {
-  [TRANSACTIONS_FETCH] ({ state, commit, rootGetters, dispatch }, {
-    cache = true,
-    page = 1
-  } = {}) {
+  [TRANSACTIONS_FETCH] ({ state, commit, rootGetters, dispatch }, {cache = true,page = 1} = {}) {
     //   url for admin or client
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
     // filters
