@@ -2,20 +2,22 @@
     <div v-loading="loadingPage">
         <div class="center h-80" v-if="error">
             <div class="center flex-column">
-                <p class="m-0 p-0">Unable to load this page</p>
+                <p class="m-0 p-0">
+                  Unable to load this page
+                </p>
                 <el-button @click.prevent="fetchTransactions" icon="sync icon" type="text">Retry</el-button>
             </div>
         </div>
-        <div v-else >
+        <div v-else>
             <el-card class="card-0 position-relative">
                 <div class="flex flex-column p-20">
                     <div class="flex justify-content-between align-items-baseline mb-1">
                     <div class="flex align-items-baseline">
                         <p class="blue-text s-24 m-0 p-0 bold-600">{{form.amount | money}}</p>
-                        <p class="text-uppercase blue-text s-14 m-0 p-0 ml-1">{{form.currency}}</p>
+                        <!-- <p class="text-uppercase blue-text s-14 m-0 p-0 ml-1">{{form.currency}}</p> -->
                     </div>
                     <div>
-                        <p class="text-uppercase s-12 bold-600 m-0 p-0">{{header}}</p>
+                      <!-- <p class="text-uppercase s-12 bold-600 m-0 p-0">{{header}}</p> -->
                     </div>
                     </div>
                     <div>
@@ -42,9 +44,9 @@
                           <i v-else class="exclamation circle s-12 icon gray"></i>
                         </div>
                         <div class="flex flex-column ml-1">
-                          <p v-if="form.payment_status == 'paid'" class="light mb-1 s-13">{{header}} payment succeeded</p>
-                          <p v-else class="light mb-1 s-13">{{header}} payment failed</p>
-                          
+                          <p v-if="form.payment_status == 'paid'" class="light mb-1 s-13">Payment succeeded</p>
+                          <p v-else class="light mb-1 s-13">{{header}} Payment failed</p>
+
                           <p class="light mb-1 s-12 gray">{{form.date}}</p>
                         </div>
                     </div>
@@ -133,7 +135,7 @@
                   <div class="flex pl-15 px-10 py-20">
                     <p class="blue-text s-13 pr-10 m-0">Message: </p>
                     <p class="s-12 blue-text bold-600">{{messages}}</p>
-                  </div>                  
+                  </div>
                 </div>
             </el-card>
 
@@ -152,12 +154,12 @@
                             <el-table-column prop="message" label="Input" width="200"></el-table-column>
                             <el-table-column prop="response" label="Response" width="auto">
                                 <template slot-scope="scope">
-                                    {{ scope.row.response}}
+                                  {{ scope.row.response}}
                                 </template>
                             </el-table-column>
                             <el-table-column prop="timestamp" label="Timestamp" width="300">
                                 <template slot-scope="scope">
-                                    {{ scope.row.timestamp  | moment("D MMM,YY hh:mm:ss A")}}
+                                  {{ scope.row.timestamp  | moment("D MMM,YY hh:mm:ss A")}}
                                 </template>
                             </el-table-column>
                     </el-table>
@@ -172,7 +174,7 @@
                 <div>
                     <el-table @row-click="clickLogs" empty-text="No logs found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="logs">
                         <el-table-column label="status" prop="status" width="100">
-                                <template slot-scope="scope">
+                                <template >
                                     <p class="status bold-600">201 OK</p>
                                 </template>
                         </el-table-column>
@@ -204,9 +206,14 @@
                     row-class-name="transactions-table-body"
                     header-row-class-name="transactions-table-header"
                     :data="events">
-                        <el-table-column show-overflow-tooltip label="event" prop="event">
+                        <el-table-column show-overflow-tooltip label="event" prop="request">
                                 <template slot-scope="scope">
-                                    <p class="m-0 p-0 bold-500 s-12">{{scope.row.code || 'N/A'}}</p>
+                                    <p class="m-0 p-0 bold-500 s-12">
+                                      <span v-if="scope.row.request.transaction.status === 'paid'">payment.succeeded</span>
+                                      <span v-else-if="scope.row.request.transaction.status === 'pending'">payment.pending</span>
+                                      <span v-else-if="scope.row.request.transaction.status === 'failed'"> payment.failed</span>
+                                      <span v-else> payment.unknown</span>
+                                    </p>
                                 </template>
                         </el-table-column>
                         <el-table-column label="id" prop="id" width="200">
@@ -349,14 +356,14 @@ export default {
     mounted () {
         this.$store.dispatch('getCurrentUssdSession', this.$route.params.id)
         .then((response) => {
-            console.log('CurrentSession: ', this.currentUssdSession)
+            console.log('CurrentUssdSession: ', this.currentUssdSession)
             this.$store.dispatch('getCurrentUssdSessionPayment', this.currentUssdSession[0].sessionid)
             .then((response) => {
               console.log('currentUssdSessionPayment:', this.currentUssdSessionPayment)
             })
         })
 
-        console.log('Form!!: ', this.form)
+        // console.log('Form!!: ', this.form)
 
         EventBus.$on('ticketModal', (val) => {
           this.ticketVisible = val
@@ -382,7 +389,7 @@ export default {
             })
         },
         messages () {
-          return this.form.extra_data.messages || 'N/A'
+          return this.form.extra_data.message || 'N/A'
         },
         loadingPage () {
             return this.state === 'LOADING'
@@ -412,8 +419,21 @@ export default {
           return nForm
         },
         data2 () {
+          let ExamsType;
+          if(this.form.extra_data.type === 'BECE') {
+            ExamsType = 'BECE(School)';
+          }
+          else {
+            if(this.form.extra_data.type === 'PBEC') {
+              ExamsType = 'BECE(Private)';
+            } else {
+              ExamsType = this.form.extra_data.type
+            }
+          }
+
           var nForm = {
-            'Candidate Name': this.form.extra_data.name? this.form.extra_data.name: 'N/A',
+            'Exams Type':  ExamsType || 'N/A',
+            'Customer Name': this.form.extra_data.name || 'NA',
             'Index Number': this.form.extra_data.index_no,
             'Year': this.form.extra_data.year,
           }
