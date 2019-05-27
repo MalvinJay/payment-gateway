@@ -1,95 +1,95 @@
 <template>
-    <el-card class="card-0">
-        <div class="transactions">
-            <div class="trans-div flex justify-content-between">
-                <div>
-                    <filter-component dispatch="setPurchasesFilters" filterType="stocks"></filter-component>
-                </div>
-                <div>
-                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
-                </div>
-            </div>
-            <div>
-                <div class="center h-80" v-if="error">
-                    <div class="center flex-column">
-                       <p class="m-0 p-0">Unable to load this page</p>
-                       <el-button @click.prevent="fetchPurchases" icon="sync icon" type="text">Retry</el-button>
-                    </div>
-                </div>
-                <div v-else class="breathe">
-                    <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredPurchases">
-                        <el-table-column label="Purchase Ref." width="auto">
-                          <template slot-scope="scope">
-                            <p class="m-0 p-0 mr-10 s-13">{{scope.row.reference}}</p>
-                          </template>
-                        </el-table-column>
-                        <!-- <el-table-column show-overflow-tooltip prop="name" label="Reference"></el-table-column> -->
-                        <el-table-column label="Status" width="120">
-                          <template slot-scope="scope">
-                            <p class="m-0 p-0 mr-10 s-13">{{scope.row.status}}</p>
-                          </template>
-                        </el-table-column>
-                        <el-table-column label="Prev. Quantity" width="130">
-                          <template slot-scope="scope">
-                            <p class="m-0 p-0 mr-10 s-13">{{scope.row.previous_quantity}}</p>
-                          </template>
-                        </el-table-column>
-                        <el-table-column label="Cur. Quantity" width="130">
-                          <template slot-scope="scope">
-                            <p class="m-0 p-0 mr-10 s-13">{{scope.row.current_quantity}}</p>
-                          </template>
-                        </el-table-column>
-                        <!-- <el-table-column label="Branch" width="160">
-                            <template slot-scope="scope">
-                              {{scope.row.branch}}
-                            </template>
-                        </el-table-column> -->
-                        <el-table-column label="Customer No.">
-                          <template slot-scope="scope">
-                            {{scope.row.customer_number}}
-                          </template>
-                        </el-table-column>
-                        <el-table-column label="Product">
-                          <template slot-scope="scope">
-                            {{scope.row.product.name}}
-                          </template>
-                        </el-table-column>
-                        <el-table-column label="Date" width="auto">
-                          <template slot-scope="scope">
-                            {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
-                          </template>
-                        </el-table-column>
-                    <el-table-column width="80px">
-                        <template slot-scope="scope">
-                            <div>
-                              <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)" trigger="click">
-                                  <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
-                                  <el-dropdown-menu class="w-200" slot="dropdown">
-                                    <el-dropdown-item command="edit" class="s-12">View Purchase Details</el-dropdown-item>
-                                  </el-dropdown-menu>
-                              </el-dropdown>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    </el-table>
-
-                    <!-- FOOTER -->
-                    <div class="flex justify-content-between align-items-center px-20">
-                        <div class="s-12">
-                          <span class="bold-600">{{purchases.length}}</span> results
-                        </div>
-                        <el-pagination class="my-2 flex justify-content-end"
-                            @current-change="handleCurrentChange"
-                            :page-size="total"
-                            layout="prev, pager, next"
-                            :total="total">
-                        </el-pagination>
-                    </div>
-                </div>
-            </div>
-            <export-modal :modalVisible.sync="exportVisible"></export-modal>
+  <el-card class="card-0">
+    <div class="transactions">
+      <div class="trans-div flex justify-content-between">
+        <div>
+          <filter-component dispatch="setPurchasesFilters" filterType="stocks"></filter-component>
         </div>
-    </el-card>
+        <div>
+          <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+        </div>
+      </div>
+      <div>
+          <div class="center h-80" v-if="error">
+            <div class="center flex-column">
+              <p class="m-0 p-0">Unable to load this page</p>
+              <el-button @click.prevent="fetchPurchases" icon="sync icon" type="text">Retry</el-button>
+            </div>
+          </div>
+          <div v-else class="breathe">
+              <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredPurchases">
+                  <el-table-column label="Purchase Ref." width="auto">
+                    <template slot-scope="scope">
+                      <p class="m-0 p-0 mr-10 s-13">{{scope.row.reference}}</p>
+                    </template>
+                  </el-table-column>
+                  <!-- <el-table-column show-overflow-tooltip prop="name" label="Reference"></el-table-column> -->
+                  <el-table-column label="Status" width="120">
+                    <template slot-scope="scope">
+                      <p class="m-0 p-0 mr-10 s-13">{{scope.row.status}}</p>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Prev. Quantity" width="130">
+                    <template slot-scope="scope">
+                      <p class="m-0 p-0 mr-10 s-13">{{scope.row.previous_quantity}}</p>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Cur. Quantity" width="130">
+                    <template slot-scope="scope">
+                      <p class="m-0 p-0 mr-10 s-13">{{scope.row.current_quantity}}</p>
+                    </template>
+                  </el-table-column>
+                  <!-- <el-table-column label="Branch" width="160">
+                      <template slot-scope="scope">
+                        {{scope.row.branch}}
+                      </template>
+                  </el-table-column> -->
+                  <el-table-column label="Customer No.">
+                    <template slot-scope="scope">
+                      {{scope.row.customer_number}}
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Product">
+                    <template slot-scope="scope">
+                      {{scope.row.product.name}}
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Date" width="auto">
+                    <template slot-scope="scope">
+                      {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
+                    </template>
+                  </el-table-column>
+              <el-table-column width="80px">
+                  <template slot-scope="scope">
+                      <div>
+                        <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                            <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
+                            <el-dropdown-menu class="w-200" slot="dropdown">
+                              <el-dropdown-item command="edit" class="s-12">View Purchase Details</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                      </div>
+                  </template>
+              </el-table-column>
+              </el-table>
+
+              <!-- FOOTER -->
+              <div class="flex justify-content-between align-items-center px-20">
+                  <div class="s-12">
+                    <span class="bold-600">{{purchases.length}}</span> results
+                  </div>
+                  <el-pagination class="my-2 flex justify-content-end"
+                    @current-change="handleCurrentChange"
+                    :page-size="pageSize"
+                    layout="prev, pager, next"
+                    :total="total">
+                  </el-pagination>
+              </div>
+          </div>
+      </div>
+      <export-modal :modalVisible.sync="exportVisible"></export-modal>
+    </div>
+  </el-card>
 </template>
 
 <script>
@@ -153,7 +153,8 @@ export default {
     ...mapGetters({
       purchases: 'purchases',
       state: 'purchasesState',
-      meta: 'purchasesMeta'
+      meta: 'purchasesMeta',
+      pageSize: 'pageSize',
     }),
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'

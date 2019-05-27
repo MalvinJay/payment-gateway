@@ -151,13 +151,13 @@
                         header-row-class-name="transactions-table-header"
                         row-class-name="transactions-table-body ussd_session"
                         :data="currentUssdSession">
-                            <el-table-column prop="message" label="Input" width="200"></el-table-column>
+                            <el-table-column prop="message" label="Input" width="150"></el-table-column>
                             <el-table-column prop="response" label="Response" width="auto">
                                 <template slot-scope="scope">
                                   {{ scope.row.response}}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="timestamp" label="Timestamp" width="300">
+                            <el-table-column prop="timestamp" label="Timestamp" width="200">
                                 <template slot-scope="scope">
                                   {{ scope.row.timestamp  | moment("D MMM,YY hh:mm:ss A")}}
                                 </template>
@@ -173,12 +173,12 @@
                 </div>
                 <div>
                     <el-table @row-click="clickLogs" empty-text="No logs found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="logs">
-                        <el-table-column label="status" prop="status" width="100">
+                        <el-table-column label="status" prop="status" width="150">
                                 <template >
                                     <p class="status bold-600">201 OK</p>
                                 </template>
                         </el-table-column>
-                        <el-table-column label="description" prop="method">
+                        <el-table-column label="description" prop="method" width="auto">
                                 <template slot-scope="scope">
                                     <div class="flex justify-content-start">
                                     <p class="m-0 p-0 mr-10 bold-500 s-12 text-uppercase">{{scope.row.method || 'N/A'}}</p>
@@ -206,7 +206,12 @@
                     row-class-name="transactions-table-body"
                     header-row-class-name="transactions-table-header"
                     :data="events">
-                        <el-table-column show-overflow-tooltip label="event" prop="request">
+                        <el-table-column label="id" prop="id" width="150">
+                                <template slot-scope="scope">
+                                    <p class="m-0 p-0 mr-10 bold-500 s-12 text-uppercase">{{scope.row.id || 'N/A'}}</p>
+                                </template>
+                        </el-table-column>
+                        <el-table-column show-overflow-tooltip label="event" prop="request" >
                                 <template slot-scope="scope">
                                     <p class="m-0 p-0 bold-500 s-12">
                                       <span v-if="scope.row.request.transaction.status === 'paid'">payment.succeeded</span>
@@ -214,11 +219,6 @@
                                       <span v-else-if="scope.row.request.transaction.status === 'failed'"> payment.failed</span>
                                       <span v-else> payment.unknown</span>
                                     </p>
-                                </template>
-                        </el-table-column>
-                        <el-table-column label="id" prop="id" width="200">
-                                <template slot-scope="scope">
-                                    <p class="m-0 p-0 mr-10 bold-500 s-12 text-uppercase">{{scope.row.id || 'N/A'}}</p>
                                 </template>
                         </el-table-column>
                         <el-table-column label="date" prop="created_at" width="200">
@@ -229,6 +229,7 @@
                     </el-table>
                 </div>
             </el-card>
+
             <!-- disputes -->
             <el-card v-if="form.has_dispute" class="my-2 card-0">
                 <div slot="header">
@@ -261,6 +262,8 @@
                 </div>
             </el-card>
         </div>
+
+        <!-- Tickets -->
         <ticket-modal :transaction="currentUssdSessionPayment" :ticketVisible.sync="ticketVisible"></ticket-modal>
     </div>
 </template>

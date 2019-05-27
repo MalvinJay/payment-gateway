@@ -1,0 +1,21 @@
+
+Response Body:
+{
+  "vpc_Message": "Merchant [TESTCORE23] does not exist", 
+  "vpc_TxnResponseCode": 0, 
+  "vpc_ReceiptNo": "012413207163", 
+  "vpc_TransactionNo": 96841, 
+  "vpc_BatchNo": "20190527", 
+  "vpc_AuthorizeId": "654321", 
+  "vpc_Card": "MC", 
+  "vpc_SecureHash": "9FF46885DCA8563ACFC62058E0FC447BD2C033D505BD8202F681DCAD7CED4DD2", 
+  "vpc_SecureHashType": "SHA256", 
+  "vpc_CardNum": "-1234", 
+  "vpc_ReturnACI": "N", 
+  "vpc_TransactionIdentifier": "ABC187659DEFGJ0", 
+  "vpc_CommercialCardIndicator": "B", 
+  "vpc_CommercialCard": "Y", 
+  "vpc_CardLevelIndicator": "A", 
+  "vpc_FinancialNetworkCode": "MCC", 
+  "vpc_MarketSpecificData": "A" 
+}

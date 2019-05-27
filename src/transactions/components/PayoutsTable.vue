@@ -248,7 +248,7 @@ export default {
     })
     EventBus.$off('exportModal', (val) => {
         this.exportVisible = false
-    })  
+    })
   },
   methods: {
     clickRow (row, event, column) {
@@ -304,7 +304,7 @@ export default {
         var form = Utils.retryTransactions(row, 'payout')
         form.live = !this.test
         form.dummy = this.test
-        
+
         this.$store.dispatch('createPayouts', form)
         .then((response) => {
             if (response.data.success) {
