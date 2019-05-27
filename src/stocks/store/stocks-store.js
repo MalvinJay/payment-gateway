@@ -1,6 +1,6 @@
 import {
   PRODUCTS_FETCH, SET_PRODUCTS_STATE, SET_PRODUCTS_META, SET_PRODUCTS, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT,
-  PURCHASES_FETCH, SET_PURCHASES_STATE, SET_PURCHASES_META, SET_PURCHASES, CREATE_PURCHASE, UPDATE_PURCHASE, DELETE_PURCHASE,
+  PURCHASES_FETCH, SET_PURCHASES_FILTERS, SET_PURCHASES_STATE, SET_PURCHASES_META, SET_PURCHASES, CREATE_PURCHASE, UPDATE_PURCHASE, DELETE_PURCHASE,
   SET_SUCCESSFUL_PURCHASES,SET_REPORT_FIELDS_STATE,
   GET_FIELDS, SET_REPORT_STATE, SET_REPORT_FIELDS,
   GENERATE_REPORTS, GET_REPORT, DOWNLOAD_REPORT, SET_DOWNLOAD_LINK,
@@ -27,6 +27,7 @@ const state = {
   purchases: {
     data: [],
     state: 'LOADING',
+    filters: {},
     meta: {},
     successful: '0'
   },
@@ -58,6 +59,7 @@ const getters = {
 
   // purchase
   purchases: state => state.purchases.data,
+  puchasesFilter: state => state.purchases.filter,
   purchasesState: state => state.purchases.state,
   purchasesMeta: state => state.purchases.meta,
   successfulPurchases: state => state.purchases.successful,
@@ -99,6 +101,9 @@ const mutations = {
     state.purchases.state = 'DATA'
     state.purchases.data = payload
   },
+  [SET_PURCHASES_FILTERS] (state, data) {
+    state.purchases.filters = data
+  },
   [SET_PURCHASES_STATE] (state, data) {
     state.purchases.state = data
   },
@@ -107,7 +112,7 @@ const mutations = {
       totalCount: data.total,
       limit: data.limit,
       page: data.page,
-      products: data.records
+      purchases: data.records
     }
     state.purchases.meta = meta
   },
@@ -256,6 +261,10 @@ const actions = {
       })
     }
 
+  },
+  [SET_PURCHASES_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
+    commit(SET_PURCHASES_FILTERS, filters)
+    dispatch('getPurchases', {page: 1, cache: false})
   },
   [CREATE_PURCHASE] ({ commit, rootGetters, dispatch }, purchase) {
     return new Promise((resolve, reject) => {

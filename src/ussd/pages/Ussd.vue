@@ -36,17 +36,17 @@
                         <el-table-column show-overflow-tooltip prop="msisdn" label="phone number"></el-table-column>
                         <el-table-column show-overflow-tooltip prop="transaction" label="exams type" :filters="[{text: 'BECE', value: 'bece'},{text: 'WASSCE', value: 'wassce'}]" :filter-method="filterHandler">
                           <template slot-scope="scope">
-                            {{scope.row.transaction.response.data.extra_data.type}}
+                            {{scope.row.transaction.response.data.extra_data.type  || 'N/A'}}
                           </template>
                         </el-table-column>
                         <el-table-column show-overflow-tooltip prop="transaction" label="year" width="100">
                           <template slot-scope="scope">
-                            {{scope.row.transaction.response.data.extra_data.year}}
+                            {{scope.row.transaction.response.data.extra_data.year || 'N/A'}}
                           </template>
                         </el-table-column>
                         <el-table-column show-overflow-tooltip prop="transaction" label="index no" width="auto">
                           <template slot-scope="scope">
-                            {{scope.row.transaction.response.data.extra_data.index_no}}
+                            {{scope.row.transaction.response.data.extra_data.index_no  || 'N/A'}}
                           </template>
                         </el-table-column>
                         <!-- <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label" :width="column.width"></el-table-column> -->
