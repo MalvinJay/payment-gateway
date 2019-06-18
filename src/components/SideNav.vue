@@ -31,7 +31,7 @@
                 <el-menu-item route="/disputes" index="disputes">Disputes</el-menu-item>
                 <el-menu-item v-if="false" class="v-step-1" index="2-4">Settings</el-menu-item>
             </el-submenu>
-            <el-submenu ref="sideMenu" index="3" v-if="user.client.code === '081593' || user.client.code === '505077'">
+            <el-submenu ref="sideMenu" index="3" v-if="user.client.code === '081593' || user.client.code === '505077' || user.client.code === '029056'">
                 <template slot="title">
                   <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">Stocks
                 </template>
