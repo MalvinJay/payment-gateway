@@ -45,7 +45,7 @@
                         </div>
                         <div class="flex flex-column ml-1">
                           <p v-if="form.payment_status == 'paid'" class="light mb-1 s-13">Payment succeeded</p>
-                          <p v-else class="light mb-1 s-13">{{header}} Payment failed</p>
+                          <p v-else class="light mb-1 s-13">Payment failed</p>
 
                           <p class="light mb-1 s-12 gray">{{form.date}}</p>
                         </div>
@@ -172,7 +172,15 @@
                     <span class="blue-text bold-600 s-16">Payment Logs</span>
                 </div>
                 <div>
-                    <el-table @row-click="clickLogs" empty-text="No logs found" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="logs">
+                    <el-table
+                    @row-click="clickLogs"
+                    empty-text="No logs found"
+                    v-loading="loading"
+                    :row-style="styleObject"
+                    row-class-name="transactions-table-body"
+                    header-row-class-name="transactions-table-header"
+                    :data="logs"
+                    >
                         <el-table-column label="status" prop="status" width="150">
                                 <template >
                                     <p class="status bold-600">201 OK</p>
@@ -366,7 +374,7 @@ export default {
             })
         })
 
-        // console.log('Form!!: ', this.form)
+        console.log('Form!!: ', this.form)
 
         EventBus.$on('ticketModal', (val) => {
           this.ticketVisible = val
@@ -380,10 +388,10 @@ export default {
           currentUssdSessionPayment: 'currentUssdSessionPayment'
         }),
         events () {
-           return this.form.events
+          return this.form.events
         },
         logs () {
-           return this.form.logs
+          return this.form.logs
         },
         disputes () {
             return this.form.disputes.map(el => {
@@ -412,7 +420,8 @@ export default {
           var nForm = {
             name: this.form.company? this.form.company: 'N/A',
             'phone number': this.form.customer_no,
-            reference: this.form.reference,
+            // reference: this.form.reference,
+            reference: `<a>${this.form.reference}</a>`,
             amount: `${symbol} ${this.form.amount}`,
             fee: `${symbol} ${this.form.charged_amount}`,
             date: this.form.date,
