@@ -7,6 +7,9 @@
                 </div>
                 <div class="flex align-items-center">
                     <p class="balance-info gray-text border-right">{{balance.fon_messanger_balance | money }}</p>
+                    <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
+                        <el-button @click.prevent="fetchMessages" icon="undo icon" type="text"></el-button>
+                    </el-tooltip>
                     <el-button @click="topupDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Topup</el-button>
                     <el-button @click="logDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
                 </div>
@@ -59,7 +62,7 @@
         </div>
         <log-dialog :modalVisible="logDialog"></log-dialog>
         <topup-account :modalVisible="topupDialog"></topup-account>
-    </el-card>  
+    </el-card>
 </template>
 
 <script>
@@ -112,13 +115,13 @@ export default {
         this.$store.dispatch('getFoneMessengers', {page: val, cache: false})
     },
     clickRow (row, event, column) {
-        this.$refs.fone.toggleRowExpansion(row)
+      this.$refs.fone.toggleRowExpansion(row)
     },
     fetchMessages () {
       this.$store.dispatch('getFoneMessengers')
     },
     topUpAccount () {
-      
+
     },
     submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -137,7 +140,7 @@ export default {
         })
     },
     resetForm(formName) {
-        this.$refs[formName].resetFields()
+      this.$refs[formName].resetFields()
     }
   },
   computed: {
@@ -161,76 +164,76 @@ export default {
 
 
 <style lang="scss" scoped>
-.mini-menu{
-    position: absolute;
-    top: 8px;
-    padding: 2px 7px;
-    border-radius: 4px;
-    transition: all ease;
-    line-height: normal;
-    right: 20px;
+  .mini-menu{
+      position: absolute;
+      top: 8px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      transition: all ease;
+      line-height: normal;
+      right: 20px;
 
-    &:hover{
-        // background: red;
-    }
-    .first-icon{
-        opacity: 0;
-    }
-    i{
-        // &:first-child{
-        //     opacity: 0;
-        // }
-        font-size: 12px;
-    }
-}
-.balance-info{
-    margin: 0;
-    margin-right: 10px;
-    padding-right: 10px;
-}
-.new-transaction{
-    .el-dialog__header{
-        color: #2b2d50;
-    }
-    .el-dialog__body{
-        padding: 20px
-    }
-}
-.new-transaction-bg{
-    background: #F7FAFC;
-}
-.transactions-table-header{
-    background-color: #F7FAFC !important;
-    height: 36px !important;
+      &:hover{
+          // background: red;
+      }
+      .first-icon{
+          opacity: 0;
+      }
+      i{
+          // &:first-child{
+          //     opacity: 0;
+          // }
+          font-size: 12px;
+      }
+  }
+  .balance-info{
+      margin: 0;
+      margin-right: 10px;
+      padding-right: 10px;
+  }
+  .new-transaction{
+      .el-dialog__header{
+          color: #2b2d50;
+      }
+      .el-dialog__body{
+          padding: 20px
+      }
+  }
+  .new-transaction-bg{
+      background: #F7FAFC;
+  }
+  .transactions-table-header{
+      background-color: #F7FAFC !important;
+      height: 36px !important;
 
-    th{
-        background-color: #F7FAFC !important;
-        padding: 0 !important;
-    }
+      th{
+          background-color: #F7FAFC !important;
+          padding: 0 !important;
+      }
 
-}
-.mr-10{
-    margin-right: 10px;
-}
-.pl-15{
-    padding-left: 15px;
-}
-.mini-button{
-    // height: 30px;
-    line-height: 1em;
-    // padding: 0 10px;
-    padding: 7px 10px !important;
-    color: rgba(0,0,0,.6);
+  }
+  .mr-10{
+      margin-right: 10px;
+  }
+  .pl-15{
+      padding-left: 15px;
+  }
+  .mini-button{
+      // height: 30px;
+      line-height: 1em;
+      // padding: 0 10px;
+      padding: 7px 10px !important;
+      color: rgba(0,0,0,.6);
 
-    &:hover{
-        color: rgba(0,0,0,.8);
-    }
+      &:hover{
+          color: rgba(0,0,0,.8);
+      }
 
-    span{
-        font-weight: 600
-    }
-    i{
-        margin-right: 5px;
-    }
-}
+      span{
+          font-weight: 600
+      }
+      i{
+          margin-right: 5px;
+      }
+  }
 </style>

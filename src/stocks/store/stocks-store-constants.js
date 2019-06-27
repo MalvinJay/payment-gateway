@@ -30,8 +30,8 @@ export const SET_DOWNLOAD_LINK = 'setDownloadLink'
 export const GET_BUCKET_FILE = 'getBucketFile'
 export const SET_AWS_FILE = 'setAwsFile'
 export const AWS_BUCKET = 'inventoribucket'
-export const ACCESS_KEY_ID = 'AKIATCUGATDXX574WJN5'
-export const SECRET_ACCESS_KEY = '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'
+export const ACCESS_KEY_ID = 'IDAKIAW2IFYS7JJXV2LKUF'
+export const SECRET_ACCESS_KEY = 'Uc+Mc+tApqGhs8dXDxObajqiqJ/d8vkMbLuO+kbw'
 
 // agents
 export const AGENTS_FETCH = 'getAgents'

@@ -36,7 +36,7 @@
                               <p class="m-0 p-0 mr-10 s-13">{{scope.row.quantity}}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Unit Price" width="120">
+                        <el-table-column label="Unit Price(Ghs)" width="120">
                             <template slot-scope="scope">
                               <div class="d-flex">
                                 <!-- <span> Ghs </span> -->
