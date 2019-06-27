@@ -108,7 +108,7 @@
                 <div slot="header">
                     <span class="blue-text bold-600 s-16">SMS</span>
                 </div>
-                <div>
+                <div class="flex justify-content-between">
                   <!-- <el-table ref="fone" empty-text="No messages to display" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="messages">
                       <el-table-column type="expand" width="55">
                           <template slot-scope="props">
@@ -132,9 +132,17 @@
                           </template>
                       </el-table-column>
                   </el-table> -->
-                  <div class="flex pl-15 px-10 py-20">
+                  <div class="flex flex-column justify-content-center pl-15 px-10 py-10">
                     <p class="blue-text s-13 pr-10 m-0">Message: </p>
                     <p class="s-12 blue-text bold-600">{{messages}}</p>
+                  </div>
+
+                  <div class="flex flex-column justify-content-center pl-15 px-10 py-10">
+                    <p class="blue-text s-13 pr-10 m-0">Status</p>
+                    <p class="s-12 blue-text bold-600"> Sent </p>
+                  </div>
+                  <div>
+
                   </div>
                 </div>
             </el-card>
@@ -421,7 +429,7 @@ export default {
             name: this.form.company? this.form.company: 'N/A',
             'phone number': this.form.customer_no,
             // reference: this.form.reference,
-            reference: `<a>${this.form.reference}</a>`,
+            reference: this.form.reference,
             amount: `${symbol} ${this.form.amount}`,
             fee: `${symbol} ${this.form.charged_amount}`,
             date: this.form.date,

@@ -101,6 +101,24 @@ const actions = {
           }
         ).then((response) => {
           commit(SET_USSD_SESSIONS_STATE, 'DATA')
+
+          // let PreferredArray = []
+          // response.data.filtered_records.map(ussd => {
+          //   if(Utils.present(ussd.transaction.response.data)) {
+          //     if(rootGetters.user.client.code === ussd.transaction.response.data.till) {
+          //       let type = ussd.transaction.response.data.extra_data.type
+          //       if(type === 'BECE') {
+          //         ussd.transaction.response.data.extra_data.type = 'BECE(School)';
+          //       }
+          //       if(type === 'PBEC') {
+          //         ussd.transaction.response.data.extra_data.type = 'BECE(Private)';
+          //       }
+          //       PreferredArray.push(ussd)
+          //     }
+          //   }
+          // })
+
+          // commit(SET_USSD_SESSIONS, PreferredArray)
           commit(SET_USSD_SESSIONS, response.data.filtered_records)
           resolve(response)
         }).catch((error) => {
