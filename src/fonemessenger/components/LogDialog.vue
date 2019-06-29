@@ -93,8 +93,8 @@ export default {
         loading: false,
         column: 'all',
         options: [
-            {name: 'Single', value: false},
-            {name: 'File Upload', value: true}
+          {name: 'Single', value: false},
+          {name: 'File Upload', value: true}
         ],
         rules: {
           payment_types: [
@@ -108,8 +108,8 @@ export default {
     },
     watch: {
         message () {
-            this.characters = this.message.length
-            this.messages = Math.ceil(this.characters / 160)
+          this.characters = this.message.length
+          this.messages = Math.ceil(this.characters / 160)
         }
     },
     methods: {
