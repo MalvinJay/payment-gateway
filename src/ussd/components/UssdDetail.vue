@@ -103,48 +103,62 @@
                     </div>
                 </div>
             </el-card>
+
             <!-- sms -->
             <el-card class="my-2 card-0">
-                <div slot="header">
-                    <span class="blue-text bold-600 s-16">SMS</span>
-                </div>
-                <div class="flex justify-content-between">
-                  <!-- <el-table ref="fone" empty-text="No messages to display" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="messages">
-                      <el-table-column type="expand" width="55">
-                          <template slot-scope="props">
-                              <div class="pl-15">
-                                  <p class="blue-text s-13 bold-600">Message: </p>
-                                  <p class="s-12 gray">{{ props.row.message }}</p>
-                              </div>
-                          </template>
-                      </el-table-column>
-                      <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in fonecolumns" :prop="column.dataField" :label="column.label"></el-table-column>
-                      <el-table-column width="80">
-                          <template slot-scope="scope">
-                              <div class="flex">
-                                  <the-tag status="failed" :title="scope.row.post_type"></the-tag>
-                              </div>
-                          </template>
-                      </el-table-column>
-                      <el-table-column prop="updated_at" label="Date" width="200">
-                          <template slot-scope="scope">
-                              {{scope.row.updated_at | moment("D MMM,YY hh:mm A")}}
-                          </template>
-                      </el-table-column>
-                  </el-table> -->
-                  <div class="flex flex-column justify-content-center pl-15 px-10 py-10">
-                    <p class="blue-text s-13 pr-10 m-0">Message: </p>
-                    <p class="s-12 blue-text bold-600">{{messages}}</p>
-                  </div>
+              <div slot="header">
+                  <span class="blue-text bold-600 s-16">SMS</span>
+              </div>
+              <div class="flex justify-content-between">
+              <!--
+                <el-table
+                  ref="fone"
+                  empty-text="No messages to display"
+                  v-loading="loading"
+                  row-class-name="transactions-table-body"
+                  header-row-class-name="transactions-table-header"
+                  :data="tableMessages">
+                    <el-table-column type="expand" width="55">
+                        <template slot-scope="props">
+                          <div class="pl-15">
+                            <p class="blue-text s-13 bold-600">Message: </p>
+                            <p class="s-12 gray">{{ props.row.message }}</p>
+                          </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in fonecolumns" :prop="column.dataField" :label="column.label"></el-table-column>
+                    <el-table-column width="80">
+                        <template slot-scope="scope">
+                          <div class="flex">
+                            <the-tag status="failed" :title="scope.row.post_type"></the-tag>
+                          </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="updated_at" label="Date" width="200">
+                        <template slot-scope="scope">
+                          {{scope.row.updated_at | moment("D MMM,YY hh:mm A")}}
+                        </template>
+                    </el-table-column>
+                </el-table> -->
 
-                  <div class="flex flex-column justify-content-center pl-15 px-10 py-10">
-                    <p class="blue-text s-13 pr-10 m-0">Status</p>
-                    <p class="s-12 blue-text bold-600"> Sent </p>
-                  </div>
-                  <div>
-
-                  </div>
+                <div class="flex flex-column justify-content-center pl-15 px-10 py-10">
+                  <p class="blue-text s-13 pr-10 m-0"> Message </p>
+                  <p class="s-12 blue-text bold-600">{{messages}}</p>
                 </div>
+
+                <div class="flex flex-column justify-content-center pl-15 px-10 py-10">
+                  <p class="blue-text s-13 pr-10 m-0"> Status </p>
+                  <p v-if="mess === 'N/A'" class="s-12 blue-text bold-600"> Unavailable </p>
+                  <p v-else class="s-12 blue-text bold-600"> Sent </p>
+                </div>
+
+                <div class="flex flex-column justify-content-center pl-15 px-10 py-10">
+                  <p class="blue-text s-13 pr-10 m-0"> Re-Send </p>
+                  <p class="s-12 blue-text bold-600">
+                    <el-button icon="sync icon black" class="p-0" type="text"></el-button>
+                  </p>
+                </div>
+              </div>
             </el-card>
 
             <!-- Ussd Sessions -->
@@ -293,31 +307,60 @@ export default {
     name: 'UssdDetail',
     data () {
         return {
-            status: 'failed',
-            edit: false,
-            remarks: '',
-            page: this.$route.path,
-            loading: false,
-            ticketVisible: false,
-            columns: [
-                {label: 'Customer', dataField: 'name', width: 'auto'},
-                {label: 'Dispute Ref.', dataField: 'ref', width: 'auto'},
-                {label: 'Transaction Ref.', dataField: 'trans_ref', width: 'auto'},
-                {label: 'Date', dataField: 'date', width: 'auto'}
-            ],
-            fonecolumns: [
-                {label: 'message id', dataField: 'response_id', align: 'center'},
-                {label: 'delivery status', dataField: 'response_message', align: 'left'},
-                {label: 'recipient', dataField: 'recipient_no', align: 'left'}
-            ],
-            styleObject: {
+          status: 'failed',
+          edit: false,
+          remarks: '',
+          page: this.$route.path,
+          loading: false,
+          ticketVisible: false,
+          columns: [
+            {label: 'Customer', dataField: 'name', width: 'auto'},
+            {label: 'Dispute Ref.', dataField: 'ref', width: 'auto'},
+            {label: 'Transaction Ref.', dataField: 'trans_ref', width: 'auto'},
+            {label: 'Date', dataField: 'date', width: 'auto'}
+          ],
+          fonecolumns: [
+            {label: 'message id', dataField: 'response_id', align: 'center'},
+            {label: 'delivery status', dataField: 'response_message', align: 'left'},
+            {label: 'recipient', dataField: 'recipient_no', align: 'left'}
+          ],
+          styleObject: {
 
-            }
+          },
+          mess: 'N/A'
         }
     },
     created () {
-        EventBus.$emit('sideNavClick', 'ussd')
+      EventBus.$emit('sideNavClick', 'ussd')
     },
+
+    mounted () {
+      this.$store.dispatch('getCurrentUssdSession', this.$route.params.id)
+      .then((response) => {
+        console.log('CurrentUssdSession: ', this.currentUssdSession)
+        this.$store.dispatch('getCurrentUssdSessionPayment', this.currentUssdSession[0].sessionid)
+        .then((response) => {
+          console.log('currentUssdSessionPayment:', this.currentUssdSessionPayment)
+        })
+      })
+
+      console.log('Form!!: ', this.form)
+
+      EventBus.$on('ticketModal', (val) => {
+        this.ticketVisible = val
+      })
+
+      console.log(this.tableMessages)
+
+      if(this.form.extra_data.message)
+      this.mess = this.form.extra_data.message
+    },
+
+    updated() {
+      if(this.form.extra_data.message)
+      this.mess = this.form.extra_data.message
+    },
+
     methods: {
         handleTableCommand (command, row) {
             switch (command) {
@@ -333,8 +376,7 @@ export default {
             }
         },
         fetchTransactions () {
-        //    this.$store.dispatch('getCurrentTransaction', this.$route.params.id)
-            this.$store.dispatch('getUssdSessions')
+          this.$store.dispatch('getUssdSessions')
         },
         refund () {
             this.loading = true
@@ -372,108 +414,103 @@ export default {
             }
         },
     },
-    mounted () {
-        this.$store.dispatch('getCurrentUssdSession', this.$route.params.id)
-        .then((response) => {
-            console.log('CurrentUssdSession: ', this.currentUssdSession)
-            this.$store.dispatch('getCurrentUssdSessionPayment', this.currentUssdSession[0].sessionid)
-            .then((response) => {
-              console.log('currentUssdSessionPayment:', this.currentUssdSessionPayment)
-            })
-        })
 
-        console.log('Form!!: ', this.form)
-
-        EventBus.$on('ticketModal', (val) => {
-          this.ticketVisible = val
-        })
-    },
     computed: {
-        ...mapGetters({
-          currentUssdSession: 'currentUssdSession',
-          form: 'currentUssdSessionPayment',
-          state: 'ussdSessionsState',
-          currentUssdSessionPayment: 'currentUssdSessionPayment'
-        }),
-        events () {
-          return this.form.events
-        },
-        logs () {
-          return this.form.logs
-        },
-        disputes () {
-            return this.form.disputes.map(el => {
-                el.date = moment(el.created_at).format('D MMM,YY hh:mm A')
-                return el
-            })
-        },
-        messages () {
-          return this.form.extra_data.message || 'N/A'
-        },
-        loadingPage () {
-            return this.state === 'LOADING'
-            // return true
-        },
-        error () {
-            return this.state === 'ERROR'
-        },
-        success () {
-            return this.status === 'paid'
-        },
-        data () {
-          var symbol = 'GHs'
-          if (this.form.currency === 'GHs') {
-            symbol = 'GHs'
-          }
-          var nForm = {
-            name: this.form.company? this.form.company: 'N/A',
-            'phone number': this.form.customer_no,
-            // reference: this.form.reference,
-            reference: this.form.reference,
-            amount: `${symbol} ${this.form.amount}`,
-            fee: `${symbol} ${this.form.charged_amount}`,
-            date: this.form.date,
-            time: this.form.time,
-            remarks: this.form.remarks ? this.form.remarks : '-'
-          }
-          return nForm
-        },
-        data2 () {
-          let ExamsType;
-          if(this.form.extra_data.type === 'BECE') {
-            ExamsType = 'BECE(School)';
-          }
-          else {
-            if(this.form.extra_data.type === 'PBEC') {
-              ExamsType = 'BECE(Private)';
-            } else {
-              ExamsType = this.form.extra_data.type
-            }
-          }
+      ...mapGetters({
+        currentUssdSession: 'currentUssdSession',
+        form: 'currentUssdSessionPayment',
+        state: 'ussdSessionsState',
+        currentUssdSessionPayment: 'currentUssdSessionPayment'
+      }),
+      events () {
+        return this.form.events
+      },
+      logs () {
+        return this.form.logs
+      },
+      disputes () {
+          return this.form.disputes.map(el => {
+              el.date = moment(el.created_at).format('D MMM,YY hh:mm A')
+              return el
+          })
+      },
+      messages () {
+        return this.form.extra_data.message || 'N/A'
+      },
+      tableMessages() {
+        let Arr = new Array()
 
-          var nForm = {
-            'Exams Type':  ExamsType || 'N/A',
-            'Customer Name': this.form.extra_data.name || 'NA',
-            'Index Number': this.form.extra_data.index_no,
-            'Year': this.form.extra_data.year,
-          }
-          return nForm
-        },
-        hasNoData () {
-            return typeof this.form === 'undefined'
-        },
-        header () {
-          // if (this.form.trans_type === 'cashin') {
-          //     EventBus.$emit('sideNavClick', 'payouts')
-          // } else {
-          //     EventBus.$emit('sideNavClick', 'ussd')
-          // }
-          EventBus.$emit('sideNavClick', 'ussd')
-          // var header = this.form.trans_type === 'cashout' ? 'Receipt' : 'Payment'
-          var header = 'Ussd'
-
-          return header
+        for (let [key, value] of Object.entries(this.form.extra_data)) {
+          Arr.push({key, value})
         }
+
+        console.log('Created Array:', Arr)
+        return Arr
+      },
+      loadingPage () {
+          return this.state === 'LOADING'
+          // return true
+      },
+      error () {
+          return this.state === 'ERROR'
+      },
+      success () {
+          return this.status === 'paid'
+      },
+      data () {
+        var symbol = 'GHs'
+        if (this.form.currency === 'GHs') {
+          symbol = 'GHs'
+        }
+        var nForm = {
+          name: this.form.company? this.form.company: 'N/A',
+          'phone number': this.form.customer_no,
+          // reference: this.form.reference,
+          reference: this.form.reference,
+          amount: `${symbol} ${this.form.amount}`,
+          fee: `${symbol} ${this.form.charged_amount}`,
+          date: this.form.date,
+          time: this.form.time,
+          remarks: this.form.remarks ? this.form.remarks : '-'
+        }
+        return nForm
+      },
+      data2 () {
+        let ExamsType;
+        if(this.form.extra_data.type === 'BECE') {
+          ExamsType = 'BECE(School)';
+        }
+        else {
+          if(this.form.extra_data.type === 'PBEC') {
+            ExamsType = 'BECE(Private)';
+          } else {
+            ExamsType = this.form.extra_data.type
+          }
+        }
+
+        var nForm = {
+          'Exams Type':  ExamsType || 'N/A',
+          'Customer Name': this.form.extra_data.name || 'NA',
+          'Index Number': this.form.extra_data.index_no,
+          'Year': this.form.extra_data.year,
+        }
+        return nForm
+      },
+      hasNoData () {
+          return typeof this.form === 'undefined'
+      },
+      header () {
+        // if (this.form.trans_type === 'cashin') {
+        //     EventBus.$emit('sideNavClick', 'payouts')
+        // } else {
+        //     EventBus.$emit('sideNavClick', 'ussd')
+        // }
+        EventBus.$emit('sideNavClick', 'ussd')
+        // var header = this.form.trans_type === 'cashout' ? 'Receipt' : 'Payment'
+        var header = 'Ussd'
+
+        return header
+      }
     }
 }
 </script>

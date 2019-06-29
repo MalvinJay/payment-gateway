@@ -8,8 +8,8 @@
             <el-form hide-required-asterisk class="transaction-form my-2" size="mini" style="width: 90%" :rules="rules" ref="form" :model="form" label-position="top">
                 <el-form-item label="Type of Transaction">
                     <div class="flex justify-content-between align-items-center">
-                        <el-checkbox v-model="form.payment_types" @change="handleCheckedTypesChange" v-for="payment in types" :label="payment.value" :key="payment.value">{{payment.label}}</el-checkbox>
-                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">All</el-checkbox>
+                      <el-checkbox v-model="form.payment_types" @change="handleCheckedTypesChange" v-for="payment in types" :label="payment.value" :key="payment.value">{{payment.label}}</el-checkbox>
+                      <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">All</el-checkbox>
                     </div>
                 </el-form-item>
                 <el-form-item label="Select Date">
@@ -41,11 +41,11 @@
                 </el-form-item>
                 <el-form-item class="flex justify-content-end">
                     <div class="flex">
-                        <el-button @click="close">Cancel</el-button>
-                        <a :href="`${GET_BASE_URI}v1/clients/reports/download?access_token=${token}&file_name=${link}`"
-                        class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" v-if="ready" download>Download</a>
-                        
-                        <el-button v-else @click="submitExport('form')" type="primary" :loading="loading">Submit</el-button>
+                      <el-button @click="close">Cancel</el-button>
+                      <a @click="close" :href="`${GET_BASE_URI}v1/clients/reports/download?access_token=${token}&file_name=${link}`"
+                      class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" v-if="ready" download>Download</a>
+
+                      <el-button v-else @click="submitExport('form')" type="primary" :loading="loading">Submit</el-button>
                     </div>
                 </el-form-item>
             </el-form>
@@ -94,13 +94,13 @@ export default {
       dateRangeClicked () {
         this.reset()
       },
-      handleCheckAllChange (val) {    
-        this.reset()     
+      handleCheckAllChange (val) {
+        this.reset()
         this.form.payment_types = val ? this.types.map(el => el.value) : []
         this.isIndeterminate = false
       },
-      handleCheckedTypesChange (value) {   
-        this.reset()      
+      handleCheckedTypesChange (value) {
+        this.reset()
         let checkedCount = value.length
         this.checkAll = checkedCount === this.types.length
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.types.length
@@ -128,27 +128,31 @@ export default {
             this.$store.dispatch('submitReport', query)
             .then((response) => {
                 if (response.data.success) {
-                    // if(this.link)
-                    this.ready = true
-
                     this.$message({
-                        type: 'success',
-                        message: response.data.response.message,
+                      type: 'success',
+                      message: response.data.response.message
                     })
-                    // var link = document.getElementById('dwnl').href = response.data.response.data.file_name
-                    // link.href = this.link
+
+                  // if(response.data.response.data.done) {
+                  //   this.ready = true
+                  //   this.$message({
+                  //     type: 'success',
+                  //     message: response.data.response.message
+                  //   })
+                  // }
+
                 } else {
                     this.loading = false
                     this.$message({
-                        type: 'error',
-                        message: response.data.response.message
+                      type: 'error',
+                      message: response.data.response.message
                     })
                 }
             }).catch((error) => {
                 this.loading = false
                 const response = error.response
                 this.$message({
-                    message: response.data.error,
+                    message: response,
                     type: 'error'
                 })
             })
@@ -168,7 +172,7 @@ export default {
       },
       reset () {
         this.loading = false
-        this.ready = false           
+        this.ready = false
       }
     //   download () {
     //     var link = document.getElementById('dwnl')
@@ -176,7 +180,7 @@ export default {
     //     this.$store.dispatch('downloadReport')
     //     .then((response) => {
     //         console.log('file data', response.data)
-            
+
     //     })
     //   }
     },
