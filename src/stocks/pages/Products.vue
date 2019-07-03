@@ -7,8 +7,7 @@
                     <!-- <filter-component dispatch="setProductsFilters" filterType="stocks"></filter-component> -->
                 </div>
                 <div>
-                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New Product</el-button>
-                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+                  <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New Product</el-button>
                 </div>
             </div>
             <div>

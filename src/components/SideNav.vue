@@ -37,6 +37,7 @@
                 </template>
                 <el-menu-item route="/stock/products" index="products">Products</el-menu-item>
                 <el-menu-item route="/stock/purchases" index="purchases">Purchases</el-menu-item>
+                <el-menu-item route="/stock/agents" index="agents">Agents</el-menu-item>
             </el-submenu>
             <el-submenu ref="sideMenu" index="4">
                 <template slot="title">

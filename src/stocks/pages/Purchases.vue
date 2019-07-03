@@ -87,7 +87,28 @@
               </div>
           </div>
       </div>
-      <export-modal :modalVisible.sync="exportVisible"></export-modal>
+      <el-dialog custom-class="export-dialog" title="Export" :visible="exportVisible" width="25%">
+        <div class="flex justify-content-center new-export-bg ">
+            <el-form hide-required-asterisk class="transaction-form my-2" size="mini" style="width: 90%" ref="form" :model="form" label-position="top">
+              <el-form-item label="Select Date">
+                  <el-date-picker
+                  v-model="dateColumns"
+                  type="daterange"
+                  @change="dateRangeClicked"
+                  start-placeholder="Start date"
+                  end-placeholder="End date">
+                  </el-date-picker>
+              </el-form-item>
+              <el-form-item class="flex justify-content-end">
+                <div class="flex">
+                    <el-button @click="close">Cancel</el-button>
+                    <a :href="`https://inventroy-box.herokuapp.com/reports/index?token=${token}&${generateQueryParams}&${fields}`"
+                    class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" @click="close" download>Download</a>
+                </div>
+              </el-form-item>
+            </el-form>
+          </div>
+      </el-dialog>
     </div>
   </el-card>
 </template>
@@ -95,6 +116,8 @@
 <script>
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
+import Utils from '@/utils/services'
+import moment from 'moment'
 
 export default {
   name: "Purchases",
@@ -106,6 +129,12 @@ export default {
       },
       exportVisible: false,
       dialogVisible: false,
+      form: {
+        from: '',
+        to: ''
+      },
+      token: '84ce3b74dc2b22a37b0147da223796d6e1af0c8c351f54e65ab6d771ff683783',
+      fields: 'fields[]=previous_quantity&fields[]=current_quantity&fields[]=network_provider&fields[]=code&fields[]=created_at&fields[]=status&fields[]=remarks&fields[]=reference'
     }
   },
   created() {
@@ -119,13 +148,17 @@ export default {
   },
   methods: {
     close () {
+      this.form = {
+        from: '',
+        to: ''
+      },
       this.exportVisible = false
-      this.dialogVisible = false
-
-      // setTimeout(() => {
-      //   this.form = Object.assign({}, this.defaultItem)
-      //   this.editedIndex = -1
-      // }, 300)
+      this.ready = false
+    },
+    reset () {
+      this.exportVisible = false
+      // this.loading = false
+      this.ready = false
     },
     handleTableCommand (command, row) {
         switch (command) {
@@ -147,6 +180,9 @@ export default {
     },
     fetchPurchases () {
       this.$store.dispatch('getPurchases', {cache: false})
+    },
+    dateRangeClicked () {
+      // this.reset()
     }
   },
   computed: {
@@ -155,6 +191,7 @@ export default {
       state: 'purchasesState',
       meta: 'purchasesMeta',
       pageSize: 'pageSize',
+      // token: 'token'
     }),
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'
@@ -167,6 +204,22 @@ export default {
     },
     filteredPurchases () {
       return this.purchases
+    },
+    dateColumns: {
+      get () {
+        var from = this.form.from
+        var to = this.form.to
+        var arr = [from, to]
+        return arr
+      },
+      set (value) {
+        this.form.from = moment(value[0]).format('YYYY-MM-DD')
+        this.form.to = moment(value[1]).format('YYYY-MM-DD')
+      }
+    },
+    generateQueryParams() {
+      console.log('Query Params:', Utils.createExportQuery(this.form))
+      return Utils.createExportQuery(this.form)
     }
   }
 }
@@ -225,6 +278,22 @@ export default {
     i{
         margin-right: 5px;
     }
+}
+
+// report
+.export-dialog {
+  .el-dialog__header {
+    color: #2b2d50;
+  }
+  .el-dialog__body {
+    padding: 0px !important
+  }
+}
+.new-export-bg {
+  background: #F7FAFC;
+}
+.m-0{
+  margin: 0 !important;
 }
 
 .transactions-table-header{

@@ -275,7 +275,7 @@ const actions = {
   [UPDATE_JOB] ({ rootGetters }, {id, data}) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}v1clients/jobs/files/${id}?${data}&is_sub_user=false`,
+        url: `${GET_BASE_URI}v1/clients/jobs/files/${id}?${data}&is_sub_user=false`,
         method: 'PUT',
         token: rootGetters.token
       }).then((response) => {
