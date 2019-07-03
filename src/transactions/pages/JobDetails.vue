@@ -119,11 +119,11 @@
                                                     <div v-else>
                                                         <p class="text-uppercase s-12">date & time of trasactions postings</p>
                                                         <el-date-picker class="w-50 mb-1" size="mini"
-                                                            type="date" 
+                                                            type="date"
                                                             placeholder="Select Date"
                                                             value-format="yyyy-MM-dd"
                                                             format="MMM dd, yyyy"
-                                                            v-model="schedule.date" 
+                                                            v-model="schedule.date"
                                                             :default-value="Date.now()"></el-date-picker>
                                                         <el-time-select class="w-50" size="mini"
                                                         v-model="schedule.time"
@@ -171,7 +171,7 @@
             <!-- JOB RUNS -->
             <el-card class="my-2 card-0">
                 <div slot="header">
-                    <span class="blue-text bold-600 s-16">{{header}} runs</span>
+                  <span class="blue-text bold-600 s-16">{{header}} runs</span>
                 </div>
                 <div>
                     <el-table @row-click="clickRun" ref="run" class="default-table-expanded" empty-text="No job runs to display" v-loading="loadingPage" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="runs">
@@ -245,14 +245,17 @@
             <el-card class="my-2 card-0">
                 <div class="flex align-items-baseline justify-content-between" slot="header">
                     <span class="blue-text bold-600 s-16">Subscribers</span>
+
+                    <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2 w-50" size="mini" placeholder="Search by name or phone"></el-input>
+
                     <el-upload
-                        class="upload-contacts no-show-upload"
-                        action=""
-                        :on-change="onChange"
-                        :auto-upload="false"
-                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                        :file-list="form.fileList">
-                        <el-button :loading="addLoading" type="primary" class="z-depth-button s-13 open-sans mini-button b-0" size="mini" icon="plus icon">Upload Contacts</el-button>
+                      class="upload-contacts no-show-upload"
+                      action=""
+                      :on-change="onChange"
+                      :auto-upload="false"
+                      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                      :file-list="form.fileList">
+                      <el-button :loading="addLoading" type="primary" class="z-depth-button s-13 open-sans mini-button b-0" size="mini" icon="plus icon">Upload Contacts</el-button>
                     </el-upload>
                 </div>
                 <div class="breathe">
@@ -262,7 +265,7 @@
                     v-loading="loading"
                     row-class-name="transactions-table-body"
                     header-row-class-name="transactions-table-header"
-                    :data="form.contacts.slice((page * 12) - 12, page * 12)">
+                    :data="form.contacts.slice((page * 12) - 12, page * 12).filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()) || data.msisdn.toLowerCase().includes(search.toLowerCase()))">
                         <el-table-column type="index"></el-table-column>
                         <!-- <el-table-column type="expand">
                             <template slot-scope="props">
@@ -294,7 +297,7 @@
                             <template slot-scope="scope">
                                 {{scope.row.amount | money}}
                             </template>
-                        </el-table-column>     
+                        </el-table-column>
                         <el-table-column prop="status" label="status" >
                             <template slot-scope="scope">
                                 <div class="flex">
@@ -303,22 +306,25 @@
                                     <the-tag v-if="scope.row.status === 'failed'" status="failed" :title="scope.row.status" icon="detail check icon"></the-tag> -->
                                     <the-tag v-if="scope.row.status === 'failed'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
                                     <the-tag v-else status="pending" :title="scope.row.status" icon="detail check icon"></the-tag>
-                                    
+
                                     <!-- <the-tag v-if="scope.row.status === 'success'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag> -->
                                     <!-- <the-tag v-if="scope.row.status === 'completed'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag> -->
                                     <!-- <the-tag v-if="scope.row.status === 'pending'" status="pending" :title="scope.row.status" icon="detail check icon"></the-tag> -->
                                 </div>
                             </template>
-                        </el-table-column>                                           
+                        </el-table-column>
                         <el-table-column prop="updated_at" label="date">
                             <template slot-scope="scope">
                                 {{scope.row.updated_at | moment("MMM Do, YYYY")}}
                             </template>
                         </el-table-column>
                         <el-table-column width="80" align="center">
-                            <template slot-scope="scope">
-                                <el-button :loading="deleteLoading" class="p-0 m-0" @click.native.prevent="deleteJobContact(scope.$index, scope.row)" icon="trash alternate outline icon" type="text"></el-button>
-                            </template>
+                          <template slot-scope="scope">
+                            <div class="flex">
+                              <el-button @click.native.prevent="edit(scope.row)" class="p-0" style="margin-right: 2px;" icon="el-icon-edit icon" type="text"></el-button>
+                              <el-button :loading="deleteLoading" class="p-0 m-0" @click.native.prevent="deleteJobContact(scope.$index, scope.row)" icon="trash alternate outline icon" type="text"></el-button>
+                            </div>
+                          </template>
                         </el-table-column>
                     </el-table>
                     <!-- FOOTER -->
@@ -336,6 +342,39 @@
                 </div>
             </el-card>
         </div>
+
+        <!-- Edit Subcriber -->
+        <el-dialog custom-class="new-transaction"
+            :title="title"
+            :visible.sync="editting"
+            width="28%">
+            <div class="flex justify-content-center new-transaction-bg">
+                <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :model="Editform" label-width="100px">
+                  <el-form-item label="Name">
+                      <el-input v-model="Editform.name"></el-input>
+                  </el-form-item>
+                  <el-form-item class="h-auto" label="Phone Number" prop="customer_no">
+                      <el-input v-model="Editform.msisdn"></el-input>
+                  </el-form-item>
+                  <el-form-item label="Provider">
+                  <el-select v-model="Editform.provider" placeholder="Select Provider">
+                      <el-option
+                        v-for="(item, index) in providers" :key="index"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="Amount" prop="amount">
+                    <el-input class="little-padding-input" v-model="Editform.amount"><span slot="prefix">&#8373;</span></el-input>
+                  </el-form-item>
+                </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="editting = false">Cancel</el-button>
+              <el-button size="mini" :loading="loading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="EditCustomer('form')">Update</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -351,23 +390,32 @@ import { GET_BASE_URI } from '../../store/constants'
 export default {
     name: 'JobDetails',
     data () {
-        return {
-            test: true,
-            loading: false,
-            readonly: true,
-            updateLoading: false,
-            addLoading: false,
-            schedule: [],
-            days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
-            field: {},
-            changedFields: {},
-            deleteLoading: false,
-            page: 1,
-            contactPage: 1,
-            ready: false,
-            exportLoading: false,
-            GET_BASE_URI: GET_BASE_URI
+      return {
+        test: true,
+        loading: false,
+        readonly: true,
+        updateLoading: false,
+        addLoading: false,
+        schedule: [],
+        days: ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
+        field: {},
+        changedFields: {},
+        deleteLoading: false,
+        page: 1,
+        contactPage: 1,
+        ready: false,
+        exportLoading: false,
+        GET_BASE_URI: GET_BASE_URI,
+        search: '',
+        editting: false,
+        Editform: {
+          name: '',
+          msisdn: '',
+          provider: '',
+          amount: '',
+          // remarks: ''
         }
+      }
     },
     // watch: {
     //     form (oldValue, newValue) {
@@ -400,7 +448,7 @@ export default {
         },
         clickContact (row, event, column) {
             if (column.property) {
-                this.$router.push(`/job-contacts/${row.id}`)
+              this.$router.push(`/job-contacts/${row.id}`)
             }
         },
         fetchTransactions () {
@@ -429,6 +477,17 @@ export default {
         },
         addContactToJob () {
         },
+        edit(row){
+          console.log('Row:', row)
+          this.Editform = row
+          this.editting = true
+        },
+        EditCustomer() {
+          this.$message({
+            type: 'success',
+            message: "Saving...",
+          })
+        },
         toggleReadonly () {
             this.readonly = !this.readonly
         },
@@ -437,7 +496,7 @@ export default {
         },
         runJob () {
             this.runLoading = true
-            
+
             this.$store.dispatch('runJob', this.form.id)
             .then((response) => {
                 if (response.data.success) {
@@ -467,11 +526,11 @@ export default {
                     message: response.data.error,
                     type: 'error'
                 })
-            }) 
+            })
         },
         deleteJobContact (index, row) {
             this.deleteLoading = true
-            
+
             this.$store.dispatch('deleteJobContact', {id: row.id, job: this.$route.params.id})
             .then((response) => {
                 if (response.data.success) {
@@ -495,7 +554,7 @@ export default {
                     message: 'Delete failed',
                     type: 'error'
                 })
-            }) 
+            })
         },
         onChange (file, fileList){
             this.addLoading = true
@@ -504,41 +563,40 @@ export default {
             this.$store.dispatch('sendToBucket', filess)
             .then((response) => {
                 if (response) {
-                    var upload = {
-                        Bucket: AWS_BUCKET,
-                        Key: this.file.key
-                    }
-                    var query = Utils.addContactToJobQuery(upload)
-                    this.$store.dispatch('createJobContact', {id: this.form.id, job: query})
-                    .then((res) => {
-                        if (res.data.success) {
-                            this.$message({
-                                type: 'success',
-                                message: res.data.response.message,
-                            })
-                            this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
-                        } else {
-                            this.$message({
-                                type: 'error',
-                                message: res.data.response.message,
-                            })
-                        }
-                        this.addLoading = false
-                    })
+                  var upload = {
+                    Bucket: AWS_BUCKET,
+                    Key: this.file.key
+                  }
+                  var query = Utils.addContactToJobQuery(upload)
+                  this.$store.dispatch('createJobContact', {id: this.form.id, job: query})
+                  .then((res) => {
+                      if (res.data.success) {
+                          this.$message({
+                          type: 'success',
+                          message: res.data.response.message,
+                        })
+                        this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})
+                      } else {
+                        this.$message({
+                          type: 'error',
+                          message: res.data.response.message,
+                        })
+                      }
+                      this.addLoading = false
+                  })
                 }
-                
+
             })
         },
-        update () {
+        update() {
             this.updateLoading = true
-           
             this.form.schedule = this.form.scheduled ? Utils.createJobQuery (this.form.schedule, this.schedule) : 'false'
             var newForm = Utils.createJobDetailsArray(this.form, ['description', 'scheduled', 'schedule', 'retry_limit', 'active', 'test'])
             // var newForm = Job.getCreateView(this.form)
             // var schedule = Utils.createJobQuery (newForm.schedule, this.schedule)
             // newForm.schedule = schedule
             // newForm.contacts = this.contacts
-            
+
             this.$store.dispatch('updateJob', {id: this.form.id, data: newForm})
             .then((response) => {
                 if (response.data.success) {
@@ -596,6 +654,9 @@ export default {
                     type: 'error'
                 })
             })
+        },
+        searchButton() {
+
         }
     },
     computed: {
@@ -606,12 +667,16 @@ export default {
             totalRunsStore: 'currentJobRuns',
             runState: 'currentJobRunsState',
             file: 'file',
+            providers: 'providers',
             fileState: 'fileState',
             pageSize: 'pageSize',
             pageLoading: 'pageLoading',
             link: 'downloadLink',
             token: 'token'
         }),
+        title() {
+          return `Edit - ${this.Editform.name}`
+        },
         error () {
             return this.state === 'ERROR'
         },

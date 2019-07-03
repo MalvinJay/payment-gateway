@@ -80,11 +80,7 @@
             </div>
         </div>
 
-      <el-dialog custom-class="export-dialog"
-        title="Export"
-        :visible="exportVisible"
-        width="25%"
-      >
+      <el-dialog custom-class="export-dialog" title="Export" :visible="exportVisible" width="25%">
         <div class="flex justify-content-center new-export-bg ">
             <el-form hide-required-asterisk class="transaction-form my-2" size="mini" style="width: 90%" ref="form" :model="form" label-position="top">
               <el-form-item label="Select Date">

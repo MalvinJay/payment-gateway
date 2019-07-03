@@ -175,7 +175,8 @@ export default {
         { label: 'Client Company', type: 'input', model: 'company_name', subtext: `Enter your company's name.`},
         { label: 'Phone Number', type: 'input', model: 'msisdn'},
         { label: 'Email', type: 'input', model: 'email', subtext: 'We also use email for avatar detection if no photo is uploaded.'},
-        { label: 'Account Number (Optional)', type: 'input', model: 'bank_account_no'},
+        { label: 'Account Number (Optional)', type: 'input', model: 'bank_account_no', editable: true},
+        { label: 'Bank Name', type: 'input', model: 'bank_name', editable: true},
         { label: 'Business Address', type: 'input', model: 'address'},
         { label: 'City', type: 'input', model: 'city'}
       ],

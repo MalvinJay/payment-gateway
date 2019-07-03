@@ -70,10 +70,10 @@ const getters = {
   stocksDownloadLink: state => state.fields.link,
   awsFile: state => state.fields.aws_file,
 
-    // agents
-    agents: state => state.agents.data,
-    agentsState: state => state.agents.state,
-    agentsMeta: state => state.agents.meta,
+  // agents
+  agents: state => state.agents.data,
+  agentsState: state => state.agents.state,
+  agentsMeta: state => state.agents.meta,
 }
 
 // mutations

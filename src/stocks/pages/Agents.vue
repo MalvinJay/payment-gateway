@@ -1,119 +1,107 @@
 <template>
     <el-card class="card-0">
         <div class="transactions">
-            <div class="trans-div flex justify-content-between">
-                <div>
-                  <p class="blue-text bold-600 s-16 m-0 p-0">Agents</p>
-                    <!-- <filter-component dispatch="stocks" filterType="stocks"></filter-component> -->
-                </div>
-                <div>
-                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New Agent</el-button>
-                    <!-- <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button> -->
-                </div>
+          <div class="trans-div flex justify-content-between">
+            <div>
+              <p class="blue-text bold-600 s-16 m-0 p-0">Agents</p>
+                <!-- <filter-component dispatch="stocks" filterType="stocks"></filter-component> -->
             </div>
             <div>
-                <div class="center h-80" v-if="error">
-                    <div class="center flex-column">
-                       <p class="m-0 p-0">Unable to load this page</p>
-                       <el-button @click.prevent="fetchAgents" icon="sync icon" type="text">Retry</el-button>
-                    </div>
-                </div>
-                <div v-else class="breathe">
-                  <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredAgents">
-                      <el-table-column label="Name">
-                          <template slot-scope="scope">
-                              <p class="m-0 p-0 mr-10 s-13">{{scope.row.first_name}} {{scope.row.last_name}}</p>
-                          </template>
-                      </el-table-column>
-                      <!-- <el-table-column show-overflow-tooltip prop="name" label="Reference"></el-table-column> -->
-                      <el-table-column label="Username">
-                          <template slot-scope="scope">
-                            <p class="m-0 p-0 mr-10 s-13">{{scope.row.username}}</p>
-                          </template>
-                      </el-table-column>
-                      <el-table-column label="Email">
-                          <template slot-scope="scope">
-                            <p class="m-0 p-0 mr-10 s-13">{{scope.row.email}}</p>
-                          </template>
-                      </el-table-column>
-                      <el-table-column label="Phone Number">
-                          <template slot-scope="scope">
-                            <div class="d-flex">
-                              <!-- <span> Ghs </span> -->
-                              <p class="m-0 p-0 mr-10 s-13">{{scope.row.phone_number}}</p>
-                            </div>
-                          </template>
-                      </el-table-column>
-                      <el-table-column label="Number of Deliveries">
-                          <template slot-scope="scope">
-                            {{scope.row.number_of_deliveries}}
-                          </template>
-                      </el-table-column>
-                    <el-table-column width="80px">
-                        <template slot-scope="scope">
-                            <div>
-                              <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)" trigger="click">
-                                  <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
-                                  <el-dropdown-menu class="w-200" slot="dropdown">
-                                      <el-dropdown-item disabled>
-                                          <div class="table-dropdown-header blue-text bold-600 text-uppercase">
-                                              action
-                                          </div>
-                                      </el-dropdown-item>
-                                      <el-dropdown-item command="edit" class="s-12">Edit</el-dropdown-item>
-                                      <el-dropdown-item command="delete" class="s-12">Delete</el-dropdown-item>
-                                  </el-dropdown-menu>
-                              </el-dropdown>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    </el-table>
-                    <!-- FOOTER -->
-                    <div class="flex justify-content-between align-items-center px-10">
-                        <div class="s-12">
-                            <span class="bold-600">{{agents.length}}</span> results
-                        </div>
-                        <el-pagination class="my-2 flex justify-content-end"
-                            @current-change="handleCurrentChange"
-                            :page-size="total"
-                            layout="prev, pager, next"
-                            :total="total">
-                        </el-pagination>
-                    </div>
+                <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New Agent</el-button>
+            </div>
+          </div>
+          <div>
+            <div class="center h-80" v-if="error">
+                <div class="center flex-column">
+                    <p class="m-0 p-0">Unable to load this page</p>
+                    <el-button @click.prevent="fetchAgents" icon="sync icon" type="text">Retry</el-button>
                 </div>
             </div>
-            <export-modal :modalVisible.sync="exportVisible"></export-modal>
+            <div v-else class="breathe">
+              <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredAgents">
+                  <el-table-column label="Name">
+                      <template slot-scope="scope">
+                          <p class="m-0 p-0 mr-10 s-13">{{scope.row.first_name}} {{scope.row.last_name}}</p>
+                      </template>
+                  </el-table-column>
+                  <!-- <el-table-column show-overflow-tooltip prop="name" label="Reference"></el-table-column> -->
+                  <el-table-column label="Username">
+                      <template slot-scope="scope">
+                        <p class="m-0 p-0 mr-10 s-13">{{scope.row.username}}</p>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="Email">
+                      <template slot-scope="scope">
+                        <p class="m-0 p-0 mr-10 s-13">{{scope.row.email}}</p>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="Phone Number">
+                      <template slot-scope="scope">
+                        <div class="d-flex">
+                          <!-- <span> Ghs </span> -->
+                          <p class="m-0 p-0 mr-10 s-13">{{scope.row.phone_number}}</p>
+                        </div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column label="Number of Deliveries">
+                      <template slot-scope="scope">
+                        {{scope.row.number_of_deliveries}}
+                      </template>
+                  </el-table-column>
+                <el-table-column width="80px">
+                    <template slot-scope="scope">
+                        <div>
+                          <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                              <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
+                              <el-dropdown-menu class="w-200" slot="dropdown">
+                                  <el-dropdown-item disabled>
+                                      <div class="table-dropdown-header blue-text bold-600 text-uppercase">
+                                          action
+                                      </div>
+                                  </el-dropdown-item>
+                                  <el-dropdown-item command="edit" class="s-12">Edit</el-dropdown-item>
+                                  <el-dropdown-item command="delete" class="s-12">Delete</el-dropdown-item>
+                              </el-dropdown-menu>
+                          </el-dropdown>
+                        </div>
+                    </template>
+                </el-table-column>
+                </el-table>
+                <!-- FOOTER -->
+                <div class="flex justify-content-between align-items-center px-10">
+                    <div class="s-12">
+                        <span class="bold-600">{{agents.length}}</span> results
+                    </div>
+                    <el-pagination class="my-2 flex justify-content-end"
+                        @current-change="handleCurrentChange"
+                        :page-size="total"
+                        layout="prev, pager, next"
+                        :total="total">
+                    </el-pagination>
+                </div>
+            </div>
+          </div>
         </div>
 
-        <!-- New Product -->
+        <!-- New Agent -->
         <el-dialog custom-class="new-transaction"
-            :title="formTitle"
-            :visible.sync="dialogVisible"
-            width="30%">
-            <div class="flex justify-content-center new-transaction-bg">
-                <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :model="form" label-width="120px">
-                    <div>
-                      <el-form-item label="Product Name">
-                          <el-input v-model="form.name" placeholder="Product Name"></el-input>
-                      </el-form-item>
-                      <el-form-item class="h-auto" label="Quantity" prop="quantity">
-                          <el-input v-model="form.quantity" type="number" class="addProduct"></el-input>
-                      </el-form-item>
-                      <el-form-item class="h-auto" label="Unit Price" prop="unit_price">
-                          <el-input class="little-padding-input addProduct" v-model="form.unit_price" type="number">
-                            <span slot="prefix">&#8373</span>
-                          </el-input>
-                      </el-form-item>
-                      <el-form-item class="h-auto" label="Description" prop="description">
-                          <el-input v-model="form.description" type="textarea" :rows="2"></el-input>
-                      </el-form-item>
-                    </div>
-                </el-form>
-            </div>
-            <span slot="footer" class="dialog-footer">
-              <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="close">Cancel</el-button>
-              <el-button size="mini" :loading="loading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="save('form')">Add Product</el-button>
-            </span>
+          :title="formTitle"
+          :visible.sync="dialogVisible"
+          width="30%">
+          <div class="flex justify-content-center new-transaction-bg">
+            <el-form size="mini" ref="form" hide-required-asterisk class="transaction-form" :model="form" label-width="120px">
+              <el-form-item label="Agent Name">
+                <el-input v-model="form.name" placeholder="Name"></el-input>
+              </el-form-item>
+              <el-form-item class="h-auto" label="Phone Number">
+                <el-input v-model="form.msisdn" placeholder="Phone number"></el-input>
+              </el-form-item>
+            </el-form>
+          </div>
+          <span slot="footer" class="dialog-footer">
+            <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="close">Cancel</el-button>
+            <el-button size="mini" :loading="loading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="save('form')">Save</el-button>
+          </span>
         </el-dialog>
     </el-card>
 </template>
@@ -132,10 +120,7 @@ export default {
       },
       form: {
         name: '',
-        quantity: 0,
-        unit_price: 0.00,
-        description: '',
-        currency: 'GHs'
+        msisdn: ''
       },
       exportVisible: false,
       dialogVisible: false,

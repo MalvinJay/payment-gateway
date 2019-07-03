@@ -4,7 +4,6 @@
             <div class="flex justify-content-between align-items-center px-20 py-16">
                 <div class="search_n_roles flex justify-content-between w-50">
                     <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2" size="mini" placeholder="Filter by name or email..."></el-input>
-
                     <div class="roles">
                         <el-select
                             v-model="value"
@@ -403,7 +402,7 @@ export default {
           if(row.bank_account_no === null) {
             delete row.bank_account_no
           }
-          
+
           // if(row.id === null) {
           //   row.id = row.user_group_id
           // }
