@@ -177,32 +177,34 @@
                     <el-table @row-click="clickRun" ref="run" class="default-table-expanded" empty-text="No job runs to display" v-loading="loadingPage" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="runs">
                         <el-table-column type="expand">
                             <template slot-scope="props">
-                                <el-table empty-text="No transactions" tooltip-effect="light" header-row-class-name="transactions-table-header" row-class-name="transactions-table-body" :data="props.row.executed_transctions">
-                                    <el-table-column prop="receiver_name" label="Name"></el-table-column>
-                                    <el-table-column prop="receiver_no" label="Number"></el-table-column>
-                                    <el-table-column prop="reference" label="Reference">
-                                        <template slot-scope="scope">
-                                            {{scope.row.reference}}
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column prop="sender_amount" label="Amount">
-                                        <template slot-scope="scope">
-                                            {{ scope.row.sender_amount | money}}
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column prop="charged_amount" label="Fee">
-                                        <template slot-scope="scope">
-                                            {{ scope.row.charged_amount | money}}
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column prop="status" label="" >
-                                        <template slot-scope="scope">
-                                            <div class="flex">
-                                                <the-tag status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
-                                            </div>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
+                              <el-table empty-text="No transactions" tooltip-effect="light" header-row-class-name="transactions-table-header" row-class-name="transactions-table-body" :data="props.row.executed_transctions">
+                                <el-table-column prop="receiver_name" label="Name" width="auto"></el-table-column>
+                                <el-table-column prop="receiver_no" label="Number" width="150"></el-table-column>
+                                <el-table-column prop="reference" label="Reference" width="180">
+                                    <template slot-scope="scope">
+                                        {{scope.row.reference}}
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="sender_amount" label="Amount" width="150">
+                                    <template slot-scope="scope">
+                                        {{ scope.row.sender_amount | money}}
+                                    </template>
+                                </el-table-column>
+                                <!-- <el-table-column prop="charged_amount" label="Fee" width="100">
+                                    <template slot-scope="scope">
+                                        {{ scope.row.charged_amount | money}}
+                                    </template>
+                                </el-table-column> -->
+                                <el-table-column prop="status" label="Status" width="100">
+                                  <template slot-scope="scope">
+                                    <div class="flex justify-content-between">
+                                      <the-tag status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
+                                      <el-button v-if="scope.row.status === 'failed'" @click="retryJobRun" :loading="retryJob" type="text" class="p-0 m-0" icon="refresh right icon"></el-button>
+                                    </div>
+                                  </template>
+                                </el-table-column>
+                                <el-table-column prop="response_message" label="Response" width="auto"></el-table-column>
+                              </el-table>
                             </template>
                         </el-table-column>
                         <el-table-column type="index"></el-table-column>
@@ -414,7 +416,8 @@ export default {
           provider: '',
           amount: '',
           // remarks: ''
-        }
+        },
+        retryJob: false
       }
     },
     // watch: {
@@ -499,25 +502,26 @@ export default {
 
             this.$store.dispatch('runJob', this.form.id)
             .then((response) => {
-                if (response.data.success) {
-                    this.$message({
-                        message: 'Job Run Successfully',
-                        type: 'success'
-                    })
-                    this.runLoading= false
-                    EventBus.$emit('tabNumber', '3')
-                    this.$router.replace('/receipts')
-                    setTimeout(() => {
-                        this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
-                        this.$store.dispatch('getBalance')
-                        // this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
-                    }, 5000)
-                } else {
-                this.$message({
-                    type: 'error',
-                    message: response.data.response.message
-                })
-                this.runLoading= false
+              if (response.data.success) {
+                  this.$message({
+                    message: 'Job Run Successfully',
+                    type: 'success'
+                  })
+                  this.runLoading= false
+                  EventBus.$emit('tabNumber', '3')
+                  this.$router.replace('/receipts')
+                  setTimeout(() => {
+                    console.log('Router Params:', this.$route.params.id)
+                    this.$store.dispatch('getJobRuns', {id: this.$route.params.id})
+                    this.$store.dispatch('getBalance')
+                    // this.$store.dispatch('getCurrentJob', {id: this.$route.params.id, cache: false})
+                  }, 5000)
+              } else {
+              this.$message({
+                type: 'error',
+                message: response.data.response.message
+              })
+              this.runLoading= false
             }
             }).catch((error) => {
                 this.runLoading= false
@@ -656,7 +660,13 @@ export default {
             })
         },
         searchButton() {
+        },
+        retryJobRun() {
+          this.retryJob = true
 
+          setTimeout(() => {
+            this.retryJob = false
+          }, 5000)
         }
     },
     computed: {

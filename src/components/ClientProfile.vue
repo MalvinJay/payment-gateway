@@ -228,12 +228,13 @@ export default {
   methods: {
     updateProfile (formName) {
         this.form = {
-            country_code: "GH",
-            name: this.user.client.full_name,
-            company: this.user.client.company_name,
-            client_msisdn: this.user.client.msisdn,
-            email: this.user.client.email,
-            city: this.user.client.city
+          is_verified_account: true,
+          country_code: "GH",
+          name: this.user.client.full_name,
+          company: this.user.client.company_name,
+          client_msisdn: this.user.client.msisdn,
+          email: this.user.client.email,
+          city: this.user.client.city
         }
 
         this.createLoading = true
