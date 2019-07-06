@@ -87,7 +87,7 @@
               </div>
           </div>
       </div>
-      <el-dialog custom-class="export-dialog" title="Export" :visible="exportVisible" width="25%">
+      <el-dialog custom-class="export-dialog" title="Export Purchases" :visible="exportVisible" width="25%">
         <div class="flex justify-content-center new-export-bg ">
             <el-form hide-required-asterisk class="transaction-form my-2" size="mini" style="width: 90%" ref="form" :model="form" label-position="top">
               <el-form-item label="Select Date">
@@ -102,7 +102,7 @@
               <el-form-item class="flex justify-content-end">
                 <div class="flex">
                     <el-button @click="close">Cancel</el-button>
-                    <a :href="`https://inventroy-box.herokuapp.com/reports/index?token=${token}&${generateQueryParams}&${fields}`"
+                    <a :href="`${GET_BASE_URI}v1/products_delivery/download_file?token=${token}&${generateQueryParams}&${fields}`"
                     class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" @click="close" download>Download</a>
                 </div>
               </el-form-item>
@@ -118,6 +118,7 @@ import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
 import Utils from '@/utils/services'
 import moment from 'moment'
+import { GET_BASE_URI } from '../../store/constants'
 
 export default {
   name: "Purchases",
@@ -133,8 +134,8 @@ export default {
         from: '',
         to: ''
       },
-      token: '84ce3b74dc2b22a37b0147da223796d6e1af0c8c351f54e65ab6d771ff683783',
-      fields: 'fields[]=previous_quantity&fields[]=current_quantity&fields[]=network_provider&fields[]=code&fields[]=created_at&fields[]=status&fields[]=remarks&fields[]=reference'
+      GET_BASE_URI: GET_BASE_URI,
+      fields: 'fields[]=previous_quantity&fields[]=current_quantity&fields[]=network_provider&fields[]=code&fields[]=created_at&fields[]=status&fields[]=remarks&fields[]=reference&fields[]=transaction_ref'
     }
   },
   created() {
@@ -157,7 +158,6 @@ export default {
     },
     reset () {
       this.exportVisible = false
-      // this.loading = false
       this.ready = false
     },
     handleTableCommand (command, row) {
@@ -191,7 +191,8 @@ export default {
       state: 'purchasesState',
       meta: 'purchasesMeta',
       pageSize: 'pageSize',
-      // token: 'token'
+      token: 'token',
+      user: 'user',
     }),
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'
@@ -218,8 +219,28 @@ export default {
       }
     },
     generateQueryParams() {
-      console.log('Query Params:', Utils.createExportQuery(this.form))
-      return Utils.createExportQuery(this.form)
+      var query = `till_number=${this.user.client.code}`
+
+      if (Utils.present(this.form.from)) {
+        query = query += `&from=${this.form.from}`
+      }
+      if (Utils.present(this.form.to)) {
+        query = query += `&to=${this.form.to}`
+      }
+
+      if (Utils.present(this.form.fields)) {
+        if (this.form.fields.length === 1) {
+          query = query += `&fields[]=${this.form.fields}`
+        } else {
+          var q = this.form.fields.split(',')
+          q.forEach(element => {
+            query = query += `&fields[]=${element}`
+          })
+        }
+      }
+
+      console.log('Query:', query)
+      return query
     }
   }
 }
