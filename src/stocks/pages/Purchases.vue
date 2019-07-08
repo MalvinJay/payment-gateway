@@ -102,7 +102,7 @@
               <el-form-item class="flex justify-content-end">
                 <div class="flex">
                     <el-button @click="close">Cancel</el-button>
-                    <a :href="`${GET_BASE_URI}v1/products_delivery/download_file?token=${token}&${generateQueryParams}&${fields}`"
+                    <a :href="`${GET_BASE_URI}v1/products_delivery/download_file?token=${token}&${generateQueryParams}`"
                     class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" @click="close" download>Download</a>
                 </div>
               </el-form-item>
