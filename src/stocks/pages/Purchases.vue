@@ -135,7 +135,7 @@ export default {
         to: ''
       },
       GET_BASE_URI: GET_BASE_URI,
-      fields: 'fields[]=previous_quantity&fields[]=current_quantity&fields[]=network_provider&fields[]=code&fields[]=created_at&fields[]=status&fields[]=remarks&fields[]=reference&fields[]=transaction_ref'
+      fields: 'fields[]=product_name&fields[]=description&fields[]=transaction_ref&fields[]=previous_quantity&fields[]=current_quantity&fields[]=network_provider&fields[]=code&fields[]=created_at&fields[]=status&fields[]=remarks&fields[]=reference'
     }
   },
   created() {
