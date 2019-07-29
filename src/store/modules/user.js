@@ -143,6 +143,7 @@ const user = {
         })
       })
     },
+    
     [ADMIN_LOGIN] ({ state, commit }, {email, password}) {
       return new Promise((resolve, reject) => {
         var url = `${GET_BASE_URI}v1/flopay_platform/login.json?email=${email}&password=${password}`

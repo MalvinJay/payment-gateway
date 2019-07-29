@@ -76,7 +76,7 @@
                     <img class="mr-10" src="../assets/images/icons/radar.svg" alt="">FoneMessenger
                 </template>
             </el-menu-item>
-            <el-menu-item route="/ussd" index="ussd" v-if="user.client.code === '077088' || user.client.code === '505077'">
+            <el-menu-item route="/ussd" index="ussd" v-if="user.client.code === 'waec' || user.client.code === '505077'">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">USSD
                 </template>
