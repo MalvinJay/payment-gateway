@@ -34,7 +34,7 @@ export default new Vuex.Store({
     user,
     transactions,
     jobs,
-    dashboard,
+    dashboard,  
     contacts,
     fees,
     payouts,
