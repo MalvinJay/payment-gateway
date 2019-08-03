@@ -2,6 +2,7 @@
 export const GET_USSD_SESSIONS = 'getUssdSessions'
 export const SET_USSD_SESSIONS = 'setUssdSessions'
 export const SET_USSD_SESSIONS_STATE = 'setUssdSessionsState'
+export const SET_USSD_META = 'setUssdMeta'
 export const CREATE_USSD_REPORT = 'createUssdReport'
 export const GET_CURRENT_USSD_SESSION = 'getCurrentUssdSession'
 

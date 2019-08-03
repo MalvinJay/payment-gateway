@@ -1,5 +1,5 @@
 import { GET_BASE_URI } from '../../store/constants'
-import { GET_USSD_SESSIONS, SET_USSD_SESSIONS, SET_USSD_SESSIONS_STATE, CREATE_USSD_REPORT,
+import { GET_USSD_SESSIONS, SET_USSD_SESSIONS, SET_USSD_SESSIONS_STATE, SET_USSD_META, CREATE_USSD_REPORT,
   SET_CURRENT_USSD_SESSION, SET_CURRENT_USSD_SESSION_STATE, GET_CURRENT_USSD_SESSION,
   GET_CURRENT_USSD_SESSION_PAYMENT, SET_CURRENT_USSD_SESSION_PAYMENT, SET_USSD_FILTERS } from './ussd-store-constants'
 import { apiCall } from '../../store/apiCall'
@@ -11,6 +11,7 @@ import axios from 'axios'
 const state = {
   ussds: {
     data: [],
+    meta: { page: 1 },
     state: 'LOADING',
     count: 0,
     filters: {}
@@ -26,6 +27,7 @@ const state = {
 const getters = {
   ussdSessions: state => state.ussds.data,
   ussdSessionsState: state => state.ussds.state,
+  ussdSessionsMeta: state => state.ussds.meta,
   ussdSessionsCount: state => state.ussds.count,
   currentUssdSession: state => state.currentUssd.data,
   currentUssdSessionPayment: state => state.currentUssd.payment,
@@ -35,6 +37,7 @@ const getters = {
 // mutations
 const mutations = {
   [SET_USSD_SESSIONS] (state, payload) {
+
     // if (payload) {
     //   var exams = ['BECE', 'WASSCE']
     //   var status = ['paid', 'failed']
@@ -50,11 +53,22 @@ const mutations = {
     //     return ussd
     //   })
     // }
+
     state.ussds.data = payload
     state.ussds.count = payload.length
   },
   [SET_USSD_SESSIONS_STATE] (state, payload) {
     state.ussds.state = payload
+  },
+  [SET_USSD_META] (state, data) {
+    var meta = {
+      totalFiltered: data.filtered_total,
+      limit: data.page_limit,
+      page: data.page,
+      total: data.total,
+      ussds: data.filtered_records
+    }
+    state.ussds.meta = meta
   },
   [SET_CURRENT_USSD_SESSION] (state, payload) {
     state.currentUssd.data = payload
@@ -77,9 +91,10 @@ const actions = {
     var query = ''
 
     if (Utils.empty(filters)) {
-      query = `?page=${page}&limit=12`
+      query = `?page=${page}&limit=25`
     } else {
-      query = query + `?&start_date=${filters.from}&end_date=${filters.to}`
+      if(filters.from && filters.to)
+      query = query + `?page=${page}&start_date=${filters.from}&end_date=${filters.to}`
     }
 
     commit(SET_USSD_SESSIONS_STATE, 'LOADING')
@@ -90,7 +105,7 @@ const actions = {
     } else {
       return new Promise((resolve, reject) => {
         axios.get(
-          // `https://3faa62d9.ngrok.io/v1/query/ussd-logs-status`,
+          // `https://2dae1380.ngrok.io/v1/query/ussd-logs-status${query}`,
           `https://ussd-log-status.nfortics.com/v1/query/ussd-logs-status${query}`,
           {
             headers: {
@@ -101,25 +116,38 @@ const actions = {
           }
         ).then((response) => {
           commit(SET_USSD_SESSIONS_STATE, 'DATA')
+          let PreferredArray = []
+          response.data.filtered_records.map(ussd => {
+            let common = ussd.transaction.response.data
+            if(Utils.present(common)) {
+              if(rootGetters.user.client.code === common.till) {
+                let type = common.extra_data.type
 
-          // let PreferredArray = []
-          // response.data.filtered_records.map(ussd => {
-          //   if(Utils.present(ussd.transaction.response.data)) {
-          //     if(rootGetters.user.client.code === ussd.transaction.response.data.till) {
-          //       let type = ussd.transaction.response.data.extra_data.type
-          //       if(type === 'BECE') {
-          //         ussd.transaction.response.data.extra_data.type = 'BECE(School)';
-          //       }
-          //       if(type === 'PBEC') {
-          //         ussd.transaction.response.data.extra_data.type = 'BECE(Private)';
-          //       }
-          //       PreferredArray.push(ussd)
-          //     }
-          //   }
-          // })
+                if(type === 'BECE') {
+                  common.extra_data.type = 'BECE(School)';
+                }
 
-          // commit(SET_USSD_SESSIONS, PreferredArray)
-          commit(SET_USSD_SESSIONS, response.data.filtered_records)
+                if(type === 'PBEC') {
+                  common.extra_data.type = 'BECE(Private)';
+                }
+
+                PreferredArray.push(ussd)
+              }
+            }
+          })
+
+          commit(SET_USSD_SESSIONS, PreferredArray)
+
+          var meta = {
+            filtered_total: PreferredArray.length,
+            page_limit: response.data.page_limit,
+            page: response.data.page,
+            total: response.data.total,
+            filtered_records: response.data.filtered_records
+          }
+
+          commit(SET_USSD_META, meta)
+
           resolve(response)
         }).catch((error) => {
           commit(SET_USSD_SESSIONS_STATE, 'ERROR')

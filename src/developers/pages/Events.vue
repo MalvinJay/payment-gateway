@@ -136,9 +136,9 @@ export default {
   },
   methods: {
     clickRow (row, event, column) {
-        if (column.property) {
-          this.$router.push(`/events/${row.id}`)
-        }
+      this.$router.push(`/events/${row.id}`)
+        // if (column.property) {
+        // }
     },
     handleCurrentChange (val) {
         this.$store.dispatch('getEvents', {page: val, cache: false})

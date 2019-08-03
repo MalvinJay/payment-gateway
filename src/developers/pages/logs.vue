@@ -75,9 +75,9 @@ export default {
   },
   methods: {
     clickRow (row, event, column) {
-      if (column.property) {
-        this.$router.push(`/logs/${row.id}`)
-      }
+      this.$router.push(`/logs/${row.id}`)
+      // if (column.property) {
+      // }
     },
     handleCurrentChange (val) {
         this.$store.dispatch('getLogs', {page: val, cache: false})

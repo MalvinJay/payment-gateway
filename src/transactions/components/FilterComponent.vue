@@ -57,7 +57,7 @@
                 </div>
             </el-collapse-transition>
 
-            <el-dropdown-item v-if="showStatus || showDispute || showStocks" divided>
+            <el-dropdown-item v-if="showStatus || showDispute || showStocks || showUssd" divided>
                 <el-checkbox class="mr-10" v-model="status"></el-checkbox> Status
             </el-dropdown-item>
             <el-collapse-transition>
@@ -73,7 +73,7 @@
                 </div>
             </el-collapse-transition>
 
-            <el-dropdown-item divided>
+            <el-dropdown-item v-if="showStatus" divided>
               <el-checkbox class="mr-10" v-model="type"></el-checkbox> Payment Type
             </el-dropdown-item>
             <el-collapse-transition>
@@ -100,134 +100,120 @@ export default {
     name: 'FilterComponent',
     props: ['filterType', 'dispatch'],
     data () {
-        return {
-            count: 0,
-            date: false,
-            status: false,
-            type: false,
-            reason: false,
-            amount: false,
-            stati: [
-                // {label: 'All', value: 'all'},
-                {label: 'Success', value: 'succeeded'},
-                {label: 'Pending', value: 'pending'},
-                {label: 'Failed', value: 'failed'}
-            ],
-            all: ['success', 'pending', 'failed'],
-            types: [
-                // {label: 'All', value: 'all'},
-                {label: 'Card', value: 'card'},
-                {label: 'Wallet', value: 'wallet'},
-                {label: 'Bank', value: 'bank'}
-            ],
-            filters: {
-                to: '',
-                from: '',
-                statuses: [],
-                payment_types: [],
-                reasons: []
-            },
-            reasons: [
-                {label: 'Duplicate', value: 'duplicate'},
-                {label: 'Fraudulent', value: 'fraudulent'},
-                {label: 'Subscription canceled', value: 'subscription_canceled'},
-                {label: 'Product unacceptable', value: 'product_unacceptable'},
-                {label: 'Product not received', value: 'product_not_received'},
-                {label: 'Unrecognized', value: 'unrecognized'},
-                {label: 'Credit not processed', value: 'credit_not_processed'},
-                {label: 'Incorrect account details', value: 'incorrect_account_details'},
-                {label: 'Insufficient funds', value: 'insufficient_funds'},
-                {label: 'Bank cannot process', value: 'bank_cannot_process'},
-                {label: 'Debit not authorized', value: 'debit_not_authorized'}
-            ]
-        }
+      return {
+        count: 0,
+        date: false,
+        status: false,
+        type: false,
+        reason: false,
+        amount: false,
+        stati: [
+            // {label: 'All', value: 'all'},
+            {label: 'Success', value: 'succeeded'},
+            {label: 'Pending', value: 'pending'},
+            {label: 'Failed', value: 'failed'}
+        ],
+        all: ['success', 'pending', 'failed'],
+        types: [
+            // {label: 'All', value: 'all'},
+            {label: 'Card', value: 'card'},
+            {label: 'Wallet', value: 'wallet'},
+            {label: 'Bank', value: 'bank'}
+        ],
+        filters: {
+            to: '',
+            from: '',
+            statuses: [],
+            payment_types: [],
+            reasons: []
+        },
+        reasons: [
+            {label: 'Duplicate', value: 'duplicate'},
+            {label: 'Fraudulent', value: 'fraudulent'},
+            {label: 'Subscription canceled', value: 'subscription_canceled'},
+            {label: 'Product unacceptable', value: 'product_unacceptable'},
+            {label: 'Product not received', value: 'product_not_received'},
+            {label: 'Unrecognized', value: 'unrecognized'},
+            {label: 'Credit not processed', value: 'credit_not_processed'},
+            {label: 'Incorrect account details', value: 'incorrect_account_details'},
+            {label: 'Insufficient funds', value: 'insufficient_funds'},
+            {label: 'Bank cannot process', value: 'bank_cannot_process'},
+            {label: 'Debit not authorized', value: 'debit_not_authorized'}
+        ]
+      }
     },
     methods: {
-        createFilters () {
-            this.$refs.messageDrop.hide()
-            this.count = this.size(this.filters)
-            this.$store.dispatch(this.dispatch, this.filters)
-
-            // if (this.filterType === 'queue') {
-            //     // this.filters.statuses = 'queued'
-            //     this.$store.dispatch('setQueueFilters', this.filters)
-            // } else if (this.filterType === 'pending') {
-            //     this.$store.dispatch('setPendingFilters', this.filters)
-            // } else if (this.filterType === 'payouts') {
-            //     this.$store.dispatch('setPayoutsFilters', this.filters)
-            // } else {
-            //     this.$store.dispatch('setTransactionsFilters', this.filters)
-            // }
-            // .then(() => {
-            //     this.$store.dispatch('getTransactions', {page: 1})
-            // })
-        },
-        size (obj) {
-            var size = 0, key
-            for (key in obj) {
-                if (obj.hasOwnProperty(key)) size++
-            }
-            return size
-        },
-        resetFilters () {
-            this.count = 0
-            this.filters = {
-                to: '',
-                from: '',
-                statuses: [],
-                payment_types: [],
-                reasons: []
-            }
-            this.date = false
-            this.status = false
-            this.type = false
-            this.reason = false
-            this.createFilters()
-        },
-        keepVisible () {
-            this.$refs.messageDrop.show()
-        },
-        showAyt () {
-            console.log('hoy')
-            console.log('hoy', this.$refs.filterFrom)
-        },
-        statusClick (val) {
-            this.keepVisible()
-            if (val[0] === 'all') {
-                var all = ['succeeded', 'pending', 'failed']
-                all.forEach(element => {
-                    this.filters.statuses.push(element)
-                })
-            }
-        },
-        removeAll (val) {
-            // if (val === 'all') {
-            //     this.filters.statuses = []
-            // }
-        },
-        typeClick (val) {
-            this.$refs.messageDrop.show()
-            if (val[0] === 'all') {
-                var all = ['card', 'wallet', 'bank']
-                all.forEach(element => {
-                    this.filters.payment_types.push(element)
-                })
-            }
-        },
-        removeAllTypes (val) {
-            // if (val === 'all') {
-            //     this.filters.payment_types = []
-            // }
-        },
-        reasonClick (val) {
-            this.$refs.messageDrop.show()
-            if (val[0] === 'all') {
-                var all = ['Duplicate','Fraudulent', 'Subscription', 'Product','Product','Unrecognized','Credit','Incorrect','Insufficient','Bank','Debit']
-                all.forEach(element => {
-                    this.filters.reasons.push(element)
-                })
-            }
-        }
+      createFilters() {
+        this.$refs.messageDrop.hide()
+        this.count = this.size(this.filters)
+        this.$store.dispatch(this.dispatch, this.filters)
+      },
+      size (obj) {
+          var size = 0, key
+          for (key in obj) {
+              if (obj.hasOwnProperty(key)) size++
+          }
+          return size
+      },
+      resetFilters () {
+          this.count = 0
+          this.filters = {
+              to: '',
+              from: '',
+              statuses: [],
+              payment_types: [],
+              reasons: []
+          }
+          this.date = false
+          this.status = false
+          this.type = false
+          this.reason = false
+          this.createFilters()
+      },
+      keepVisible () {
+          this.$refs.messageDrop.show()
+      },
+      showAyt () {
+          console.log('hoy')
+          console.log('hoy', this.$refs.filterFrom)
+      },
+      statusClick (val) {
+          this.keepVisible()
+          if (val[0] === 'all') {
+              var all = ['succeeded', 'pending', 'failed']
+              all.forEach(element => {
+                  this.filters.statuses.push(element)
+              })
+          }
+      },
+      removeAll (val) {
+          // if (val === 'all') {
+          //     this.filters.statuses = []
+          // }
+      },
+      typeClick (val) {
+          this.$refs.messageDrop.show()
+          if (val[0] === 'all') {
+              var all = ['card', 'wallet', 'bank']
+              all.forEach(element => {
+                  this.filters.payment_types.push(element)
+              })
+          }
+      },
+      removeAllTypes (val) {
+          // if (val === 'all') {
+          //     this.filters.payment_types = []
+          // }
+      },
+      reasonClick (val) {
+          this.$refs.messageDrop.show()
+          if (val[0] === 'all') {
+              var all = ['Duplicate','Fraudulent', 'Subscription', 'Product','Product','Unrecognized','Credit','Incorrect','Insufficient','Bank','Debit']
+              all.forEach(element => {
+                  this.filters.reasons.push(element)
+              })
+          }
+      }
     },
     mounted () {
         EventBus.$on('blur', this.keepVisible)
@@ -255,26 +241,29 @@ export default {
     },
     computed: {
         showStatus () {
-            return this.filterType === 'payment' || this.filterType === 'payouts'
+          return this.filterType === 'payment' || this.filterType === 'payouts'
         },
         showDispute () {
-            return this.filterType === 'dispute'
+          return this.filterType === 'dispute'
         },
         showStocks () {
-            return this.filterType === 'stocks'
+          return this.filterType === 'stocks'
+        },
+        showUssd () {
+          return this.filterType === 'ussd'
         },
         filterCount () {
-            var count = 0
-            if (Utils.present(this.filters.from) || Utils.present(this.filters.to)) {
-                count++
-            }
-            if (Utils.present(this.filters.payment_types)) {
-                count++
-            }
-            if (Utils.present(this.filters.statuses)) {
-                count++
-            }
-            return count
+          var count = 0
+          if (Utils.present(this.filters.from) || Utils.present(this.filters.to)) {
+              count++
+          }
+          if (Utils.present(this.filters.payment_types)) {
+              count++
+          }
+          if (Utils.present(this.filters.statuses)) {
+              count++
+          }
+          return count
         }
     }
 }

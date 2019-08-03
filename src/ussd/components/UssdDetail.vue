@@ -107,22 +107,37 @@
             <!-- sms -->
             <el-card class="my-2 card-0">
               <div slot="header">
-                  <span class="blue-text bold-600 s-16">SMS</span>
+                  <span class="blue-text bold-600 s-16">SMS Log</span>
               </div>
               <div class="flex justify-content-between">
-              <!--
                 <el-table
                   ref="fone"
                   empty-text="No messages to display"
                   v-loading="loading"
                   row-class-name="transactions-table-body"
                   header-row-class-name="transactions-table-header"
+                  :default-expand-all="true"
                   :data="tableMessages">
                     <el-table-column type="expand" width="55">
+                        <template slot="label">
+                          <el-botton icon="el-icon-caret-bottom"></el-botton>
+                        </template>
                         <template slot-scope="props">
                           <div class="pl-15">
                             <p class="blue-text s-13 bold-600">Message: </p>
                             <p class="s-12 gray">{{ props.row.message }}</p>
+                          </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="delivery_status" label="delivery status">
+                        <template slot-scope="scope">
+                          <div class="flex justify-content-between">
+                            <the-tag :status="scope.row.delivery_status" :title="scope.row.delivery_status"></the-tag>
+                            <div v-if="scope.row.delivery_status != success">
+                              <el-tooltip class="item" effect="dark" content="Resend SMS" placement="top">
+                                <el-button @click="resendSMS" type="text" icon="undo icon" :loading="loading" class="p-0"></el-button>
+                              </el-tooltip>
+                            </div>
                           </div>
                         </template>
                     </el-table-column>
@@ -139,25 +154,7 @@
                           {{scope.row.updated_at | moment("D MMM,YY hh:mm A")}}
                         </template>
                     </el-table-column>
-                </el-table> -->
-
-                <div class="flex flex-column justify-content-center pl-15 px-10 py-10">
-                  <p class="blue-text s-13 pr-10 m-0"> Message </p>
-                  <p class="s-12 blue-text bold-600">{{messages}}</p>
-                </div>
-
-                <div class="flex flex-column justify-content-center pl-15 px-10 py-10">
-                  <p class="blue-text s-13 pr-10 m-0"> Status </p>
-                  <p v-if="mess === 'N/A'" class="s-12 blue-text bold-600"> Unavailable </p>
-                  <p v-else class="s-12 blue-text bold-600"> Sent </p>
-                </div>
-
-                <div class="flex flex-column justify-content-center pl-15 px-10 py-10">
-                  <p class="blue-text s-13 pr-10 m-0"> Re-Send </p>
-                  <p class="s-12 blue-text bold-600">
-                    <el-button icon="sync icon black" class="p-0" type="text"></el-button>
-                  </p>
-                </div>
+                </el-table>
               </div>
             </el-card>
 
@@ -173,13 +170,13 @@
                         header-row-class-name="transactions-table-header"
                         row-class-name="transactions-table-body ussd_session"
                         :data="currentUssdSession">
-                            <el-table-column prop="message" label="Input" width="150"></el-table-column>
+                            <el-table-column prop="message" label="Input" width="120"></el-table-column>
                             <el-table-column prop="response" label="Response" width="auto">
                                 <template slot-scope="scope">
                                   {{ scope.row.response}}
                                 </template>
                             </el-table-column>
-                            <el-table-column prop="timestamp" label="Timestamp" width="200">
+                            <el-table-column prop="timestamp" label="Timestamp" width="180">
                                 <template slot-scope="scope">
                                   {{ scope.row.timestamp  | moment("D MMM,YY hh:mm:ss A")}}
                                 </template>
@@ -197,33 +194,33 @@
                     <el-table
                     @row-click="clickLogs"
                     empty-text="No logs found"
-                    v-loading="loading"
                     :row-style="styleObject"
                     row-class-name="transactions-table-body"
                     header-row-class-name="transactions-table-header"
                     :data="logs"
                     >
-                        <el-table-column label="status" prop="status" width="150">
-                                <template >
-                                    <p class="status bold-600">201 OK</p>
-                                </template>
-                        </el-table-column>
-                        <el-table-column label="description" prop="method" width="auto">
-                                <template slot-scope="scope">
-                                    <div class="flex justify-content-start">
-                                    <p class="m-0 p-0 mr-10 bold-500 s-12 text-uppercase">{{scope.row.method || 'N/A'}}</p>
-                                    <p class="m-0 p-0 mr-10 bold-500 s-12 text-lowercase">{{scope.row.url || 'n/a'}}</p>
-                                    </div>
-                                </template>
-                        </el-table-column>
-                        <el-table-column label="date" prop="created_at" width="200">
-                                <template slot-scope="scope">
-                                  <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("D MMM,YY hh:mm A")}}</p>
-                                </template>
-                        </el-table-column>
+                      <el-table-column label="status" prop="status" width="150">
+                              <template >
+                                  <p class="status bold-600">201 OK</p>
+                              </template>
+                      </el-table-column>
+                      <el-table-column label="description" prop="method" width="auto">
+                              <template slot-scope="scope">
+                                  <div class="flex justify-content-start">
+                                  <p class="m-0 p-0 mr-10 bold-500 s-12 text-uppercase">{{scope.row.method || 'N/A'}}</p>
+                                  <p class="m-0 p-0 mr-10 bold-500 s-12 text-lowercase">{{scope.row.url || 'n/a'}}</p>
+                                  </div>
+                              </template>
+                      </el-table-column>
+                      <el-table-column label="date" prop="created_at" width="200">
+                              <template slot-scope="scope">
+                                <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("D MMM,YY hh:mm A")}}</p>
+                              </template>
+                      </el-table-column>
                     </el-table>
                 </div>
             </el-card>
+
             <!-- events -->
             <el-card class="my-2 card-0">
                 <div slot="header">
@@ -307,6 +304,7 @@ export default {
     name: 'UssdDetail',
     data () {
         return {
+          icon: '',
           status: 'failed',
           edit: false,
           remarks: '',
@@ -320,15 +318,13 @@ export default {
             {label: 'Date', dataField: 'date', width: 'auto'}
           ],
           fonecolumns: [
-            {label: 'message id', dataField: 'response_id', align: 'center'},
-            {label: 'delivery status', dataField: 'response_message', align: 'left'},
-            {label: 'recipient', dataField: 'recipient_no', align: 'left'}
+            // {label: 'message id', dataField: 'id', align: 'center'},
+            {label: 'recipient', dataField: 'recipient_no', align: 'left'},
+            {label: 'network', dataField: 'network_provider', align: 'left'},
           ],
           styleObject: {
 
-          },
-          mess: 'N/A'
-        }
+          },        }
     },
     created () {
       EventBus.$emit('sideNavClick', 'ussd')
@@ -337,28 +333,12 @@ export default {
     mounted () {
       this.$store.dispatch('getCurrentUssdSession', this.$route.params.id)
       .then((response) => {
-        console.log('CurrentUssdSession: ', this.currentUssdSession)
         this.$store.dispatch('getCurrentUssdSessionPayment', this.currentUssdSession[0].sessionid)
-        .then((response) => {
-          console.log('currentUssdSessionPayment:', this.currentUssdSessionPayment)
-        })
       })
-
-      console.log('Form!!: ', this.form)
 
       EventBus.$on('ticketModal', (val) => {
         this.ticketVisible = val
       })
-
-      console.log(this.tableMessages)
-
-      if(this.form.extra_data.message)
-      this.mess = this.form.extra_data.message
-    },
-
-    updated() {
-      if(this.form.extra_data.message)
-      this.mess = this.form.extra_data.message
     },
 
     methods: {
@@ -404,15 +384,49 @@ export default {
             })
         },
         clickRow (row, event, column) {
-            if (column.property) {
-            this.$router.push(`/events/${row.id}`)
-            }
+          this.$router.push(`/events/${row.id}`)
+            // if (column.property) {
+            // }
         },
         clickLogs (row, event, column) {
-            if (column.property) {
-                this.$router.push(`/logs/${row.id}`)
-            }
+          this.$router.push(`/logs/${row.id}`)
+            // if (column.property) {
+            // }
         },
+        resendSMS() {
+          this.loading = true
+          setTimeout(() => {
+            this.loading = false
+            this.$message({
+              type: 'success',
+              message: 'Message processed successfully'
+            })
+          }, 3000);
+
+          // this.$store.dispatch('createLog', form)
+          // .then((response) => {
+          //   if (response.data.success) {
+          //     this.$message({
+          //       type: 'success',
+          //       message: 'Message Sent'
+          //     })
+          //   } else {
+          //     this.$message({
+          //       type: 'error',
+          //       message: response.data.response.message
+          //     })
+          //   }
+          //   this.loading = false
+          // })
+          // .catch((error) => {
+          //   this.loading = false
+          //   const response = error.response
+          //   this.$message({
+          //       message: 'Failed to send message. Please try again',
+          //       type: 'error'
+          //   })
+          // })
+        }
     },
 
     computed: {
@@ -438,14 +452,7 @@ export default {
         return this.form.extra_data.message || 'N/A'
       },
       tableMessages() {
-        let Arr = new Array()
-
-        for (let [key, value] of Object.entries(this.form.extra_data)) {
-          Arr.push({key, value})
-        }
-
-        console.log('Created Array:', Arr)
-        return Arr
+        return this.form.sms_logs
       },
       loadingPage () {
           return this.state === 'LOADING'

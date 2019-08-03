@@ -276,9 +276,9 @@ export default {
         })
       },
     clickRow (row, event, column) {
-      if (column.property) {
-        // this.$router.push(`/stock/${row.reference}`)
-      }
+      // this.$router.push(`/stock/${row.reference}`)
+      // if (column.property) {
+      // }
     },
     handleCurrentChange (val) {
       this.$store.dispatch('getAgents', {page: val, cache: false })

@@ -40,7 +40,7 @@
                                         <p class="s-12 gray">{{ props.row.message }}</p>
                                     </div>
                                 </div>
-                            </template>                            
+                            </template>
                         </el-table-column> -->
                         <el-table-column type="selection"></el-table-column>
                         <el-table-column prop="amount" label="Amount" width="100">
@@ -64,7 +64,7 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                    
+
                     <!-- FOOTER -->
                     <div class="flex justify-content-between align-items-center px-10">
                         <div class="s-12">
@@ -77,7 +77,7 @@
                             :total="total">
                         </el-pagination>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -116,11 +116,11 @@ export default {
         this.$store.dispatch('getDisputes', {page: val, cache: false})
     },
     clickRow (row, event, column) {
-        if (column.property) {
-            this.$router.push(`/payments/${row.trans_ref}`)
-        }
+      this.$router.push(`/payments/${row.trans_ref}`)
+        // if (column.property) {
+        // }
         // this.$refs.dispute.toggleRowExpansion(row)
-    },    
+    },
     fetchDisputes () {
       this.$store.dispatch('getDisputes', {cache: false})
     },
