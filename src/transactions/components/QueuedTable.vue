@@ -125,13 +125,13 @@ export default {
   beforeDestroy () {
     EventBus.$off('ticketModal', (val) => {
         this.ticketVisible = false
-    })  
+    })
   },
   methods: {
     clickRow (row, event, column) {
-        if (column.property) {
-            this.$router.push(`/payments/${row.reference}`)
-        }
+      this.$router.push(`/payments/${row.reference}`)
+        // if (column.property) {
+        // }
     },
     handleCurrentChange (val) {
         this.$store.dispatch('getQueues', {page: val, cache: false})

@@ -203,7 +203,6 @@ export default {
 .client_name{
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: 90%;
     display: block;
     overflow: hidden;
     color: #999999;

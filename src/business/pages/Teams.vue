@@ -257,9 +257,9 @@ export default {
             EventBus.$emit('teamModal', false)
         },
         clickRow (row, event, column) {
-          if (column.property) {
-            // this.$router.push(`/teams/${row.reference}`)
-          }
+          // this.$router.push(`/teams/${row.reference}`)
+          // if (column.property) {
+          // }
         },
         checkRole (row, event, column){
           this.$refs.role.setCurrentRow(row)

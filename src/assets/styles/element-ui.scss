@@ -360,6 +360,14 @@ $border: #dcdfe6;
     }
 }
 
+// .el-dialog__wrapper {
+//   z-index: 2010!important;
+// }
+
+// .v-modal {
+//   z-index: 2002!important;
+// }
+
 // new payment modal
 .new-transaction,.export-dialog,.user-dialog{
     .el-dialog__title{
@@ -379,7 +387,7 @@ $border: #dcdfe6;
         display: flex
     }
 }
-.export-dialog, .no-padding-dialog{
+.export-dialog, .no-padding-dialog {
     .el-dialog__body{
         padding: 0
     }

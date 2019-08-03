@@ -8,7 +8,7 @@
                 </div>
                 <div>
                     <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New role</el-button>
-                </div>                
+                </div>
             </div>
             <div>
                 <div class="center h-80" v-if="error">
@@ -17,7 +17,7 @@
                        <el-button @click.prevent="fetchRoles" icon="sync icon" type="text">Retry</el-button>
                     </div>
                 </div>
-                <div v-else class=""> 
+                <div v-else class="">
                     <el-table :show-header="false" class="no-header" empty-text="No roles available, create a new role" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" :data="roles">
                         <el-table-column v-for="(column, index) in columns" :key="index" :prop="column" :formatter="formatter" width="300"></el-table-column>
                         <el-table-column align="right">
@@ -74,7 +74,7 @@ export default {
                 fontSize: '12px'
             },
             columns: ['name', 'description'],
-            column: 'all'  
+            column: 'all'
         }
     },
 
@@ -94,7 +94,7 @@ export default {
     created () {
         this.form.privileges = this.privileges
     },
-    
+
     methods: {
         fetchRoles () {
             this.$store.dispatch('getRoles', {cache: false})
@@ -109,13 +109,13 @@ export default {
             roles: 'roles',
             state: 'rolesState',
             privileges: 'privileges'
-        }),  
+        }),
         error () {
             return this.state === 'ERROR' && this.state !== 'LOADING'
-        },              
+        },
         total () {
             return this.roles.length
-        },    
+        },
         loading () {
             return this.state === 'LOADING'
         }
@@ -175,5 +175,5 @@ export default {
         flex: 1 1;
     }
 
-    
+
 </style>

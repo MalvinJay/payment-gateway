@@ -445,14 +445,14 @@ export default {
     },
     methods: {
         clickRun (row, event, column) {
-            if (column.property) {
-                this.$refs.run.toggleRowExpansion(row)
-            }
+          this.$refs.run.toggleRowExpansion(row)
+            // if (column.property) {
+            // }
         },
         clickContact (row, event, column) {
-            if (column.property) {
-              this.$router.push(`/job-contacts/${row.id}`)
-            }
+          this.$router.push(`/job-contacts/${row.id}`)
+            // if (column.property) {
+            // }
         },
         fetchTransactions () {
             this.$store.dispatch('getCurrentJob', {id: this.$route.params.id})

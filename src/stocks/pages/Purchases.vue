@@ -171,9 +171,9 @@ export default {
         }
     },
     clickRow (row, event, column) {
-      if (column.property) {
-        // this.$router.push(`/stock/purchases/${row.id}`)
-      }
+      // this.$router.push(`/stock/purchases/${row.id}`)
+      // if (column.property) {
+      // }
     },
     handleCurrentChange (val) {
       this.$store.dispatch('getPurchases', {page: val, cache: false })

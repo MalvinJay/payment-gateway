@@ -111,9 +111,9 @@ export default {
   },
   methods: {
     clickRow (row, event, column) {
-        if (column.property) {
-            this.$router.push(`/payments/${row.reference}`)
-        }
+      this.$router.push(`/payments/${row.reference}`)
+        // if (column.property) {
+        // }
     },
     handleCurrentChange (val) {
         this.$store.dispatch('getPending', {page: val, cache: false})
@@ -144,7 +144,7 @@ export default {
                 message: 'Error',
                 type: 'error'
             })
-        }) 
+        })
     }
   },
   computed: {

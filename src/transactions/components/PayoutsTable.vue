@@ -252,9 +252,9 @@ export default {
   },
   methods: {
     clickRow (row, event, column) {
-        if (column.property || !column.status === 'error') {
-            this.$router.push(`/payments/${row.reference}`)
-        }
+      this.$router.push(`/payments/${row.reference}`)
+        // if (column.property || !column.status === 'error') {
+        // }
     },
     tableRowClassName ({row, rowIndex}) {
         if (row.has_dispute) {

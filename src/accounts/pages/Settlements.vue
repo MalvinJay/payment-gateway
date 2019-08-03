@@ -120,8 +120,8 @@ export default {
         this.$store.dispatch('getSettlements', {page: val, cache: false})
     },
     clickRow (row, event, column) {
+      //     this.$router.push(`/job/${row.id}`)
         // if (column.property) {
-        //     this.$router.push(`/job/${row.id}`)
         // }
     },
     fetchSettlements () {

@@ -139,7 +139,7 @@
                         <el-table-column label="status" prop="status" width="100">
                                 <template slot-scope="scope">
                                     <p class="status bold-600">201 OK</p>
-                                </template>                    
+                                </template>
                         </el-table-column>
                         <el-table-column label="description" prop="method">
                                 <template slot-scope="scope">
@@ -152,8 +152,8 @@
                         <el-table-column label="date" prop="created_at" width="200">
                                 <template slot-scope="scope">
                                     <p class="m-0 p-0 bold-500 s-12">{{scope.row.created_at | moment("D MMM,YY hh:mm A")}}</p>
-                                </template>      
-                        </el-table-column>                                    
+                                </template>
+                        </el-table-column>
                     </el-table>
                 </div>
             </el-card>
@@ -251,7 +251,7 @@ export default {
                 {label: 'recipient', dataField: 'recipient_no', align: 'left'}
             ],
             styleObject: {
-                
+
             }
         }
     },
@@ -273,7 +273,7 @@ export default {
             }
         },
         fetchTransactions () {
-           this.$store.dispatch('getCurrentTransaction', this.$route.params.id) 
+           this.$store.dispatch('getCurrentTransaction', this.$route.params.id)
         },
         refund () {
             this.loading = true
@@ -300,17 +300,17 @@ export default {
                     message: response.data.response.error_message,
                     type: 'error'
                 })
-            })            
+            })
         },
         clickRow (row, event, column) {
-            if (column.property) {
-            this.$router.push(`/events/${row.id}`)
-            }
+          this.$router.push(`/events/${row.id}`)
+            // if (column.property) {
+            // }
         },
         clickLogs (row, event, column) {
-            if (column.property) {
-                this.$router.push(`/logs/${row.id}`)
-            }
+          this.$router.push(`/logs/${row.id}`)
+            // if (column.property) {
+            // }
         },
     },
     mounted () {
