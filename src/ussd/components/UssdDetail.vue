@@ -324,13 +324,20 @@ export default {
           ],
           styleObject: {
 
-          },        }
+          },
+          log: {
+            message: '',
+            contacts: [],
+            is_batch: false,
+            transaction_id: ''
+          }
+        }
     },
     created () {
       EventBus.$emit('sideNavClick', 'ussd')
     },
 
-    mounted () {
+    mounted() {
       this.$store.dispatch('getCurrentUssdSession', this.$route.params.id)
       .then((response) => {
         this.$store.dispatch('getCurrentUssdSessionPayment', this.currentUssdSession[0].sessionid)
@@ -395,37 +402,35 @@ export default {
         },
         resendSMS() {
           this.loading = true
-          setTimeout(() => {
-            this.loading = false
-            this.$message({
-              type: 'success',
-              message: 'Message processed successfully'
-            })
-          }, 3000);
+          this.log.contacts.push(this.form.customer_no)
+          this.log.message = this.form.extra_data.message
+          this.log.transaction_id = this.form.email_logs[0].transaction_id
 
-          // this.$store.dispatch('createLog', form)
-          // .then((response) => {
-          //   if (response.data.success) {
-          //     this.$message({
-          //       type: 'success',
-          //       message: 'Message Sent'
-          //     })
-          //   } else {
-          //     this.$message({
-          //       type: 'error',
-          //       message: response.data.response.message
-          //     })
-          //   }
-          //   this.loading = false
-          // })
-          // .catch((error) => {
-          //   this.loading = false
-          //   const response = error.response
-          //   this.$message({
-          //       message: 'Failed to send message. Please try again',
-          //       type: 'error'
-          //   })
-          // })
+          console.log('SMS Log:', this.log)
+
+          this.$store.dispatch('createLog', this.log)
+          .then((response) => {
+            if (response.data.success) {
+              this.$message({
+                type: 'success',
+                message: 'Message sent successfully'
+              })
+            } else {
+              this.$message({
+                type: 'success',
+                message: 'Message being processed'
+              })
+            }
+            this.loading = false
+          })
+          .catch((error) => {
+            this.loading = false
+            const response = error.response
+            this.$message({
+                message: 'Failed to send message. Please try again',
+                type: 'error'
+            })
+          })
         }
     },
 
@@ -443,10 +448,10 @@ export default {
         return this.form.logs
       },
       disputes () {
-          return this.form.disputes.map(el => {
-              el.date = moment(el.created_at).format('D MMM,YY hh:mm A')
-              return el
-          })
+        return this.form.disputes.map(el => {
+          el.date = moment(el.created_at).format('D MMM,YY hh:mm A')
+          return el
+        })
       },
       messages () {
         return this.form.extra_data.message || 'N/A'
@@ -455,14 +460,14 @@ export default {
         return this.form.sms_logs
       },
       loadingPage () {
-          return this.state === 'LOADING'
-          // return true
+        return this.state === 'LOADING'
+        // return true
       },
       error () {
-          return this.state === 'ERROR'
+        return this.state === 'ERROR'
       },
       success () {
-          return this.status === 'paid'
+        return this.status === 'paid'
       },
       data () {
         var symbol = 'GHs'
@@ -504,7 +509,7 @@ export default {
         return nForm
       },
       hasNoData () {
-          return typeof this.form === 'undefined'
+        return typeof this.form === 'undefined'
       },
       header () {
         // if (this.form.trans_type === 'cashin') {

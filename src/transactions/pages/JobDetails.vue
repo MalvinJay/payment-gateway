@@ -178,8 +178,9 @@
                         <el-table-column type="expand">
                             <template slot-scope="props">
                               <el-table empty-text="No transactions" tooltip-effect="light" header-row-class-name="transactions-table-header" row-class-name="transactions-table-body" :data="props.row.executed_transctions">
-                                <el-table-column prop="receiver_name" label="Name" width="auto"></el-table-column>
-                                <el-table-column prop="receiver_no" label="Number" width="150"></el-table-column>
+                                <el-table-column type="index"></el-table-column>
+                                <el-table-column prop="receiver_name" label="Name" width="180"></el-table-column>
+                                <el-table-column prop="receiver_no" label="Number" width="120"></el-table-column>
                                 <el-table-column prop="reference" label="Reference" width="180">
                                     <template slot-scope="scope">
                                         {{scope.row.reference}}
