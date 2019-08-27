@@ -31,7 +31,7 @@
                       row-class-name="transactions-table-body"
                       header-row-class-name="transactions-table-header"
                       :data="messages">
-                        <el-table-column type="expand" width="55">
+                        <el-table-column v-loading="loading" type="expand" width="55">
                             <template slot-scope="props">
                                 <div class="pl-15">
                                     <p class="blue-text s-13 bold-600">Message: </p>
@@ -39,6 +39,20 @@
                                 </div>
                             </template>
                         </el-table-column>
+                      <el-table-column prop="delivery_status" label="delivery status">
+                          <template slot-scope="scope">
+                            <div class="flex justify-content-between">
+                              <the-tag v-if="scope.row.status === 'sent'" status="success" :title="scope.row.status"></the-tag>
+                              <the-tag v-else status="failed" :title="scope.row.status"></the-tag>
+
+                              <div v-if="scope.row.status !== 'sent'">
+                                <el-tooltip class="item" effect="dark" content="Resend SMS" placement="top">
+                                  <el-button @click="createLog(scope.row)" type="text" icon="undo icon" :loading="loadingRx" class="p-0"></el-button>
+                                </el-tooltip>
+                              </div>
+                            </div>
+                          </template>
+                      </el-table-column>
                         <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
                         <el-table-column width="80">
                             <template slot-scope="scope">
@@ -91,14 +105,19 @@ export default {
       test: true,
       columns: [
         {label: 'message id', dataField: 'response_id', align: 'center'},
-        {label: 'delivery status', dataField: 'response_message', align: 'left'},
+        {label: 'status message', dataField: 'response_message', align: 'left'},
         {label: 'recipient', dataField: 'recipient_no', align: 'left'}
       ],
       logDialog: false,
       topupDialog: false,
       styleObject: {
         fontSize: '12px'
-      }
+      },
+      loadingRx: false,
+      form: {
+        is_batch: false,
+        contacts: []
+      },
     }
   },
   created () {
@@ -149,6 +168,42 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    createLog (row) {
+      this.loadingRx = true
+      if (row.post_type !== 'single') {
+        this.form.file_url = ''
+        this.form.is_batch = true
+      } else {
+        this.form.message = row.message
+        this.form.contacts.push(row.recipient_no)
+        this.form.title = 'Message'
+        this.form.is_batch = false
+      }
+      this.$store.dispatch('createLog', this.form)
+      .then((response) => {
+          if (response.data.success) {
+              this.$message({
+                type: 'success',
+                message: 'Message Sent'
+              })
+              this.$store.dispatch('getFoneMessengers', { cache: false })
+              this.$store.dispatch('getBalance')
+              this.loadingRx = false
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.response.message
+            })
+          }
+      }).catch((error) => {
+        this.loadingRx = false
+        const response = error.response
+        this.$message({
+          message: 'Failed to send message. Please try again',
+          type: 'error'
+        })
+      })
     }
   },
   computed: {

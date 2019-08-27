@@ -86,7 +86,7 @@ const mutations = {
 
 // actions
 const actions = {
-  [GET_USSD_SESSIONS] ({ state, commit, rootGetters }, { cache = true, page = 1 } = {}) {
+  [GET_USSD_SESSIONS] ({ state, commit, dispatch, rootGetters }, { cache = true, page = 1 } = {}) {
     var filters = state.ussds.filters
     var query = ''
 
@@ -134,6 +134,7 @@ const actions = {
                 PreferredArray.push(ussd)
               }
             }
+            console.log('Filtered Data:', PreferredArray)
           })
 
           commit(SET_USSD_SESSIONS, PreferredArray)
@@ -148,6 +149,13 @@ const actions = {
 
           commit(SET_USSD_META, meta)
 
+          if (PreferredArray.length > 0) {
+            let ID = PreferredArray[0].transaction.response.data.extra_data.sessionId
+            dispatch(GET_CURRENT_USSD_SESSION, ID)
+            .then(response => {
+              dispatch(GET_CURRENT_USSD_SESSION_PAYMENT, ID)
+            })
+          }
           resolve(response)
         }).catch((error) => {
           commit(SET_USSD_SESSIONS_STATE, 'ERROR')

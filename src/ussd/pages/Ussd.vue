@@ -33,7 +33,7 @@
                         :row-style="styleObject"
                         row-class-name="transactions-table-body"
                         header-row-class-name="transactions-table-header"
-                        :data="filteredPins.filter(data => !search || data.msisdn.toLowerCase().includes(search.toLowerCase())).slice((page * 12) - 12, page * 12)">
+                        :data="filteredPins.filter( data => !search || data.msisdn.toLowerCase().includes(search.toLowerCase() || data.transaction.response.data.customer_no.toLowerCase().includes(search.toLowerCase()) )).slice((page * 12) - 12, page * 12)">
                             <el-table-column type="index"></el-table-column>
                             <el-table-column show-overflow-tooltip prop="sessionid" label="session id"></el-table-column>
                             <el-table-column show-overflow-tooltip prop="msisdn" label="phone number"></el-table-column>
@@ -103,7 +103,7 @@
                 <div class="trans-div flex justify-content-between">
                     <div class="search_n_roles flex justify-content-between w-50">
                       <filter-component dispatch="setUssdFilters" filterType="ussd"></filter-component>
-                      <el-input @keyup.enter.native="searchButton" v-model="search" :prefix-icon="icon" class="search-div mr-2" style="width: 70%;" size="mini" placeholder="Search phone number"></el-input>
+                      <el-input @keyup.enter.native="searchButton" v-model="search" :prefix-icon="icon" class="search-div mr-2" style="width: 70%;" size="mini" placeholder="Search phone or index number"></el-input>
                     </div>
                     <div class="flex align-items-center">
                         <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
@@ -128,7 +128,7 @@
                         :row-style="styleObject"
                         row-class-name="transactions-table-body"
                         header-row-class-name="transactions-table-header"
-                        :data="filteredUSSD.filter(data => !search || data.msisdn.toLowerCase().includes(search.toLowerCase()) || data.exam_type.toLowerCase().includes(search.toLowerCase()) ||  data.year.toLowerCase().includes(search.toLowerCase())).slice((page * 12) - 12, page * 12)">
+                        :data="filteredSmsLogs.filter(data => !search || data.msisdn.toLowerCase().includes(search.toLowerCase()) || data.transaction.response.data.customer_no.toLowerCase().includes(search.toLowerCase()) ||  data.transaction.response.data.extra_data.index_no.toLowerCase().includes(search.toLowerCase())).slice((page * 12) - 12, page * 12)">
                             <el-table-column type="index"></el-table-column>
                             <el-table-column show-overflow-tooltip prop="sessionid" label="session id"></el-table-column>
                             <el-table-column show-overflow-tooltip prop="msisdn" label="phone number"></el-table-column>
@@ -164,7 +164,7 @@
 
                         <div class="flex justify-content-between align-items-center px-10">
                             <div class="s-12">
-                              {{this.filteredUSSD.slice((page * 12) - 12, page * 12).length}} results
+                              {{this.filteredSmsLogs.slice((page * 12) - 12, page * 12).length}} results
                             </div>
 
                             <el-pagination class="my-2 flex justify-content-end"
@@ -281,7 +281,7 @@ export default {
       setTimeout(() => {
         this.$message({
           type: 'success',
-          message: 'Server-side search complete'
+          message: 'Server-side search to be completed soon'
         })
         this.icon = 'el-icon-search'
       }, 3000);
@@ -349,7 +349,7 @@ export default {
       token: 'token',
       user: 'user',
     }),
-    filteredUSSD () {
+    filteredSmsLogs () {
       let arr = new Array();
       this.ussds.map(el => {
         let common = el.transaction.response.data.extra_data.type
@@ -357,6 +357,7 @@ export default {
           arr.push(el)
         }
       })
+      console.log('arr:', arr)
       return arr
     },
     filteredPins() {
