@@ -178,6 +178,12 @@ export default {
       if (this.present(filters.statuses)) {
         query = query + `&statuses[]=${filters.statuses}`
       }
+      if (this.present(filters.state)) {
+        query = query + `&state[]=${filters.state}`
+      }
+      if (this.present(filters.providers)) {
+        query = query + `&providers[]=${filters.providers}`
+      }
       if (this.present(filters.search_value)) {
         query = query + `&search_value=${filters.search_value}`
       }
@@ -193,17 +199,22 @@ export default {
       if (this.present(filters.name)) {
         query = query + `&user_group=${filters.name}`
       }
-      if (this.empty(filters.from) &&
-          this.empty(filters.to) &&
-          this.empty(filters.payment_types) &&
-          this.empty(filters.statuses) &&
-          this.empty(filters.reasons) &&
-          this.empty(filters.name)) {
-        query = query + '&all=true'
-      }
-    } else {
-      query = query + '&all=true'
+
+      // if (this.empty(filters.from) &&
+      //     this.empty(filters.to) &&
+      //     this.empty(filters.payment_types) &&
+      //     this.empty(filters.statuses) &&
+      //     this.empty(filters.state) &&
+      //     this.empty(filters.providers) &&
+      //     this.empty(filters.reasons) &&
+      //     this.empty(filters.name)) {
+      //   query = query + '&all=true'
+      // }
     }
+    // else {
+    //   query = query + '&all=true'
+    // }
+
     return query
   },
   createPendingParams (filters, page = 1) {

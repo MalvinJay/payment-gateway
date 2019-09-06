@@ -3,13 +3,18 @@
         <div class="transactions">
             <div class="trans-div flex justify-content-between">
                 <div class="flex align-items-baseline">
-                    <p class="blue-text bold-600 s-16 m-0 p-0">Fone Messenger</p>
+                    <filter-component dispatch="setFoneFilters" filterType="fone"></filter-component>
                 </div>
+
+                <div class="search_n_roles flex w-50">
+                  <el-input @keyup.enter.native="searchButton" :prefix-icon="icon" v-model="search" class="search-div mr-2" size="mini" placeholder="Search phone number"></el-input>
+                </div>
+
                 <div class="flex align-items-center">
                     <p class="balance-info gray-text border-right">{{balance.fon_messanger_balance | money }}</p>
-                    <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
-                        <el-button @click.prevent="fetchMessages" icon="undo icon" type="text"></el-button>
-                    </el-tooltip>
+                    <!-- <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
+                        <el-button @click="fetchMessages" icon="undo icon" type="text"></el-button>
+                    </el-tooltip> -->
                     <el-button @click="topupDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Topup</el-button>
                     <el-button @click="logDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
                 </div>
@@ -39,7 +44,7 @@
                                 </div>
                             </template>
                         </el-table-column>
-                      <el-table-column prop="delivery_status" label="delivery status">
+                      <el-table-column prop="delivery_status" label="delivery status" width="150">
                           <template slot-scope="scope">
                             <div class="flex justify-content-between">
                               <the-tag v-if="scope.row.status === 'sent'" status="success" :title="scope.row.status"></the-tag>
@@ -105,8 +110,9 @@ export default {
       test: true,
       columns: [
         {label: 'message id', dataField: 'response_id', align: 'center'},
+        {label: 'network', dataField: 'network_provider', align: 'center'},
+        {label: 'recipient', dataField: 'recipient_no', align: 'left'},
         {label: 'status message', dataField: 'response_message', align: 'left'},
-        {label: 'recipient', dataField: 'recipient_no', align: 'left'}
       ],
       logDialog: false,
       topupDialog: false,
@@ -114,6 +120,8 @@ export default {
         fontSize: '12px'
       },
       loadingRx: false,
+      search: '',
+      icon: 'el-icon-search',
       form: {
         is_batch: false,
         contacts: []
@@ -168,6 +176,13 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    searchButton () {
+      this.icon = 'el-icon-loading'
+      this.$store.dispatch('getFoneMessengers', {cache: false, search_value: this.search })
+      .then(() => {
+          this.icon = 'el-icon-search'
+      })
     },
     createLog (row) {
       this.loadingRx = true

@@ -92,6 +92,13 @@ export const SET_PENDING_FILTERS = 'setPendingFilters'
 export const SET_PENDING_META = 'setPendingMeta'
 export const APPROVE_TRANSACTIONS = 'approveTransactions'
 
+// FAILED
+export const GET_FAILED = 'getFailed'
+export const SET_FAILED = 'setFailed'
+export const SET_FAILED_STATE = 'setFailedState'
+export const SET_FAILED_FILTERS = 'setFailedFilters'
+export const SET_FAILED_META = 'setFailedMeta'
+
 // SEARCH
 export const SEARCH_TRANSACTIONS = 'searchTransactions'
 

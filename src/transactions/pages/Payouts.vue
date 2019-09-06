@@ -12,9 +12,11 @@
             <el-tab-pane label="Pending Approval">
                 <pending-table></pending-table>
             </el-tab-pane>
-            <!-- <el-tab-pane label="Jobs">
-                <job-table type="cashin"></job-table>
-            </el-tab-pane> -->
+            <!--
+            <el-tab-pane name="3" label="Failed">
+                <failed-table type="cashout"></failed-table>
+            </el-tab-pane>
+            -->
         </el-tabs>
     </div>
 </template>
@@ -40,8 +42,10 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'payouts')
-    this.$store.dispatch('getPayouts')
-    this.$store.dispatch('getJobs')
+    // this.$store.dispatch('getPayouts')
+    this.$store.dispatch('getTransactions', {search_value: 'cashin', cache: false})
+
+    // this.$store.dispatch('getJobs')
     this.$store.dispatch('getQueues')
     this.$store.dispatch('getPending')
   },
