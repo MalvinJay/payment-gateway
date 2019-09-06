@@ -33,22 +33,26 @@
                         :row-style="styleObject"
                         row-class-name="transactions-table-body"
                         header-row-class-name="transactions-table-header"
-                        :data="filteredPins.filter( data => !search || data.msisdn.toLowerCase().includes(search.toLowerCase() || data.transaction.response.data.customer_no.toLowerCase().includes(search.toLowerCase()) )).slice((page * 12) - 12, page * 12)">
+                        :data="filteredPins.filter( data => !search || data.receiver_no.toLowerCase().includes(search.toLowerCase()) ).slice((page * 12) - 12, page * 12)">
                             <el-table-column type="index"></el-table-column>
-                            <el-table-column show-overflow-tooltip prop="sessionid" label="session id"></el-table-column>
-                            <el-table-column show-overflow-tooltip prop="msisdn" label="phone number"></el-table-column>
-                            <el-table-column show-overflow-tooltip prop="network" label="network" width="auto"></el-table-column>
+                            <el-table-column show-overflow-tooltip prop="extra_data.sessionId" label="session id"></el-table-column>
+                            <el-table-column show-overflow-tooltip prop="receiver_no" label="phone number"></el-table-column>
+                            <el-table-column show-overflow-tooltip prop="provider_code" label="network" width="auto" label-class-name="text-uppercase">
+                              <template slot-scope="scope" class="text-uppercase">
+                                {{scope.row.provider_code}}
+                              </template>
+                            </el-table-column>
                             <el-table-column prop="transaction" label="Payment status" width="auto">
                               <template slot-scope="scope">
                                 <div class="flex">
-                                  <the-tag v-if="scope.row.transaction.response.data.payment_status === 'paid'" status="success" :title="scope.row.transaction.response.data.payment_status" icon="detail check icon"></the-tag>
-                                  <the-tag v-else status="failed" :title="scope.row.transaction.response.data.payment_status" icon="reply icon"></the-tag>
+                                  <the-tag v-if="scope.row.status === 'paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                  <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
                                 </div>
                               </template>
                             </el-table-column>
-                            <el-table-column prop="timestamp" label="Timestamp" width="200">
+                            <el-table-column prop="updated_at" label="Timestamp" width="200">
                                 <template slot-scope="scope">
-                                  {{scope.row.timestamp | moment("D MMM,YY hh:mm:ss A")}}
+                                  {{scope.row.updated_at | moment("D MMM,YY hh:mm:ss A")}}
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -128,36 +132,36 @@
                         :row-style="styleObject"
                         row-class-name="transactions-table-body"
                         header-row-class-name="transactions-table-header"
-                        :data="filteredSmsLogs.filter(data => !search || data.msisdn.toLowerCase().includes(search.toLowerCase()) || data.transaction.response.data.customer_no.toLowerCase().includes(search.toLowerCase()) ||  data.transaction.response.data.extra_data.index_no.toLowerCase().includes(search.toLowerCase())).slice((page * 12) - 12, page * 12)">
+                        :data="filteredSmsLogs.filter(data => !search || data.receiver_no.toLowerCase().includes(search.toLowerCase()) || data.extra_data.index_no.toLowerCase().includes(search.toLowerCase())).slice((page * 12) - 12, page * 12)">
                             <el-table-column type="index"></el-table-column>
-                            <el-table-column show-overflow-tooltip prop="sessionid" label="session id"></el-table-column>
-                            <el-table-column show-overflow-tooltip prop="msisdn" label="phone number"></el-table-column>
-                            <el-table-column show-overflow-tooltip prop="transaction" label="exams type" :filters="[{text: 'BECE', value: 'bece'},{text: 'WASSCE', value: 'wassce'}]" :filter-method="filterHandler">
+                            <el-table-column show-overflow-tooltip prop="extra_data.sessionId" label="session id"></el-table-column>
+                            <el-table-column show-overflow-tooltip prop="receiver_no" label="phone number"></el-table-column>
+                            <el-table-column show-overflow-tooltip prop="extra_data.type" label="exams type" :filters="[{text: 'BECE', value: 'bece'},{text: 'WASSCE', value: 'wassce'}]" :filter-method="filterHandler">
                               <template slot-scope="scope">
-                                {{scope.row.transaction.response.data.extra_data.type  || 'N/A'}}
+                                {{scope.row.extra_data.type  || 'N/A'}}
                               </template>
                             </el-table-column>
-                            <el-table-column show-overflow-tooltip prop="transaction" label="year" width="100">
+                            <el-table-column show-overflow-tooltip prop="extra_data.year" label="year" width="100">
                               <template slot-scope="scope">
-                                {{scope.row.transaction.response.data.extra_data.year || 'N/A'}}
+                                {{scope.row.extra_data.year || 'N/A'}}
                               </template>
                             </el-table-column>
-                            <el-table-column show-overflow-tooltip prop="transaction" label="index no" width="auto">
+                            <el-table-column show-overflow-tooltip prop="extra_data.index_no" label="index no" width="auto">
                               <template slot-scope="scope">
-                                {{scope.row.transaction.response.data.extra_data.index_no  || 'N/A'}}
+                                {{scope.row.extra_data.index_no  || 'N/A'}}
                               </template>
                             </el-table-column>
-                            <el-table-column prop="transaction" label="Payment status" width="auto">
+                            <el-table-column prop="status" label="Payment status" width="auto">
                               <template slot-scope="scope">
                                 <div class="flex">
-                                  <the-tag v-if="scope.row.transaction.response.data.payment_status === 'paid'" status="success" :title="scope.row.transaction.response.data.payment_status" icon="detail check icon"></the-tag>
-                                  <the-tag v-else status="failed" :title="scope.row.transaction.response.data.payment_status" icon="reply icon"></the-tag>
+                                  <the-tag v-if="scope.row.status === 'paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                  <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
                                 </div>
                               </template>
                             </el-table-column>
-                            <el-table-column prop="timestamp" label="Timestamp" width="200">
+                            <el-table-column prop="updated_at" label="Timestamp" width="200">
                                 <template slot-scope="scope">
-                                  {{scope.row.timestamp | moment("D MMM,YY hh:mm:ss A")}}
+                                  {{scope.row.updated_at | moment("D MMM,YY hh:mm:ss A")}}
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -261,6 +265,8 @@ export default {
     EventBus.$on('exportModal', (val) => {
       this.exportVisible = false
     })
+
+
   },
   methods: {
     filterHandler (value, row, column) {
@@ -271,7 +277,7 @@ export default {
       this.$store.dispatch('getUssdSessions', {page: page, cache: false})
     },
     clickRow (row, event, column) {
-      this.$router.push(`/ussd/${row.sessionid}`)
+      this.$router.push(`/ussd/${row.extra_data.sessionId}`)
     },
     fetchMessages () {
       this.$store.dispatch('getUssdSessions', {cache: false})
@@ -341,7 +347,6 @@ export default {
       ussds: 'ussdSessions',
       state: 'ussdSessionsState',
       meta: 'ussdSessionsMeta',
-      // total: 'ussdSessionsCount',
       pageSize: 'pageSize',
       currentUssdSession: 'currentUssdSession',
       fields: 'fields',
@@ -352,7 +357,7 @@ export default {
     filteredSmsLogs () {
       let arr = new Array();
       this.ussds.map(el => {
-        let common = el.transaction.response.data.extra_data.type
+        let common = el.extra_data.type
         if(common) {
           arr.push(el)
         }
@@ -363,7 +368,7 @@ export default {
     filteredPins() {
       let arr = new Array();
       this.ussds.map(el => {
-        let common = el.transaction.response.data.extra_data.type
+        let common = el.extra_data.type
         if(common === "" || common == null || common === 'N/A') {
           arr.push(el)
         }

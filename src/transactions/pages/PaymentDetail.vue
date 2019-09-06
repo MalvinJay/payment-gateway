@@ -19,7 +19,7 @@
                     </div>
                     </div>
                     <div>
-                        <el-button :disabled="error" @click="refund" :loading="loading" v-if="status === 'failed' &&  form.trans_type === 'cashout'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Refund</el-button>
+                        <el-button :disabled="error" @click="refund" :loading="loading" v-if="status === 'paid' &&  form.trans_type === 'cashout'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Refund</el-button>
                         <el-button v-if="!form.has_dispute" @click="ticketVisible = true" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Open Ticket</el-button>
                         <el-dropdown class="ml-10" @command="command => handleTableCommand(command, form)" trigger="click">
                             <el-button size="mini" class="mr-0 cursor z-depth-button bold-600 s-13 open-sans mini-button b-0" plain icon="ellipsis horizontal icon"></el-button>
@@ -275,7 +275,7 @@ export default {
         fetchTransactions () {
            this.$store.dispatch('getCurrentTransaction', this.$route.params.id)
         },
-        refund () {
+        refund() {
             this.loading = true
             this.$store.dispatch('createRefund', this.form.reference)
             .then((response) => {

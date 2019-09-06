@@ -8,6 +8,7 @@ import SummaryCard from '@/components/cards/SummaryCard'
 import PaymentTable from '@/transactions/components/PaymentTable'
 import QueuedTable from '@/transactions/components/QueuedTable'
 import PendingTable from '@/transactions/components/PendingTable'
+import FailedTable from '@/transactions/components/FailedPaymentsTable.vue'
 import PayoutsTable from '@/transactions/components/PayoutsTable'
 import JobTable from '@/transactions/components/JobTable'
 import FilterComponent from '@/transactions/components/FilterComponent'
@@ -27,6 +28,7 @@ Vue.component('summary-card', SummaryCard)
 Vue.component('queued-table', QueuedTable)
 Vue.component('payment-table', PaymentTable)
 Vue.component('pending-table', PendingTable)
+Vue.component('failed-table', FailedTable)
 Vue.component('payouts-table', PayoutsTable)
 Vue.component('job-table', JobTable)
 Vue.component('filter-component', FilterComponent)
@@ -47,6 +49,7 @@ export default {
   FilterComponent: FilterComponent,
   PaymentTable: PaymentTable,
   PendingTable: PendingTable,
+  FailedTable: FailedTable,
   ExportModal: ExportModal,
   TicketModal: TicketModal,
   JobTable: JobTable,

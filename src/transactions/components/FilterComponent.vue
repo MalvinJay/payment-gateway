@@ -11,6 +11,7 @@
               <p class="p-0 m-0 blue-text">Filters</p>
               <el-button size="mini" @click="createFilters" type="primary" class="s-13 open-sans filter-button b-0">Done</el-button>
             </div>
+
             <el-dropdown-item>
               <el-checkbox class="mr-10" v-model="date"></el-checkbox> Date
             </el-dropdown-item>
@@ -64,7 +65,39 @@
                 <div class="filter-bg" v-show="status">
                     <el-select size="mini" v-model="filters.statuses" @remove-tag="removeAll" @change="statusClick" multiple collapse-tags placeholder="Select Status">
                         <el-option
-                        v-for="item in stati"
+                          v-for="item in stati"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+            </el-collapse-transition>
+
+            <el-dropdown-item v-if="showFoneStatus" divided>
+                <el-checkbox class="mr-10" v-model="state"></el-checkbox> Status
+            </el-dropdown-item>
+            <el-collapse-transition>
+                <div class="filter-bg" v-show="state">
+                    <el-select size="mini" v-model="filters.state" @remove-tag="removeAll" @change="FonStatusClick" multiple collapse-tags placeholder="SMS Status">
+                        <el-option
+                        v-for="item in FonStatus"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+            </el-collapse-transition>
+
+            <el-dropdown-item v-if="showFoneStatus" divided>
+                <el-checkbox class="mr-10" v-model="provider"></el-checkbox> Network
+            </el-dropdown-item>
+            <el-collapse-transition>
+                <div class="filter-bg" v-show="provider">
+                    <el-select size="mini" v-model="filters.providers" @remove-tag="removeAll" @change="FonProvidersClick" multiple collapse-tags placeholder="Select Network">
+                        <el-option
+                        v-for="item in Provider"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -104,6 +137,8 @@ export default {
         count: 0,
         date: false,
         status: false,
+        state: false,
+        provider: false,
         type: false,
         reason: false,
         amount: false,
@@ -112,6 +147,17 @@ export default {
             {label: 'Success', value: 'succeeded'},
             {label: 'Pending', value: 'pending'},
             {label: 'Failed', value: 'failed'}
+        ],
+        FonStatus: [
+          {label: 'Sent', value: 'sent'},
+          {label: 'Pending', value: 'pending'},
+          {label: 'Failed', value: 'failed'}
+        ],
+        Provider: [
+          {label: 'Mtn', value: 'mtn'},
+          {label: 'Vodafone', value: 'vodafone'},
+          {label: 'Airtel', value: 'airtel'},
+          {label: 'Tigo', value: 'tigo'}
         ],
         all: ['success', 'pending', 'failed'],
         types: [
@@ -146,6 +192,10 @@ export default {
       createFilters() {
         this.$refs.messageDrop.hide()
         this.count = this.size(this.filters)
+        console.log('Route:', this.$route.name)
+        if(this.$route.name === 'ViewTransactions') this.filters.search_value = 'cashout'
+        if(this.$route.name === 'Payouts') this.filters.search_value = 'cashin'
+        
         this.$store.dispatch(this.dispatch, this.filters)
       },
       size (obj) {
@@ -182,9 +232,27 @@ export default {
           if (val[0] === 'all') {
               var all = ['succeeded', 'pending', 'failed']
               all.forEach(element => {
-                  this.filters.statuses.push(element)
+                this.filters.statuses.push(element)
               })
           }
+      },
+      FonStatusClick (val) {
+        this.keepVisible()
+        if (val[0] === 'all') {
+            var all = ['sent', 'pending', 'failed']
+            all.forEach(element => {
+              this.filters.state.push(element)
+            })
+        }
+      },
+      FonProvidersClick (val) {
+        this.keepVisible()
+        if (val[0] === 'all') {
+            var all = ['sent', 'pending', 'failed']
+            all.forEach(element => {
+              this.filters.state.push(element)
+            })
+        }
       },
       removeAll (val) {
           // if (val === 'all') {
@@ -242,6 +310,9 @@ export default {
     computed: {
         showStatus () {
           return this.filterType === 'payment' || this.filterType === 'payouts'
+        },
+        showFoneStatus() {
+          return this.filterType === 'fone'
         },
         showDispute () {
           return this.filterType === 'dispute'

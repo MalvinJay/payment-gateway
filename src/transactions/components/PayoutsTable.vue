@@ -231,7 +231,8 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('getPayouts')
+    // this.$store.dispatch('getPayouts', {search_value: 'cashout'})
+    this.$store.dispatch('getTransactions', {search_value: 'cashin'})
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'payouts')
@@ -264,10 +265,12 @@ export default {
         }
     },
     handleCurrentChange (val) {
-        this.$store.dispatch('getPayouts', {page: val, cache: false})
+        // this.$store.dispatch('getPayouts', {page: val, cache: false})
+        this.$store.dispatch('getTransactions', {search_value: 'cashin', page: val, cache: false})
     },
     fetchTransactions () {
-      this.$store.dispatch('getPayouts', {cache: false})
+      // this.$store.dispatch('getPayouts', {cache: false})
+      this.$store.dispatch('getTransactions', {search_value: 'cashin', cache: false})
     },
     close () {
         this.form = {

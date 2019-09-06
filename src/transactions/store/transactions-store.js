@@ -1,6 +1,7 @@
 import { TRANSACTION_CREATE, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SEARCH_TRANSACTIONS,
   TRANSACTIONS_FETCH, SET_CURRENT_TRANSACTION_STATE,
   SET_TRANSACTIONS_STATE, GET_QUEUE, SET_QUEUE, SET_QUEUE_STATE, SET_QUEUE_FILTERS, SET_QUEUE_META, SET_CURRENT_TRANSACTION,
+  GET_FAILED, SET_FAILED,SET_FAILED_STATE, SET_FAILED_FILTERS, SET_FAILED_META,
   SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, ADD_TRANSACTION, SET_PENDING_STATE, SET_PENDING_META, APPROVE_TRANSACTIONS, GET_CURRENT_TRANSACTION,
   CREATE_TICKET, REFUND_TRANSACTION } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
@@ -46,6 +47,17 @@ const state = {
     },
     meta: {}
   },
+  failed: {
+    data: [],
+    state: 'LOADING',
+    filters: {
+      from: moment().startOf('month').format('YYYY-MM-DD'),
+      to: moment().endOf('month').format('YYYY-MM-DD')
+    },
+    meta: {
+
+    }
+  },
   providers: [
     {label: 'MTN', value: 'mtn'},
     {label: 'Vodafone', value: 'vodafone'},
@@ -71,7 +83,13 @@ const getters = {
   pendingFilters: state => state.pending.state,
   pendingMeta: state => state.pending.meta,
   currentTransaction: state => state.currentTransaction.data,
-  currentTransactionState: state => state.currentTransaction.state
+  currentTransactionState: state => state.currentTransaction.state,
+
+  // Failed
+  failed: state => state.failed.data,
+  failedState: state => state.failed.state,
+  failedFilters: state => state.failed.state,
+  failedMeta: state => state.failed.meta,
 
 }
 
@@ -88,8 +106,9 @@ const mutations = {
     var meta = {
       totalCount: data.total_transactions,
       limit: data.limit,
-      page: data.page,
-      trans: data.total_page_transactions
+      page: data.total_pages,
+      trans: data.total_transactions,
+      // total: data.total_transactions
     }
     state.transactions.meta = meta
   },
@@ -111,7 +130,7 @@ const mutations = {
       totalCount: data.total_transactions,
       limit: data.limit,
       page: data.page,
-      trans: data.total_page_transactions
+      trans: data.total_transactions
     }
     state.queues.meta = meta
   },
@@ -134,6 +153,25 @@ const mutations = {
     }
     state.pending.meta = meta
   },
+  [SET_FAILED] (state, payload) {
+    state.failed.state = 'DATA'
+    state.failed.data = payload
+  },
+  [SET_FAILED_STATE] (state, data) {
+    state.failed.state = data
+  },
+  [SET_FAILED_FILTERS] (state, data) {
+    state.failed.filters = data
+  },
+  [SET_FAILED_META] (state, data) {
+    var meta = {
+      totalCount: data.total_transactions,
+      limit: data.limit,
+      page: data.page,
+      trans: data.total_transactions
+    }
+    state.failed.meta = meta
+  },
   [SET_CURRENT_TRANSACTION] (state, data) {
     state.currentTransaction.data = data
   },
@@ -148,18 +186,24 @@ const mutations = {
 
 // actions
 const actions = {
-  [TRANSACTIONS_FETCH] ({ state, commit, rootGetters, dispatch }, {cache = true,page = 1} = {}) {
+  [TRANSACTIONS_FETCH] ({ state, commit, rootGetters, dispatch }, {cache = true, page = 1, search_value = ''} = {}) {
     //   url for admin or client
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
+
     // filters
     var filters = state.transactions.filters
     var query = ''
+
+    console.log('search_value:', search_value)
+
     if (Utils.empty(filters)) {
-      query = `?all=true&search_value=cashout&page=${page}&limit=12`
+      query = `?search_value=${search_value}&page=${page}&limit=12&statuses[]=succeeded`
     } else {
-      filters.search_value = 'cashout'
+      // filters.search_value = 'cashout'
       query = Utils.createQueryParams(filters, page)
+      query = query + `&statuses[]=succeeded`
     }
+
     // state
     commit(SET_TRANSACTIONS_STATE, 'LOADING')
     commit(SET_TRANSACTIONS_FILTERS, filters)
@@ -190,6 +234,7 @@ const actions = {
   },
   [SET_TRANSACTIONS_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
     commit(SET_TRANSACTIONS_FILTERS, filters)
+    console.log('Filters for Filter', filters)
     dispatch('getTransactions', {page: 1, cache: false})
   },
   [TRANSACTION_CREATE] ({commit, state, rootGetters}, transaction) {
@@ -279,6 +324,40 @@ const actions = {
     commit(SET_PENDING_FILTERS, filters)
     dispatch('getPending', {page: 1, cache: false})
   },
+
+  // failed
+  [GET_FAILED] ({ state, commit, rootGetters }, { page = 1, cache = true } = {}) {
+    var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
+    var filters = state.failed.filters
+    var query = Utils.createPendingParams(filters, page)
+    commit(SET_FAILED_STATE, 'LOADING')
+    commit(SET_FAILED_FILTERS, filters)
+    if (cache && state.failed.data.length !== 0) {
+      commit(SET_FAILED_STATE, 'DATA')
+    } else {
+      return new Promise((resolve, reject) => {
+        apiCall({
+          url: `${GET_BASE_URI}${url}${query}&statuses[]=failed`,
+          method: 'GET',
+          token: rootGetters.token
+        }).then((response) => {
+          commit(SET_FAILED_STATE, 'DATA')
+          commit(SET_FAILED_META, response.data.response.data)
+          commit(SET_FAILED, response.data.response.data.transactions)
+          resolve()
+        }).catch((error) => {
+          commit(SET_FAILED_STATE, 'ERROR')
+          console.log(error)
+          reject(error)
+        })
+      })
+    }
+  },
+  [SET_FAILED_FILTERS] ({ state, commit, rootGetters, dispatch }, filters) {
+    commit(SET_FAILED_FILTERS, filters)
+    dispatch('getFailed', {page: 1, cache: false})
+  },
+
   [APPROVE_TRANSACTIONS] ({ state, commit, rootGetters }, transactions) {
     console.log('transactions pending', transactions)
     return new Promise((resolve, reject) => {

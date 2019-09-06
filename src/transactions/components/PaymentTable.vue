@@ -2,7 +2,7 @@
     <div class="transactions">
       <div class="trans-div flex justify-content-between">
         <div>
-            <filter-component dispatch="setTransactionsFilters" filterType="payment"></filter-component>
+            <filter-component dispatch="setTransactionsFilters" filterType="all"></filter-component>
         </div>
         <div>
             <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
@@ -183,7 +183,7 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('getTransactions')
+    this.$store.dispatch('getTransactions', {search_value: 'cashout'})
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'payments')
@@ -212,10 +212,10 @@ export default {
         // }
     },
     handleCurrentChange (val) {
-        this.$store.dispatch('getTransactions', {page: val, cache: false})
+        this.$store.dispatch('getTransactions', {search_value: 'cashout', page: val, cache: false})
     },
     fetchTransactions () {
-      this.$store.dispatch('getTransactions', {cache: false})
+      this.$store.dispatch('getTransactions', {search_value: 'cashout', cache: false})
     },
     handleTableCommand (command, row) {
         switch (command) {
@@ -326,7 +326,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-    // 1. what you want to call the getter here : 2. the name of the getter from the vuex store
       transactions: 'transactions',
       state: 'transactionsState',
       meta: 'transactionsMeta',

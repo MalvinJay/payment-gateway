@@ -104,53 +104,89 @@ const actions = {
       commit(SET_USSD_SESSIONS_STATE, 'DATA')
     } else {
       return new Promise((resolve, reject) => {
-        axios.get(
-          // `https://2dae1380.ngrok.io/v1/query/ussd-logs-status${query}`,
-          `https://ussd-log-status.nfortics.com/v1/query/ussd-logs-status${query}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'Access-Control-Allow-Origin': '*/*'
-            }
-          }
-        ).then((response) => {
+        // axios.get(
+        // `https://2dae1380.ngrok.io/v1/query/ussd-logs-status${query}`,
+        //   `https://ussd-log-status.nfortics.com/v1/query/ussd-logs-status${query}`,
+        // `${GET_BASE_URI}v2/sms/logs${query}`,
+        //   {
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //       'Accept': 'application/json',
+        //       'Access-Control-Allow-Origin': '*/*'
+        //     }
+        //   }
+        // )
+        apiCall({
+          url: `${GET_BASE_URI}v2/ussd/sessions${query}`,
+          method: 'GET',
+          token: rootGetters.token
+        })
+        .then((response) => {
           commit(SET_USSD_SESSIONS_STATE, 'DATA')
           let PreferredArray = []
-          response.data.filtered_records.map(ussd => {
-            let common = ussd.transaction.response.data
-            if(Utils.present(common)) {
-              if(rootGetters.user.client.code === common.till) {
-                let type = common.extra_data.type
+
+          // response.data.filtered_records.map(ussd => {
+          //   let common = ussd.transaction.response.data
+          //   if(Utils.present(common)) {
+          //     if(rootGetters.user.client.code === common.till) {
+          //       let type = common.extra_data.type
+
+          //       if(type === 'BECE') {
+          //         common.extra_data.type = 'BECE(School)';
+          //       }
+
+          //       if(type === 'PBEC') {
+          //         common.extra_data.type = 'BECE(Private)';
+          //       }
+
+          //       PreferredArray.push(ussd)
+          //     }
+          //   }
+          //   console.log('Filtered Data:', PreferredArray)
+          // })
+
+
+          response.data.map(ussd => {
+            // if(ussd.extra_data.ussd_code === "*944#") {
+          // if(rootGetters.user.client.code === common.till) {
+                let type = ussd.extra_data.type
 
                 if(type === 'BECE') {
-                  common.extra_data.type = 'BECE(School)';
+                  ussd.extra_data.type = 'BECE(School)';
                 }
 
                 if(type === 'PBEC') {
-                  common.extra_data.type = 'BECE(Private)';
+                  ussd.extra_data.type = 'BECE(Private)';
                 }
 
                 PreferredArray.push(ussd)
-              }
-            }
+              // }
+            //  }
             console.log('Filtered Data:', PreferredArray)
           })
 
           commit(SET_USSD_SESSIONS, PreferredArray)
 
+          // var meta = {
+          //   filtered_total: PreferredArray.length,
+          //   page_limit: response.data.page_limit,
+          //   page: response.data.page,
+          //   total: response.data.total,
+          //   filtered_records: response.data.filtered_records
+          // }
+
           var meta = {
             filtered_total: PreferredArray.length,
-            page_limit: response.data.page_limit,
-            page: response.data.page,
-            total: response.data.total,
-            filtered_records: response.data.filtered_records
+            page_limit: 12,
+            page: 1,
+            total: PreferredArray.length,
+            filtered_records: PreferredArray.length
           }
 
           commit(SET_USSD_META, meta)
 
           if (PreferredArray.length > 0) {
-            let ID = PreferredArray[0].transaction.response.data.extra_data.sessionId
+            let ID = PreferredArray[0].extra_data.sessionId
             dispatch(GET_CURRENT_USSD_SESSION, ID)
             .then(response => {
               dispatch(GET_CURRENT_USSD_SESSION_PAYMENT, ID)

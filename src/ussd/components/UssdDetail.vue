@@ -170,7 +170,7 @@
                         header-row-class-name="transactions-table-header"
                         row-class-name="transactions-table-body ussd_session"
                         :data="currentUssdSession">
-                            <el-table-column prop="message" label="Input" width="120"></el-table-column>
+                            <el-table-column prop="message" label="Input" width="200"></el-table-column>
                             <el-table-column prop="response" label="Response" width="auto">
                                 <template slot-scope="scope">
                                   {{ scope.row.response}}
