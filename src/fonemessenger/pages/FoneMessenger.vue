@@ -225,7 +225,7 @@ export default {
     ...mapGetters({
       messages: 'messages',
       state: 'messagesState',
-      total: 'messagesCount',
+      meta: 'messagesMeta',
       providers: 'providers',
       pageSize: 'pageSize',
       balance: 'balance'
@@ -235,6 +235,9 @@ export default {
     },
     loading () {
       return this.state === 'LOADING'
+    },
+    total() {
+      return this.meta.total
     }
   }
 }
