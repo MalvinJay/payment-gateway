@@ -59,11 +59,10 @@ export default {
     EventBus.$on('tabNumber', (val) => {
         this.activeName = val
     })
+
     this.$store.dispatch('getTransactions', {search_value: 'cashout'})
     this.$store.dispatch('getQueues')
     this.$store.dispatch('getFailed')
-
-    // this.$store.dispatch('getJobs')
     this.$store.dispatch('getFields')
   },
   beforeDestroy () {
@@ -75,9 +74,9 @@ export default {
     },
     sendMessage () {
         this.$cable.perform({
-            channel: 'ChatChannel',
-            action: 'send_message',
-            data: { content: this.message }
+          channel: 'ChatChannel',
+          action: 'send_message',
+          data: { content: this.message }
         })
     }
   },
@@ -97,6 +96,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 
 </style>

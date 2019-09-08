@@ -161,7 +161,8 @@ export default {
     var query = ``
     if (this.present(form)) {
       query = query + `?date_value=${form.date}&time_interval=date`
-    } else {
+    }
+    else {
       query = `?time_interval=day`
     }
     return query
@@ -198,6 +199,9 @@ export default {
       }
       if (this.present(filters.name)) {
         query = query + `&user_group=${filters.name}`
+      }
+      if (this.present(filters.date_value)) {
+        query = query + `&date_value=${filters.date_value}`
       }
 
       // if (this.empty(filters.from) &&

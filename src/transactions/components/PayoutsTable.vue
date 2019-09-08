@@ -231,8 +231,7 @@ export default {
     }
   },
   created () {
-    // this.$store.dispatch('getPayouts', {search_value: 'cashout'})
-    this.$store.dispatch('getTransactions', {search_value: 'cashin'})
+    this.$store.dispatch('getPayouts')
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'payouts')
@@ -258,50 +257,48 @@ export default {
         // }
     },
     tableRowClassName ({row, rowIndex}) {
-        if (row.has_dispute) {
-            return 'transactions-table-body warning-row'
-        } else {
-            return 'transactions-table-body'
-        }
+      if (row.has_dispute) {
+          return 'transactions-table-body warning-row'
+      } else {
+          return 'transactions-table-body'
+      }
     },
     handleCurrentChange (val) {
-        // this.$store.dispatch('getPayouts', {page: val, cache: false})
-        this.$store.dispatch('getTransactions', {search_value: 'cashin', page: val, cache: false})
+      this.$store.dispatch('getPayouts', {page: val, cache: false})
     },
     fetchTransactions () {
-      // this.$store.dispatch('getPayouts', {cache: false})
-      this.$store.dispatch('getTransactions', {search_value: 'cashin', cache: false})
+      this.$store.dispatch('getPayouts', {cache: false})
     },
     close () {
-        this.form = {
-            sender_amount: '',
-            sender_currency: 'GHS',
-            recipient_amount: '',
-            recipient_currency: 'GHS',
-            recipient_no: '',
-            recipient_name: '',
-            provider: '',
-            country_code: 'GH',
-            service_code: 'cashin',
-            live: false
-        }
-        this.dialogVisible = false
+      this.form = {
+          sender_amount: '',
+          sender_currency: 'GHS',
+          recipient_amount: '',
+          recipient_currency: 'GHS',
+          recipient_no: '',
+          recipient_name: '',
+          provider: '',
+          country_code: 'GH',
+          service_code: 'cashin',
+          live: false
+      }
+      this.dialogVisible = false
     },
     handleTableCommand (command, row) {
-        switch (command) {
-            case 'edit':
-                this.$router.push(`payments/${row.id}`)
-                break
-            case 'open':
-                this.ticketVisible = true
-                this.transaction = row
-                break
-            case 'retry':
-                this.retry(row)
-                break
-            default:
-                break
-        }
+      switch (command) {
+          case 'edit':
+              this.$router.push(`payments/${row.id}`)
+              break
+          case 'open':
+              this.ticketVisible = true
+              this.transaction = row
+              break
+          case 'retry':
+              this.retry(row)
+              break
+          default:
+              break
+      }
     },
     retry (row) {
         var form = Utils.retryTransactions(row, 'payout')
@@ -310,26 +307,26 @@ export default {
 
         this.$store.dispatch('createPayouts', form)
         .then((response) => {
-            if (response.data.success) {
-                this.$message({
-                    message: 'Retry successful',
-                    type: 'success'
-                })
-                this.fetchTransactions()
-                this.dialogVisible = false
-                this.$store.dispatch('getBalance')
-            } else {
-                this.$message({
-                    type: 'error',
-                    message: response.data.response.error_message
-                })
-            }
+          if (response.data.success) {
+              this.$message({
+                  message: 'Retry successful',
+                  type: 'success'
+              })
+              this.fetchTransactions()
+              this.dialogVisible = false
+              this.$store.dispatch('getBalance')
+          } else {
+              this.$message({
+                  type: 'error',
+                  message: response.data.response.error_message
+              })
+          }
         }).catch((error) => {
-            const response = error.response
-            this.$message({
-                message: response.data.error,
-                type: 'error'
-            })
+          const response = error.response
+          this.$message({
+            message: response.data.error,
+            type: 'error'
+          })
         })
     },
     submitForm (formName) {

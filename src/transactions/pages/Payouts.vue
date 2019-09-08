@@ -41,11 +41,10 @@ export default {
     }
   },
   mounted () {
+    // this.$cable.subscribe({ channel: 'ChatChannel' })
     EventBus.$emit('sideNavClick', 'payouts')
-    // this.$store.dispatch('getPayouts')
-    this.$store.dispatch('getTransactions', {search_value: 'cashin', cache: false})
-
-    // this.$store.dispatch('getJobs')
+    
+    this.$store.dispatch('getPayouts')
     this.$store.dispatch('getQueues')
     this.$store.dispatch('getPending')
   },

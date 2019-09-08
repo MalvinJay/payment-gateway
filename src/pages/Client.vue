@@ -91,7 +91,8 @@ export default {
   methods: {
     init () {
         var time = {
-            time_interval: 'month'
+            time_interval: 'day',
+            statuses: ['succeeded']
         }
         this.$store.dispatch('setDashboardFilters', time)
         .then((response) => {
