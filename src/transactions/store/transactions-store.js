@@ -412,7 +412,7 @@ const actions = {
         commit(SET_TRANSACTIONS_STATE, 'DATA')
         commit(SET_TRANSACTIONS_META, response.data.response.data)
         commit(SET_TRANSACTIONS, response.data.response.data.transactions)
-        resolve()
+        resolve(response)
       }).catch((error) => {
         commit(SET_TRANSACTIONS_STATE, 'ERROR')
         console.log(error)

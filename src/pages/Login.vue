@@ -122,14 +122,12 @@ export default {
                 switch (response.data.response.message_type) {
                   case "needs_reset":
                     console.log("needs resetting")
-                    // this.$router.push('/forgot-password')
                       var win = window.open('/forgot-password', '_blank');
                       win.focus();
                   break;
 
                   case "failed_authorization":
                   this.loginTimes++;
-                    // this.$router.push('/help')
                     console.log("Failed Authorization")
 
                     if(this.loginTimes >= 3) {
