@@ -7,7 +7,7 @@
             <!-- <div style="height: 25px">
                 <el-switch active-text="Test" v-model="testData"></el-switch>
             </div>
-            
+
             <el-dropdown trigger="click">
                 <span class="el-dropdown-link">
                     <img class="img-fluid" src="../assets/images/icons/bell.svg" alt="">
@@ -69,15 +69,28 @@ export default {
   created () {
     // if (Object.keys(this.user).length === 0) {
     //   this.logout()
-    // }  
+    // }
   },
   methods: {
     searchButton () {
         this.loading = 'el-icon-loading'
         this.$store.dispatch('searchTransactions', {search: this.search})
-        .then(() => {
-            this.$router.push('/payments')
-            this.loading = 'el-icon-search'
+        .then((response) => {
+          console.log('Transaction:', response.data.response.data)
+          this.loading = 'el-icon-search'
+          switch (this.$route.name) {
+            case 'Payouts':
+              this.$router.push('/payments')
+            break;
+
+            case 'ViewTransactions':
+              this.$router.push('/receipts')
+            break;
+
+            default:
+
+            break;
+          }
         })
     },
     logout () {

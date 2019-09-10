@@ -19,7 +19,7 @@
                     </div>
                     </div>
                     <div>
-                        <el-button :disabled="error" @click="refund" :loading="loading" v-if="status === 'paid' &&  form.trans_type === 'cashout'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Refund</el-button>
+                        <el-button :disabled="error" @click="refund" :loading="loading" v-if="form.payment_status === 'paid' &&  form.trans_type === 'cashout'" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="undo icon"></i> Reserve</el-button>
                         <el-button v-if="!form.has_dispute" @click="ticketVisible = true" size="mini" class="z-depth-button bold-600 s-13 open-sans mini-button b-0" plain><i class="plus icon"></i> Open Ticket</el-button>
                         <el-dropdown class="ml-10" @command="command => handleTableCommand(command, form)" trigger="click">
                             <el-button size="mini" class="mr-0 cursor z-depth-button bold-600 s-13 open-sans mini-button b-0" plain icon="ellipsis horizontal icon"></el-button>
@@ -257,6 +257,7 @@ export default {
     },
     created () {
         // EventBus.$emit('sideNavClick', 'payments')
+        console.log('Form:', this.form)
     },
     methods: {
         handleTableCommand (command, row) {
@@ -276,30 +277,41 @@ export default {
            this.$store.dispatch('getCurrentTransaction', this.$route.params.id)
         },
         refund() {
-            this.loading = true
-            this.$store.dispatch('createRefund', this.form.reference)
-            .then((response) => {
-                if (response.data.success) {
-                    this.$message({
-                        type: 'success',
-                        message: 'Payment Refunded',
-                    })
-                    // EventBus.$emit('tabNumber', '3')
-                    // this.$router.push('/payments')
-                } else {
-                    this.$message({
-                        type: 'error',
-                        message: response.data.response.message
-                    })
-                }
-                this.loading = false
-            }).catch((error) => {
-                this.loading = false
-                const response = error.response
-                this.$message({
-                    message: response.data.response.error_message,
-                    type: 'error'
-                })
+          this.$confirm('Are you sure you want to reverse this transaction?', 'Warning', {
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+            type: 'warning'
+          }).then(() => {
+              this.loading = true
+              this.$store.dispatch('createRefund', this.form.reference)
+              .then((response) => {
+                  if (response.data.success) {
+                      this.$message({
+                          type: 'success',
+                          message: 'Payment Refunded',
+                      })
+                      // EventBus.$emit('tabNumber', '3')
+                      // this.$router.push('/payments')
+                  } else {
+                      this.$message({
+                          type: 'error',
+                          message: response.data.response.message
+                      })
+                  }
+                  this.loading = false
+              }).catch((error) => {
+                  this.loading = false
+                  const response = error.response
+                  this.$message({
+                      message: response.data.response.error_message,
+                      type: 'error'
+                  })
+              })
+            }).catch(() => {
+              this.$message({
+                  type: 'error',
+                  message: 'Reversal Cancel'
+              })
             })
         },
         clickRow (row, event, column) {
