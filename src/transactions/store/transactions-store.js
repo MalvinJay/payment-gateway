@@ -394,14 +394,18 @@ const actions = {
       })
     })
   },
-  [SEARCH_TRANSACTIONS] ({ state, commit, rootGetters }, {search}) {
+  [SEARCH_TRANSACTIONS] ({ state, commit, rootGetters }, { search }) {
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
     // var query = ''
     // // if (type) {
     // //   query = query + `statuses[]=${type}`
     // // }
     // query = query + `search_value=${search}`
-    var filters = {...state.transactions.filters, search_value: search}
+    console.log('Final Query:', ...state.transactions.filters)
+    var filters = {
+      ...state.transactions.filters,
+      search_value: search
+    }
     var fill = Utils.createQueryParams(filters)
     return new Promise((resolve, reject) => {
       apiCall({
@@ -412,6 +416,9 @@ const actions = {
         commit(SET_TRANSACTIONS_STATE, 'DATA')
         commit(SET_TRANSACTIONS_META, response.data.response.data)
         commit(SET_TRANSACTIONS, response.data.response.data.transactions)
+        // Trigger event to refresh transaction table
+        
+
         resolve(response)
       }).catch((error) => {
         commit(SET_TRANSACTIONS_STATE, 'ERROR')

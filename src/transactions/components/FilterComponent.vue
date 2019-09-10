@@ -195,7 +195,7 @@ export default {
         console.log('Route:', this.$route.name)
         if(this.$route.name === 'ViewTransactions') this.filters.search_value = 'cashout'
         if(this.$route.name === 'Payouts') this.filters.search_value = 'cashin'
-        
+
         this.$store.dispatch(this.dispatch, this.filters)
       },
       size (obj) {
@@ -288,6 +288,7 @@ export default {
         EventBus.$on('focus', this.keepVisible)
         this.$on('blur', this.keepVisible)
         this.$on('focus', this.keepVisible)
+        this.$on('resetFilters', this.resetFilters)
 
         console.log('focus here', this.$refs.messageDrop)
 
