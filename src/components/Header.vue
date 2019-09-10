@@ -1,7 +1,7 @@
 <template>
     <div class="flex justify-content-between h-100 header">
         <!-- <div> -->
-            <el-input @keyup.enter.native="searchButton" v-model="search" class="is-shadow border-rounded search-div" :prefix-icon="loading" placeholder="Search..."></el-input>
+            <el-input @keyup.enter.native="searchButton" v-model="search" class="is-shadow border-rounded search-div" :prefix-icon="loading" placeholder="Search transaction..."></el-input>
         <!-- </div> -->
         <div class="flex align-items-center justify-content-end header-side-panel">
             <!-- <div style="height: 25px">
@@ -74,9 +74,8 @@ export default {
   methods: {
     searchButton () {
         this.loading = 'el-icon-loading'
-        this.$store.dispatch('searchTransactions', {search: this.search})
+        this.$store.dispatch('searchTransactions', { search: this.search })
         .then((response) => {
-          console.log('Transaction:', response.data.response.data)
           this.loading = 'el-icon-search'
           switch (this.$route.name) {
             case 'Payouts':
