@@ -1,3 +1,3 @@
 export const GET_BASE_URI = 'https://api.flopay.io/'
-// export const GET_BASE_URI = 'https://3171fbe3.ngrok.io/'
+// export const GET_BASE_URI = 'https://a0c045dd.ngrok.io/'
 export const CTRL_KEY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='

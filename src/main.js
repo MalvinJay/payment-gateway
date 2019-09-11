@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import VueSweetalert2 from 'vue-sweetalert2'
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
@@ -11,7 +12,6 @@ import './assets/styles/element-variables.scss'
 import locale from 'element-ui/lib/locale/lang/en'
 import '@/assets/styles/app.scss'
 import components from './components'
-
 import store from './store/store.js'
 import VueMoment from 'vue-moment'
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
@@ -25,7 +25,7 @@ import highlightJs from 'highlight.js'
 // require('vue-tour/dist/vue-tour.css')
 
 // Vue.use(VueTour)
-
+Vue.use(VueSweetalert2)
 Vue.use(highlightJs)
 Vue.use(VueSession)
 // Vue.use(VueLocalStorage)
