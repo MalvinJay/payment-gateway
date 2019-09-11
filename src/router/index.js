@@ -80,37 +80,55 @@ let router = new Router({
         {
           path: '/receipts',
           name: 'ViewTransactions',
-          component: ViewTransactions
+          component: ViewTransactions,
+          meta: {
+            permissions: 'View Transactions'
+          }
         },
         {
           path: '/jobs',
           name: 'Jobs',
-          component: Jobs
+          component: Jobs,
+          meta: {
+            permission: 'permission',
+          }
         },
         {
           path: '/job/:id',
           name: 'JobDetails',
-          component: JobDetails
+          component: JobDetails,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/run/:id',
           name: 'RunDetails',
-          component: RunDetails
+          component: RunDetails,
         },
         {
           path: '/new-job',
           name: 'NewJob',
-          component: NewJob
+          component: NewJob,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/payments',
           name: 'Payouts',
-          component: Payouts
+          component: Payouts,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/payments/:id',
           name: 'ViewTransactionsDetails',
-          component: PaymentDetail
+          component: PaymentDetail,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/stock/dashboard',
@@ -135,32 +153,50 @@ let router = new Router({
         {
           path: '/fees',
           name: 'Fees',
-          component: Fees
+          component: Fees,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/topups',
           name: 'TopUps',
-          component: TopUps
+          component: TopUps,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/settlements',
           name: 'Settlements',
-          component: Settlements
+          component: Settlements,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/logs',
           name: 'Logs',
-          component: Logs
+          component: Logs,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/logs/:id',
           name: 'LogsDetails',
-          component: LogsDetails
+          component: LogsDetails,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/keys',
           name: 'APIKeys',
-          component: APIKeys
+          component: APIKeys,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/sandbox',
@@ -170,22 +206,34 @@ let router = new Router({
         {
           path: '/events',
           name: 'Events',
-          component: Events
+          component: Events,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/events/:id',
           name: 'EventsDetails',
-          component: EventsDetails
+          component: EventsDetails,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/webhooks',
           name: 'Webhooks',
-          component: Webhooks
+          component: Webhooks,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/webhooks/:id',
           name: 'WebhookDetails',
-          component: WebhookDetails
+          component: WebhookDetails,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/fees/:id',
@@ -195,7 +243,10 @@ let router = new Router({
         {
           path: '/contacts',
           name: 'Customers',
-          component: Customers
+          component: Customers,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/contacts/:id',
@@ -210,22 +261,34 @@ let router = new Router({
         {
           path: '/account',
           name: 'BsSettings',
-          component: BsSettings
+          component: BsSettings,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/teams',
           name: 'Teams',
-          component: Teams
+          component: Teams,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/roles',
           name: 'Roles',
-          component: Roles
+          component: Roles,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/branches',
           name: 'Branches',
-          component: Branches
+          component: Branches,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/disputes',
@@ -235,37 +298,58 @@ let router = new Router({
         {
           path: '/fonemessenger',
           name: 'FoneMessenger',
-          component: FoneMessenger
+          component: FoneMessenger,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/ussd',
           name: 'Ussd',
-          component: Ussd
+          component: Ussd,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/ussd/:id',
           name: 'UssdDetails',
-          component: UssdDetails
+          component: UssdDetails,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/accounts',
           name: 'Account',
-          component: Account
+          component: Account,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/accounts/:id',
           name: 'AccountDetail',
-          component: AccountDetail
+          component: AccountDetail,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/account-settlements',
           name: 'AccountSettlements',
-          component: AccountSettlements
+          component: AccountSettlements,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/account-fees',
           name: 'AccountFees',
-          component: AccountFees
+          component: AccountFees,
+          meta: {
+            permission: 'permission'
+          }
         }
       ]
     },
@@ -292,16 +376,22 @@ let router = new Router({
       name: 'ResetPassword',
       component: ResetPassword
     },
-    { path: '/404', component: NotFound },
-    { path: '*', redirect: '/' }
+    {
+      path: '/404',
+      component: NotFound
+    },
+    {
+      path: '*',
+      redirect: '/404'
+    }
   ]
 })
 
 router.beforeEach((to, from, next) => {
   console.log('to route', to)
   console.log('app', store.state.user)
-  console.log('login', localStorage.getItem('login'))
-  console.log('store', store)
+  console.log('permissions:', store.getters.permissions)
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
       next({
@@ -311,6 +401,10 @@ router.beforeEach((to, from, next) => {
     } else {
       store.dispatch('getToken')
       next()
+
+      // Implement Route user route-permissions here
+
+
     }
   } else if (to.matched.some(record => record.meta.guest)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
