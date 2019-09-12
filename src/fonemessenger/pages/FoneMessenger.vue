@@ -43,13 +43,14 @@
                                 </div>
                             </template>
                         </el-table-column>
-                      <el-table-column prop="delivery_status" label="delivery status" width="220">
+                      <el-table-column prop="delivery_status" label="delivery status" width="auto">
                           <template slot-scope="scope">
                             <div class="flex justify-content-between">
                               <the-tag v-if="scope.row.delivery_status === 'DELIVERED' || scope.row.delivery_status === 'Message delivered to handset'" status="success" title="DELIVERED"></the-tag>
                               <the-tag v-else-if="scope.row.delivery_status === null" status="failed" title="pending"></the-tag>
                               <the-tag v-else status="failed" :title="scope.row.delivery_status"></the-tag>
 
+                              <!--
                               <div v-if="scope.row.delivery_status == 'DELIVERED' || scope.row.delivery_status == 'Message delivered to handset'">
 
                               </div>
@@ -58,6 +59,7 @@
                                   <el-button @click="createLog(scope.row)" type="text" icon="undo icon" :loading="loadingRx" class="p-0"></el-button>
                                 </el-tooltip>
                               </div>
+                              -->
 
                             </div>
                           </template>
@@ -123,7 +125,7 @@ export default {
     return {
       test: true,
       columns: [
-        {label: 'message id', dataField: 'response_id', align: 'center', width: 'auto'},
+        {label: 'message id', dataField: 'response_id', align: 'center', width: '270'},
         {label: 'network', dataField: 'network_provider', align: 'center', width: '100'},
         {label: 'recipient', dataField: 'recipient_no', align: 'left', width: 'auto'},
       ],

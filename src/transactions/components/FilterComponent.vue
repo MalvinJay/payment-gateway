@@ -149,7 +149,7 @@ export default {
             {label: 'Failed', value: 'failed'}
         ],
         FonStatus: [
-          {label: 'Sent', value: 'sent'},
+          {label: 'Delivered', value: 'DELIVERED'},
           {label: 'Pending', value: 'pending'},
           {label: 'Failed', value: 'failed'}
         ],

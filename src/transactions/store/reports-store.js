@@ -131,7 +131,7 @@ const actions = {
               // }).catch((error) => {
               //   reject(error)
               // })
-          }, 5000)
+          }, 10000)
         }
       }).catch((error) => {
         commit(SET_FIELDS_STATE, 'ERROR')
