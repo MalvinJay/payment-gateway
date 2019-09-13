@@ -150,8 +150,20 @@ $border: #dcdfe6;
     }
 }
 
-.el-table .warning-row {
-  background: rgba(#983705, 0.04);
+.el-table { 
+  .el-table__body-wrapper {
+    table {
+      tbody {
+        .el-table__expanded-cell[class*=cell] {
+          padding: 20px!important;
+        }        
+      }
+    }
+  }
+
+  .warning-row {
+    background: rgba(#983705, 0.04);
+  }
 }
 
 .accounts-table-body{

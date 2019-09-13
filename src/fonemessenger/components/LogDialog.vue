@@ -189,7 +189,7 @@ export default {
                 })
             }
         })
-      }
+      },
     },
     computed: {
         ...mapGetters({

@@ -19,14 +19,14 @@
                     <el-button @click="logDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
                 </div>
             </div>
-            <div>
+            <div v-loading="loading">
                 <div class="center h-80" v-if="error">
-                    <div class="center flex-column">
-                        <p class="m-0 p-0">Unable to load this page</p>
-                        <el-button @click.prevent="fetchMessages" icon="sync icon" type="text">Retry</el-button>
-                    </div>
+                  <div class="center flex-column">
+                      <p class="m-0 p-0">Unable to load this page</p>
+                      <el-button @click.prevent="fetchMessages" icon="sync icon" type="text">Retry</el-button>
+                  </div>
                 </div>
-                <div v-loading="loading" v-else>
+                <div v-loading="loadingRetry" v-else>
                     <el-table
                       ref="fone"
                       @row-click="clickRow"
@@ -35,32 +35,83 @@
                       row-class-name="transactions-table-body"
                       header-row-class-name="transactions-table-header"
                       :data="messages">
-                        <el-table-column v-loading="loading" type="expand" width="55">
+                        <el-table-column type="expand" width="55">
                             <template slot-scope="props">
-                                <div class="pl-15">
-                                    <p class="blue-text s-13 bold-600">Message: </p>
-                                    <p class="s-12 gray">{{ props.row.message }}</p>
+                                <div class="pl-15 mb-2">
+                                  <p class="blue-text s-13 bold-600">Message: </p>
+                                  <p class="s-12 gray">{{ props.row.message }}</p>
                                 </div>
+                                
+                                <el-card v-if="props.row.reposted_logs.length > 0" class="pb-5">
+                                  <el-table
+                                    ref="reposted"
+                                    empty-text="No reposted message logs"
+                                    :row-style="styleObject"
+                                    row-class-name="transactions-table-body"
+                                    header-row-class-name="transactions-table-header"
+                                    :data="props.row.reposted_logs">
+                                      <el-table-column type="expand" width="55">
+                                          <template slot-scope="props">
+                                              <div class="pl-15">
+                                                <p class="blue-text s-13 bold-600">Message: </p>
+                                                <p class="s-12 gray">{{ props.row.message }}</p>
+                                              </div>
+                                          </template>
+                                      </el-table-column>
+                                    <el-table-column prop="delivery_status" label="delivery status" width="auto">
+                                        <template slot-scope="scope">
+                                          <div class="flex justify-content-between">
+                                            <the-tag v-if="scope.row.delivery_status === 'DELIVERED' || scope.row.delivery_status === 'Message delivered to handset'" status="success" title="DELIVERED"></the-tag>
+                                            <the-tag v-else-if="scope.row.delivery_status == 'REPOSETED'" status="success" title="REPOSETED"></the-tag>
+                                            <the-tag v-else-if="scope.row.delivery_status === null" status="failed" title="pending"></the-tag>
+                                            <the-tag v-else status="failed" :title="scope.row.delivery_status"></the-tag>
+
+
+                                            <div v-if="scope.row.delivery_status == 'DELIVERED' || scope.row.delivery_status == 'Message delivered to handset' || scope.row.delivery_status == 'REPOSETED'">
+                                            </div>
+                                            <div v-else>
+                                              <el-tooltip class="item" effect="dark" content="Resend SMS" placement="top">
+                                                <el-button @click="repostLog(scope.row)" type="text" icon="undo icon" :loading="loadingRx" class="p-0"></el-button>
+                                              </el-tooltip>
+                                            </div>
+                                          </div>
+                                        </template>
+                                    </el-table-column>
+                                      <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label" :width="column.width"></el-table-column>
+                                      <el-table-column prop="created_at" label="Sent At" width="auto">
+                                          <template slot-scope="scope">
+                                              {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
+                                          </template>
+                                      </el-table-column>
+                                      <el-table-column prop="" label="Delivered At" width="auto">
+                                          <template slot-scope="scope">
+                                            <div v-if="scope.row.callback_data">
+                                              <span class="bold-600">{{scope.row.callback_data.createdAt | moment("D MMM,YY hh:mm A")}}</span>
+                                            </div>
+                                            <div v-else>
+                                              N/A
+                                            </div>
+                                          </template>
+                                      </el-table-column>
+                                  </el-table>
+                                </el-card>
                             </template>
                         </el-table-column>
                       <el-table-column prop="delivery_status" label="delivery status" width="auto">
                           <template slot-scope="scope">
                             <div class="flex justify-content-between">
                               <the-tag v-if="scope.row.delivery_status === 'DELIVERED' || scope.row.delivery_status === 'Message delivered to handset'" status="success" title="DELIVERED"></the-tag>
+                              <the-tag v-else-if="scope.row.delivery_status == 'REPOSETED'" status="success" title="REPOSETED"></the-tag>
                               <the-tag v-else-if="scope.row.delivery_status === null" status="failed" title="pending"></the-tag>
                               <the-tag v-else status="failed" :title="scope.row.delivery_status"></the-tag>
 
-                              <!--
-                              <div v-if="scope.row.delivery_status == 'DELIVERED' || scope.row.delivery_status == 'Message delivered to handset'">
-
+                              <div v-if="scope.row.delivery_status == 'DELIVERED' || scope.row.delivery_status == 'Message delivered to handset' || scope.row.delivery_status == 'REPOSETED'">
                               </div>
                               <div v-else>
                                 <el-tooltip class="item" effect="dark" content="Resend SMS" placement="top">
-                                  <el-button @click="createLog(scope.row)" type="text" icon="undo icon" :loading="loadingRx" class="p-0"></el-button>
+                                  <el-button @click="repostLog(scope.row)" type="text" icon="undo icon" :loading="loadingRx" class="p-0"></el-button>
                                 </el-tooltip>
                               </div>
-                              -->
-
                             </div>
                           </template>
                       </el-table-column>
@@ -110,6 +161,7 @@
 
 <script>
 import EventBus from '../../event-bus.js'
+import { Utils } from '../../utils/services'
 import { mapGetters } from 'vuex'
 import LogDialog from '../components/LogDialog'
 import TopupAccount from '../components/TopupAccount'
@@ -135,6 +187,7 @@ export default {
         fontSize: '12px'
       },
       loadingRx: false,
+      loadingRetry: false,
       search: '',
       icon: 'el-icon-search',
       form: {
@@ -234,7 +287,49 @@ export default {
           type: 'error'
         })
       })
-    }
+    },
+    repostLog (row) {
+      this.loadingRetry = true
+
+      this.form.sms_id = row.response_id
+      this.form.is_repost = true
+
+      if (row.post_type !== 'single') {
+        this.form.file_url = ''
+        this.form.is_batch = true
+      } else {
+        this.form.message = row.message
+        this.form.contacts.push(row.recipient_no)
+        this.form.title = 'Message'
+        this.form.is_batch = false
+      }
+
+      this.$store.dispatch('createLog', this.form)
+      .then((response) => {
+          if (response.data.success) {
+              this.$message({
+                type: 'success',
+                message: 'Message reposted successfully'
+              })
+              this.$store.dispatch('getFoneMessengers', { cache: false })
+              this.$store.dispatch('getBalance')
+              this.loadingRetry = false
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.response.message
+            })
+            this.loadingRetry = false
+          }
+      }).catch((error) => {
+        this.loadingRetry = false
+        const response = error.response
+        this.$message({
+          message: 'Failed to repost message. Please try again',
+          type: 'error'
+        })
+      })
+    },
   },
   computed: {
     ...mapGetters({
