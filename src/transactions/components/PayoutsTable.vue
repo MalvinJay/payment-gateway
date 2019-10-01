@@ -438,7 +438,7 @@ export default {
       banks: 'bills'
     }),
     total () {
-      return this.meta.trans
+      return this.meta.totalCount
     },
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'
