@@ -37,6 +37,33 @@
                 <el-button size="mini" :loading="createLoading" @click="updateProfile('form')" class="z-depth-button s-13 b-0 bold-500 open-sans white-text" type="primary">Update Client Profile</el-button>
             </div>
         </el-card>
+
+
+        <!-- Set Password -->
+        <el-card class="my-2 card-0 custom">
+            <div class="flex align-items-baseline justify-content-between" slot="header">
+                <span class="header-text">Password Settings</span>
+            </div>
+            <div>
+                <el-row type="flex" justify="center">
+                    <el-col :sm="16" :lg="13">
+                        <el-form label-position="left" size="mini" ref="reset" hide-required-asterisk class="transaction-form py-20" :model="passReset" label-width="200px">
+                            <el-form-item v-for="(item, index) in setPassCol" :key="index" :label="item.label">
+                                <el-input v-model="passReset[item.model]" :type="type">
+                                    <i slot="suffix" @click="togglePassword" class="el-input__icon eye icon"></i>
+                                </el-input>
+                            </el-form-item>
+                        </el-form>
+                    </el-col>
+                </el-row>
+            </div>
+            <div class="el-card__footer flex justify-content-end">
+                <el-button size="mini" class="z-depth-button s-13 open-sans mini-button b-0" @click="$router.push('/forgot-password')">Forgot Password?</el-button>
+                <el-button size="mini" :loading="createLoading" @click="changePassword('reset')" class="z-depth-button s-13 b-0 bold-500 open-sans white-text" type="primary">Save Password</el-button>
+            </div>            
+        </el-card>
+
+
         <!-- Accounts -->
         <el-card class="my-2 card-0">
             <div class="flex align-items-baseline justify-content-between" slot="header">
@@ -96,6 +123,7 @@
                 </div>
             </div>
         </el-card>
+
         <!-- Privileges -->
         <el-card class="my-2">
             <div class="flex align-items-baseline justify-content-between" slot="header">
@@ -180,6 +208,11 @@ export default {
         { label: 'Business Address', type: 'input', model: 'address'},
         { label: 'City', type: 'input', model: 'city'}
       ],
+      setPassCol: [
+        { label: 'Current password', type: 'password', model: 'current_password', showPass: false},
+        { label: 'New password', type: 'password', model: 'password', showPass: false},
+        { label: 'Password confirmation', type: 'password', model: 'confirm_new', showPass: false}
+      ],
       styleObject: {
         fontSize: '12px'
       },
@@ -195,6 +228,13 @@ export default {
         {label: 'desciption', prop: 'description'}
       ],
       form: {},
+      type: 'password',
+      passReset: {
+        current_password: '',
+        password: '',
+        confirm_new: ''
+      },      
+      showPassword: false,
       createLoading: false,
       page: 1
     }
@@ -263,6 +303,84 @@ export default {
           }
         })
     },
+    togglePassword() {
+        this.type = this.type === 'password' ? 'text' : 'password'
+    },
+    changePassword (formName) {
+        if(this.passReset.password !== this.passReset.confirm_new){
+            this.$message({
+                message: 'New Password must match. Kindly check and try again',
+                type: 'error'
+            })            
+        }
+        else {
+            if(this.$route.query.token){
+                this.form.token = this.$route.query.token
+                this.makeRequest('resetPassword', formName)
+            } else {
+                if(localStorage.getItem('FTloginToken')){
+                    this.form.token = localStorage.getItem('FTloginToken')
+                }
+                else {
+                    this.form.token = localStorage.getItem('token')
+                }
+    
+                this.makeRequest('resetPassword', formName)
+            }
+        }
+    },
+    makeRequest(url, formName){
+        this.createLoading = true
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            //   console.log('Url to sent: ', url)
+            this.$store.dispatch(`${url}`, this.passReset)
+            .then((response) => {
+                if (response.data.success) {
+                    this.$message({
+                        message: response.data.response.message,
+                        type: 'success'
+                    })
+
+                    if (this.$session.has('client')) {
+                        // login sucessful
+                        this.$store.dispatch('getToken')
+                        .then((response) => {
+                            // SETTING TOKEN
+                            this.$session.set('token', response.data.access_token)
+                            this.$store.dispatch('setToken', response.data.access_token)
+                            this.$router.push('/')
+                        })
+                    } else {
+                        this.$message({
+                            message: 'Password Saved',
+                            type: 'success'
+                        })      
+                        this.$router.push('/login')
+                    }
+                } else {
+                    this.$message({
+                        message: response.data.response.message,
+                        type: 'error'
+                    })
+                }
+               this.createLoading = false
+            }).catch((error) => {
+               this.createLoading = false
+                this.$message({
+                    message: 'Error. Please try again later',
+                    type: 'error'
+                })
+            })
+          } else {
+           this.createLoading = false
+            this.$message({
+                message: 'Please fill out all the details',
+                type: 'error'
+            })
+          }
+        })
+    },    
     handleAvatarSuccess (res, file) {
         this.imageUrl = URL.createObjectURL(file.raw)
     },

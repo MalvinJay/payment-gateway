@@ -43,7 +43,11 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label">
+                    <!-- <template slot-scope="scope" v-if="column.dataField === 'charged_amount'">
+                        <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.charged_amount | money}}</p>
+                    </template> -->
+                </el-table-column>
                 <el-table-column prop="created_at" label="Date" width="auto">
                     <template slot-scope="scope">
                         {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
@@ -55,7 +59,7 @@
                         <!-- <div class="status" v-if="scope.row.has_dispute"></div> -->
                         <div>
                             <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon cursor first-icon"></i> -->
-                            <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                            <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)">
                                 <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
                                 <el-dropdown-menu class="w-200" slot="dropdown">
                                     <el-dropdown-item disabled>
@@ -148,7 +152,8 @@ export default {
       columns: [
         {label: 'Customer', dataField: 'customer', width: 'auto'},
         {label: 'Reference', dataField: 'reference', width: 'auto'},
-        {label: 'type', dataField: 'transaction_type', width: '100px'}
+        {label: 'fee', dataField: 'charged_amount', width: 'auto'},
+        {label: 'net', dataField: 'net_amount', width: 'auto'},
       ],
       styleObject: {
         fontSize: '12px'

@@ -90,7 +90,7 @@ let router = new Router({
           name: 'Jobs',
           component: Jobs,
           meta: {
-            permission: 'permission',
+            permission: 'permission'
           }
         },
         {
@@ -104,7 +104,7 @@ let router = new Router({
         {
           path: '/run/:id',
           name: 'RunDetails',
-          component: RunDetails,
+          component: RunDetails
         },
         {
           path: '/new-job',
@@ -401,10 +401,6 @@ router.beforeEach((to, from, next) => {
     } else {
       store.dispatch('getToken')
       next()
-
-      // Implement Route user route-permissions here
-
-
     }
   } else if (to.matched.some(record => record.meta.guest)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {

@@ -62,7 +62,7 @@
                             <i v-if="scope.row.has_dispute" class="exclamation icon red-text"></i>
                             <div>
                                 <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i> -->
-                                <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                                <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)">
                                     <!-- <i class="ellipsis horizontal icon m-0 mr-0 blue-text cursor"></i> -->
                                     <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
                                     <el-dropdown-menu class="w-200" slot="dropdown">
