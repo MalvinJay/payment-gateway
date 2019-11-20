@@ -5,7 +5,9 @@ var axiosCall = (data) => {
     method: data.method === undefined ? 'POST' : data.method,
     url: data.url,
     headers: {
-      Authorization: 'Bearer ' + data.token
+      Authorization: 'Bearer ' + data.token,
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json'
     },
     data: data.data,
     params: data.parameters
