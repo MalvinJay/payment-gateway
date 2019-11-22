@@ -40,7 +40,7 @@
 
 
         <!-- Set Password -->
-        <el-card class="my-2 card-0 custom">
+        <el-card class="my-2 card-0 custom" v-loading="changePassword">
             <div class="flex align-items-baseline justify-content-between" slot="header">
                 <span class="header-text">Password Settings</span>
             </div>
@@ -59,7 +59,7 @@
             </div>
             <div class="el-card__footer flex justify-content-end">
                 <el-button size="mini" class="z-depth-button s-13 open-sans mini-button b-0" @click="$router.push('/forgot-password')">Forgot Password?</el-button>
-                <el-button size="mini" :loading="createLoading" @click="changePassword('reset')" class="z-depth-button s-13 b-0 bold-500 open-sans white-text" type="primary">Save Password</el-button>
+                <el-button size="mini" :loading="changePassword" @click="changePass('reset')" class="z-depth-button s-13 b-0 bold-500 open-sans white-text" type="primary">Save Password</el-button>
             </div>            
         </el-card>
 
@@ -236,6 +236,7 @@ export default {
       },      
       showPassword: false,
       createLoading: false,
+      changePassword: false,
       page: 1
     }
   },
@@ -306,15 +307,15 @@ export default {
     togglePassword() {
         this.type = this.type === 'password' ? 'text' : 'password'
     },
-    changePassword (formName) {
+    changePass (formName) {
         if(this.passReset.password !== this.passReset.confirm_new){
             this.$message({
                 message: 'New Password must match. Kindly check and try again',
                 type: 'error'
-            })            
+            })        
         }
         else {
-            if(this.$route.query.token){
+            if(this.$route.query.token) {
                 this.form.token = this.$route.query.token
                 this.makeRequest('resetPassword', formName)
             } else {
@@ -330,7 +331,7 @@ export default {
         }
     },
     makeRequest(url, formName){
-        this.createLoading = true
+        this.changePassword = true
         this.$refs[formName].validate((valid) => {
           if (valid) {
             //   console.log('Url to sent: ', url)
@@ -364,16 +365,16 @@ export default {
                         type: 'error'
                     })
                 }
-               this.createLoading = false
+               this.changePassword = false
             }).catch((error) => {
-               this.createLoading = false
+               this.changePassword = false
                 this.$message({
                     message: 'Error. Please try again later',
                     type: 'error'
                 })
             })
           } else {
-           this.createLoading = false
+           this.changePassword = false
             this.$message({
                 message: 'Please fill out all the details',
                 type: 'error'

@@ -152,8 +152,8 @@ export default {
       columns: [
         {label: 'Customer', dataField: 'customer', width: 'auto'},
         {label: 'Reference', dataField: 'reference', width: 'auto'},
-        {label: 'fee', dataField: 'charged_amount', width: 'auto'},
-        {label: 'net', dataField: 'net_amount', width: 'auto'},
+        {label: 'fee', dataField: 'charged_amount', width: '75'},
+        {label: 'net', dataField: 'net_amount', width: '75'},
       ],
       styleObject: {
         fontSize: '12px'
@@ -220,7 +220,7 @@ export default {
         this.$store.dispatch('getTransactions', {search_value: 'cashout', page: val, cache: false})
     },
     fetchTransactions () {
-      this.$store.dispatch('getTransactions', {search_value: 'cashout', cache: false})
+        this.$store.dispatch('getTransactions', {search_value: 'cashout', cache: false})
     },
     handleTableCommand (command, row) {
         switch (command) {
