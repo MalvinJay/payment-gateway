@@ -151,6 +151,8 @@ export default {
         FonStatus: [
           {label: 'Delivered', value: 'DELIVERED'},
           {label: 'Pending', value: 'pending'},
+          {label: 'Reposted', value: 'reposted'},
+          {label: 'Undelivered', value: 'UNDELIV'},
           {label: 'Failed', value: 'failed'}
         ],
         Provider: [
