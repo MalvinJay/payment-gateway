@@ -41,7 +41,7 @@
                                   <p class="blue-text s-13 bold-600">Message: </p>
                                   <p class="s-12 gray">{{ props.row.message }}</p>
                                 </div>
-                                
+
                                 <el-card v-if="props.row.reposted_logs.length > 0" class="pb-5">
                                   <el-table
                                     ref="reposted"
@@ -101,7 +101,7 @@
                           <template slot-scope="scope">
                             <div class="flex justify-content-between">
                               <the-tag v-if="scope.row.delivery_status === 'DELIVERED' || scope.row.delivery_status === 'Message delivered to handset'" status="success" title="DELIVERED"></the-tag>
-                              <the-tag v-else-if="scope.row.delivery_status == 'REPOSETED'" status="success" title="REPOSETED"></the-tag>
+                              <the-tag v-else-if="scope.row.delivery_status == 'REPOSTED'" status="success" title="REPOSTED"></the-tag>
                               <the-tag v-else-if="scope.row.delivery_status === null" status="failed" title="pending"></the-tag>
                               <the-tag v-else status="failed" :title="scope.row.delivery_status"></the-tag>
 
@@ -145,6 +145,7 @@
                             <span class="bold-600">{{messages.length}}</span> results of <span class="bold-600">{{total}}</span>
                         </div>
                         <el-pagination class="my-2 flex justify-content-end"
+
                             @current-change="handleCurrentChange"
                             :page-size="pageSize"
                             layout="prev, pager, next"

@@ -217,46 +217,79 @@ const actions = {
       })
     })
   },
-  [SEND_TO_BUCKET] ({state, commit, rootGetters}, file){
+
+  [SEND_TO_BUCKET] ({ state, commit, rootGetters }, file) {
     commit(SET_FILE_STATE, 'LOADING')
-    function getFileExtension (filename) {
-      return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined
-    }
-
-    var fileExtension = getFileExtension(file.name)
-
-    console.log('File Extension:', fileExtension)
     return new Promise((resolve, reject) => {
       apiCall({
         url: `https://3fr3gyg66k.execute-api.eu-central-1.amazonaws.com/default/presignedUrl`,
-        method: 'GET',
+        method: 'POST',
         data: {
-          "bucket": AWS_BUCKET,
-          "filename": file.name
-        },
-        token: rootGetters.token
-      })
-      .then(response => {
-        console.log('Presigned url:', response)
+          bucket: 'mbackofficedata',
+          filename: file.name
+        }
+      }).then((response) => {
+        console.log('Presigned URL:', response.data)
         apiCall({
-          url: response,
-          method: 'PUT',
-          data: {file},
-          token: rootGetters.token
+          url: response.data,
+          method: 'POST',
+          data: {
+          }
+        }).then((response) => {
+          resolve(response)
+        }).catch((error) => {
+          console.log(error)
+          reject(error)
         })
-        .then(response => {
-          console.log('Response:', response)
-        })
-        .catch(errors => {
-          console.error(errors)
-        })
-      })
-      .catch(error => {
+        resolve(response)
+      }).catch(error => {
         reject(error)
         return error
       })
     })
   },
+
+  // [SEND_TO_BUCKET] ({ state, commit, rootGetters }, file) {
+  //   commit(SET_FILE_STATE, 'LOADING')
+  //   function getFileExtension (filename) {
+  //     return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined
+  //   }
+
+  //   var fileExtension = getFileExtension(file.name)
+
+  //   console.log('File Extension:', fileExtension)
+  //   return new Promise((resolve, reject) => {
+  //     apiCall({
+  //       url: `https://3fr3gyg66k.execute-api.eu-central-1.amazonaws.com/default/presignedUrl`,
+  //       method: 'GET',
+  //       data: {
+  //         "bucket": AWS_BUCKET,
+  //         "filename": file.name
+  //       },
+  //       token: rootGetters.token
+  //     })
+  //     .then(response => {
+  //       console.log('Presigned url:', response)
+  //       apiCall({
+  //         url: response,
+  //         method: 'PUT',
+  //         data: {file},
+  //         token: rootGetters.token
+  //       })
+  //       .then(response => {
+  //         console.log('Response:', response)
+  //       })
+  //       .catch(errors => {
+  //         console.error(errors)
+  //       })
+  //     })
+  //     .catch(error => {
+  //       reject(error)
+  //       return error
+  //     })
+  //   })
+  // },
+
   [DELETE_JOB] ({ rootGetters }, id) {
     return new Promise((resolve, reject) => {
       apiCall({
