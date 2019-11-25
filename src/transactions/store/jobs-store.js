@@ -218,78 +218,77 @@ const actions = {
     })
   },
 
+  [SEND_TO_BUCKET] ({ state, commit, rootGetters }, file) {
+    commit(SET_FILE_STATE, 'LOADING')
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `https://3fr3gyg66k.execute-api.eu-central-1.amazonaws.com/default/presignedUrl`,
+        method: 'POST',
+        data: {
+          bucket: 'mbackofficedata',
+          filename: file.name
+        }
+      }).then((response) => {
+        console.log('Presigned URL:', response.data)
+        apiCall({
+          url: response.data,
+          method: 'POST',
+          data: {
+          }
+        }).then((response) => {
+          resolve(response)
+        }).catch((error) => {
+          console.log(error)
+          reject(error)
+        })
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+        return error
+      })
+    })
+  },
+
   // [SEND_TO_BUCKET] ({ state, commit, rootGetters }, file) {
   //   commit(SET_FILE_STATE, 'LOADING')
+  //   function getFileExtension (filename) {
+  //     return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined
+  //   }
+
+  //   var fileExtension = getFileExtension(file.name)
+
+  //   console.log('File Extension:', fileExtension)
   //   return new Promise((resolve, reject) => {
   //     apiCall({
   //       url: `https://3fr3gyg66k.execute-api.eu-central-1.amazonaws.com/default/presignedUrl`,
-  //       method: 'POST',
+  //       method: 'GET',
   //       data: {
-  //         bucket: 'mbackofficedata',
-  //         filename: file.name
-  //       }
-  //     }).then((response) => {
-  //       console.log('Presigned URL:', response.data)
+  //         "bucket": AWS_BUCKET,
+  //         "filename": file.name
+  //       },
+  //       token: rootGetters.token
+  //     })
+  //     .then(response => {
+  //       console.log('Presigned url:', response)
   //       apiCall({
-  //         url: response.data,
-  //         method: 'POST',
-  //         data: {   
-  //         }
-  //       }).then((response) => {
-  //         resolve(response)
-  //       }).catch((error) => {
-  //         console.log(error)
-  //         reject(error)
+  //         url: response,
+  //         method: 'PUT',
+  //         data: {file},
+  //         token: rootGetters.token
   //       })
-  //       resolve(response)
-  //     }).catch(error => {
+  //       .then(response => {
+  //         console.log('Response:', response)
+  //       })
+  //       .catch(errors => {
+  //         console.error(errors)
+  //       })
+  //     })
+  //     .catch(error => {
   //       reject(error)
   //       return error
   //     })
   //   })
   // },
-
-  [SEND_TO_BUCKET] ({ state, commit, rootGetters }, file) {
-    commit(SET_FILE_STATE, 'LOADING')
-    function getFileExtension (filename) {
-      return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined
-    }
-
-    var fileExtension = getFileExtension(file.name)
-
-    var BucketName = AWS_BUCKET
-    var accessKeyId = ACCESS_KEY_ID
-    var SecretAccessKey = SECRET_ACCESS_KEY
-
-    var s3 = new S3({
-      apiVersion: '2006-03-01',
-      region: 'eu-central-1',
-      accessKeyId: accessKeyId,
-      secretAccessKey: SecretAccessKey,
-      params: {Bucket: BucketName}
-    })
-    var albumFileKey = encodeURIComponent('flopay-file-batch') + '/'
-    var fileKey = albumFileKey + Utils.randomString2(3) + '_' + file.name
-    // batchUploadsChannel.subscribe(fileKey, _this.onFileProcessed)
-    var params = {Bucket: BucketName, Key: fileKey, Body: file}
-    return new Promise((resolve, reject) => {
-      s3.upload(params, function (err, data) {
-        if (err) {
-          console.log('err', err)
-          commit(SET_FILE_STATE, 'ERROR')
-          reject(err)
-          return
-        }
-        let admin = {
-          s3_object_key: data.key,
-          file_type: fileExtension
-        }
-        resolve(data)
-        commit(SET_FILE_UPLOAD_DETAILS, data)
-        commit(SET_FILE_STATE, 'DATA')
-      })
-    })
-  },
 
   [DELETE_JOB] ({ rootGetters }, id) {
     return new Promise((resolve, reject) => {
