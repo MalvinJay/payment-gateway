@@ -105,3 +105,6 @@ export const SEARCH_TRANSACTIONS = 'searchTransactions'
 
 // TICKET
 export const CREATE_TICKET = 'createTicket'
+
+// TICKET
+export const REQUEST_SMS = 'requestSMS'

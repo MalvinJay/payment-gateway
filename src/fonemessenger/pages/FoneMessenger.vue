@@ -7,16 +7,40 @@
                 </div>
 
                 <div class="search_n_roles flex w-50">
-                  <el-input @keyup.enter.native="searchButton" :prefix-icon="icon" v-model="search" clearable class="search-div mr-2" size="mini" placeholder="Search phone number"></el-input>
+                  <el-input @keyup.enter.native="searchButton" :prefix-icon="icon" v-model="search" clearable @clear="reset" class="search-div mr-2" size="mini" placeholder="Search phone number"></el-input>
                 </div>
 
-                <div class="flex align-items-center">
-                    <p class="balance-info gray-text border-right">{{balance.fon_messanger_balance | money }}</p>
-                    <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
-                        <el-button @click.prevent="fetchMessages" icon="undo icon" type="text"></el-button>
-                    </el-tooltip>
-                    <el-button @click="topupDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Topup</el-button>
-                    <el-button @click="logDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
+                <div class="flex align-items-center relative">
+                  <p class="balance-info gray-text border-right">{{balance.fon_messanger_balance | money }}</p>
+
+                  <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
+                    <el-button @click.prevent="fetchMessages" icon="undo icon" type="text"></el-button>
+                  </el-tooltip>
+
+                  <el-button @click="exportVisible = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text">
+                    <i class="file alternate outline icon"></i>
+                    Export SMS
+                  </el-button>
+                  <!-- <el-button @click.prevent="fetchMessages" icon="undo icon" type="text"></el-button> -->
+
+                  <div class="relative">
+                    <el-dropdown class="" @command="command => handleTableCommand(command)" trigger="click">
+                        <el-button class="mr-0 ml-2 cursor z-depth-button bold-600 s-13 open-sans mini-button b-0" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
+                        <el-dropdown-menu class="w-auto p-10" slot="dropdown">
+                          <!-- <el-dropdown-item command="topup" class="s-12"><i class="plus icon"></i> Topup</el-dropdown-item>
+                          <el-dropdown-item command="new" class="s-12"><i class="plus icon"></i> New</el-dropdown-item> -->
+                          <el-button @click="topupDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Topup</el-button>
+                          <el-button @click="logDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                  </div>
+
+                  <!--
+                    <div>
+                      <el-button @click="topupDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> Topup</el-button>
+                      <el-button @click="logDialog = true" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text"><i class="plus icon"></i> New</el-button>
+                    </div>
+                  -->
                 </div>
             </div>
             <div v-loading="loading">
@@ -62,14 +86,11 @@
                                         <template slot-scope="scope">
                                           <div class="flex justify-content-between">
                                             <the-tag v-if="scope.row.delivery_status === 'DELIVERED' || scope.row.delivery_status === 'Message delivered to handset'" status="success" title="DELIVERED"></the-tag>
-                                            <the-tag v-else-if="scope.row.delivery_status == 'REPOSETED'" status="success" title="REPOSETED"></the-tag>
+                                            <the-tag v-else-if="scope.row.delivery_status == 'REPOSTED'" status="success" title="REPOSTED"></the-tag>
                                             <the-tag v-else-if="scope.row.delivery_status === null" status="failed" title="pending"></the-tag>
                                             <the-tag v-else status="failed" :title="scope.row.delivery_status"></the-tag>
 
-
-                                            <div v-if="scope.row.delivery_status == 'DELIVERED' || scope.row.delivery_status == 'Message delivered to handset' || scope.row.delivery_status == 'REPOSETED'">
-                                            </div>
-                                            <div v-else>
+                                            <div v-if="scope.row.delivery_status === 'pending' || scope.row.delivery_status === 'UNDELIV'">
                                               <el-tooltip class="item" effect="dark" content="Resend SMS" placement="top">
                                                 <el-button @click="repostLog(scope.row)" type="text" icon="undo icon" :loading="loadingRx" class="p-0"></el-button>
                                               </el-tooltip>
@@ -101,13 +122,11 @@
                           <template slot-scope="scope">
                             <div class="flex justify-content-between">
                               <the-tag v-if="scope.row.delivery_status === 'DELIVERED' || scope.row.delivery_status === 'Message delivered to handset'" status="success" title="DELIVERED"></the-tag>
-                              <the-tag v-else-if="scope.row.delivery_status == 'REPOSTED'" status="success" title="REPOSTED"></the-tag>
+                              <the-tag v-else-if="scope.row.delivery_status === 'REPOSTED'" status="success" title="REPOSTED"></the-tag>
                               <the-tag v-else-if="scope.row.delivery_status === null" status="failed" title="pending"></the-tag>
                               <the-tag v-else status="failed" :title="scope.row.delivery_status"></the-tag>
 
-                              <div v-if="scope.row.delivery_status == 'DELIVERED' || scope.row.delivery_status == 'Message delivered to handset' || scope.row.delivery_status == 'REPOSETED'">
-                              </div>
-                              <div v-else>
+                              <div v-if="scope.row.delivery_status === 'pending' || scope.row.delivery_status === 'UNDELIV'">
                                 <el-tooltip class="item" effect="dark" content="Resend SMS" placement="top">
                                   <el-button @click="repostLog(scope.row)" type="text" icon="undo icon" :loading="loadingRx" class="p-0"></el-button>
                                 </el-tooltip>
@@ -157,15 +176,41 @@
         </div>
         <log-dialog :modalVisible="logDialog"></log-dialog>
         <topup-account :modalVisible="topupDialog"></topup-account>
+
+        <!-- Fon Messeges Report -->
+      <el-dialog custom-class="export-dialog" title="Export SMS" :visible="exportVisible" width="25%">
+        <div class="flex justify-content-center new-export-bg ">
+            <el-form hide-required-asterisk class="transaction-form my-2" size="mini" style="width: 90%" ref="form" :model="form" label-position="top">
+              <el-form-item label="Select Date">
+                  <el-date-picker
+                  v-model="dateColumns"
+                  type="daterange"
+                  @change="dateRangeClicked"
+                  start-placeholder="Start date"
+                  end-placeholder="End date">
+                  </el-date-picker>
+              </el-form-item>
+              <el-form-item class="flex justify-content-end">
+                <div class="flex">
+                    <el-button @click="close">Cancel</el-button>
+                    <a :href="`${GET_BASE_URI}v1/sms_delivery/${letsEcrypt}/download_file?${generateQueryParams}`"
+                    class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" @click="close" download>Download</a>
+                </div>
+              </el-form-item>
+            </el-form>
+          </div>
+      </el-dialog>
     </el-card>
 </template>
 
 <script>
 import EventBus from '../../event-bus.js'
-import { Utils } from '../../utils/services'
+import Utils from '../../utils/services'
 import { mapGetters } from 'vuex'
 import LogDialog from '../components/LogDialog'
 import TopupAccount from '../components/TopupAccount'
+import { GET_BASE_URI } from '../../store/constants'
+import moment from 'moment'
 
 export default {
   name: 'Sms',
@@ -176,6 +221,7 @@ export default {
   },
   data () {
     return {
+      dummyDate: '11/24/2019 04:29:36',
       test: true,
       columns: [
         {label: 'message id', dataField: 'response_id', align: 'center', width: '270'},
@@ -195,6 +241,12 @@ export default {
         is_batch: false,
         contacts: []
       },
+      reportForm: {
+        from: '',
+        to: ''
+      },
+      exportVisible: false,
+      GET_BASE_URI: GET_BASE_URI,
     }
   },
   created () {
@@ -211,10 +263,33 @@ export default {
   },
   beforeDestroy () {
     EventBus.$off('logModal', () => {
-       this.logDialog = false
+      this.logDialog = false
     })
   },
   methods: {
+    handleTableCommand (command) {
+      switch (command) {
+        case 'topup':
+          this.topupDialog = true
+        break
+        case 'new':
+          this.logDialog = true
+        break
+        default:
+
+        break
+      }
+    },
+    dateRangeClicked () {
+
+    },
+    reset() {
+      EventBus.$emit('resetFilters')
+    },
+    close () {
+      this.exportVisible = false
+      this.ready = false
+    },
     handleCurrentChange (val) {
       this.$store.dispatch('getFoneMessengers', {page: val, cache: false})
     },
@@ -291,6 +366,7 @@ export default {
     },
     repostLog (row) {
       this.loadingRetry = true
+      console.log('Report SMS body:', row)
 
       this.form.sms_id = row.response_id
       this.form.is_repost = true
@@ -339,7 +415,8 @@ export default {
       meta: 'messagesMeta',
       providers: 'providers',
       pageSize: 'pageSize',
-      balance: 'balance'
+      balance: 'balance',
+      user: 'user',
     }),
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'
@@ -349,13 +426,59 @@ export default {
     },
     total() {
       return this.meta.total
-    }
+    },
+    letsEcrypt() {
+      const CTRL_KEY = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
+      var Base64 = {_keyStr: CTRL_KEY, encode: function (e) { var t = ''; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 }t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ''; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9\+\/\=]/g, ''); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } }t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/\r\n/g, '\n'); var t = ''; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ''; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t }}
+      var encodedString = Base64.encode('5b1892ab46d583da4542d5951ccf6d38ec27a6a8a3f1e3d9bbeb730827731314')
+
+      return encodedString
+    },
+    dateColumns: {
+      get () {
+        var from = this.reportForm.from
+        var to = this.reportForm.to
+        var arr = [from, to]
+        return arr
+      },
+      set (value) {
+        this.reportForm.from = moment(value[0]).format('YYYY-MM-DD')
+        this.reportForm.to = moment(value[1]).format('YYYY-MM-DD')
+      }
+    },
+    generateQueryParams() {
+      var query = `till_number=${this.user.client.code}`
+
+      if (Utils.present(this.reportForm.from)) {
+        query = query += `&from=${this.reportForm.from}`
+      }
+      if (Utils.present(this.reportForm.to)) {
+        query = query += `&to=${this.reportForm.to}`
+      }
+
+      // if (Utils.present(this.form.fields)) {
+      //   if (this.form.fields.length === 1) {
+      //     query = query += `&fields[]=${this.form.fields}`
+      //   } else {
+      //     var q = this.form.fields.split(',')
+      //     q.forEach(element => {
+      //       query = query += `&fields[]=${element}`
+      //     })
+      //   }
+      // }
+
+      console.log('Query:', query)
+      return query
+    },
   }
 }
 </script>
 
 
 <style lang="scss" scoped>
+  .relative {
+    position: relative;
+  }
   .mini-menu{
       position: absolute;
       top: 8px;
@@ -411,9 +534,7 @@ export default {
       padding-left: 15px;
   }
   .mini-button{
-      // height: 30px;
       line-height: 1em;
-      // padding: 0 10px;
       padding: 7px 10px !important;
       color: rgba(0,0,0,.6);
 

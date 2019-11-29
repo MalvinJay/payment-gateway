@@ -1,7 +1,10 @@
 <template>
     <div class="flex justify-content-between h-100 header">
         <!-- <div> -->
-            <el-input @keyup.enter.native="searchButton" v-model="search" class="is-shadow border-rounded search-div" :prefix-icon="loading" placeholder="Search transaction..."></el-input>
+            <el-input @keyup.enter.native="searchButton"
+            v-model="search" class="is-shadow border-rounded search-div"
+            :prefix-icon="loading"
+            placeholder="Search transaction by reference, phone or trans. ID"></el-input>
         <!-- </div> -->
         <div class="flex align-items-center justify-content-end header-side-panel">
             <!-- <div style="height: 25px">
