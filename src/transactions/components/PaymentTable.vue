@@ -30,18 +30,18 @@
             :data="filteredTransactions">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="amount" label="Amount" width="150">
-                    <template slot-scope="scope">
-                        <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.receiver_amount | money}}</p>
-                    </template>
+                  <template slot-scope="scope">
+                    <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.gross_amount | money}}</p>
+                  </template>
                 </el-table-column>
-                <el-table-column prop="status" label="" width="auto">
-                    <template slot-scope="scope">
-                        <div class="flex">
-                            <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
-                            <the-tag v-else-if="scope.row.status.toLowerCase() === 'failed'" status="success" :title="scope.row.status" icon="close icon"></the-tag>
-                            <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
-                        </div>
-                    </template>
+                <el-table-column prop="status" label="" width="160">
+                  <template slot-scope="scope">
+                      <div class="flex">
+                        <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                        <the-tag v-else-if="scope.row.status.toLowerCase() === 'failed'" status="success" :title="scope.row.status" icon="close icon"></the-tag>
+                        <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
+                      </div>
+                  </template>
                 </el-table-column>
                 <el-table-column show-overflow-tooltip :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label">
                     <!-- <template slot-scope="scope" v-if="column.dataField === 'charged_amount'">
@@ -151,7 +151,9 @@ export default {
     return {
       columns: [
         {label: 'Customer', dataField: 'customer', width: 'auto'},
+        // {label: 'Network', dataField: 'provider_code', width: 'auto'},
         {label: 'Reference', dataField: 'reference', width: 'auto'},
+        {label: 'Trans. ID', dataField: 'provider_ref', width: 'auto'},
         {label: 'fee', dataField: 'charged_amount', width: '75'},
         {label: 'net', dataField: 'net_amount', width: '75'},
       ],

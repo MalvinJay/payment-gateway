@@ -143,16 +143,16 @@ export default {
         reason: false,
         amount: false,
         stati: [
-            // {label: 'All', value: 'all'},
-            {label: 'Success', value: 'succeeded'},
-            {label: 'Pending', value: 'pending'},
-            {label: 'Failed', value: 'failed'}
+          {label: 'Success', value: 'succeeded'},
+          {label: 'Pending', value: 'pending'},
+          {label: 'Failed', value: 'failed'}
         ],
         FonStatus: [
           {label: 'Delivered', value: 'DELIVERED'},
           {label: 'Pending', value: 'pending'},
           {label: 'Reposted', value: 'REPOSTED'},
           {label: 'Undelivered', value: 'UNDELIV'},
+          {label: 'Expired', value: 'EXPIRED'},
           {label: 'Failed', value: 'failed'}
         ],
         Provider: [
@@ -288,6 +288,8 @@ export default {
     mounted () {
         EventBus.$on('blur', this.keepVisible)
         EventBus.$on('focus', this.keepVisible)
+        EventBus.$on('resetFilters', this.resetFilters)
+
         this.$on('blur', this.keepVisible)
         this.$on('focus', this.keepVisible)
         this.$on('resetFilters', this.resetFilters)

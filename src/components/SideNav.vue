@@ -14,14 +14,7 @@
                 </el-popover>
             </div>
         </div>
-        <el-menu
-          router
-          :unique-opened="true"
-          :default-active="defaultActive"
-          active-text-color='#586ADA'
-          text-color="#999999"
-          background-color="#f1f6f8"
-        >
+        <el-menu router :unique-opened="true" :default-active="defaultActive" active-text-color='#586ADA' text-color="#999999" background-color="#f1f6f8">
             <el-menu-item route="/" index="dashboard">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/home.svg" alt="">

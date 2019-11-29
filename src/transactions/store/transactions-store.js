@@ -2,7 +2,7 @@ import { TRANSACTION_CREATE, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SE
   SET_CURRENT_TRANSACTION_STATE, SET_TRANSACTIONS_STATE, GET_QUEUE, SET_QUEUE, SET_QUEUE_STATE, SET_QUEUE_FILTERS,
   SET_QUEUE_META, SET_CURRENT_TRANSACTION, GET_FAILED, SET_FAILED,SET_FAILED_STATE, SET_FAILED_FILTERS, SET_FAILED_META,
   SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, ADD_TRANSACTION, SET_PENDING_STATE, SET_PENDING_META,
-  APPROVE_TRANSACTIONS, GET_CURRENT_TRANSACTION, CREATE_TICKET, REFUND_TRANSACTION
+  APPROVE_TRANSACTIONS, GET_CURRENT_TRANSACTION, CREATE_TICKET, REFUND_TRANSACTION, REQUEST_SMS
 } from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import { ctrlCall } from '../../store/ctrlCall'
@@ -417,7 +417,7 @@ const actions = {
         commit(SET_TRANSACTIONS_META, response.data.response.data)
         commit(SET_TRANSACTIONS, response.data.response.data.transactions)
         // Trigger event to refresh transaction table
-        
+
 
         resolve(response)
       }).catch((error) => {
@@ -456,7 +456,24 @@ const actions = {
         reject(error)
       })
     })
-  }
+  },
+  [REQUEST_SMS] ({ state, commit, rootGetters }, reference) {
+    commit(SET_CURRENT_TRANSACTION_STATE, 'LOADING')
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v2/sms/waec-resend?reference=${reference}`,
+        method: 'POST',
+        token: rootGetters.token
+      }).then((response) => {
+        commit(SET_CURRENT_TRANSACTION_STATE, 'DATA')
+        resolve(response)
+      }).catch((error) => {
+        commit(SET_CURRENT_TRANSACTION_STATE, 'ERROR')  
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
 }
 
 export default {

@@ -152,6 +152,9 @@ button{
 .w-200{
     width: 200px;
 }
+.w-auto {
+  width: auto;
+}
 .m-auto{
     margin: 0 auto;
 }
@@ -216,7 +219,7 @@ button{
     padding: 5px !important
 }
 .p-10{
-    padding: 10px;
+    padding: 10px!important;
 }
 .p-20{
     padding: 20px;
