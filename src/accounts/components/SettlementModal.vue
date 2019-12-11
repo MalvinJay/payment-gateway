@@ -46,7 +46,7 @@
                     </el-select>
                 </el-form-item> -->
                 <el-form-item label="Remarks">
-                    <el-input type="textarea" v-model="form.description"></el-input>
+                    <el-input type="textarea" v-model="form.remarks"></el-input>
                 </el-form-item>
             </el-form>
         </div>
@@ -129,7 +129,7 @@ export default {
                 this.form.live = !this.test
                 this.form.dummy = this.test
                 this.form.account_no = this.form.account_no ? this.form.account_no : 'others'
-                
+
                 this.$store.dispatch('createSettlement', this.form)
                 .then((response) => {
                     if (response.data.success) {
