@@ -99,41 +99,44 @@
           </el-card>
           <!-- sms -->
           <el-card class="my-2 card-0">
-              <div slot="header">
-                  <span class="blue-text bold-600 s-16">{{header}} SMS</span>
+            <div slot="header">
+                <span class="blue-text bold-600 s-16">{{header}} SMS</span>
+            </div>
+
+            <div v-if="form.payment_status == 'paid' && messages.length < 0" class="center h-80">
+              <div class="center flex-column">
+                <p class="m-0 p-0">Request for SMS</p>
+                <el-button @click.prevent="requestForSMS" icon="sync icon" type="text">Request</el-button>
               </div>
-              <div v-if="messages.length > 0">
-                <el-table ref="fone" empty-text="No messages to display" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="messages">
-                    <el-table-column type="expand" width="55">
-                        <template slot-scope="props">
-                            <div class="pl-15">
-                                <p class="blue-text s-13 bold-600">Message: </p>
-                                <p class="s-12 gray">{{ props.row.message }}</p>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in fonecolumns" :prop="column.dataField" :label="column.label"></el-table-column>
-                    <!-- <el-table-column show-overflow-tooltip label="Message text" prop="message"></el-table-column> -->
-                    <el-table-column width="80">
-                        <template slot-scope="scope">
-                            <div class="flex">
-                                <the-tag status="failed" :title="scope.row.post_type"></the-tag>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="updated_at" label="Date" width="200">
-                        <template slot-scope="scope">
-                            {{scope.row.updated_at | moment("D MMM,YY hh:mm A")}}
-                        </template>
-                    </el-table-column>
-                </el-table>
-              </div>
-              <div v-else class="center h-80">
-                <div class="center flex-column">
-                  <p class="m-0 p-0">Request for SMS</p>
-                  <el-button @click.prevent="requestForSMS" icon="sync icon" type="text">Request</el-button>
-                </div>
-              </div>
+            </div>
+
+            <div v-else>
+              <el-table ref="fone" empty-text="No messages to display" v-loading="loading" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="messages">
+                  <el-table-column type="expand" width="55">
+                      <template slot-scope="props">
+                          <div class="pl-15">
+                              <p class="blue-text s-13 bold-600">Message: </p>
+                              <p class="s-12 gray">{{ props.row.message }}</p>
+                          </div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column show-overflow-tooltip :key="index" v-for="(column, index) in fonecolumns" :prop="column.dataField" :label="column.label"></el-table-column>
+                  <!-- <el-table-column show-overflow-tooltip label="Message text" prop="message"></el-table-column> -->
+                  <el-table-column width="80">
+                      <template slot-scope="scope">
+                          <div class="flex">
+                              <the-tag status="failed" :title="scope.row.post_type"></the-tag>
+                          </div>
+                      </template>
+                  </el-table-column>
+                  <el-table-column prop="updated_at" label="Date" width="200">
+                      <template slot-scope="scope">
+                          {{scope.row.updated_at | moment("D MMM,YY hh:mm A")}}
+                      </template>
+                  </el-table-column>
+              </el-table>
+            </div>
+
           </el-card>
           <!-- logs -->
           <el-card class="my-2 card-0">
@@ -290,7 +293,7 @@ export default {
               message: response.data.response.message,
               type: 'success'
             })
-            this.fetchTransactions()  
+            this.fetchTransactions()
           })
           .catch((error) => {
             this.$message({

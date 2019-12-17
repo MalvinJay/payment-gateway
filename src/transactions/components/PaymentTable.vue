@@ -48,7 +48,7 @@
                         <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.charged_amount | money}}</p>
                     </template> -->
                 </el-table-column>
-                <el-table-column prop="created_at" label="Date" width="auto">
+                <el-table-column show-overflow-tooltip prop="created_at" label="Date" width="auto">
                     <template slot-scope="scope">
                         {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
                     </template>
