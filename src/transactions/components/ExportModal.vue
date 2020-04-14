@@ -120,14 +120,14 @@ export default {
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.types.length
       },
       close () {
-        this.form = {
-            payment_types: [],
-            cash_flow: '',
-            fields: '',
-            file_type: 'csv',
-            from: '',
-            to: ''
-        }
+        // this.form = {
+        //     payment_types: [],
+        //     cash_flow: '',
+        //     fields: '',
+        //     file_type: 'csv',
+        //     from: '',
+        //     to: ''
+        // }
         this.loading = false
         this.ready = false
         EventBus.$emit('exportModal', false)
