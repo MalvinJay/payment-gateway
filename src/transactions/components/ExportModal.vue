@@ -49,7 +49,7 @@
                 <el-form-item class="flex justify-content-end">
                     <div class="flex">
                       <el-button @click="close">Cancel</el-button>
-                      <a :href="`${GET_BASE_URI}v2/reports/transactions/${letsEncrypt}/download_file?${generateQueryParams}`" class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" @click="close" download>Download</a>
+                      <a :href="`${GET_BASE_URI}v2/reports/transactions/${letsEncrypt}/download_file?${generateQueryParams}`" class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" @click="EventBus.$emit('exportModal', false)" download>Download</a>
 
                       <!-- <a @click="close" :href="`${GET_BASE_URI}v1/clients/reports/download?access_token=${token}&file_name=${link}`"
                       class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" v-if="ready" download>Download</a> -->
