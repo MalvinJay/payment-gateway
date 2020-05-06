@@ -167,7 +167,7 @@
 
 <script>
 import EventBus from '../../event-bus.js'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 var S3 = require('aws-sdk/clients/s3')
 import { AWS_BUCKET } from '../store/transactions-store-constants.js'
 import Utils from '../../utils/services'
@@ -317,6 +317,12 @@ export default {
             let fileInput = this.$el.querySelector(".upload-demo input[type='file']")
             let filess = fileInput.files[0]
             this.$store.dispatch('sendToBucket', filess)
+            .then(response => {
+              this.file.key = response
+            })
+            .catch(err => {
+              console.log('Error occured whiles uploading file: ', err);
+            })
         }
     },
     mounted () {
