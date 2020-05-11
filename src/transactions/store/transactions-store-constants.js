@@ -2,6 +2,7 @@ import {GET_BASE_URI} from '../../store/constants'
 // transactions
 export const TRANSACTIONS_FETCH = 'getTransactions'
 export const TRANSACTION_CREATE = 'createTransactions'
+export const CREATE_CHECKOUT = 'createCheckout'
 export const SET_TRANSACTIONS_STATE = 'setTransactionsState'
 export const SET_TRANSACTIONS = 'setTransactions'
 export const SET_TRANSACTIONS_META = 'setTransactionsMeta'

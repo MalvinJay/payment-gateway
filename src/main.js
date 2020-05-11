@@ -11,6 +11,7 @@ import './assets/styles/element-variables.scss'
 import locale from 'element-ui/lib/locale/lang/en'
 import '@/assets/styles/app.scss'
 import components from './components'
+import swal from 'sweetalert'
 
 import store from './store/store.js'
 import VueMoment from 'vue-moment'

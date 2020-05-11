@@ -217,6 +217,42 @@ const actions = {
       })
     })
   },
+
+  [SEND_TO_BUCKET] ({ state, commit, rootGetters }, file) {
+    commit(SET_FILE_STATE, 'LOADING')
+    var fileBucketName;
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `https://3fr3gyg66k.execute-api.eu-central-1.amazonaws.com/default/presignedUrl`,
+        method: 'POST',
+        data: {
+          bucket: 'mbackofficedata',
+          filename: file.name
+        }
+      }).then((response) => {
+        console.log('Presigned URL:', response.data)
+        fileBucketName = response.data;
+        apiCall({
+          url: response.data,
+          method: 'PUT',
+          data: {
+            file
+          }
+        }).then(() => {
+          console.log('fileBucketName :>> ', fileBucketName);
+          resolve(fileBucketName)
+        }).catch((error) => {
+          console.log(error)
+          reject(error)
+        })
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+        return error
+      })
+    })
+  },
+
   [SEND_TO_BUCKET] ({ state, commit, rootGetters }, file) {
     commit(SET_FILE_STATE, 'LOADING')
     function getFileExtension (filename) {

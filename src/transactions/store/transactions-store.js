@@ -1,4 +1,4 @@
-import { TRANSACTION_CREATE, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SEARCH_TRANSACTIONS,
+import { TRANSACTION_CREATE, CREATE_CHECKOUT, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SEARCH_TRANSACTIONS,
   TRANSACTIONS_FETCH, SET_CURRENT_TRANSACTION_STATE,
   SET_TRANSACTIONS_STATE, GET_QUEUE, SET_QUEUE, SET_QUEUE_STATE, SET_QUEUE_FILTERS, SET_QUEUE_META, SET_CURRENT_TRANSACTION,
   SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, ADD_TRANSACTION, SET_PENDING_STATE, SET_PENDING_META, APPROVE_TRANSACTIONS, GET_CURRENT_TRANSACTION,
@@ -198,10 +198,25 @@ const actions = {
   [TRANSACTION_CREATE] ({commit, state, rootGetters}, transaction) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}/v1/receive.json`,
+        url: `${GET_BASE_URI}v1/receive.json`,
         method: 'POST',
         data: transaction,
-        token: rootGetters.token
+        token: rootGetters.token || transaction.token
+      }).then((response) => {
+        resolve(response)
+      }).catch((error) => {
+        console.log('ERROR', error)
+        reject(error)
+      })
+    })
+  },
+  [CREATE_CHECKOUT] ({commit, state, rootGetters}, transaction) {
+    return new Promise((resolve, reject) => {
+      apiCall({
+        url: `${GET_BASE_URI}v1/default_checkout`,
+        method: 'POST',
+        data: transaction,
+        token: transaction.token
       }).then((response) => {
         resolve(response)
       }).catch((error) => {
@@ -318,7 +333,7 @@ const actions = {
       })
     })
   },
-  [SEARCH_TRANSACTIONS] ({ state, commit, rootGetters }, {search}) {
+  [SEARCH_TRANSACTIONS] ({ state, commit, rootGetters }, { search }) {
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
     // var query = ''
     // // if (type) {
