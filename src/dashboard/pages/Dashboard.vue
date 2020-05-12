@@ -88,7 +88,6 @@ export default {
       durations: [
         {label: '1d', value: 'day'},
         {label: '1w', value: 'week'},
-        // {label: '1y', value: 'yearly'},
         {label: 'Mtd', value: 'month'},
         {label: 'Qtd', value: 'quarter'},
         {label: 'Ytd', value: 'year'}
@@ -96,7 +95,7 @@ export default {
       edit: false,
       pickerOptions: {
         disabledDate(time) {
-            return time.getTime() > Date.now();
+          return time.getTime() > Date.now();
         },
         shortcuts: [{
         text: 'Today',
@@ -125,9 +124,9 @@ export default {
       statue: [],
       cash: [],
       form: {
-        time_interval: 'month',
-        payment_types: [],
-        statuses: []
+        time_interval: 'day',
+        payment_types: 'wallet',
+        statuses: 'succeeded'
       },
       value2: null,
       date: '',
@@ -204,7 +203,6 @@ export default {
   },
   mounted () {
     EventBus.$emit('sideNavClick', 'dashboard')
-    // EventBus.$emit('updateTimeGraph')
   },
   methods: {
     handleChange () {
@@ -218,9 +216,9 @@ export default {
     },
     clearDashboard () {
         var form = {
-            time_interval: 'month',
-            payment_types: [],
-            statuses: []
+            time_interval: 'day',
+            payment_types: 'wallet',
+            statuses: 'succeeded'
         }
         this.form = form
         this.handleChange()
@@ -230,12 +228,10 @@ export default {
     },
     handleError () {
         var time = {
-            time_interval: 'month'
+          time_interval: 'day'
         }
         this.$store.dispatch('setDashboardFilters', time)
         .then((response) => {
-            console.log('header', response.data)
-            console.log('header data', response)
             EventBus.$emit('updateGraph')
         })
         this.$store.dispatch('getTodayGraph', {cache: false})
@@ -251,7 +247,7 @@ export default {
     },
     fetchGraph () {
         var time = {
-            time_interval: 'month'
+            time_interval: 'day'
         }
         this.$store.dispatch('setDashboardFilters', time)
         .then((response) => {
@@ -271,7 +267,7 @@ export default {
     }),
     options () {
         var analytics = [
-            {title: 'Gross Volume', id: 'line-chart', volume: this.grossVolume, chartData: this.chartData, chartOptions: this.chartOptions, popover: false},
+            {title: 'Net Balance', id: 'line-chart', volume: (this.depositVolume - this.withVolume), chartData: this.chartData, chartOptions: this.chartOptions, popover: false},
             {title: 'Receipts', id: 'line-chart1', volume: this.depositVolume, chartData: this.chartDataDep, chartOptions: this.chartOptions, popover: true,
             popoverContent: 'All receipts recorded within the specified filters'},
             {title: 'Payments', id: 'line-chart2', volume: this.withVolume, chartData: this.chartDataWith, chartOptions: this.chartOptions, popover: true,

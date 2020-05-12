@@ -7,7 +7,7 @@
                         <p class="p-0 m-0">Account Balance</p>
                         <p class="p-0 m-0 bold-600 ml-16">{{ balance | money }}</p>
                     </div>
-                    <div class="flex align-items-center justify-content-between">
+                    <div class="flex align-items-center cursor justify-content-between">
                         <el-date-picker class="transparent-input" ref="datePick"
                             v-model="currentDate"
                             @change="handleChange"
@@ -324,120 +324,128 @@ export default {
         return this.amount.fon_messanger_balance
     },
     chartData () {
-        var count = ''
-        return {
-            labels: this.days,
-            datasets: [{
-                // label: this.labels,
-                data: this.count,
-                // backgroundColor: '#E8EBF8',
-                // borderColor: '#808EE3',
-                borderColor: '#ffffff',
-                pointHoverBackgroundColor: '#ffffff',
-                borderWidth: 2,
-                pointRadius: 0,
-                pointHitRadius: 20,
-                lineTension: 0,
-                fill: false
-            }]
-        }
+      var count = ''
+      return {
+          labels: this.days,
+          datasets: [{
+              // label: this.labels,
+              data: this.count,
+              // backgroundColor: '#E8EBF8',
+              // borderColor: '#808EE3',
+              borderColor: '#ffffff',
+              pointHoverBackgroundColor: '#ffffff',
+              borderWidth: 2,
+              pointRadius: 0,
+              pointHitRadius: 20,
+              lineTension: 0,
+              fill: false
+          }]
+      }
     },
     todayLoading () {
-        return this.todayState === 'LOADING'
+      return this.todayState === 'LOADING'
     },
     todayError () {
-        return this.todayState === 'ERROR'
+      return this.todayState === 'ERROR'
     },
     days () {
-        return this.today.map((el) => {
-            return el.label
-        })
+      return this.today.map((el) => {
+          return el.label
+      })
     },
     count () {
-        return this.today.map((el) => {
-           return `${el.count}`
-        })
+      return this.today.map((el) => {
+          return `${el.count}`
+      })
     },
     sData () {
-        return this.today.map((el) => {
-          var way = {
-            x: el.count,
-            y: el.day
-          }
-          return way
-        })
+      return this.today.map((el) => {
+        var way = {
+          x: el.count,
+          y: el.day
+        }
+        return way
+      })
     }
   },
   methods: {
-    fetchToday () {
-        this.$store.dispatch('getTodayGraph', {cache: false})
-        .then(() => {
-            EventBus.$emit('updateGraph')
-        })
+    fetchToday() {
+      this.$store.dispatch('getTodayGraph', {cache: false})
+      .then(() => {
+        EventBus.$emit('updateGraph')
+      })
     },
+
     handleChange (val) {
-        var form = {
-            date: val
-        }
-        this.$store.dispatch('setTodayFilters', form)
-        .then(() => {
-            EventBus.$emit('updateGraph')
-        })
+      var form = {
+        date: val
+      }
+
+      this.$store.dispatch('setTodayFilters', form)
+      this.$store.dispatch('setDashboardFilters', {
+        time_interval: "date",
+        statuses: 'succeeded',
+        date_value: form.date
+      })
+      .then((res) => {
+        EventBus.$emit('updateGraph')
+      })
     },
-    openDate () {
-        this.$refs.datePick.focus()
+
+    openDate() {
+      this.$refs.datePick.focus()
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.blue-banner{
-    color: white;
-    // font-weight: 500;
-    font-size: 18px;
-    .el-card__body{
-        padding: 10px 20px !important;
-    }
-}
-.light-gray{
-    color: #a3acb9
-}
-.dashboard-header{
-    // height: 200px;
-    height: 190px;
+  .blue-banner{
+      color: white;
+      // font-weight: 500;
+      font-size: 18px;
+      .el-card__body{
+          padding: 10px 20px !important;
+      }
+  }
+  .light-gray{
+      color: #a3acb9
+  }
+  .dashboard-header{
+      // height: 200px;
+      height: 190px;
 
-    h3{
-        margin-bottom: 4px;
-    }
+      h3{
+          margin-bottom: 4px;
+      }
 
-    i{
-        line-height: 28px;
-        height: 28px;
-    }
-}
-.h-120{
-    height: 120px;
-}
-.mb-3{
-    margin-bottom: 1rem;
-}
-.s-20{
-    font-size: 20px;
-}
-.ml-16{
-    margin-left: 16px !important;
-}
-.blue-graph{
-    height: 70px;
-}
+      i{
+          line-height: 28px;
+          height: 28px;
+      }
+  }
+  .h-120{
+      height: 120px;
+  }
+  .mb-3{
+      margin-bottom: 1rem;
+  }
+  .s-20{
+      font-size: 20px;
+  }
+  .ml-16{
+      margin-left: 16px !important;
+  }
+  .blue-graph{
+      height: 70px;
+  }
 
-.little-money{
-    font-size: 12px;
-}
+  .little-money{
+      font-size: 12px;
+  }
 
-.transparent-input{
-    width: 80px;
-}
+  .transparent-input{
+      width: 80px;
+  }
 </style>
 

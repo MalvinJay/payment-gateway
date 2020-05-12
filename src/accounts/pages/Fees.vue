@@ -39,7 +39,7 @@
                             <template slot-scope="scope">
                                 <p class="m-0 p-0 mr-10 s-13">{{scope.row.charged_amount | money}}</p>
                             </template>
-                        </el-table-column>                                                                                               
+                        </el-table-column>
                         <el-table-column prop="created_at" label="Date">
                             <template slot-scope="scope">
                                 {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
@@ -58,7 +58,7 @@
                             :total="total">
                         </el-pagination>
                     </div>
-                </div>   
+                </div>
             </div>
             <export-modal :modalVisible.sync="exportVisible"></export-modal>
         </div>
@@ -96,30 +96,30 @@ export default {
     },
     methods: {
         clickRow (row, event, column) {
-            if (column.property) {
-                this.$router.push(`/payments/${row.reference}`)
-            }        
-        },   
+          this.$router.push(`/payments/${row.reference}`)
+            // if (column.property) {
+            // }
+        },
         handleCurrentChange (val) {
             this.$store.dispatch('getFees', {page: val, cache: false })
-        },             
+        },
         fetchFees () {
             this.$store.dispatch('getFees', {cache: false})
         }
-    }, 
+    },
     computed: {
         ...mapGetters({
             fees: 'fees',
             meta: 'feesMeta',
             state: 'feesState',
             pageSize: 'pageSize'
-        }),  
+        }),
         error () {
             return this.state === 'ERROR' && this.state !== 'LOADING'
-        },              
+        },
         total () {
             return this.meta.trans
-        },    
+        },
         loading () {
             return this.state === 'LOADING'
         },
@@ -128,7 +128,7 @@ export default {
                 el.net_amount = el.receiver_amount - el.charged_amount
                 return el
             })
-        }                
+        }
     }
 }
 </script>

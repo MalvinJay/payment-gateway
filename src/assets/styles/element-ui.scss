@@ -134,34 +134,49 @@ $border: #dcdfe6;
     }
 
 }
-.transactions-table-body{
-    td{
-        padding: 8px 0 !important;
-        padding-left: 5px!important;
-        // color: #999999;
-        font-size: 12px;
-        // text-transform: capitalize;
-        cursor: pointer;
 
-        a,p,div{
-            // color: #999999
-        }
+.transactions-table-body {
+    td {
+      padding: 8px 0 !important;
+      padding-left: 5px!important;
+      // color: #999999;
+      font-size: 12px;
+      // text-transform: capitalize;
+      cursor: pointer;
+
+      a, p, div{
+        // color: #999999
+      }
     }
 }
-.el-table .warning-row {
+
+.el-table { 
+  .el-table__body-wrapper {
+    table {
+      tbody {
+        .el-table__expanded-cell[class*=cell] {
+          padding: 20px!important;
+        }        
+      }
+    }
+  }
+
+  .warning-row {
     background: rgba(#983705, 0.04);
   }
-.accounts-table-body{
-    td{
-        padding: 8px 0 !important;
-        // color: #999999;
-        text-transform: lowercase;
-        cursor: pointer;
+}
 
-        a,p,div{
-            // color: #999999
-        }
-    }
+.accounts-table-body{
+  td{
+      padding: 8px 0 !important;
+      // color: #999999;
+      text-transform: lowercase;
+      cursor: pointer;
+
+      a,p,div{
+          // color: #999999
+      }
+  }
 }
 
 .el-table--enable-row-hover .el-table__body tr:hover>td{
@@ -357,6 +372,14 @@ $border: #dcdfe6;
     }
 }
 
+// .el-dialog__wrapper {
+//   z-index: 2010!important;
+// }
+
+// .v-modal {
+//   z-index: 2002!important;
+// }
+
 // new payment modal
 .new-transaction,.export-dialog,.user-dialog{
     .el-dialog__title{
@@ -376,7 +399,7 @@ $border: #dcdfe6;
         display: flex
     }
 }
-.export-dialog, .no-padding-dialog{
+.export-dialog, .no-padding-dialog {
     .el-dialog__body{
         padding: 0
     }

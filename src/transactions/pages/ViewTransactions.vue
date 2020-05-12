@@ -3,15 +3,14 @@
         <el-tabs v-model="activeName" class="default-tab" :class="[{'test-data': test}, 'position-relative']" stretch type="border-card">
             <!-- <div v-show="test" class="position-absolute bg-orange test">TEST DATA</div> -->
             <el-tab-pane name="1" label="Receipts">
-                <!-- FOUND IN TRANSACTIONS/COMPONENTS -->
                 <payment-table type="payment"></payment-table>
             </el-tab-pane>
             <el-tab-pane name="2" label="Queued">
                 <queued-table></queued-table>
             </el-tab-pane>
-            <!-- <el-tab-pane name="3" label="Jobs">
-                <job-table type="cashout"></job-table>
-            </el-tab-pane> -->
+            <el-tab-pane name="3" label="Failed">
+                <failed-table type="cashout"></failed-table>
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
@@ -60,9 +59,10 @@ export default {
     EventBus.$on('tabNumber', (val) => {
         this.activeName = val
     })
-    this.$store.dispatch('getTransactions')
-    this.$store.dispatch('getJobs')
+
+    this.$store.dispatch('getTransactions', {search_value: 'cashout'})
     this.$store.dispatch('getQueues')
+    this.$store.dispatch('getFailed')
     this.$store.dispatch('getFields')
   },
   beforeDestroy () {
@@ -74,9 +74,9 @@ export default {
     },
     sendMessage () {
         this.$cable.perform({
-            channel: 'ChatChannel',
-            action: 'send_message',
-            data: { content: this.message }
+          channel: 'ChatChannel',
+          action: 'send_message',
+          data: { content: this.message }
         })
     }
   },
@@ -96,6 +96,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 
 </style>

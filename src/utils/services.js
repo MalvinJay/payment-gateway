@@ -161,7 +161,8 @@ export default {
     var query = ``
     if (this.present(form)) {
       query = query + `?date_value=${form.date}&time_interval=date`
-    } else {
+    }
+    else {
       query = `?time_interval=day`
     }
     return query
@@ -178,6 +179,12 @@ export default {
       if (this.present(filters.statuses)) {
         query = query + `&statuses[]=${filters.statuses}`
       }
+      if (this.present(filters.state)) {
+        query = query + `&state[]=${filters.state}`
+      }
+      if (this.present(filters.providers)) {
+        query = query + `&providers[]=${filters.providers}`
+      }
       if (this.present(filters.search_value)) {
         query = query + `&search_value=${filters.search_value}`
       }
@@ -193,17 +200,25 @@ export default {
       if (this.present(filters.name)) {
         query = query + `&user_group=${filters.name}`
       }
-      if (this.empty(filters.from) &&
-          this.empty(filters.to) &&
-          this.empty(filters.payment_types) &&
-          this.empty(filters.statuses) &&
-          this.empty(filters.reasons) &&
-          this.empty(filters.name)) {
-        query = query + '&all=true'
+      if (this.present(filters.date_value)) {
+        query = query + `&date_value=${filters.date_value}`
       }
-    } else {
-      query = query + '&all=true'
+
+      // if (this.empty(filters.from) &&
+      //     this.empty(filters.to) &&
+      //     this.empty(filters.payment_types) &&
+      //     this.empty(filters.statuses) &&
+      //     this.empty(filters.state) &&
+      //     this.empty(filters.providers) &&
+      //     this.empty(filters.reasons) &&
+      //     this.empty(filters.name)) {
+      //   query = query + '&all=true'
+      // }
     }
+    // else {
+    //   query = query + '&all=true'
+    // }
+
     return query
   },
   createPendingParams (filters, page = 1) {

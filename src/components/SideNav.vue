@@ -31,14 +31,14 @@
                 <el-menu-item route="/disputes" index="disputes">Disputes</el-menu-item>
                 <el-menu-item v-if="false" class="v-step-1" index="2-4">Settings</el-menu-item>
             </el-submenu>
-            <el-submenu ref="sideMenu" index="3">
+            <el-submenu ref="sideMenu" index="3"
+              v-if="user.client.code === '081593' || user.client.code === '505077' || user.client.code === '029056' || user.client.code === '047552' || user.client.code === '040683'">
                 <template slot="title">
-                    <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">Stocks
+                  <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">Stocks
                 </template>
-                <!-- <el-menu-item route="/stock/dashboard" index="st_dashboard">Dashboard</el-menu-item> -->
                 <el-menu-item route="/stock/products" index="products">Products</el-menu-item>
                 <el-menu-item route="/stock/purchases" index="purchases">Purchases</el-menu-item>
-                <!-- <el-menu-item route="/stock/agents" index="bulk">Agents</el-menu-item> -->
+                <el-menu-item route="/stock/agents" index="agents">Agents</el-menu-item>
             </el-submenu>
             <el-submenu ref="sideMenu" index="4">
                 <template slot="title">
@@ -77,7 +77,7 @@
                     <img class="mr-10" src="../assets/images/icons/radar.svg" alt="">FoneMessenger
                 </template>
             </el-menu-item>
-            <el-menu-item v-if="!isAdmin" route="/ussd" index="ussd">
+            <el-menu-item route="/ussd" index="ussd" v-if="user.client.code === 'waec' || user.client.code === '505077'">
                 <template slot="title">
                     <img class="mr-10" src="../assets/images/icons/connect.svg" alt="">USSD
                 </template>
@@ -204,7 +204,6 @@ export default {
 .client_name{
     white-space: nowrap;
     text-overflow: ellipsis;
-    width: 90%;
     display: block;
     overflow: hidden;
     color: #999999;

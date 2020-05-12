@@ -7,7 +7,7 @@
         <div class="flex justify-content-center new-export-bg">
             <el-form class="transaction-form my-2" size="mini" style="width: 90%" :rules="rules" ref="form" :model="form" label-width="100px">
                 <el-form-item :prop="item.prop" v-for="(item, index) in columns" :key="index" :label="item.label">
-                    <el-input v-model="form[item.value]"></el-input>
+                    <el-input v-model="form[item.value]" :placeholder="item.label"></el-input>
                 </el-form-item>
                 <el-form-item label="Privileges" class="my-2 privileges">
                     <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">Check all</el-checkbox>
@@ -104,7 +104,7 @@ export default {
             this.$message({
                 type: 'error',
                 message: 'Please correctly fill all fields',
-            })  
+            })
           }
         })
     },
@@ -147,7 +147,7 @@ export default {
             this.$message({
                 type: 'error',
                 message: 'Please correctly fill all fields',
-            })  
+            })
           }
         })
     }

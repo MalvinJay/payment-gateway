@@ -1,118 +1,231 @@
 <template>
-    <el-card class="card-0">
-        <div class="transactions">
-            <div class="trans-div flex justify-content-between">
-                <div class="search_n_roles flex justify-content-between w-50">
-                    <el-input @keyup.enter.native="searchButton" v-model="search" class="search-div mr-2 w-50" size="mini" placeholder="Filter by year or exam type..."></el-input>
-                    
-                    <!-- <div class="roles">
-                        <el-select 
-                            v-model="value" 
-                            size="mini"
-                            filterable
-                            @change="filterByName"
-                            placeholder="Select an exams type">
-                            <el-option v-model="all" label="all"></el-option>
-                            <el-option v-for="item in filteredExamsTypes" :key="item.code" :label="item.name" :value="item.code"></el-option>
-                        </el-select>                    
-                    </div> -->
-                </div>  
-                <div class="flex align-items-center">
-                    <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
-                        <el-button @click.prevent="fetchMessages" icon="undo icon" type="text"></el-button>
-                    </el-tooltip>
-                    <!-- <el-button v-can="'Generate Reports'" @click="generateReport" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text">
-                        <i class="download icon"></i> Export
-                    </el-button> -->
+  <div>
+    <el-tabs class="default-tab" :class="[{'test-data': test}, 'position-relative']" stretch type="border-card">
+      <!-- <div v-show="test" class="position-absolute bg-orange test">TEST DATA</div> -->
+      <el-tab-pane label="PINS">
+        <el-card class="card-0">
+            <div class="transactions">
+                <div class="trans-div flex justify-content-between">
+                    <div class="search_n_roles flex justify-content-between w-50">
+                      <filter-component dispatch="setUssdFilters" filterType="ussd"></filter-component>
+                      <el-input @keyup.enter.native="searchButton" v-model="search" :prefix-icon="icon" class="search-div mr-2" style="width: 70%;" size="mini" placeholder="Search phone number"></el-input>
+                    </div>
+                    <div class="flex align-items-center">
+                        <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
+                          <el-button @click.prevent="fetchMessages" icon="undo icon" type="text"></el-button>
+                        </el-tooltip>
+                        <el-button v-can="'Generate Reports'" @click="generateReport" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text">
+                          <i class="download icon"></i>Export
+                        </el-button>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <div class="center h-80" v-if="error">
-                    <div class="center flex-column">
+                <div v-loading="loading">
+                    <div class="center h-80" v-if="error">
+                      <div class="center flex-column">
                         <p class="m-0 p-0">Unable to load this page</p>
                         <el-button @click.prevent="fetchMessages" icon="sync icon" type="text">Retry</el-button>
+                      </div>
                     </div>
-                </div>
-                <div class="ussd_session" v-else>
-                    <el-table ref="fone"
-                    @row-click="clickRow"
-                    empty-text="No ussd session available to display"
-                    v-loading="loading" :row-style="styleObject"
-                    row-class-name="transactions-table-body"
-                    header-row-class-name="transactions-table-header"
-                    :data="filteredUSSD.filter(data => !search || data.exam_type.toLowerCase().includes(search.toLowerCase()) ||  data.year.toLowerCase().includes(search.toLowerCase())).slice((page * 12) - 12, page * 12)">
-                        <el-table-column type="index"></el-table-column>
-
-                        <el-table-column
-                         show-overflow-tooltip
-                         prop="sessionid"
-                         label="session id"></el-table-column>
-                        <el-table-column
-                         show-overflow-tooltip
-                         prop="msisdn"
-                         label="phone number"></el-table-column>
-                        <el-table-column
-                         show-overflow-tooltip
-                         prop="exam_type"
-                         label="exams type"
-                         :filters="[{text: 'BECE', value: 'bece'},{text: 'WASSCE', value: 'wassce'}]"
-                         :filter-method="filterHandler"></el-table-column>
-                        <el-table-column
-                         show-overflow-tooltip
-                         :key="index"
-                         v-for="(column, index) in columns"
-                         :prop="column.dataField"
-                         :label="column.label"
-                         :width="column.width"
-                         ></el-table-column>
-                        <el-table-column prop="status" label="Payment status" width="auto">
-                            <template slot-scope="scope">
+                    <div class="ussd_session" v-else>
+                        <el-table ref="fone"
+                        @row-click="clickRow"
+                        empty-text="No ussd session available today"
+                        :row-style="styleObject"
+                        row-class-name="transactions-table-body"
+                        header-row-class-name="transactions-table-header"
+                        :data="filteredPins.filter( data => !search || data.receiver_no.toLowerCase().includes(search.toLowerCase()) ).slice((page * 12) - 12, page * 12)">
+                            <el-table-column type="index"></el-table-column>
+                            <el-table-column show-overflow-tooltip prop="extra_data.sessionId" label="session id"></el-table-column>
+                            <el-table-column show-overflow-tooltip prop="receiver_no" label="phone number"></el-table-column>
+                            <el-table-column show-overflow-tooltip prop="provider_code" label="network" width="auto" label-class-name="text-uppercase">
+                              <template slot-scope="scope" class="text-uppercase">
+                                {{scope.row.provider_code}}
+                              </template>
+                            </el-table-column>
+                            <el-table-column prop="transaction" label="Payment status" width="auto">
+                              <template slot-scope="scope">
                                 <div class="flex">
-                                    <the-tag v-if="scope.row.status === 'paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
-                                    <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
+                                  <the-tag v-if="scope.row.status === 'paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                  <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
                                 </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="timestamp" label="Timestamp" width="200">
-                            <template slot-scope="scope">
-                                {{scope.row.timestamp | moment("D MMM,YY hh:mm:ss A")}}
-                            </template>
-                        </el-table-column>
-                    </el-table>
+                              </template>
+                            </el-table-column>
+                            <el-table-column prop="updated_at" label="Timestamp" width="200">
+                                <template slot-scope="scope">
+                                  {{scope.row.updated_at | moment("D MMM,YY hh:mm:ss A")}}
+                                </template>
+                            </el-table-column>
+                        </el-table>
 
-                    <div class="flex justify-content-between align-items-center px-10">
-                        <div class="s-12">
-                            {{this.filteredUSSD.slice((page * 12) - 12, page * 12).length}} results
+                        <div class="flex justify-content-between align-items-center px-10">
+                            <div class="s-12">
+                              {{this.filteredPins.slice((page * 12) - 12, page * 12).length}} results
+                            </div>
+                            <el-pagination class="my-2 flex justify-content-end"
+                              @current-change="handleCurrentChange"
+                              :page-size="pageSize"
+                              layout="prev, pager, next"
+                              :total="total">
+                            </el-pagination>
                         </div>
-                        <el-pagination class="my-2 flex justify-content-end"
-                            @current-change="handleCurrentChange"
-                            :page-size="pageSize"
-                            layout="prev, pager, next"
-                            :total="total">
-                        </el-pagination>
                     </div>
                 </div>
             </div>
-        </div>
-    </el-card>      
+
+          <el-dialog
+            custom-class="export-dialog"
+            title="Export"
+            :visible="exportVisible"
+            width="25%">
+            <div class="flex justify-content-center new-export-bg ">
+                <el-form hide-required-asterisk class="transaction-form my-2" size="mini" style="width: 90%" ref="form" :model="form" label-position="top">
+                  <el-form-item label="Select Date">
+                      <el-date-picker
+                      v-model="dateColumns"
+                      type="daterange"
+                      @change="dateRangeClicked"
+                      start-placeholder="Start date"
+                      end-placeholder="End date">
+                      </el-date-picker>
+                  </el-form-item>
+                    <el-form-item class="flex justify-content-end">
+                        <div class="flex">
+                            <el-button @click="close">Cancel</el-button>
+                            <a :href="`https://ussd-log-status.nfortics.com/reports/index?${generateQueryParams}`"
+                            class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" @click="close" download>Download</a>
+                        </div>
+                    </el-form-item>
+                </el-form>
+              </div>
+          </el-dialog>
+        </el-card>
+      </el-tab-pane>
+
+      <el-tab-pane label="SMS Results">
+        <el-card class="card-0">
+            <div class="transactions">
+                <div class="trans-div flex justify-content-between">
+                    <div class="search_n_roles flex justify-content-between w-50">
+                      <filter-component dispatch="setUssdFilters" filterType="ussd"></filter-component>
+                      <el-input @keyup.enter.native="searchButton" v-model="search" :prefix-icon="icon" class="search-div mr-2" style="width: 70%;" size="mini" placeholder="Search phone or index number"></el-input>
+                    </div>
+                    <div class="flex align-items-center">
+                        <el-tooltip class="item" effect="dark" content="Refresh" placement="top">
+                          <el-button @click.prevent="fetchMessages" icon="undo icon" type="text"></el-button>
+                        </el-tooltip>
+                        <el-button v-can="'Generate Reports'" @click="generateReport" class="z-depth-button bold-600 s-13 open-sans mini-button" type="text">
+                          <i class="download icon"></i>Export
+                        </el-button>
+                    </div>
+                </div>
+                <div v-loading="loading">
+                    <div class="center h-80" v-if="error">
+                      <div class="center flex-column">
+                        <p class="m-0 p-0">Unable to load this page</p>
+                        <el-button @click.prevent="fetchMessages" icon="sync icon" type="text">Retry</el-button>
+                      </div>
+                    </div>
+                    <div class="ussd_session" v-else>
+                        <el-table ref="fone"
+                        @row-click="clickRow"
+                        empty-text="No ussd session available today"
+                        :row-style="styleObject"
+                        row-class-name="transactions-table-body"
+                        header-row-class-name="transactions-table-header"
+                        :data="filteredSmsLogs.filter(data => !search || data.receiver_no.toLowerCase().includes(search.toLowerCase()) || data.extra_data.index_no.toLowerCase().includes(search.toLowerCase())).slice((page * 12) - 12, page * 12)">
+                            <el-table-column type="index"></el-table-column>
+                            <el-table-column show-overflow-tooltip prop="extra_data.sessionId" label="session id"></el-table-column>
+                            <el-table-column show-overflow-tooltip prop="receiver_no" label="phone number"></el-table-column>
+                            <el-table-column show-overflow-tooltip prop="extra_data.type" label="exams type" :filters="[{text: 'BECE', value: 'bece'},{text: 'WASSCE', value: 'wassce'}]" :filter-method="filterHandler">
+                              <template slot-scope="scope">
+                                {{scope.row.extra_data.type  || 'N/A'}}
+                              </template>
+                            </el-table-column>
+                            <el-table-column show-overflow-tooltip prop="extra_data.year" label="year" width="100">
+                              <template slot-scope="scope">
+                                {{scope.row.extra_data.year || 'N/A'}}
+                              </template>
+                            </el-table-column>
+                            <el-table-column show-overflow-tooltip prop="extra_data.index_no" label="index no" width="auto">
+                              <template slot-scope="scope">
+                                {{scope.row.extra_data.index_no  || 'N/A'}}
+                              </template>
+                            </el-table-column>
+                            <el-table-column prop="status" label="Payment status" width="auto">
+                              <template slot-scope="scope">
+                                <div class="flex">
+                                  <the-tag v-if="scope.row.status === 'paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
+                                  <the-tag v-else status="failed" :title="scope.row.status" icon="reply icon"></the-tag>
+                                </div>
+                              </template>
+                            </el-table-column>
+                            <el-table-column prop="updated_at" label="Timestamp" width="200">
+                                <template slot-scope="scope">
+                                  {{scope.row.updated_at | moment("D MMM,YY hh:mm:ss A")}}
+                                </template>
+                            </el-table-column>
+                        </el-table>
+
+                        <div class="flex justify-content-between align-items-center px-10">
+                            <div class="s-12">
+                              {{this.filteredSmsLogs.slice((page * 12) - 12, page * 12).length}} results
+                            </div>
+
+                            <el-pagination class="my-2 flex justify-content-end"
+                              @current-change="handleCurrentChange"
+                              :page-size="pageSize"
+                              layout="prev, pager, next"
+                              :total="total">
+                            </el-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          <el-dialog custom-class="export-dialog" title="Export" :visible="exportVisible" width="25%">
+            <div class="flex justify-content-center new-export-bg ">
+                <el-form hide-required-asterisk class="transaction-form my-2" size="mini" style="width: 90%" ref="form" :model="form" label-position="top">
+                  <el-form-item label="Select Date">
+                      <el-date-picker
+                      v-model="dateColumns"
+                      type="daterange"
+                      @change="dateRangeClicked"
+                      start-placeholder="Start date"
+                      end-placeholder="End date">
+                      </el-date-picker>
+                  </el-form-item>
+                    <el-form-item class="flex justify-content-end">
+                        <div class="flex">
+                            <el-button @click="close">Cancel</el-button>
+                            <a :href="`https://ussd-log-status.nfortics.com/reports/index?${generateQueryParams}`"
+                            class="cursor open-sans el-button el-button--primary el-button--mini" target="_blank" @click="close" download>Download</a>
+                        </div>
+                    </el-form-item>
+                </el-form>
+              </div>
+          </el-dialog>
+        </el-card>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 
 <script>
 import EventBus from '../../event-bus.js'
 import { mapGetters } from 'vuex'
-// import LogDialog from '../components/LogDialog'
-// import TopupAccount from '../components/TopupAccount'
+import Utils from '@/utils/services'
+import moment from 'moment'
 
 export default {
   name: 'USSD',
   props: ['type'],
   data () {
     return {
+      icon: 'el-icon-search',
       test: true,
       columns: [
         {label: 'year', dataField: 'year', align: 'left', width: 'auto'},
         {label: 'index no', dataField: 'index_no', align: 'left', width: 'auto'},
-        // {label: 'paid?', dataField: 'index_no', align: 'left', width: 'auto'},
       ],
       page: 1,
       logDialog: false,
@@ -138,63 +251,52 @@ export default {
           name: 'W.A.S.C.E',
           code: '02'
         }
-      ]
+      ],
+      form: {
+        from: '',
+        to: ''
+      },
+      ready: false,
     }
-  },
-  created () {
-    this.$store.dispatch('getUssdSessions')
   },
   mounted () {
     this.$store.dispatch('getUssdSessions')
     EventBus.$emit('sideNavClick', 'ussd')
     EventBus.$on('exportModal', (val) => {
-        this.exportVisible = false
-    })    
+      this.exportVisible = false
+    })
+
+
   },
   methods: {
-    // handleCurrentChange (val) {
-    //     this.$store.dispatch('getUssdSessions', {page: val, cache: false})
-    // },
     filterHandler (value, row, column) {
-        const property = column['property']
-        // console.log('filtered', this.filteredUSSD.filter(ussd => ussd[property].toLowerCase() === value.toLowerCase()))
-        return row[property].toLowerCase() === value.toLowerCase()
+      const property = column['property']
+      return row[property].toLowerCase() === value.toLowerCase()
     },
     handleCurrentChange (page) {
-        this.page = page
+      this.$store.dispatch('getUssdSessions', {page: page, cache: false})
     },
     clickRow (row, event, column) {
-        if (column.property || !column.status === 'error') {
-            this.$router.push(`/ussd/${row.sessionid}`)
-        }
-
-        // this.$store.dispatch('getCurrentUssdSession', row.sessionid)
-        // .then((response) => {
-        //     this.$store.dispatch('getCurrentUssdSessionPayment', row.sessionid)
-
-        //     if (column.property || !column.status === 'error') {
-        //         this.$router.push(`/ussd/${row.sessionid}`)
-        //     }                     
-        // })
-        // .catch(()=>{
-        //     this.$message({
-        //         message: "Couldn't load Ussd Details",
-        //         type: 'error'
-        //     })            
-        // })
+      this.$router.push(`/ussd/${row.extra_data.sessionId}`)
     },
     fetchMessages () {
       this.$store.dispatch('getUssdSessions', {cache: false})
     },
     searchButton () {
-
-    },  
+      this.icon = 'el-icon-loading'
+      setTimeout(() => {
+        this.$message({
+          type: 'success',
+          message: 'Server-side search to be completed soon'
+        })
+        this.icon = 'el-icon-search'
+      }, 3000);
+    },
     filterByName (val) {
-        this.filter.name = val
-        // this.$store.dispatch('setTeamsFilters', this.filter)
-    },      
+      this.filter.name = val
+    },
     topUpAccount () {
-      
+
     },
     submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -213,34 +315,71 @@ export default {
         })
     },
     resetForm(formName) {
-        this.$refs[formName].resetFields()
+      this.$refs[formName].resetFields()
     },
     generateReport() {
-        this.$message({
-            message: 'Generating link in background',
-            type: 'info'
-        })        
+      // this.$message({
+      //   message: 'Generating link in background',
+      //   type: 'success'
+      // })
+
+      this.exportVisible = true;
+    },
+    close () {
+      this.form = {
+        from: '',
+        to: ''
+      },
+      this.exportVisible = false
+      this.ready = false
+    },
+    reset () {
+      this.exportVisible = false
+      // this.loading = false
+      this.ready = false
+    },
+    dateRangeClicked () {
+      // this.reset()
     }
   },
   computed: {
     ...mapGetters({
       ussds: 'ussdSessions',
       state: 'ussdSessionsState',
-      total: 'ussdSessionsCount',
+      meta: 'ussdSessionsMeta',
       pageSize: 'pageSize',
-      currentUssdSession: 'currentUssdSession'
+      currentUssdSession: 'currentUssdSession',
+      fields: 'fields',
+      link: 'downloadLink',
+      token: 'token',
+      user: 'user',
     }),
-    filteredUSSD () {
-        // var exams = ['BECE', 'WASSCE']
-        // var years = ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019']
-        // var ussd = this.ussds.map(ussd => {
-        //     var rand = Math.floor(Math.random() * 2)
-        //     var yRand = Math.floor(Math.random() * 10)
-        //     ussd.exam_type = exams[rand]
-        //     ussd.year = years[yRand]
-        //     return ussd
-        // })
-      return this.ussds
+    filteredSmsLogs () {
+      let arr = new Array();
+      this.ussds.map(el => {
+        let common = el.extra_data.type
+        if(common) {
+          arr.push(el)
+        }
+      })
+      console.log('arr:', arr)
+      return arr
+    },
+    filteredPins() {
+      let arr = new Array();
+      this.ussds.map(el => {
+        let common = el.extra_data.type
+        if(common === "" || common == null || common === 'N/A') {
+          arr.push(el)
+        }
+      })
+      return arr
+    },
+    total() {
+      return this.meta.total
+    },
+    pageSize() {
+      return this.meta.limit
     },
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'
@@ -250,6 +389,22 @@ export default {
     },
     currentUssd() {
       return this.currentUssdSession
+    },
+    dateColumns: {
+      get () {
+        var from = this.form.from
+        var to = this.form.to
+        var arr = [from, to]
+        return arr
+      },
+      set (value) {
+        this.form.from = moment(value[0]).format('YYYY-MM-DD')
+        this.form.to = moment(value[1]).format('YYYY-MM-DD')
+      }
+    },
+    generateQueryParams() {
+      console.log('Query Params:', Utils.createExportQuery(this.form))
+      return Utils.createExportQuery(this.form)
     }
   }
 }
@@ -266,9 +421,6 @@ export default {
     line-height: normal;
     right: 20px;
 
-    &:hover{
-        // background: red;
-    }
     .first-icon{
         opacity: 0;
     }
@@ -328,5 +480,21 @@ export default {
     i{
         margin-right: 5px;
     }
+}
+
+// report
+.export-dialog {
+  .el-dialog__header {
+    color: #2b2d50;
+  }
+  .el-dialog__body {
+    padding: 0px !important
+  }
+}
+.new-export-bg {
+  background: #F7FAFC;
+}
+.m-0{
+  margin: 0 !important;
 }
 </style>

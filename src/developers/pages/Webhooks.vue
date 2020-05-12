@@ -13,29 +13,29 @@
                        <p class="m-0 p-0">Unable to load this page</p>
                        <el-button @click.prevent="webhooks" icon="sync icon" type="text">Retry</el-button>
                     </div>
-                </div>                
+                </div>
                 <div v-else class="callbacks breathe w-100 s-13">
                     <el-table empty-text="You have not defined any webhooks yet" v-loading="loadingPage" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="webhooks">
                         <el-table-column prop="url" label="URL">
                             <template slot-scope="scope">
                                 {{scope.row.url || 'N/A'}}
                             </template>
-                        </el-table-column>                    
+                        </el-table-column>
                         <el-table-column prop="version" label="VERSION" width="200">
                             <template slot-scope="scope">
                                 {{scope.row.version || 'N/A'}}
-                            </template>                            
-                        </el-table-column>  
+                            </template>
+                        </el-table-column>
                         <el-table-column label="MODE" width="125">
                             <template slot-scope="scope">
                                 <the-tag v-if="scope.row.type == 'test'" status="success" title="Test" icon="detail check icon" class="w-50"></the-tag>
                                 <the-tag v-else status="success" title="Live" icon="detail check icon" class="w-50"></the-tag>
-                            </template>   
-                        </el-table-column>                                                        
-                    </el-table>   
+                            </template>
+                        </el-table-column>
+                    </el-table>
                 </div>
             </div>
-        </el-card>      
+        </el-card>
 
         <el-card :class="[{'test-data': isTest}]" class="mb-2">
             <div slot="header">
@@ -50,28 +50,28 @@
                        <p class="m-0 p-0">Unable to load this page</p>
                        <el-button @click.prevent="webhooks" icon="sync icon" type="text">Retry</el-button>
                     </div>
-                </div>                
+                </div>
                 <div class="callbacks breathe w-100 s-13">
                     <el-table empty-text="You have not defined any webhooks yet" v-loading="loadingPage" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="appsHooks">
                         <el-table-column prop="url" label="URL">
                             <template slot-scope="scope">
                                 {{scope.row.test_url || 'N/A'}}
                             </template>
-                        </el-table-column>                    
+                        </el-table-column>
                         <el-table-column prop="version" label="VERSION" width="200">
                             <template slot-scope="scope">
                                 {{scope.row.version || 'N/A'}}
-                            </template>                            
-                        </el-table-column>  
+                            </template>
+                        </el-table-column>
                         <el-table-column label="MODE" width="125">
                             <template slot-scope="scope">
                                 <the-tag status="success" title="Test" icon="detail check icon"></the-tag>
-                            </template>   
-                        </el-table-column>                                                        
-                    </el-table>   
+                            </template>
+                        </el-table-column>
+                    </el-table>
                 </div>
             </div>
-        </el-card>  
+        </el-card>
 
         <!-- Add Webhook -->
         <el-dialog custom-class="new-transaction"
@@ -85,7 +85,7 @@
                     </el-form-item>
                     <el-form-item label="Production URL">
                         <el-input v-model="form.production_url" clearable></el-input>
-                    </el-form-item>                    
+                    </el-form-item>
                     <el-form-item class="h-auto" label="Webhook version" prop="version">
                         <div class="flex align-items-center w-100" v-for="(item, index) in form.webhook_versions" :key="index">
                             <el-radio v-model="form.id" :label="item.id"></el-radio>
@@ -100,14 +100,14 @@
                     </el-form-item>
                     <el-form-item label="Filter events" prop="event">
                         <div class="flex align-items-center" v-for="(item, index) in form.subscribed_event" :key="index">
-                            <el-radio @change="handleEventSelection" v-model="radio" :label="item.id"></el-radio>            
+                            <el-radio @change="handleEventSelection" v-model="radio" :label="item.id"></el-radio>
                             <div class="px-10">
                                 <span>{{item.type}}</span>
                                 <div>
                                     <span>{{item.tag}}</span>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
                     </el-form-item>
                     <el-form-item v-if="custom" label="Events" prop="event" class="filtered-events m-0">
                         <el-checkbox-group @change="handleCheckedPrivilegesChange" v-model="event">
@@ -131,8 +131,8 @@
                 <el-button size="mini" class="z-depth-button b-0 open-sans black-text" @click="dialogVisible = false">Cancel</el-button>
                 <el-button size="mini" :loading="createLoading" class="z-depth-button b-0 bold-500 open-sans white-text" type="primary" @click="SaveWebhook('form')">Add endpoint</el-button>
             </span>
-        </el-dialog>        
-    </div>    
+        </el-dialog>
+    </div>
 </template>
 
 <script>
@@ -170,7 +170,7 @@ export default {
                         name: 'v2',
                         date: '2018-07-01',
                         tag: 'latest'
-                    }                   
+                    }
                 ],
                 subscribed_event: [
                     {
@@ -182,7 +182,7 @@ export default {
                         type: 'Select types to send',
                     }
                 ]
-            },  
+            },
             services: [
                 {id: 1, name:'account.updated'},
                 {id: 2, name:'account.application.authorized'},
@@ -247,15 +247,15 @@ export default {
         for (let i = 0; i < this.webhooks.length; i++) {
             if (this.webhooks[i].type == 'test'){
                 this.webhooks[i].url = this.user.client.test_callbackurl
-            } else 
+            } else
                 this.webhooks[i].url = this.user.client.callbackurl
         }
-    },    
+    },
     methods: {
         clickRow (row, event, column) {
-            if (column.property) {
-                // this.$router.push(`/webhooks/${row.id}`)
-            }
+          // this.$router.push(`/webhooks/${row.id}`)
+            // if (column.property) {
+            // }
         },
         SaveWebhook () {
             this.createLoading = true
@@ -283,7 +283,7 @@ export default {
                     type: 'error',
                     message: response.data.error,
                 })
-            })          
+            })
         },
         handleCheckAllChange (val) {
             this.priv = val ? this.privileges.map(el => el.code) : []
@@ -293,11 +293,11 @@ export default {
             let checkedCount = value.length
             this.checkAll = checkedCount === this.privileges.length
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.privileges.length
-        },      
+        },
         handleEventSelection (val) {
             if(val == 2) this.custom = true
             else this.custom = false
-        }  
+        }
     },
     computed: {
         ...mapGetters({
@@ -305,13 +305,13 @@ export default {
             state: 'hooksState',
             meta: 'hooksMeta',
             user: 'user',
-        }),    
+        }),
         filteredLogs () {
             return this.hooks
         },
         error () {
             return this.state === 'ERROR' && this.state !== 'LOADING'
-        },  
+        },
         total () {
             return this.meta.totalCount
         },

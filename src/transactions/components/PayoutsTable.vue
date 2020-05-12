@@ -62,7 +62,7 @@
                             <i v-if="scope.row.has_dispute" class="exclamation icon red-text"></i>
                             <div>
                                 <!-- <i v-if="scope.row.status.toLowerCase() ==='failed'" class="reply icon blue-text cursor first-icon"></i> -->
-                                <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)" trigger="click">
+                                <el-dropdown class="mini-menu" @command="command => handleTableCommand(command, scope.row)">
                                     <!-- <i class="ellipsis horizontal icon m-0 mr-0 blue-text cursor"></i> -->
                                     <el-button class="trans-icon-only-button" type="text" size="mini" plain icon="ellipsis horizontal icon"></el-button>
                                     <el-dropdown-menu class="w-200" slot="dropdown">
@@ -248,85 +248,85 @@ export default {
     })
     EventBus.$off('exportModal', (val) => {
         this.exportVisible = false
-    })  
+    })
   },
   methods: {
     clickRow (row, event, column) {
-        if (column.property || !column.status === 'error') {
-            this.$router.push(`/payments/${row.reference}`)
-        }
+      this.$router.push(`/payments/${row.reference}`)
+        // if (column.property || !column.status === 'error') {
+        // }
     },
     tableRowClassName ({row, rowIndex}) {
-        if (row.has_dispute) {
-            return 'transactions-table-body warning-row'
-        } else {
-            return 'transactions-table-body'
-        }
+      if (row.has_dispute) {
+          return 'transactions-table-body warning-row'
+      } else {
+          return 'transactions-table-body'
+      }
     },
     handleCurrentChange (val) {
-        this.$store.dispatch('getPayouts', {page: val, cache: false})
+      this.$store.dispatch('getPayouts', {page: val, cache: false})
     },
     fetchTransactions () {
       this.$store.dispatch('getPayouts', {cache: false})
     },
     close () {
-        this.form = {
-            sender_amount: '',
-            sender_currency: 'GHS',
-            recipient_amount: '',
-            recipient_currency: 'GHS',
-            recipient_no: '',
-            recipient_name: '',
-            provider: '',
-            country_code: 'GH',
-            service_code: 'cashin',
-            live: false
-        }
-        this.dialogVisible = false
+      this.form = {
+          sender_amount: '',
+          sender_currency: 'GHS',
+          recipient_amount: '',
+          recipient_currency: 'GHS',
+          recipient_no: '',
+          recipient_name: '',
+          provider: '',
+          country_code: 'GH',
+          service_code: 'cashin',
+          live: false
+      }
+      this.dialogVisible = false
     },
     handleTableCommand (command, row) {
-        switch (command) {
-            case 'edit':
-                this.$router.push(`payments/${row.id}`)
-                break
-            case 'open':
-                this.ticketVisible = true
-                this.transaction = row
-                break
-            case 'retry':
-                this.retry(row)
-                break
-            default:
-                break
-        }
+      switch (command) {
+          case 'edit':
+              this.$router.push(`payments/${row.id}`)
+              break
+          case 'open':
+              this.ticketVisible = true
+              this.transaction = row
+              break
+          case 'retry':
+              this.retry(row)
+              break
+          default:
+              break
+      }
     },
     retry (row) {
         var form = Utils.retryTransactions(row, 'payout')
         form.live = !this.test
         form.dummy = this.test
-        
+
         this.$store.dispatch('createPayouts', form)
         .then((response) => {
-            if (response.data.success) {
-                this.$message({
-                    message: 'Retry successful',
-                    type: 'success'
-                })
-                this.fetchTransactions()
-                this.dialogVisible = false
-                this.$store.dispatch('getBalance')
-            } else {
-                this.$message({
-                    type: 'error',
-                    message: response.data.response.error_message
-                })
-            }
+          if (response.data.success) {
+              this.$message({
+                  message: 'Retry successful',
+                  type: 'success'
+              })
+              this.fetchTransactions()
+              this.dialogVisible = false
+              this.$store.dispatch('getBalance')
+          } else {
+              this.$message({
+                  type: 'error',
+                  message: response.data.response.error_message
+              })
+          }
         }).catch((error) => {
-            const response = error.response
-            this.$message({
-                message: response.data.error,
-                type: 'error'
-            })
+          const response = error.response
+          this.$message({
+            message: response.data.error,
+            type: 'error'
+          })
         })
     },
     submitForm (formName) {
@@ -438,7 +438,7 @@ export default {
       banks: 'bills'
     }),
     total () {
-      return this.meta.trans
+      return this.meta.totalCount
     },
     error () {
       return this.state === 'ERROR' && this.state !== 'LOADING'

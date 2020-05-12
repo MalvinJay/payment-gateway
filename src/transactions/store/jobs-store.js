@@ -219,81 +219,89 @@ const actions = {
   },
 
   [SEND_TO_BUCKET] ({ state, commit, rootGetters }, file) {
+    var presignedUrl;
+    var BucketName = AWS_BUCKET;
+    var albumFileKey = encodeURIComponent('flopay-file-batch') + '/';
+    var fileKey = albumFileKey + Utils.randomString2(3) + '_' + file.name;
+
     commit(SET_FILE_STATE, 'LOADING')
-    var fileBucketName;
     return new Promise((resolve, reject) => {
-      apiCall({
-        url: `https://3fr3gyg66k.execute-api.eu-central-1.amazonaws.com/default/presignedUrl`,
-        method: 'POST',
-        data: {
-          bucket: 'mbackofficedata',
-          filename: file.name
+      fetch('https://3fr3gyg66k.execute-api.eu-central-1.amazonaws.com/default/presignedUrl',
+        {
+          method: 'POST',
+          body: JSON.stringify({"bucket": BucketName, "filename": fileKey}),
         }
-      }).then((response) => {
-        console.log('Presigned URL:', response.data)
-        fileBucketName = response.data;
-        apiCall({
-          url: response.data,
+      )
+      .then(response => {
+        return response.json()
+      })
+      .then((response) => {
+        console.log('Presigned URL:', response)
+        presignedUrl = response;
+
+        fetch(presignedUrl, {
           method: 'PUT',
-          data: {
-            file
-          }
-        }).then(() => {
-          console.log('fileBucketName :>> ', fileBucketName);
-          resolve(fileBucketName)
-        }).catch((error) => {
+          Body: file
+        })
+        .then(() => {
+          console.log('Item Key :>> ', presignedUrl.split("?")[0]);
+          commit(SET_FILE_STATE, 'DATA')
+          resolve(fileKey)
+        })
+        .catch((error) => {
+          commit(SET_JOB_RUNS_STATE, 'ERROR')
           console.log(error)
           reject(error)
         })
-        resolve(response)
       }).catch(error => {
+        commit(SET_JOB_RUNS_STATE, 'ERROR')
         reject(error)
-        return error
       })
     })
   },
 
-  [SEND_TO_BUCKET] ({ state, commit, rootGetters }, file) {
-    commit(SET_FILE_STATE, 'LOADING')
-    function getFileExtension (filename) {
-      return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined
-    }
+  // [SEND_TO_BUCKET] ({ state, commit, rootGetters }, file) {
+  //   commit(SET_FILE_STATE, 'LOADING')
+  //   function getFileExtension (filename) {
+  //     return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined
+  //   }
 
-    var fileExtension = getFileExtension(file.name)
+  //   var fileExtension = getFileExtension(file.name)
 
-    var BucketName = AWS_BUCKET
-    var accessKeyId = ACCESS_KEY_ID
-    var SecretAccessKey = SECRET_ACCESS_KEY
+  //   var BucketName = AWS_BUCKET
+  //   var accessKeyId = ACCESS_KEY_ID
+  //   var SecretAccessKey = SECRET_ACCESS_KEY
 
-    var s3 = new S3({
-      apiVersion: '2006-03-01',
-      region: 'eu-central-1',
-      accessKeyId: accessKeyId,
-      secretAccessKey: SecretAccessKey,
-      params: {Bucket: BucketName}
-    })
-    var albumFileKey = encodeURIComponent('flopay-file-batch') + '/'
-    var fileKey = albumFileKey + Utils.randomString2(3) + '_' + file.name
-    // batchUploadsChannel.subscribe(fileKey, _this.onFileProcessed)
-    var params = {Bucket: BucketName, Key: fileKey, Body: file}
-    return new Promise((resolve, reject) => {
-      s3.upload(params, function (err, data) {
-        if (err) {
-          console.log('err', err)
-          commit(SET_FILE_STATE, 'ERROR')
-          reject(err)
-          return
-        }
-        let admin = {
-          s3_object_key: data.key,
-          file_type: fileExtension
-        }
-        resolve(data)
-        commit(SET_FILE_UPLOAD_DETAILS, data)
-        commit(SET_FILE_STATE, 'DATA')
-      })
-    })
-  },
+  //   var s3 = new S3({
+  //     apiVersion: '2006-03-01',
+  //     region: 'eu-central-1',
+  //     accessKeyId: accessKeyId,
+  //     secretAccessKey: SecretAccessKey,
+  //     params: {Bucket: BucketName}
+  //   })
+  //   var albumFileKey = encodeURIComponent('flopay-file-batch') + '/'
+  //   var fileKey = albumFileKey + Utils.randomString2(3) + '_' + file.name
+  //   // batchUploadsChannel.subscribe(fileKey, _this.onFileProcessed)
+  //   var params = {Bucket: BucketName, Key: fileKey, Body: file}
+  //   return new Promise((resolve, reject) => {
+  //     s3.upload(params, function (err, data) {
+  //       if (err) {
+  //         console.log('err', err)
+  //         commit(SET_FILE_STATE, 'ERROR')
+  //         reject(err)
+  //         return
+  //       }
+  //       let admin = {
+  //         s3_object_key: data.key,
+  //         file_type: fileExtension
+  //       }
+  //       resolve(data)
+  //       commit(SET_FILE_UPLOAD_DETAILS, data)
+  //       commit(SET_FILE_STATE, 'DATA')
+  //     })
+  //   })
+  // },
+
   [DELETE_JOB] ({ rootGetters }, id) {
     return new Promise((resolve, reject) => {
       apiCall({
@@ -311,7 +319,7 @@ const actions = {
   [UPDATE_JOB] ({ rootGetters }, {id, data}) {
     return new Promise((resolve, reject) => {
       apiCall({
-        url: `${GET_BASE_URI}v1clients/jobs/files/${id}?${data}&is_sub_user=false`,
+        url: `${GET_BASE_URI}v1/clients/jobs/files/${id}?${data}&is_sub_user=false`,
         method: 'PUT',
         token: rootGetters.token
       }).then((response) => {

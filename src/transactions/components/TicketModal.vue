@@ -108,8 +108,8 @@ export default {
             date_of_transaction: this.transaction.created_at,
             email: [this.$session.get('email')],
             emails: [...this.form.email],
-            customer_name: this.transaction.receiver_name,
-            provider_reference: this.transaction.provider_ref,
+            customer_name: this.transaction.receiver_name || 'N/A',
+            provider_reference: this.transaction.provider_ref || 'N/A',
             from: this.$session.get('email')
         }
         this.$store.dispatch('createTicket', form)
