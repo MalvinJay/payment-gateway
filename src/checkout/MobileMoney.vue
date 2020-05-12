@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-column justify-content-center new-transaction-bg p-30">
-    <p class="text-center pb-10">Enter your mobile money number and provider <br> to start the payment</p>
+    <!-- <p class="text-center pb-10">Enter your mobile money number and provider <br> to start the payment</p> -->
     <el-form
       size="medium"
       ref="form"
@@ -12,7 +12,7 @@
       :status-icon="true"
     >
       <el-form-item class="h-auto" label="Phone" prop="customer_no">
-        <el-input type="tel" v-model="phone" placeholder="0XX 000 0000" @input="formatTel" style="white-space: pre-line;"></el-input>
+        <el-input type="tel" v-model="phone" placeholder="000 000 0000" @input="formatTel" style="white-space: pre-line;"></el-input>
       </el-form-item>
 
       <el-form-item label="Mobile Network">
@@ -165,6 +165,7 @@ export default {
       var replacedInput = temp.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
       this.phone = !replacedInput[2] ? replacedInput[1] : '' + replacedInput[1] + ' ' + replacedInput[2] + (replacedInput[3] ? ' ' + replacedInput[3] : '');
     },
+
     handleDataChange(data) {
       switch (data) {
         case "mtn":
@@ -181,6 +182,7 @@ export default {
           break;
       }
     },
+
     fetchItem() {
       return new Promise((resolve, reject) => {
         apiCall({
@@ -197,70 +199,12 @@ export default {
           });
       });
     },
+
     submitForm(formName) {
       this.createLoading = true;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.$store
-            .dispatch("createTransactions", this.form)
-            .then(response => {
-              if (response.data.success) {
-                // Redirect here
-                swal({
-                  title: response.data.response.message.message,
-                  text: "Checking transaction status...",
-                  icon: "info"
-                });
-
-                let trans_ref = response.data.response.message.reference;
-
-                if (this.paymentDone == false) {
-                  const timer = () => {
-                    setInterval(() => {
-                      this.$store
-                        .dispatch("getCurrentTransaction", trans_ref)
-                        .then(response => {
-                          console.log("response :>> ", response);
-
-                          if (response.status === 'paid') {
-                            this.paymentDone = true;
-                            clearInterval(timer);
-
-                            swal({
-                              title: "Done",
-                              text: "Payment successful",
-                              icon: "success"
-                            })
-
-                            setTimeout(() => {
-                              window.location = this.itemInfo.invoice.return_url
-                            }, 2000);
-                          }
-                        });
-                    }, 5000);
-                  };
-                }
-              } else {
-                swal({
-                  title: "Ooops!",
-                  text:
-                    response.data.response.message.message ||
-                    response.data.response.message,
-                  icon: "error"
-                });
-              }
-
-              this.createLoading = false;
-            })
-            .catch(error => {
-              this.createLoading = false;
-
-              // swal({
-              //   title: "Error",
-              //   text: error,
-              //   icon: "error"
-              // });
-            });
+          this.postTranasaction()
         } else {
           this.createLoading = false;
           this.$message({
@@ -271,16 +215,161 @@ export default {
         }
       });
     },
+
     cancel() {
       swal({
         title: "Ooops!",
         text: "You cancelled payment, redirecting.....",
         icon: "warning"
       });
+      swal({
+        title: "Are you sure you want to cancel this payment?",
+        text: "Going back will cancel and delete this payment.",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          swal({
+            title: "Payment Cancelled!",
+            text: "Redirecting you back .....",
+            icon: "error",
+          });
 
-      setTimeout(() => {
-        window.location = this.itemInfo.invoice.cancel_url;
-      }, 2000);
+          setTimeout(() => {
+            window.location = this.itemInfo.invoice.cancel_url;
+          }, 2000);
+        } else {
+          swal({
+            title: "Good to go",
+            text: "You can continue with payment!",
+            icon: "info"
+          });
+        }
+      });
+    },
+
+    postTranasaction() {
+      this.$store.dispatch("createTransactions", this.form)
+      .then(response => {
+        if (response.data.success) {
+          swal({
+            title: response.data.response.message.message,
+            text: "Checking transaction status...",
+            icon: "info"
+          });
+
+          const trans_ref = response.data.response.message.reference;
+
+          if (!this.paymentDone) {
+            const timer = setInterval(() => {
+              this.checkTransactionStatus(trans_ref, timer, timeOut)
+            }, 5000);
+
+            const timeOut = setTimeout(() => {
+              clearInterval(timer);
+              this.createLoading = false;
+              this.paymentDone = true;
+
+              // Call completer function here
+              this.transactionCompleter(trans_ref)
+              .then(() => {
+                // Check transaction status one more time but just once
+                this.checkTransactionStatus(trans_ref, timer, timeOut)
+              })
+            }, 60000);
+          }
+        } else {
+          swal({
+            title: "Ooops!",
+            text: response.data.response.message.message || response.data.response.message,
+            icon: "error"
+          });
+
+          this.createLoading = false;
+        }
+      })
+      .catch(error => {
+        this.createLoading = false;
+
+        swal({
+          title: error,
+          text: "Payment could not be made, check your internet and try again",
+          icon: "error"
+        });
+      });
+    },
+
+    checkTransactionStatus(trans_ref, timer, timeOut) {
+      this.$store.dispatch("getCurrentTransaction", trans_ref)
+      .then(response => {
+        console.log("status response :>> ", response.payment_status);
+
+        if (response.payment_status.toLowerCase() === 'paid') {
+          this.createLoading = false;
+          this.paymentDone = true;
+          clearInterval(timer);
+
+          swal({
+            title: "Done",
+            text: "Payment successful",
+            icon: "success"
+          })
+
+          setTimeout(() => {
+            window.location = this.itemInfo.invoice.return_url
+          }, 2000);
+        }
+
+        if (response.payment_status.toLowerCase() === 'failed') {
+          this.createLoading = false;
+          this.paymentDone = true;
+          clearInterval(timer);
+          clearTimeout(timeOut);
+
+          this.retry(trans_ref);
+        }
+
+      });
+    },
+
+    transactionCompleter(ref) {
+      return this.$store.dispatch("transactionCompleter", ref)
+            .then(response => {
+              console.log('response :>> ', response);
+            })
+            .catch(error => {
+              console.log('error :>> ', error);
+            });
+    },
+
+    retry(ref) {
+      swal({
+        title: "Sorry! Payment failed",
+        text: "Payment failed",
+        icon: "error"
+      });
+      swal({
+        title: "Do you want to retry?",
+        text: "This will retry the payment again",
+        icon: "info",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((retry) => {
+        if (retry) {
+          swal("Payment cancelled!, redirecting you back .....", {
+            icon: "error",
+          });
+
+          setTimeout(() => {
+            this.postTranasaction();
+          }, 1000);
+        } else {
+          this.cancel();
+        }
+      });
     }
   },
   computed: {

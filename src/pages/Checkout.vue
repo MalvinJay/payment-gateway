@@ -2,53 +2,79 @@
   <!-- Stripe -->
   <div :class="[{'animate': !fullscreenLoading }, 'payment_page']" v-loading.fullscreen.lock="fullscreenLoading">
     <div :class="[{'animate': !fullscreenLoading}, 'single-payment', 'mx-0', 'm-auto']">
-      <div class>
+      <div style="width: 400px;">
         <div class="position-relative">
-          <div class="go_back cursor" style="display: block;margin-left: -24px;padding-left: 24px;" @click="cancelRequest">
-            <div class="flex-container align-items-center width-auto menu-gray-text">
+          <div class="go_back cursor" style="display: block; margin-left: -24px; padding-left: 24px;" @click="cancelRequest">
+            <div class="flex-container align-items-center width-auto menu-gray-text" style="height: 50px;">
               <div class="flex align-items-center">
                 <div class="box-button flex justify-content-center align-items-center">
                   <i class="el-icon-back position-absolute black-text trans-arrow bold-600 s-18"></i>
-                  <!-- <img src="@/assets/go_back.png" class="" style="width: 20px" alt=""> -->
                 </div>
-                <span class="black-text bold-600">Back</span>
+                <span class="black-text bold-600 pl-6">Back</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="flex flex-column justify-content-start mt-5">
-          <div class="flex flex-column gray-text">
-            <span class="m-0 s-16 bold-500">{{customerInfo.meta_items.description || ''}}</span>
-            <span
-              class="s-24 my-3 bold-600"
-              style="font-variant-numeric: tabular-nums;letter-spacing: -0.03rem"
-            >{{customerInfo.amount | money}}</span>
-            <!-- <span class="bold-500 s-16">Paying for serial number</span> -->
-          </div>
+        <div class="flex flex-column justify-content-start mt-5 productSummary">
+          <div class="flex flex-column productContainer w-100">
+            <div class="flex flex-column gray-text w-100">
+              <div class="flex align-items-center">
+                <!-- <img src="@/assets/waec.png" style="max-height: 25px" alt /> -->
+                <span class="m-0 s-14 bold-500">{{customerInfo.meta_items.description || ''}}</span>
+              </div>
 
-          <div class="flex mt-6">
-            <div class="bg-white border-round p-20">
-              <!-- <el-avatar shape="square" class="bg-white" :size="300" src="@/assets/qrcode.png"></el-avatar> -->
-              <!-- <img src="@/assets/qrcode.png" style="width: 250px;opacity: 0.7;" alt=""> -->
+              <div class="w-100 my-2">
+                <span class="s-34 bold-600" style="font-variant-numeric: tabular-nums;letter-spacing: -0.03rem" >{{customerInfo.amount | money}}</span>
+              </div>
+            </div>
 
-              <span class="bold-500 s-16">{{customerInfo.meta_items.description || ''}}</span>
+            <div class="flex flex-column pt-30 s-18"> <!-- align-items-center justify-content-center -->
+              <p class="text-lineHeight--40">
+                Payment for BECE (
+                  <span class="bold-700">
+                    <template v-if="customerInfo.meta_items.type === 'pece'">Private</template>
+                    <template v-else>Basic</template>
+                  </span>
+                ) year <span class="bold-700">{{customerInfo.meta_items.year}}</span> for candidate with index number
+                <span class="bold-700">{{customerInfo.meta_items.index_no}}</span>
+              </p>
+
+              <!-- <div class="py-20">
+                <span class="bold-700">{{customerInfo.meta_items.description}}</span>
+              </div>
+              <div class="py-20">
+                <span class="bold-500 pr-10">Index No.: </span>
+                <span class="bold-700 s-20">{{customerInfo.meta_items.index_no}}</span>
+              </div>
+              <div class="py-20">
+                <span class="bold-500 pr-10">Year: </span>
+                <span class="bold-700 s-20">{{customerInfo.meta_items.year}}</span>
+              </div>
+              <div class="py-20">
+                <span class="bold-500 pr-10">Exams Type: </span>
+                <span class="bold-700 s-20 upper-case">
+                  <template v-if="customerInfo.meta_items.type === 'pece'">Private</template>
+                  <template v-else>Basic</template>
+                </span>
+              </div> -->
+
             </div>
-          </div>
-          <div class="flex mt-6">
-            <div class="bg-white border-round p-20">
-              <img src="@/assets/waec.jpg" style="width: 250px; opacity: 0.7;" alt />
+
+            <div class="flex align-items-center justify-content-center pt-50">
+              <img src="@/assets/waec.png" style="max-height: 80px" alt />
             </div>
+
           </div>
         </div>
       </div>
 
-      <div class="pt-20">
+      <div class="payment_form">
         <div class="w-100 m-auto mr-0">
-          <div class>
-            <div class="">
+          <!-- <div class> -->
+            <!-- <div class="">
               <div class="payment-form black-text bold-700 s-18 py-20 position-relative">Pay with</div>
-            </div>
+            </div> -->
             <el-tabs class="default-tab position-relative" stretch type>
               <div class="position-absolute bg-orange test"></div>
               <el-tab-pane label="Mobile Wallet">
@@ -59,12 +85,12 @@
               </el-tab-pane>
             </el-tabs>
             <!-- powered by no -->
-            <div class="flex justify-content-center mt-2">
-              <div class="mt-50 pr-10 w-50">
-                <img style="width: 100%;" src="../assets/images/PoweredBy.svg" alt />
+            <div class="flex justify-content-center mt-5">
+              <div class="flex justify-content-center align-items-center pr-10 w-50">
+                <img style="height: 30%;" src="../assets/images/PoweredBy.svg" alt />
               </div>
             </div>
-          </div>
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -102,19 +128,15 @@ export default {
           index_no: null
         }
       },
-      fullscreenLoading: false
+      fullscreenLoading: null
     };
   },
   created() {
-      // this.fullscreenLoading = true;
+    this.fullscreenLoading = true
   },
   mounted() {
-    setTimeout(() => {
-      this.fullscreenLoading = false;
-    }, 2000);
-
     EventBus.$on("itemFetched", info => {
-      this.fullscreenLoading = true;
+      this.fullscreenLoading = false;
       this.customerInfo.email = info.customer.address;
       this.customerInfo.amount = info.invoice.total;
       this.customerInfo.meta_items = info.meta_items;
@@ -134,6 +156,37 @@ export default {
       padding: 20px 10px;
       max-width: 380px;
       margin: 0 auto;
+
+      .productSummary {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+
+        .productContainer {
+          -webkit-box-ordinal-group: 3;
+          order: 2;
+        }
+
+        .productImage {
+          -webkit-box-ordinal-group: 2;
+          order: 1;
+
+          img {
+            max-height: 120px;
+          }
+        }
+      }
+
+      .clientLogo {
+        margin: 2.5rem auto;
+      }
+
+      .payment_form {
+        width: 400px;
+        padding-top: 30px;
+      }
     }
   }
 
@@ -147,57 +200,79 @@ export default {
       top: 0;
       right: 0;
       background: #fff;
+      box-shadow: 2px 1px 20px 2px #f3ecec;
+      background-image: url('../assets/pageBack.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      opacity: 0.2;
     }
 
     &.animate {
       &::before {
-        -webkit-animation: enter 0.6s;
         animation: enter 0.6s;
-        -webkit-animation-fill-mode: both;
         animation-fill-mode: both;
-        -webkit-transform-origin: right;
-        -ms-transform-origin: right;
         transform-origin: right;
       }
     }
 
     &::after {
       height: 100%;
-      width: 100%;
+      width: 50%;
       position: fixed;
       content: " ";
       top: 0;
-      right: 0;
-      background: #f5f2f2;
+      left: 0;
+      background: #fff;
       z-index: -1;
+      // background-image: url('../assets/pageBack.jpg');
+      // background-repeat: no-repeat;
+      // background-size: cover;
     }
 
     .single-payment {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      max-width: 920px;
-      padding-top: 90px;
+      max-width: 1000px;
+      padding-top: 100px;
       padding-bottom: 90px;
-      -webkit-box-orient: horizontal;
-      -webkit-box-direction: normal;
-      -webkit-flex-direction: row;
-      -ms-flex-direction: row;
       flex-direction: row;
-      -webkit-box-pack: justify;
-      -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
       justify-content: space-between;
 
-
       &.animate {
-      -webkit-animation: enter 0.6s;
-      animation: enter 0.6s;
-      -webkit-animation-delay: 0.2s;
-      animation-delay: 0.2s;
-      -webkit-animation-fill-mode: both;
-      animation-fill-mode: both;
+        animation: enter 0.6s;
+        animation-delay: 0.2s;
+        animation-fill-mode: both;
       }
+
+      .productSummary {
+        flex-direction: column;
+        text-align: left;
+        justify-content: left;
+        align-items: flex-start;
+
+        .productContainer {
+          display: flex;
+          // align-items: center;
+          flex-shrink: 0;
+        }
+
+        .productImage {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          img {
+            width: 250px;
+            opacity: 0.7;
+            max-height: none;
+          }
+        }
+      }
+
+      // .clientLogo {
+
+      // }
     }
 
     .payment-form {

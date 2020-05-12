@@ -6,5 +6,19 @@
 // @import "tailwindcss/utilities";
 
 .swal-button {
-  background-color: #586ADA!important;
+  color: #fff!important;
+
+  &.swal-button--confirm {
+    background-color: #586ADA!important;
+  }
+
+  &.swal-button--cancel {
+
+  }
 }
+
+.swal-text {
+  text-align: center!important;
+}
+
+

@@ -1,4 +1,4 @@
-import { TRANSACTION_CREATE, CREATE_CHECKOUT, SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SEARCH_TRANSACTIONS,
+import { TRANSACTION_CREATE, CREATE_CHECKOUT, TRANSACTION_COMPLETER,  SET_TRANSACTIONS_META, SET_TRANSACTIONS_FILTERS, SEARCH_TRANSACTIONS,
   TRANSACTIONS_FETCH, SET_CURRENT_TRANSACTION_STATE,
   SET_TRANSACTIONS_STATE, GET_QUEUE, SET_QUEUE, SET_QUEUE_STATE, SET_QUEUE_FILTERS, SET_QUEUE_META, SET_CURRENT_TRANSACTION,
   SET_TRANSACTIONS, GET_PENDING, SET_PENDING, SET_PENDING_FILTERS, ADD_TRANSACTION, SET_PENDING_STATE, SET_PENDING_META, APPROVE_TRANSACTIONS, GET_CURRENT_TRANSACTION,
@@ -321,13 +321,34 @@ const actions = {
     return new Promise((resolve, reject) => {
       ctrlCall({
         url: `${GET_BASE_URI}v1/rekt_transacts/${id}`,
-        method: 'GET'
+        method: 'GET',
       }).then((response) => {
         commit(SET_CURRENT_TRANSACTION_STATE, 'DATA')
         commit(SET_CURRENT_TRANSACTION, response.data.response.data)
-        resolve()
+        resolve(response.data.response.data)
       }).catch((error) => {
         commit(SET_CURRENT_TRANSACTION_STATE, 'ERROR')
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
+  [TRANSACTION_COMPLETER] ({ state, commit, rootGetters }, ref) {
+    commit(SET_CURRENT_TRANSACTION_STATE, 'LOADING')
+    return new Promise((resolve, reject) => {
+      ctrlCall({
+        url: `${GET_BASE_URI}v1/rekt_transacts/tickets/completer`,
+        method: 'POST',
+        data: {
+          transact_ref: ref
+        }
+      }).then((response) => {
+        // commit(SET_CURRENT_TRANSACTION_STATE, 'DATA')
+        // commit(SET_CURRENT_TRANSACTION, response.data.response.data)
+        console.log('response.data :>> ', response.data);
+        resolve(response.data)
+      }).catch((error) => {
+        // commit(SET_CURRENT_TRANSACTION_STATE, 'ERROR')
         console.log(error)
         reject(error)
       })
