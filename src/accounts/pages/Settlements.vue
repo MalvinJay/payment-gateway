@@ -6,6 +6,7 @@
                 <filter-component dispatch="setSettlementsFilters" filterType="payment"></filter-component>
             </div>
             <div>
+
                 <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="settlementVisible = true" type="text"><i class="plus icon"></i> New</el-button>
             </div>
         </div>
@@ -24,7 +25,7 @@
                             <p class="m-0 p-0 mr-10 bold-500 s-13">{{scope.row.receiver_amount | money}}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="status" label="">
+                    <el-table-column prop="status" label="" width="150">
                         <template slot-scope="scope">
                             <div class="flex">
                                 <the-tag v-if="scope.row.status === 'Paid'" status="success" :title="scope.row.status" icon="detail check icon"></the-tag>
@@ -33,7 +34,12 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column :width="column.width" :key="index" v-for="(column, index) in columns" :prop="column.dataField" :label="column.label"></el-table-column>
+                    <el-table-column 
+                        show-overflow-tooltip
+                        :width="column.width" 
+                        :key="index" v-for="(column, index) in columns" 
+                        :prop="column.dataField" 
+                        :label="column.label"></el-table-column>
                     <el-table-column prop="created_at" label="Date">
                         <template slot-scope="scope">
                             {{scope.row.created_at | moment("D MMM,YY hh:mm A")}}
@@ -92,8 +98,9 @@ export default {
     return {
       test: true,
       columns: [
-        {label: 'Customer', dataField: 'customer', width: '250'},
-        {label: 'Reference', dataField: 'reference', width: 'auto'}
+        {label: 'Customer', dataField: 'customer', width: '150'},
+        {label: 'Remarks', dataField: 'remarks', width: 'auto'},
+        {label: 'Reference', dataField: 'reference', width: 'auto'},
       ],
       styleObject: {
         fontSize: '12px'
@@ -120,8 +127,8 @@ export default {
         this.$store.dispatch('getSettlements', {page: val, cache: false})
     },
     clickRow (row, event, column) {
+      //     this.$router.push(`/job/${row.id}`)
         // if (column.property) {
-        //     this.$router.push(`/job/${row.id}`)
         // }
     },
     fetchSettlements () {

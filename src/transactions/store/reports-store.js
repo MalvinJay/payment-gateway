@@ -57,6 +57,7 @@ const actions = {
       })
     }
   },
+
   [SUBMIT_JOB_REPORT] ({ state, commit, rootGetters, dispatch }, id) {
     return new Promise((resolve, reject) => {
       apiCall({
@@ -80,6 +81,7 @@ const actions = {
       })
     })
   },
+
   [SUBMIT_REPORT] ({ state, commit, rootGetters, dispatch }, report) {
     commit(SET_FIELDS_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
@@ -89,24 +91,26 @@ const actions = {
         token: rootGetters.token
       }).then((response) => {
         if (response.data.success) {
+          resolve(response)
+
           state.job_id = response.data.response.data.job_id
           dispatch(GET_REPORT, state.job_id)
-            .then((response) => {
-              resolve(response)
-            }).catch((error) => {
-              reject(error)
-            })
-          resolve(response)
+          // .then((response) => {
+          //   resolve(response)
+          // }).catch((error) => {
+          //   reject(error)
+          // })
         }
       }).catch((error) => {
         commit(SET_FIELDS_STATE, 'ERROR')
         console.log(error)
-
         reject(error)
       })
     })
   },
+
   [GET_REPORT] ({ state, commit, rootGetters, dispatch }, jobId = state.job_id) {
+    commit(SET_FIELDS_STATE, 'LOADING')
     return new Promise((resolve, reject) => {
       apiCall({
         url: `${GET_BASE_URI}v1/clients/reports/${jobId}`,
@@ -115,26 +119,27 @@ const actions = {
       }).then((response) => {
         if (response.data.response.data.done) {
           commit(SET_DOWNLOAD_LINK, response.data.response.data.file_name)
-          // trigger an event to set the 'download' button active
           bus.$emit('toggleDownload')
-
           resolve(response)
         } else {
-          reject(response)
+          // reject(response)
           setTimeout(() => {
+            commit(SET_FIELDS_STATE, 'LOADING')
             dispatch(GET_REPORT, jobId)
-              .then((response) => {
-                resolve(response)
-              }).catch((error) => {
-                reject(error)
-              })
-          }, 5000)
+              // .then((response) => {
+              //   resolve(response)
+              // }).catch((error) => {
+              //   reject(error)
+              // })
+          }, 10000)
         }
       }).catch((error) => {
+        commit(SET_FIELDS_STATE, 'ERROR')
         reject(error)
       })
     })
   },
+
   [DOWNLOAD_REPORT] ({ state, commit, rootGetters }, report = state.link) {
     return new Promise((resolve, reject) => {
       apiCall({
@@ -142,7 +147,6 @@ const actions = {
         method: 'GET',
         token: rootGetters.token
       }).then((response) => {
-        // state.link =
         resolve(response)
       }).catch((error) => {
         commit(SET_FIELDS_STATE, 'ERROR')

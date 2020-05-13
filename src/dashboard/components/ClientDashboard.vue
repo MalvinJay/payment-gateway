@@ -125,7 +125,6 @@ export default {
       durations: [
         {label: '1d', value: 'day'},
         {label: '1w', value: 'week'},
-        // {label: '1y', value: 'yearly'},
         {label: 'Mtd', value: 'month'},
         {label: 'Qtd', value: 'quarter'},
         {label: 'Ytd', value: 'year'}
@@ -161,9 +160,9 @@ export default {
       statue: [],
       cash: [],
       form: {
-        time_interval: 'month',
-        payment_types: [],
-        statuses: []
+        time_interval: 'day',
+        payment_types: 'wallet',
+        statuses: 'succeeded'
       },
       value2: null,
       date: '',

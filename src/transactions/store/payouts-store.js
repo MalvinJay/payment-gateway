@@ -1,8 +1,6 @@
 import { PAYOUT_CREATE, SET_PAYOUTS_META, SET_PAYOUTS_FILTERS,
-  PAYOUTS_FETCH,
-  SET_PAYOUTS_STATE,
-  BILL_PAYOUT,
-  SET_PAYOUTS} from './transactions-store-constants'
+  PAYOUTS_FETCH, SET_PAYOUTS_STATE, BILL_PAYOUT, SET_PAYOUTS
+} from './transactions-store-constants'
 import { apiCall } from '../../store/apiCall'
 import { GET_BASE_URI } from '../../store/constants'
 import Utils from '../../utils/services'
@@ -39,7 +37,7 @@ const getters = {
   payoutsMeta: state => state.payouts.meta,
   payoutsSortParams: state => state.payouts.sortParams,
   payoutsState: state => state.payouts.state
-//   currentTransaction: state => state.currentTransaction.data
+  // currentTransaction: state => state.currentTransaction.data
 }
 
 // mutations
@@ -67,10 +65,7 @@ const mutations = {
 
 // actions
 const actions = {
-  [PAYOUTS_FETCH] ({ state, commit, rootGetters }, {
-    page = 1,
-    cache = true
-  } = {}) {
+  [PAYOUTS_FETCH] ({ state, commit, rootGetters }, { page = 1, cache = true } = {}) {
     //   url
     var url = rootGetters.isAdmin ? 'v2/accounts/transactions' : 'v2/transactions.json'
 
@@ -78,7 +73,7 @@ const actions = {
     var filters = state.payouts.filters
     var query = ''
     if (Utils.empty(filters)) {
-      query = `?all=true&search_value=cashin&page=${page}&limit=12`
+      query = `?search_value=cashin&page=${page}&limit=12`
     } else {
       filters.search_value = 'cashin'
       query = Utils.createQueryParams(filters, page)

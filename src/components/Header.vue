@@ -1,13 +1,16 @@
 <template>
     <div class="flex justify-content-between h-100 header">
         <!-- <div> -->
-            <el-input @keyup.enter.native="searchButton" v-model="search" class="is-shadow border-rounded search-div" :prefix-icon="loading" placeholder="Search..."></el-input>
+            <el-input @keyup.enter.native="searchButton"
+            v-model="search" class="is-shadow border-rounded search-div"
+            :prefix-icon="loading"
+            placeholder="Search transaction by reference, phone or trans. ID"></el-input>
         <!-- </div> -->
         <div class="flex align-items-center justify-content-end header-side-panel">
             <!-- <div style="height: 25px">
                 <el-switch active-text="Test" v-model="testData"></el-switch>
             </div>
-            
+
             <el-dropdown trigger="click">
                 <span class="el-dropdown-link">
                     <img class="img-fluid" src="../assets/images/icons/bell.svg" alt="">
@@ -69,15 +72,27 @@ export default {
   created () {
     // if (Object.keys(this.user).length === 0) {
     //   this.logout()
-    // }  
+    // }
   },
   methods: {
     searchButton () {
         this.loading = 'el-icon-loading'
-        this.$store.dispatch('searchTransactions', {search: this.search})
-        .then(() => {
-            this.$router.push('/payments')
-            this.loading = 'el-icon-search'
+        this.$store.dispatch('searchTransactions', { search: this.search })
+        .then((response) => {
+          this.loading = 'el-icon-search'
+          switch (this.$route.name) {
+            case 'Payouts':
+              this.$router.push('/payments')
+            break;
+
+            case 'ViewTransactions':
+              this.$router.push('/receipts')
+            break;
+
+            default:
+
+            break;
+          }
         })
     },
     logout () {

@@ -86,12 +86,13 @@ export default {
     this.init()
   },
   computed: {
-    ...mapGetters(['pageLoading', 'user'])  
+    ...mapGetters(['pageLoading', 'user'])
   },
   methods: {
     init () {
         var time = {
-            time_interval: 'month'
+            time_interval: 'day',
+            statuses: ['succeeded']
         }
         this.$store.dispatch('setDashboardFilters', time)
         .then((response) => {
@@ -144,7 +145,7 @@ export default {
         this.$store.dispatch('addTransaction', data)
     }
   },
-  onIdle() {    
+  onIdle() {
     this.$store.dispatch('logout')
     .then(() => {
       this.$router.push('/login')

@@ -7,13 +7,13 @@
         </el-button>
         <el-dropdown-menu class="filter-dropdown" slot="dropdown">
             <div class="dropdown-header flex justify-content-between align-items-center">
-                <el-button size="mini" @click="resetFilters" class="s-13 open-sans filter-button b-0">Clear</el-button>
-                <p class="p-0 m-0 blue-text">Filters</p>
-                <el-button size="mini" @click="createFilters" type="primary" class="s-13 open-sans filter-button b-0">Done</el-button>
+              <el-button size="mini" @click="resetFilters" class="s-13 open-sans filter-button b-0">Clear</el-button>
+              <p class="p-0 m-0 blue-text">Filters</p>
+              <el-button size="mini" @click="createFilters" type="primary" class="s-13 open-sans filter-button b-0">Done</el-button>
             </div>
 
             <el-dropdown-item>
-                <el-checkbox class="mr-10" v-model="date"></el-checkbox> Date
+              <el-checkbox class="mr-10" v-model="date"></el-checkbox> Date
             </el-dropdown-item>
             <el-collapse-transition>
                 <div id="filter-from" class="filter-bg" v-show="date">
@@ -58,14 +58,30 @@
                 </div>
             </el-collapse-transition>
 
-            <el-dropdown-item v-if="showStatus || showDispute || showStocks" divided>
+            <el-dropdown-item v-if="showStatus || showDispute || showStocks || showUssd" divided>
                 <el-checkbox class="mr-10" v-model="status"></el-checkbox> Status
             </el-dropdown-item>
             <el-collapse-transition>
                 <div class="filter-bg" v-show="status">
                     <el-select size="mini" v-model="filters.statuses" @remove-tag="removeAll" @change="statusClick" multiple collapse-tags placeholder="Select Status">
                         <el-option
-                        v-for="item in stati"
+                          v-for="item in stati"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+            </el-collapse-transition>
+
+            <el-dropdown-item v-if="showFoneStatus" divided>
+                <el-checkbox class="mr-10" v-model="state"></el-checkbox> Status
+            </el-dropdown-item>
+            <el-collapse-transition>
+                <div class="filter-bg" v-show="state">
+                    <el-select size="mini" v-model="filters.state" @remove-tag="removeAll" @change="FonStatusClick" multiple collapse-tags placeholder="SMS Status">
+                        <el-option
+                        v-for="item in FonStatus"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
@@ -74,8 +90,24 @@
                 </div>
             </el-collapse-transition>
 
-            <el-dropdown-item divided>
-                <el-checkbox class="mr-10" v-model="type"></el-checkbox> Payment Type
+            <el-dropdown-item v-if="showFoneStatus" divided>
+                <el-checkbox class="mr-10" v-model="provider"></el-checkbox> Network
+            </el-dropdown-item>
+            <el-collapse-transition>
+                <div class="filter-bg" v-show="provider">
+                    <el-select size="mini" v-model="filters.providers" @remove-tag="removeAll" @change="FonProvidersClick" multiple collapse-tags placeholder="Select Network">
+                        <el-option
+                        v-for="item in Provider"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+            </el-collapse-transition>
+
+            <el-dropdown-item v-if="showStatus" divided>
+              <el-checkbox class="mr-10" v-model="type"></el-checkbox> Payment Type
             </el-dropdown-item>
             <el-collapse-transition>
                 <div class="filter-bg" v-show="type">
@@ -101,140 +133,166 @@ export default {
     name: 'FilterComponent',
     props: ['filterType', 'dispatch'],
     data () {
-        return {
-            count: 0,
-            date: false,
-            status: false,
-            type: false,
-            reason: false,
-            amount: false,
-            stati: [
-                // {label: 'All', value: 'all'},
-                {label: 'Success', value: 'succeeded'},
-                {label: 'Pending', value: 'pending'},
-                {label: 'Failed', value: 'failed'}
-            ],
-            all: ['success', 'pending', 'failed'],
-            types: [
-                // {label: 'All', value: 'all'},
-                {label: 'Card', value: 'card'},
-                {label: 'Wallet', value: 'wallet'},
-                {label: 'Bank', value: 'bank'}
-            ],
-            filters: {
-                to: '',
-                from: '',
-                statuses: [],
-                payment_types: [],
-                reasons: []
-            },
-            reasons: [
-                {label: 'Duplicate', value: 'duplicate'},
-                {label: 'Fraudulent', value: 'fraudulent'},
-                {label: 'Subscription canceled', value: 'subscription_canceled'},
-                {label: 'Product unacceptable', value: 'product_unacceptable'},
-                {label: 'Product not received', value: 'product_not_received'},
-                {label: 'Unrecognized', value: 'unrecognized'},
-                {label: 'Credit not processed', value: 'credit_not_processed'},
-                {label: 'Incorrect account details', value: 'incorrect_account_details'},
-                {label: 'Insufficient funds', value: 'insufficient_funds'},
-                {label: 'Bank cannot process', value: 'bank_cannot_process'},
-                {label: 'Debit not authorized', value: 'debit_not_authorized'}
-            ]
-        }
+      return {
+        count: 0,
+        date: false,
+        status: false,
+        state: false,
+        provider: false,
+        type: false,
+        reason: false,
+        amount: false,
+        stati: [
+          {label: 'Success', value: 'succeeded'},
+          {label: 'Pending', value: 'pending'},
+          {label: 'Failed', value: 'failed'}
+        ],
+        FonStatus: [
+          {label: 'Delivered', value: 'DELIVERED'},
+          {label: 'Pending', value: 'pending'},
+          {label: 'Reposted', value: 'REPOSTED'},
+          {label: 'Undelivered', value: 'UNDELIV'},
+          {label: 'Expired', value: 'EXPIRED'},
+          {label: 'Failed', value: 'failed'}
+        ],
+        Provider: [
+          {label: 'Mtn', value: 'mtn'},
+          {label: 'Vodafone', value: 'vodafone'},
+          {label: 'Airtel', value: 'airtel'},
+          {label: 'Tigo', value: 'tigo'}
+        ],
+        all: ['success', 'pending', 'failed'],
+        types: [
+            // {label: 'All', value: 'all'},
+            {label: 'Card', value: 'card'},
+            {label: 'Wallet', value: 'wallet'},
+            {label: 'Bank', value: 'bank'}
+        ],
+        filters: {
+            to: '',
+            from: '',
+            statuses: [],
+            payment_types: [],
+            reasons: []
+        },
+        reasons: [
+            {label: 'Duplicate', value: 'duplicate'},
+            {label: 'Fraudulent', value: 'fraudulent'},
+            {label: 'Subscription canceled', value: 'subscription_canceled'},
+            {label: 'Product unacceptable', value: 'product_unacceptable'},
+            {label: 'Product not received', value: 'product_not_received'},
+            {label: 'Unrecognized', value: 'unrecognized'},
+            {label: 'Credit not processed', value: 'credit_not_processed'},
+            {label: 'Incorrect account details', value: 'incorrect_account_details'},
+            {label: 'Insufficient funds', value: 'insufficient_funds'},
+            {label: 'Bank cannot process', value: 'bank_cannot_process'},
+            {label: 'Debit not authorized', value: 'debit_not_authorized'}
+        ]
+      }
     },
     methods: {
-        createFilters () {
-            this.$refs.messageDrop.hide()
-            this.count = this.size(this.filters)
-            this.$store.dispatch(this.dispatch, this.filters)
+      createFilters() {
+        this.$refs.messageDrop.hide()
+        this.count = this.size(this.filters)
+        console.log('Route:', this.$route.name)
+        if(this.$route.name === 'ViewTransactions') this.filters.search_value = 'cashout'
+        if(this.$route.name === 'Payouts') this.filters.search_value = 'cashin'
 
-            // if (this.filterType === 'queue') {
-            //     // this.filters.statuses = 'queued'
-            //     this.$store.dispatch('setQueueFilters', this.filters)
-            // } else if (this.filterType === 'pending') {
-            //     this.$store.dispatch('setPendingFilters', this.filters)
-            // } else if (this.filterType === 'payouts') {
-            //     this.$store.dispatch('setPayoutsFilters', this.filters)
-            // } else {
-            //     this.$store.dispatch('setTransactionsFilters', this.filters)
-            // }
-            // .then(() => {
-            //     this.$store.dispatch('getTransactions', {page: 1})
-            // })
-        },
-        size (obj) {
-            var size = 0, key
-            for (key in obj) {
-                if (obj.hasOwnProperty(key)) size++
-            }
-            return size
-        },
-        resetFilters () {
-            this.count = 0
-            this.filters = {
-                to: '',
-                from: '',
-                statuses: [],
-                payment_types: [],
-                reasons: []
-            }
-            this.date = false
-            this.status = false
-            this.type = false
-            this.reason = false
-            this.createFilters()
-        },
-        keepVisible () {
-            this.$refs.messageDrop.show()
-        },
-        showAyt () {
-            console.log('hoy')
-            console.log('hoy', this.$refs.filterFrom)
-        },
-        statusClick (val) {
-            this.keepVisible()
-            if (val[0] === 'all') {
-                var all = ['succeeded', 'pending', 'failed']
-                all.forEach(element => {
-                    this.filters.statuses.push(element)
-                })
-            }
-        },
-        removeAll (val) {
-            // if (val === 'all') {
-            //     this.filters.statuses = []
-            // }
-        },
-        typeClick (val) {
-            this.$refs.messageDrop.show()
-            if (val[0] === 'all') {
-                var all = ['card', 'wallet', 'bank']
-                all.forEach(element => {
-                    this.filters.payment_types.push(element)
-                })
-            }
-        },
-        removeAllTypes (val) {
-            // if (val === 'all') {
-            //     this.filters.payment_types = []
-            // }
-        },
-        reasonClick (val) {
-            this.$refs.messageDrop.show()
-            if (val[0] === 'all') {
-                var all = ['Duplicate','Fraudulent', 'Subscription', 'Product','Product','Unrecognized','Credit','Incorrect','Insufficient','Bank','Debit']
-                all.forEach(element => {
-                    this.filters.reasons.push(element)
-                })
-            }
+        this.$store.dispatch(this.dispatch, this.filters)
+      },
+      size (obj) {
+          var size = 0, key
+          for (key in obj) {
+              if (obj.hasOwnProperty(key)) size++
+          }
+          return size
+      },
+      resetFilters () {
+          this.count = 0
+          this.filters = {
+              to: '',
+              from: '',
+              statuses: [],
+              payment_types: [],
+              reasons: []
+          }
+          this.date = false
+          this.status = false
+          this.type = false
+          this.reason = false
+          this.createFilters()
+      },
+      keepVisible () {
+          this.$refs.messageDrop.show()
+      },
+      showAyt () {
+          console.log('hoy')
+          console.log('hoy', this.$refs.filterFrom)
+      },
+      statusClick (val) {
+          this.keepVisible()
+          if (val[0] === 'all') {
+              var all = ['succeeded', 'pending', 'failed']
+              all.forEach(element => {
+                this.filters.statuses.push(element)
+              })
+          }
+      },
+      FonStatusClick (val) {
+        this.keepVisible()
+        if (val[0] === 'all') {
+            var all = ['sent', 'pending', 'failed']
+            all.forEach(element => {
+              this.filters.state.push(element)
+            })
         }
+      },
+      FonProvidersClick (val) {
+        this.keepVisible()
+        if (val[0] === 'all') {
+            var all = ['sent', 'pending', 'failed']
+            all.forEach(element => {
+              this.filters.state.push(element)
+            })
+        }
+      },
+      removeAll (val) {
+          // if (val === 'all') {
+          //     this.filters.statuses = []
+          // }
+      },
+      typeClick (val) {
+          this.$refs.messageDrop.show()
+          if (val[0] === 'all') {
+              var all = ['card', 'wallet', 'bank']
+              all.forEach(element => {
+                  this.filters.payment_types.push(element)
+              })
+          }
+      },
+      removeAllTypes (val) {
+          // if (val === 'all') {
+          //     this.filters.payment_types = []
+          // }
+      },
+      reasonClick (val) {
+          this.$refs.messageDrop.show()
+          if (val[0] === 'all') {
+              var all = ['Duplicate','Fraudulent', 'Subscription', 'Product','Product','Unrecognized','Credit','Incorrect','Insufficient','Bank','Debit']
+              all.forEach(element => {
+                  this.filters.reasons.push(element)
+              })
+          }
+      }
     },
     mounted () {
         EventBus.$on('blur', this.keepVisible)
         EventBus.$on('focus', this.keepVisible)
+        EventBus.$on('resetFilters', this.resetFilters)
+
         this.$on('blur', this.keepVisible)
         this.$on('focus', this.keepVisible)
+        this.$on('resetFilters', this.resetFilters)
 
         console.log('focus here', this.$refs.messageDrop)
 
@@ -256,26 +314,32 @@ export default {
     },
     computed: {
         showStatus () {
-            return this.filterType === 'payment' || this.filterType === 'payouts'
+          return this.filterType === 'payment' || this.filterType === 'payouts'
+        },
+        showFoneStatus() {
+          return this.filterType === 'fone'
         },
         showDispute () {
-            return this.filterType === 'dispute'
+          return this.filterType === 'dispute'
         },
         showStocks () {
-            return this.filterType === 'stocks'
+          return this.filterType === 'stocks'
+        },
+        showUssd () {
+          return this.filterType === 'ussd'
         },
         filterCount () {
-            var count = 0
-            if (Utils.present(this.filters.from) || Utils.present(this.filters.to)) {
-                count++
-            }
-            if (Utils.present(this.filters.payment_types)) {
-                count++
-            }
-            if (Utils.present(this.filters.statuses)) {
-                count++
-            }
-            return count
+          var count = 0
+          if (Utils.present(this.filters.from) || Utils.present(this.filters.to)) {
+              count++
+          }
+          if (Utils.present(this.filters.payment_types)) {
+              count++
+          }
+          if (Utils.present(this.filters.statuses)) {
+              count++
+          }
+          return count
         }
     }
 }

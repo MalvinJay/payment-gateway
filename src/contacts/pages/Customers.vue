@@ -64,8 +64,8 @@
                         </el-pagination>
                     </div>
                 </div>
-                
-                
+
+
             </div>
             <!-- New Customer -->
            <add-contact :form="contact" :dialogVisible="dialogVisible"></add-contact>
@@ -123,12 +123,12 @@ export default {
         this.$store.dispatch('setCurrentContacts', val)
     },
     clickRow (row, event, column) {
-        if (column.property) {
-            // this.$router.push(`/contacts/${row.id}`)
-            var form = Customer.getEditView(row)
-            this.dialogVisible = true
-            this.contact = form
-        }
+      // this.$router.push(`/contacts/${row.id}`)
+      var form = Customer.getEditView(row)
+      this.dialogVisible = true
+      this.contact = form
+        // if (column.property) {
+        // }
     },
     newContact () {
         this.dialogVisible = true

@@ -14,6 +14,7 @@
                     <!-- JOB SERVICE CODE -->
                     <el-form-item label="Service Code">
                         <el-select v-model="form.service_code">
+                            <el-option label="Airtime" value="airtime"></el-option>
                             <el-option label="Payment" value="cashin"></el-option>
                             <el-option label="Receipt" value="cashout"></el-option>
                             <el-option label="Direct Debit" value="direct_payment"></el-option>
@@ -44,8 +45,8 @@
                     <!-- JOB MODE -->
                     <el-form-item label="Mode">
                         <el-select v-model="form.scheduled">
-                            <el-option v-can="'Approve Transactions'" label="Automatic" :value="true"></el-option>
-                            <el-option v-if="form.service_code === 'cashin' || form.service_code === 'cashout'" label="Manual" :value="false"></el-option>
+                            <el-option v-can="'Approve Transactions'" v-if="form.service_code != 'airtime'" label="Automatic" :value="true"></el-option>
+                            <el-option v-if="form.service_code != 'direct_payment'" label="Manual" :value="false"></el-option>
                         </el-select>
                     </el-form-item>
                     <!-- JOB AUTOMATIC SCHEDULED -->
@@ -99,7 +100,7 @@
                                         placeholder="Date"
                                         value-format="yyyy-MM-dd"
                                         format="MMM dd, yyyy"
-                                        v-model="schedule.date" 
+                                        v-model="schedule.date"
                                         :default-value="Date.now()"></el-date-picker>
                                     <el-time-select
                                     v-model="schedule.time"
@@ -166,7 +167,7 @@
 
 <script>
 import EventBus from '../../event-bus.js'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 var S3 = require('aws-sdk/clients/s3')
 import { AWS_BUCKET } from '../store/transactions-store-constants.js'
 import Utils from '../../utils/services'
@@ -268,12 +269,12 @@ export default {
                     this.form.dummy = this.test
                     this.form.live = !this.test
                     this.form.frequency_type = this.form.schedule
-                    
+
                     this.form.debit_day = Utils.createDebitFreq(this.form.schedule, this.schedule)
                     this.form.frequency = Utils.createFreq(this.form.schedule, this.schedule)
                     var schedule = Utils.createJobQuery(this.form.schedule, this.schedule)
                     this.form.schedule = schedule
-                    
+
                     console.log('Recurring payment:', this.form)
                     this.$store.dispatch(job, this.form)
                     .then((response) => {
@@ -316,6 +317,12 @@ export default {
             let fileInput = this.$el.querySelector(".upload-demo input[type='file']")
             let filess = fileInput.files[0]
             this.$store.dispatch('sendToBucket', filess)
+            .then(response => {
+              this.file.key = response
+            })
+            .catch(err => {
+              console.log('Error occured whiles uploading file: ', err);
+            })
         }
     },
     mounted () {

@@ -63,15 +63,12 @@ const mutations = {
 
 // actions
 const actions = {
-  [EVENTS_FETCH] ({state, commit, rootGetters}, {
-    page = 1,
-    cache = true
-  } = {}) {
+  [EVENTS_FETCH] ({state, commit, rootGetters}, {page = 1,cache = true} = {}) {
     var filters = state.events.filters
     var query = ''
 
     if (Utils.empty(filters)) {
-      query = `?page=${page}&limit=20`
+      query = `?page=${page}&limit=12`
     } else {
       query = Utils.createQueryParams(filters, page)
     }
@@ -135,7 +132,7 @@ const actions = {
         return error
       })
     })
-  }  
+  }
 }
 
 export default {

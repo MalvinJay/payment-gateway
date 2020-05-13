@@ -48,7 +48,8 @@ export default {
         password: [
             { required: true, message: 'Please input password', trigger: 'blur' }
         ]
-      }
+      },
+      loginTimes: 0,
     }
   },
   computed: {
@@ -71,64 +72,96 @@ export default {
           if (valid) {
             this.$store.dispatch(url, {email: this.form.email, password: this.form.password})
             .then((response) => {
-                if (response.data.success) {
-                    this.$session.start()
-                    this.$session.set('client', JSON.stringify(response.data.response.data))
-                    this.$session.set('email', this.form.email)
+              if (response.data.success) {
+                this.$session.start()
+                this.$session.set('client', JSON.stringify(response.data.response.data))
+                this.$session.set('email', this.form.email)
 
-                    if(response.data.response.data.is_sub_user) {
-                        if(!response.data.response.data.sub_user.is_login_before) {
-                            localStorage.setItem('FTloginToken', response.data.response.data.sub_user.token)
-                            this.$store.dispatch('getToken')
-                            this.$router.push('/reset_password')
-                        } else {
-                            if (this.$session.has('client')) {
-                                this.$store.dispatch('getToken')
-                                .then((response) => {
-                                    this.$session.set('token', response.data.access_token)
-                                    this.$store.dispatch('setToken', response.data.access_token)
-                                    this.$router.push('/')
-                                })
-                            } else {
-                                this.$store.dispatch('setClient', response.data.response.data)
-                                .then(()=> {
-                                    this.$router.push('/')
-                                })                              
-                            }                            
-                        }
+                if(response.data.response.data.is_sub_user) {
+                    if(!response.data.response.data.sub_user.is_login_before) {
+                      localStorage.setItem('FTloginToken', response.data.response.data.sub_user.token)
+                      this.$store.dispatch('getToken')
+                      this.$router.push('/reset_password')
                     } else {
-                        if (!response.data.response.data.is_login_before) {
-                            localStorage.setItem('FTloginToken', response.data.response.data.token)
-                            this.$store.dispatch('getToken')
-                            this.$router.push('/reset_password')
-                        } else {
-                            if (this.$session.has('client')) {
-                                this.$store.dispatch('getToken')
-                                .then((response) => {
-                                    this.$session.set('token', response.data.access_token)
-                                    this.$store.dispatch('setToken', response.data.access_token)
-                                    this.$router.push('/')
-                                })
-                            } else {
-                                this.$store.dispatch('setClient', response.data.response.data)
-                                .then(()=> {
-                                    this.$router.push('/')
-                                })
-                            }
-                        }
+                      if (this.$session.has('client')) {
+                          this.$store.dispatch('getToken')
+                          .then((response) => {
+                            this.$session.set('token', response.data.access_token)
+                            this.$store.dispatch('setToken', response.data.access_token)
+                            this.$router.push('/')
+                          })
+                      } else {
+                          this.$store.dispatch('setClient', response.data.response.data)
+                          .then(()=> {
+                            this.$router.push('/')
+                          })
+                      }
                     }
                 } else {
-                    this.$message({
-                        message: response.data.response.message,
-                        type: 'error'
-                    })
+                    if (!response.data.response.data.is_login_before) {
+                      localStorage.setItem('FTloginToken', response.data.response.data.token)
+                      this.$store.dispatch('getToken')
+                      this.$router.push('/reset_password')
+                    } else {
+                      if (this.$session.has('client')) {
+                        this.$store.dispatch('getToken')
+                        .then((response) => {
+                          this.$session.set('token', response.data.access_token)
+                          this.$store.dispatch('setToken', response.data.access_token)
+                          this.$router.push('/')
+                        })
+                      } else {
+                        this.$store.dispatch('setClient', response.data.response.data)
+                        .then(()=> {
+                          this.$router.push('/')
+                        })
+                      }
+                    }
+                  }
+              } else {
+                switch (response.data.response.message_type) {
+                  case "needs_reset":
+                    console.log("needs resetting")
+                      var win = window.open('/forgot-password', '_blank');
+                      win.focus();
+                  break;
+
+                  case "failed_authorization":
+                  this.loginTimes++;
+                    console.log("Failed Authorization")
+
+                    if(this.loginTimes >= 3) {
+                        if(response.data.response.message.includes("check your password")) {
+                          localStorage.removeItem('wrong_email');
+                          localStorage.setItem('wrong_password', this.form.password)
+                        } else {
+                          if(response.data.response.message.includes("check your details entered"))
+                          localStorage.removeItem('wrong_password');
+                          localStorage.setItem('wrong_email', this.form.email)
+                        }
+
+                      var win = window.open('/help', '_blank');
+                      win.focus();
+                    }
+                  break;
+
+                  default:
+                    console.log("It just failed!!")
+                  break;
                 }
-                    this.loading = false
+
+                this.$message({
+                  message: response.data.response.message,
+                  type: 'error'
                 })
+              }
+
+              this.loading = false
+            })
             .catch((error) => {
                 this.loading = false
                 let resp = ''
-                console.log('Here')
+                console.log('Error:', error.response)
 
                 if(error.response != undefined) {
                     switch (error.response.status) {
@@ -144,11 +177,11 @@ export default {
                     }
                 }
                 else
-                    resp = '500 - (Internal Server Error)'
+                  resp = '500 - (Internal Server Error)'
 
                 this.$message({
-                    message: error.response,
-                    type: 'error'
+                  message: error.response,
+                  type: 'error'
                 })
             })
           } else {

@@ -71,7 +71,7 @@
                             :total="total">
                         </el-pagination>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -91,7 +91,7 @@ export default {
   },
   data () {
     return {
-      accountVisible: false,  
+      accountVisible: false,
       columns: [
         {label: 'code', dataField: 'account_code'},
         {label: 'Client', dataField: 'company'},
@@ -130,9 +130,9 @@ export default {
         }
     },
     clickRow (row, event, column) {
-        if (column.property) {
-            this.$router.push(`/accounts/${row.code}`)
-        }
+      this.$router.push(`/accounts/${row.code}`)
+        // if (column.property) {
+        // }
     }
   },
   computed: {

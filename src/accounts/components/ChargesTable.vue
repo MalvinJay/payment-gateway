@@ -14,7 +14,7 @@
                     <p class="m-0 p-0">Unable to load this page</p>
                     <el-button @click.prevent="fetchTransactions" icon="sync icon" type="text">Retry</el-button>
                 </div>
-            </div>    
+            </div>
             <div v-else>
                 <el-table @row-click="clickRow" empty-text="No match found, filter desired period range" v-loading="loading" :row-style="styleObject" row-class-name="transactions-table-body" header-row-class-name="transactions-table-header" :data="filteredFees">
                     <el-table-column type="selection" width="55"></el-table-column>
@@ -77,8 +77,8 @@
                         :total="total">
                     </el-pagination>
                 </div>
-                
-            </div>                    
+
+            </div>
         </div>
     </div>
 </template>
@@ -95,7 +95,7 @@ data() {
         columns: [
             {label: 'Customer', dataField: 'customer', width: 'auto'},
             {label: 'Reference', dataField: 'reference', width: 'auto'},
-            {label: 'type', dataField: 'transaction_type', width: '100px'}            
+            {label: 'type', dataField: 'transaction_type', width: '100px'}
         ],
         styleObject: {
             fontSize: '12px'
@@ -105,7 +105,7 @@ data() {
         dialogVisible: false,
         exportVisible: false,
     }
-},   
+},
 
 created () {
     this.$store.dispatch('getFees');
@@ -120,9 +120,9 @@ mounted () {
 
 methods: {
     clickRow (row, event, column) {
-        if (column.property) {
-            this.$router.push(`/fees/${row.reference}`)
-        }        
+      this.$router.push(`/fees/${row.reference}`)
+        // if (column.property) {
+        // }
     },
     handleCurrentChange (val) {
         this.$store.dispatch('getFees', {page: val, cached: false })
@@ -134,7 +134,7 @@ methods: {
 
 computed: {
     ...mapGetters({
-    // 1. what you want to call the getter here on the component : 2. The name of the getter from the vuex store    
+    // 1. what you want to call the getter here on the component : 2. The name of the getter from the vuex store
         fees: 'fees',
         state: 'feesState',
         meta: 'feesMeta',

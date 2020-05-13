@@ -70,8 +70,6 @@ export const SET_SINGLE_JOB_STATE = 'setSingleJobState'
 export const SET_FILE_UPLOAD_DETAILS = 'setFileUploadDetails'
 export const SET_FILE_STATE = 'setFileState'
 export const AWS_BUCKET = 'flopay-batchstore'
-export const ACCESS_KEY_ID = 'AKIAIXNSKAFGGRPN7SIQ'
-export const SECRET_ACCESS_KEY = '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'
 export const SEND_TO_BUCKET = 'sendToBucket'
 export const SET_CURRENT_RUN = 'setCurrentRun'
 export const GET_CURRENT_RUN = 'getCurrentRun'
@@ -94,8 +92,18 @@ export const SET_PENDING_FILTERS = 'setPendingFilters'
 export const SET_PENDING_META = 'setPendingMeta'
 export const APPROVE_TRANSACTIONS = 'approveTransactions'
 
+// FAILED
+export const GET_FAILED = 'getFailed'
+export const SET_FAILED = 'setFailed'
+export const SET_FAILED_STATE = 'setFailedState'
+export const SET_FAILED_FILTERS = 'setFailedFilters'
+export const SET_FAILED_META = 'setFailedMeta'
+
 // SEARCH
 export const SEARCH_TRANSACTIONS = 'searchTransactions'
 
 // TICKET
 export const CREATE_TICKET = 'createTicket'
+
+// TICKET
+export const REQUEST_SMS = 'requestSMS'

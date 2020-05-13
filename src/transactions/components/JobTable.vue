@@ -129,9 +129,9 @@ export default {
         this.$store.dispatch('getJobs', {page: val, cache: false})
     },
     clickRow (row, event, column) {
-        if (column.property) {
-            this.$router.push(`/job/${row.id}`)
-        }
+      this.$router.push(`/job/${row.id}`)
+        // if (column.property) {
+        // }
     },
     editJob (id) {
         this.$router.push(`/job/${id}`)
@@ -173,7 +173,7 @@ export default {
                     type: 'error',
                     message: response.data.response.message
                 })
-            }  
+            }
           }).catch((error) => {
             this.$message({
                 type: 'error',
@@ -181,7 +181,7 @@ export default {
             })
           })
         }).catch(() => {
-                  
+
         })
     },
     submitForm (formName) {

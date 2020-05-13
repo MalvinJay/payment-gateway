@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import store from '../store/store'
 import Client from '@/pages/Client'
 import Login from '@/pages/Login'
+import LoginHelp from '@/pages/LoginHelp'
 import Dashboard from '@/dashboard/pages/Dashboard'
 import ViewTransactions from '../transactions/pages/ViewTransactions'
 
@@ -14,21 +15,6 @@ const Teams = () => import(/* webpackChunkName: "payment" */ '../business/pages/
 const Roles = () => import(/* webpackChunkName: "payment" */ '../business/pages/Roles')
 const Branches = () => import(/* webpackChunkName: "payment" */ '../business/pages/Branches')
 const Jobs = () => import(/* webpackChunkName: "payment" */ '../transactions/pages/Jobs')
-// import PaymentDetail from '../transactions/pages/PaymentDetail'
-// import ContactDetails from '../contacts/pages/ContactDetails'
-
-// import NotFound from '@/pages/NotFound'
-
-// import Settings from '@/pages/client/transactions/Settings'
-// import NewProduct from '@/pages/client/transactions/NewProduct'
-// import BsSettings from '@/business/pages/BsSettings'
-// import Taxation from '@/business/pages/Taxation'
-// import Teams from '@/business/pages/Teams'
-// import Roles from '@/business/pages/Roles'
-// import Branches from '@/business/pages/Branches'
-// import Reports from '@/business/pages/Reports'
-// import JobDetails from '../transactions/pages/JobDetails'
-// import Jobs from '../transactions/pages/Jobs'
 
 const Customers = () => import(/* webpackChunkName: "customer" */ '../contacts/pages/Customers')
 const Payouts = () => import(/* webpackChunkName: "customer" */ '../transactions/pages/Payouts')
@@ -56,7 +42,7 @@ const AccountFees = () => import(/* webpackChunkName: "connect" */ '../connect/p
 
 const Logs = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Logs')
 const LogsDetails = () => import(/* webpackChunkName: "developer" */ '../developers/pages/LogsDetails')
-const Events = () => import(/* webpackChunkName: "developer" */ '../developers/pages/events')
+const Events = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Events')
 const EventsDetails = () => import(/* webpackChunkName: "developer" */ '../developers/pages/EventsDetails')
 const Webhooks = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Webhooks')
 const WebhookDetails = () => import(/* webpackChunkName: "developer" */ '../developers/pages/WebhookDetails')
@@ -66,7 +52,7 @@ const Sandbox = () => import(/* webpackChunkName: "developer" */ '../developers/
 const stockDashboard = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Dashboard')
 const Products = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Products')
 const Purchases = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Purchases')
-const Agent = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Agents')
+const Agents = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Agents')
 
 const Checkout = () => import(/* webpackChunkName: "stocks" */'../pages/Checkout')
 
@@ -96,17 +82,26 @@ let router = new Router({
         {
           path: '/receipts',
           name: 'ViewTransactions',
-          component: ViewTransactions
+          component: ViewTransactions,
+          meta: {
+            permissions: 'View Transactions'
+          }
         },
         {
           path: '/jobs',
           name: 'Jobs',
-          component: Jobs
+          component: Jobs,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/job/:id',
           name: 'JobDetails',
-          component: JobDetails
+          component: JobDetails,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/run/:id',
@@ -116,17 +111,26 @@ let router = new Router({
         {
           path: '/new-job',
           name: 'NewJob',
-          component: NewJob
+          component: NewJob,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/payments',
           name: 'Payouts',
-          component: Payouts
+          component: Payouts,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/payments/:id',
           name: 'ViewTransactionsDetails',
-          component: PaymentDetail
+          component: PaymentDetail,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/stock/dashboard',
@@ -140,39 +144,61 @@ let router = new Router({
         },
         {
           path: '/stock/purchases',
-          name: 'Purchase',
+          name: 'Purchases',
           component: Purchases
+        },
+        {
+          path: '/stock/agents',
+          name: 'Agents',
+          component: Agents
         },
         {
           path: '/fees',
           name: 'Fees',
-          component: Fees
+          component: Fees,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/topups',
           name: 'TopUps',
-          component: TopUps
+          component: TopUps,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/settlements',
           name: 'Settlements',
-          component: Settlements
+          component: Settlements,
+          meta: {
+            permission: 'permission'
+          }
         },
-        // Developers
         {
           path: '/logs',
           name: 'Logs',
-          component: Logs
+          component: Logs,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/logs/:id',
           name: 'LogsDetails',
-          component: LogsDetails
+          component: LogsDetails,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/keys',
           name: 'APIKeys',
-          component: APIKeys
+          component: APIKeys,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/sandbox',
@@ -182,22 +208,34 @@ let router = new Router({
         {
           path: '/events',
           name: 'Events',
-          component: Events
+          component: Events,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/events/:id',
           name: 'EventsDetails',
-          component: EventsDetails
+          component: EventsDetails,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/webhooks',
           name: 'Webhooks',
-          component: Webhooks
+          component: Webhooks,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/webhooks/:id',
           name: 'WebhookDetails',
-          component: WebhookDetails
+          component: WebhookDetails,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/fees/:id',
@@ -207,7 +245,10 @@ let router = new Router({
         {
           path: '/contacts',
           name: 'Customers',
-          component: Customers
+          component: Customers,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/contacts/:id',
@@ -219,72 +260,98 @@ let router = new Router({
           name: 'JobContactDetails',
           component: JobContactDetails
         },
-        // Business Settings
         {
           path: '/account',
           name: 'BsSettings',
-          component: BsSettings
+          component: BsSettings,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/teams',
           name: 'Teams',
-          component: Teams
+          component: Teams,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/roles',
           name: 'Roles',
-          component: Roles
+          component: Roles,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/branches',
           name: 'Branches',
-          component: Branches
+          component: Branches,
+          meta: {
+            permission: 'permission'
+          }
         },
-        // disputes
         {
           path: '/disputes',
           name: 'Disputes',
           component: Disputes
         },
-        // fone messenger
         {
           path: '/fonemessenger',
           name: 'FoneMessenger',
-          component: FoneMessenger
+          component: FoneMessenger,
+          meta: {
+            permission: 'permission'
+          }
         },
-        // ussd sessiond & transactions
         {
           path: '/ussd',
           name: 'Ussd',
-          component: Ussd
+          component: Ussd,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/ussd/:id',
           name: 'UssdDetails',
-          component: UssdDetails
+          component: UssdDetails,
+          meta: {
+            permission: 'permission'
+          }
         },
-        // connect
         {
           path: '/accounts',
           name: 'Account',
-          component: Account
+          component: Account,
+          meta: {
+            permission: 'permission'
+          }
         },
         {
           path: '/accounts/:id',
           name: 'AccountDetail',
-          component: AccountDetail
+          component: AccountDetail,
+          meta: {
+            permission: 'permission'
+          }
         },
-        // connect settlements
         {
           path: '/account-settlements',
           name: 'AccountSettlements',
-          component: AccountSettlements
+          component: AccountSettlements,
+          meta: {
+            permission: 'permission'
+          }
         },
-        // connect settlements
         {
           path: '/account-fees',
           name: 'AccountFees',
-          component: AccountFees
+          component: AccountFees,
+          meta: {
+            permission: 'permission'
+          }
         }
       ]
     },
@@ -314,16 +381,22 @@ let router = new Router({
       name: 'ResetPassword',
       component: ResetPassword
     },
-    { path: '/404', component: NotFound },
-    { path: '*', redirect: '/' }
+    {
+      path: '/404',
+      component: NotFound
+    },
+    {
+      path: '*',
+      redirect: '/404'
+    }
   ]
 })
 
 router.beforeEach((to, from, next) => {
   console.log('to route', to)
   console.log('app', store.state.user)
-  console.log('login', localStorage.getItem('login'))
-  console.log('store', store)
+  console.log('permissions:', store.getters.permissions)
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
       next({
@@ -333,39 +406,9 @@ router.beforeEach((to, from, next) => {
     } else {
       store.dispatch('getToken')
       next()
-    //   if (localStorage.getItem('login')) {
-    //     store.dispatch('getToken')
-    //     next()
-    //   } else {
-    //     store.client = {}
-    //     store.user = {
-    //       data: {},
-    //       client_id: '',
-    //       client_secret: ''
-    //     }
-    //     store.userdata = {}
-    //     store.permissions = {
-    //       data: []
-    //     }
-    //     store.logIn = false
-    //     store.user.token = null
-    //     localStorage.removeItem('token')
-    //     localStorage.setItem('login', false) // clear your user's token from localstorage
-    //     localStorage.removeItem('client_id')
-    //     localStorage.removeItem('client_secret')
-    //     next({
-    //       path: '/login',
-    //       params: { nextUrl: to.fullPath }
-    //     })
-    //   }
-    //   console.log('app stat', this.a.app.$session.exists())
     }
   } else if (to.matched.some(record => record.meta.guest)) {
     if (localStorage.getItem('token') === '' || localStorage.getItem('token') === null) {
-    //   next({
-    //     path: '/login',
-    //     params: { nextUrl: to.fullPath }
-    //   })
       next()
     } else {
       next({ name: 'Dashboard' })

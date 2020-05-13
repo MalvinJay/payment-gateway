@@ -1,8 +1,9 @@
 <template>
   <!-- Stripe -->
   <div :class="[{'animate': !fullscreenLoading }, 'payment_page']" v-loading.fullscreen.lock="fullscreenLoading">
-    <div :class="[{'animate': !fullscreenLoading}, 'single-payment', 'mx-0', 'm-auto']">
-      <div style="width: 400px;">
+    <div :class="[{'animate': !fullscreenLoading}, 'single-payment', 'mx-0', 'm-auto', 'h-screen']">
+
+      <div class="left-side" style="width: 400px;">
         <div class="position-relative">
           <div class="go_back cursor" style="display: block; margin-left: -24px; padding-left: 24px;" @click="cancelRequest">
             <div class="flex-container align-items-center width-auto menu-gray-text" style="height: 50px;">
@@ -36,8 +37,8 @@
                     <template v-if="customerInfo.meta_items.type === 'pece'">Private</template>
                     <template v-else>Basic</template>
                   </span>
-                ) year <span class="bold-700">{{customerInfo.meta_items.year}}</span> for candidate with index number
-                <span class="bold-700">{{customerInfo.meta_items.index_no}}</span>
+                ) year <span class="bold-700">{{customerInfo.meta_items.year || 'N/A'}}</span> for candidate with index number
+                <span class="bold-700">{{customerInfo.meta_items.index_no || 'N/A'}}</span>
               </p>
 
               <!-- <div class="py-20">
@@ -61,8 +62,10 @@
 
             </div>
 
-            <div class="flex align-items-center justify-content-center pt-50">
-              <img src="@/assets/waec.png" style="max-height: 80px" alt />
+            <div class="image-box flex align-items-center justify-content-center pt-50">
+              <el-card class="box-card">
+                <img src="@/assets/waec.svg" style="max-height: 80px" alt />
+              </el-card>
             </div>
 
           </div>
@@ -71,19 +74,34 @@
 
       <div class="payment_form">
         <div class="w-100 m-auto mr-0">
-          <!-- <div class> -->
-            <!-- <div class="">
-              <div class="payment-form black-text bold-700 s-18 py-20 position-relative">Pay with</div>
-            </div> -->
             <el-tabs class="default-tab position-relative" stretch type>
-              <div class="position-absolute bg-orange test"></div>
-              <el-tab-pane label="Mobile Wallet">
-                <mobile-money></mobile-money>
-              </el-tab-pane>
-              <el-tab-pane :disabled="true" label="Card">
-                <card-payment></card-payment>
-              </el-tab-pane>
+
+
+                <el-tab-pane label="Mobile Wallet">
+                  <template v-if="loading">
+                    <div class="flex flex-column justify-content-center align-items-center p-30 bold-700">
+                      <div class="py-10">
+                        <i class="el-icon-loading s-24" ></i>
+                      </div>
+                      <div class="box-button flex justify-content-center align-items-center m-0 p-20">
+                        <span class="s-16 gray-text m-2">{{countDown}}</span>
+                      </div>
+                      <div class="payment-form black-text s-14 text-center py-20">
+                        <span>Please complete authorization process on your phone.</span>
+                      </div>
+                      <el-button type="text" @click="cancel">Cancel</el-button>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <mobile-money></mobile-money>
+                  </template>
+                </el-tab-pane>
+                <el-tab-pane :disabled="true" label="Card">
+                  <card-payment></card-payment>
+                </el-tab-pane>
+
             </el-tabs>
+
             <!-- powered by no -->
             <div class="flex justify-content-center mt-5">
               <div class="flex justify-content-center align-items-center pr-10 w-50">
@@ -123,30 +141,58 @@ export default {
       customerInfo: {
         email: "",
         amount: "",
+        timeout: 120,
         meta_items: {
           description: null,
-          index_no: null
+          index_no: null,
         }
       },
-      fullscreenLoading: null
+      fullscreenLoading: null,
+      countDown: 0,
+      loading: false
     };
   },
   created() {
-    this.fullscreenLoading = true
+    // this.fullscreenLoading = true
   },
   mounted() {
+    EventBus.$on("startTrans", val => {
+      console.log('val to be appliedd :>> ', val);
+      this.loading = val
+      if (val) this.counter(this.customerInfo.timeout)
+    });
     EventBus.$on("itemFetched", info => {
       this.fullscreenLoading = false;
       this.customerInfo.email = info.customer.address;
       this.customerInfo.amount = info.invoice.total;
       this.customerInfo.meta_items = info.meta_items;
+      // this.customerInfo.timeout = info.invoice.timeout;
     });
+
+
   },
   methods: {
     cancelRequest() {
       EventBus.$emit("cancelRequest");
+    },
+    cancel() {
+
+    },
+    counter(total) {
+      let timeout = parseInt(total);
+      this.countDown = timeout;
+      const timer = setInterval(() => {
+        this.countDown -= 1;
+      }, 1000);
+
+      const finaTimeout = timeout * 1000;
+      console.log('Final Timeout: 12000', finaTimeout);
+      const countLimit = setTimeout(() => {
+        clearInterval(timer);
+        this.countDown = 0
+      }, finaTimeout);
     }
-  }
+  },
 };
 </script>
 
@@ -156,6 +202,10 @@ export default {
       padding: 20px 10px;
       max-width: 380px;
       margin: 0 auto;
+
+      .left-side {
+        height: auto;
+      }
 
       .productSummary {
         display: flex;
@@ -239,6 +289,10 @@ export default {
       flex-direction: row;
       justify-content: space-between;
 
+      .left-side {
+        height: 100%;
+      }
+
       &.animate {
         animation: enter 0.6s;
         animation-delay: 0.2s;
@@ -246,15 +300,20 @@ export default {
       }
 
       .productSummary {
+        height: 70%;
         flex-direction: column;
         text-align: left;
-        justify-content: left;
+        justify-content: center;
         align-items: flex-start;
 
         .productContainer {
           display: flex;
           // align-items: center;
           flex-shrink: 0;
+
+          .image-box {
+            justify-content: flex-start;
+          }
         }
 
         .productImage {
@@ -276,7 +335,7 @@ export default {
     }
 
     .payment-form {
-      padding-top: 0!important;
+      // padding-top: 0!important;
     }
   }
 }

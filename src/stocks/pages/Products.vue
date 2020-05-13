@@ -3,11 +3,11 @@
         <div class="transactions">
             <div class="trans-div flex justify-content-between">
                 <div>
-                    <filter-component dispatch="setProductsFilters" filterType="stocks"></filter-component>
+                  <p class="blue-text bold-600 s-16 m-0 p-0">Products</p>
+                    <!-- <filter-component dispatch="setProductsFilters" filterType="stocks"></filter-component> -->
                 </div>
                 <div>
-                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New Product</el-button>
-                    <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="exportVisible = true" type="text"><i class="file alternate outline icon"></i> Export</el-button>
+                  <el-button class="z-depth-button bold-600 s-13 open-sans mini-button" @click="dialogVisible = true" type="text"><i class="plus icon"></i> New Product</el-button>
                 </div>
             </div>
             <div>
@@ -25,17 +25,17 @@
                             </template>
                         </el-table-column>
                         <!-- <el-table-column show-overflow-tooltip prop="name" label="Reference"></el-table-column> -->
-                        <el-table-column label="Code">
+                        <el-table-column label="Code" width="180">
                             <template slot-scope="scope">
                               <p class="m-0 p-0 mr-10 s-13">{{scope.row.code}}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Quantity">
+                        <el-table-column label="Quantity" width="150">
                             <template slot-scope="scope">
                               <p class="m-0 p-0 mr-10 s-13">{{scope.row.quantity}}</p>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Unit Price">
+                        <el-table-column label="Unit Price(Ghs)" width="120">
                             <template slot-scope="scope">
                               <div class="d-flex">
                                 <!-- <span> Ghs </span> -->
@@ -295,9 +295,9 @@ export default {
         })
       },
     clickRow (row, event, column) {
-      if (column.property) {
-        // this.$router.push(`/stock/${row.reference}`)
-      }
+      // this.$router.push(`/stock/${row.reference}`)
+      // if (column.property) {
+      // }
     },
     handleCurrentChange (val) {
       this.$store.dispatch('getProducts', {page: val, cache: false })
