@@ -201,12 +201,12 @@ export default {
     },
 
     submitForm(formName) {
-      this.createLoading = true;
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.postTranasaction()
         } else {
           this.createLoading = false;
+          EventBus.$emit("startTrans", false);
           this.$message({
             message: "Please correct the errors",
             type: "error"
@@ -240,10 +240,11 @@ export default {
           setTimeout(() => {
             window.location = this.itemInfo.invoice.cancel_url;
           }, 2000);
+
         } else {
           swal({
-            title: "Good to go",
-            text: "You can continue with payment!",
+            title: "Good",
+            text: "Kindly retry payment",
             icon: "info"
           });
         }
@@ -251,12 +252,14 @@ export default {
     },
 
     postTranasaction() {
+      this.createLoading = true;
+      EventBus.$emit("startTrans", true);
       this.$store.dispatch("createTransactions", this.form)
       .then(response => {
         if (response.data.success) {
           swal({
             title: response.data.response.message.message,
-            text: "Checking transaction status...",
+            text: "Checking transaction status...", //Add network specific text here to instruct the customer on what to do
             icon: "info"
           });
 
@@ -270,6 +273,7 @@ export default {
             const timeOut = setTimeout(() => {
               clearInterval(timer);
               this.createLoading = false;
+              EventBus.$emit("startTrans", false);
               this.paymentDone = true;
 
               // Call completer function here
@@ -288,9 +292,11 @@ export default {
           });
 
           this.createLoading = false;
+          EventBus.$emit("startTrans", false);
         }
       })
       .catch(error => {
+        EventBus.$emit("startTrans", false);
         this.createLoading = false;
 
         swal({
@@ -308,8 +314,10 @@ export default {
 
         if (response.payment_status.toLowerCase() === 'paid') {
           this.createLoading = false;
+          EventBus.$emit("startTrans", false);
           this.paymentDone = true;
           clearInterval(timer);
+          clearTimeout(timeOut);
 
           swal({
             title: "Done",
@@ -324,32 +332,33 @@ export default {
 
         if (response.payment_status.toLowerCase() === 'failed') {
           this.createLoading = false;
+          EventBus.$emit("startTrans", false);
           this.paymentDone = true;
           clearInterval(timer);
           clearTimeout(timeOut);
 
           this.retry(trans_ref);
         }
-
       });
     },
 
     transactionCompleter(ref) {
       return this.$store.dispatch("transactionCompleter", ref)
-            .then(response => {
-              console.log('response :>> ', response);
-            })
-            .catch(error => {
-              console.log('error :>> ', error);
-            });
+      .then(response => {
+        console.log('response :>> ', response);
+      })
+      .catch(error => {
+        console.log('error :>> ', error);
+      });
     },
 
     retry(ref) {
       swal({
-        title: "Sorry! Payment failed",
-        text: "Payment failed",
+        title: "Failed",
+        text: "Sorry! Payment failed",
         icon: "error"
       });
+
       swal({
         title: "Do you want to retry?",
         text: "This will retry the payment again",
@@ -359,7 +368,7 @@ export default {
       })
       .then((retry) => {
         if (retry) {
-          swal("Payment cancelled!, redirecting you back .....", {
+          swal("Retrying payment again...", {
             icon: "error",
           });
 
