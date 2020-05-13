@@ -1,3 +1,24 @@
 @import 'general.scss';
 @import 'element-ui.scss';
 
+// @import "tailwindcss/base";
+// @import "tailwindcss/components";
+// @import "tailwindcss/utilities";
+
+.swal-button {
+  color: #fff!important;
+
+  &.swal-button--confirm {
+    background-color: #586ADA!important;
+  }
+
+  &.swal-button--cancel {
+
+  }
+}
+
+.swal-text {
+  text-align: center!important;
+}
+
+
