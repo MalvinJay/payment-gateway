@@ -54,6 +54,8 @@ const Products = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/P
 const Purchases = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Purchases')
 const Agents = () => import(/* webpackChunkName: "stocks" */'../stocks/pages/Agents')
 
+const Checkout = () => import(/* webpackChunkName: "stocks" */'../pages/Checkout')
+
 Vue.use(Router)
 
 let router = new Router({
@@ -362,9 +364,12 @@ let router = new Router({
       }
     },
     {
-      path: '/help',
-      name: 'Help',
-      component: LoginHelp
+      path: '/checkout/:client/:ref/payment',
+      name: 'Checkout',
+      component: Checkout,
+      meta: {
+        guest: true
+      }
     },
     {
       path: '/reset_password',

@@ -772,3 +772,25 @@ td.hljs-ln-code {
     padding-right: 0!important;
   }
 }
+
+.checkout {
+  .el-form-item__label {
+    padding: 10px!important;
+    font-weight: 700!important;
+    line-height: 22px;
+  }
+
+
+
+}
+
+.network_images {
+  &.add_space {
+    .el-input__inner {
+      transition: padding-left 300ms ease-in-out;
+      padding-left: 40px;
+    }
+  }
+}
+
+

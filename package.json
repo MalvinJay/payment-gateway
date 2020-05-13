@@ -2,7 +2,7 @@
   "name": "flopay_vue",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "seddie.dwamena <seddie62@gmail.com>",
+  "author": "nfortics",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -24,6 +24,7 @@
     "highlight.js": "^9.13.1",
     "idle-vue": "^2.0.5",
     "npm": "^6.5.0",
+    "sweetalert": "^2.1.2",
     "vue": "^2.5.19",
     "vue-chartjs": "^3.4.0",
     "vue-localstorage": "^0.6.2",
