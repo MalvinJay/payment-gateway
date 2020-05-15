@@ -1,58 +1,79 @@
 <template>
   <div class="flex flex-column justify-content-center new-transaction-bg p-30">
     <!-- <p class="text-center pb-10">Enter your mobile money number and provider <br> to start the payment</p> -->
-    <el-form
-      size="medium"
-      ref="form"
-      hide-required-asterisk
-      class="transaction-form w-100 checkout"
-      :rules="rules"
-      :model="form"
-      label-position="top"
-      :status-icon="true"
-    >
-      <el-form-item class="h-auto" label="Phone" prop="customer_no">
-        <el-input type="tel" v-model="phone" placeholder="000 000 0000" @input="formatTel" style="white-space: pre-line;"></el-input>
-      </el-form-item>
+      <template v-if="paymentDone">
+        <div class="w-100">
+          <div class="swal-icon swal-icon--success">
+            <span class="swal-icon--success__line swal-icon--success__line--long"></span>
+            <span class="swal-icon--success__line swal-icon--success__line--tip"></span>
+            <div class="swal-icon--success__ring"></div>
+            <div class="swal-icon--success__hide-corners"></div>
+          </div>
 
-      <el-form-item label="Mobile Network">
-        <div class="flex justify-content-between position-relative w-100">
-          <el-select
-            v-model="form.provider"
-            @change="handleDataChange"
-            :class="[{'add_space': form.provider}, 'w-100', 'network_images']"
-            placeholder="Choose Provider"
-          >
-            <el-option
-              v-for="(item, index) in providers"
-              :key="index"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <div
-            class="position-absolute left-0 h-100 flex justify-content-center align-items-center p-5"
-          >
-            <img :src="netImage" class="border-rounded h-100" alt />
+          <div class="flex flex-column justify-content-center align-items-center">
+            <div class="swal-title m-0" style="">Done</div>
+            <div class="swal-text" style="">Payment successful</div>
+          </div>
+
+          <div class="flex justify-content-center">
+            <el-button type="text" @click="proceed">Continue</el-button>
           </div>
         </div>
-      </el-form-item>
+      </template>
+      <template v-else>
+        <el-form
+          size="medium"
+          ref="form"
+          hide-required-asterisk
+          class="transaction-form w-100 checkout"
+          :rules="rules"
+          :model="form"
+          label-position="top"
+          :status-icon="true"
+        >
+          <el-form-item class="h-auto" label="Phone" prop="customer_no">
+            <el-input type="tel" v-model="phone" placeholder="000 000 0000" @input="formatTel" style="white-space: pre-line;"></el-input>
+          </el-form-item>
 
-      <el-form-item v-if="form.provider === 'vodafone'">
-        <el-input v-model="form.voucher" placeholder="Voucher"></el-input>
-      </el-form-item>
-      <div class="flex justify-content-stretch">
-        <el-button type="primary" :loading="createLoading" @click="submitForm('form')" class="w-100">
-          <!-- <template v-if="!createLoading">
-            <img src="@/assets/loading.gif" alt="">
-          </template> -->
-          <template>
-            Pay {{this.form.amount | money}}
-          </template>
-        </el-button>
-        <!-- <el-button class="w-50" @click="cancel">Cancel</el-button> -->
-      </div>
-    </el-form>
+          <el-form-item label="Mobile Network">
+            <div class="flex justify-content-between position-relative w-100">
+              <el-select
+                v-model="form.provider"
+                @change="handleDataChange"
+                :class="[{'add_space': form.provider}, 'w-100', 'network_images']"
+                placeholder="Choose Provider"
+              >
+                <el-option
+                  v-for="(item, index) in providers"
+                  :key="index"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <div
+                class="position-absolute left-0 h-100 flex justify-content-center align-items-center p-5"
+              >
+                <img :src="netImage" class="border-rounded h-100" alt />
+              </div>
+            </div>
+          </el-form-item>
+
+          <!-- <el-form-item v-if="form.provider === 'vodafone'">
+            <el-input v-model="form.voucher" placeholder="Voucher"></el-input>
+          </el-form-item> -->
+          <div class="flex justify-content-stretch">
+            <el-button type="primary" :loading="createLoading" @click="submitForm('form')" class="w-100">
+              <!-- <template v-if="!createLoading">
+                <img src="@/assets/loading.gif" alt="">
+              </template> -->
+              <template>
+                Pay {{this.form.amount | money}}
+              </template>
+            </el-button>
+            <!-- <el-button class="w-50" @click="cancel">Cancel</el-button> -->
+          </div>
+        </el-form>
+      </template>
   </div>
 </template>
 
@@ -80,6 +101,7 @@ export default {
       exportVisible: false,
       ticketVisible: false,
       form: {
+        // required params
         amount: "",
         recipient_amount: null,
         currency: "GHS",
@@ -89,7 +111,7 @@ export default {
         integration_type: "WAEC_CHECKOUT",
         extra_data: {},
 
-        // optional parameters
+        // optional params
         customer_name: name,
         remarks: "",
         provider: "",
@@ -131,13 +153,23 @@ export default {
       itemInfo: null,
       paymentDone: false,
       phone: "",
-      netImage: ""
+      netImage: "",
+      timer: null,
+      timeOut: null
     };
   },
   created() {
-    EventBus.$on("cancelRequest", this.cancel);
+
   },
   mounted() {
+    EventBus.$on("cancelRequest", this.cancel);
+
+    // Cancel timer call
+    EventBus.$on("cancelAnyRequest", () => {
+      clearInterval(this.timer);
+      clearTimeout(this.timeOut);
+    });
+
     this.fetchItem().then(res => {
       EventBus.$emit("itemFetched", this.itemInfo);
 
@@ -207,6 +239,7 @@ export default {
         } else {
           this.createLoading = false;
           EventBus.$emit("startTrans", false);
+
           this.$message({
             message: "Please correct the errors",
             type: "error"
@@ -216,73 +249,50 @@ export default {
       });
     },
 
-    cancel() {
-      swal({
-        title: "Ooops!",
-        text: "You cancelled payment, redirecting.....",
-        icon: "warning"
-      });
-      swal({
-        title: "Are you sure you want to cancel this payment?",
-        text: "Going back will cancel and delete this payment.",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      })
-      .then((willDelete) => {
-        if (willDelete) {
-          swal({
-            title: "Payment Cancelled!",
-            text: "Redirecting you back .....",
-            icon: "error",
-          });
-
-          setTimeout(() => {
-            window.location = this.itemInfo.invoice.cancel_url;
-          }, 2000);
-
-        } else {
-          swal({
-            title: "Good",
-            text: "Kindly retry payment",
-            icon: "info"
-          });
-        }
-      });
-    },
-
     postTranasaction() {
       this.createLoading = true;
-      EventBus.$emit("startTrans", true);
+
       this.$store.dispatch("createTransactions", this.form)
       .then(response => {
         if (response.data.success) {
           swal({
             title: response.data.response.message.message,
-            text: "Checking transaction status...", //Add network specific text here to instruct the customer on what to do
+            text: "Checking transaction status...",  //Add network specific text here to instruct the customer on what to do
             icon: "info"
           });
+
+          // Trigger count down timer event
+          EventBus.$emit("startTrans", true);
 
           const trans_ref = response.data.response.message.reference;
 
           if (!this.paymentDone) {
-            const timer = setInterval(() => {
-              this.checkTransactionStatus(trans_ref, timer, timeOut)
+            this.timer = setInterval(() => {
+              this.checkTransactionStatus(trans_ref, this.timer, this.timeOut);
             }, 5000);
 
-            const timeOut = setTimeout(() => {
-              clearInterval(timer);
+            this.timeOut = setTimeout(() => {
+              clearInterval(this.timer);
               this.createLoading = false;
               EventBus.$emit("startTrans", false);
               this.paymentDone = true;
 
-              // Call completer function here
+              // Call completer function here if after 2 minutes and status is still not 'paid'
               this.transactionCompleter(trans_ref)
               .then(() => {
-                // Check transaction status one more time but just once
-                this.checkTransactionStatus(trans_ref, timer, timeOut)
+                // Check transaction status one more time and either choose to handle
+                // response here or in the checkTransactionStatus method
+                this.checkTransactionStatus(trans_ref, this.timer, this.timeOut)
+                .then(res => {
+                  if (res !== 'paid') {
+                    clearInterval(this.timer);
+                    clearTimeout(this.timeOut);
+
+                    this.retry();
+                  }
+                })
               })
-            }, 60000);
+            }, 120000); //Poll the server for 2 minutes - 120000 micro seconds - 120 seconds
           }
         } else {
           swal({
@@ -296,8 +306,8 @@ export default {
         }
       })
       .catch(error => {
-        EventBus.$emit("startTrans", false);
         this.createLoading = false;
+        EventBus.$emit("startTrans", false);
 
         swal({
           title: error,
@@ -308,37 +318,39 @@ export default {
     },
 
     checkTransactionStatus(trans_ref, timer, timeOut) {
-      this.$store.dispatch("getCurrentTransaction", trans_ref)
-      .then(response => {
-        console.log("status response :>> ", response.payment_status);
+      return new Promise((resolve, reject) => {
+        this.$store.dispatch("getCurrentTransaction", trans_ref)
+          .then(response => {
+            let status = response.payment_status;
+            console.log("Status: ", status);
 
-        if (response.payment_status.toLowerCase() === 'paid') {
-          this.createLoading = false;
-          EventBus.$emit("startTrans", false);
-          this.paymentDone = true;
-          clearInterval(timer);
-          clearTimeout(timeOut);
+            if (status.toLowerCase() === 'paid') {
+              this.createLoading = false;
+              EventBus.$emit("startTrans", false);
+              this.paymentDone = true;
 
-          swal({
-            title: "Done",
-            text: "Payment successful",
-            icon: "success"
+              clearInterval(timer);
+              clearTimeout(timeOut);
+            }
+
+            if (status.toLowerCase() === 'failed') {
+              this.createLoading = false;
+              EventBus.$emit("startTrans", false);
+
+              this.paymentDone = true;
+              clearInterval(timer);
+              clearTimeout(timeOut);
+
+              this.retry();
+            }
+
+            resolve(status);
           })
+          .catch(error => {
+            // Do smth here
 
-          setTimeout(() => {
-            window.location = this.itemInfo.invoice.return_url
-          }, 2000);
-        }
-
-        if (response.payment_status.toLowerCase() === 'failed') {
-          this.createLoading = false;
-          EventBus.$emit("startTrans", false);
-          this.paymentDone = true;
-          clearInterval(timer);
-          clearTimeout(timeOut);
-
-          this.retry(trans_ref);
-        }
+            resolve(error);
+          })
       });
     },
 
@@ -352,7 +364,7 @@ export default {
       });
     },
 
-    retry(ref) {
+    retry() {
       swal({
         title: "Failed",
         text: "Sorry! Payment failed",
@@ -360,26 +372,67 @@ export default {
       });
 
       swal({
-        title: "Do you want to retry?",
-        text: "This will retry the payment again",
-        icon: "info",
+        title: `Payment Failed!`,
+        text: " Do you want to retry?",
+        icon: "error",
         buttons: true,
+        buttons: ["No", "Yes"],
         dangerMode: true,
       })
-      .then((retry) => {
+      .then(retry => {
         if (retry) {
-          swal("Retrying payment again...", {
-            icon: "error",
+          swal({
+            title: "Retrying Payment....",
+            icon: "info",
           });
+          // Start the whole payment again as a new transaction request.
+          this.submitForm('form');
 
-          setTimeout(() => {
-            this.postTranasaction();
-          }, 1000);
         } else {
           this.cancel();
         }
       });
-    }
+    },
+
+    cancel() {
+      if (this.timer && this.timeOut) {
+        EventBus.$emit("cancelAnyRequest");
+      }
+
+      swal({
+        title: "Are you sure you want to cancel this payment?",
+        text: "Going back will cancel and delete this payment.",
+        icon: "warning",
+        buttons: true,
+        buttons: ["No", "Yes"],
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          swal({
+            title: "Payment Cancelled!",
+            text: "Redirecting you back .....",
+            icon: "error",
+            buttons: false,
+          });
+
+          setTimeout(() => {
+            window.location = this.itemInfo.invoice.cancel_url;
+          }, 2000);
+
+        } else {
+          swal({
+            title: "Good",
+            text: "Kindly continue with payment",
+            icon: "info"
+          });
+        }
+      });
+    },
+
+    proceed() {
+      window.location = this.itemInfo.invoice.return_url
+    },
   },
   computed: {
     // ...mapGetters({
@@ -390,4 +443,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+@media (max-width: 767px) {
+  .new-transaction-bg {
+    padding: 20px;
+  }
+}
 </style>
