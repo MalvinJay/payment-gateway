@@ -1,114 +1,133 @@
 <template>
   <!-- Stripe -->
-  <div :class="[{'animate': !fullscreenLoading }, 'payment_page']" v-loading.fullscreen.lock="fullscreenLoading">
-    <div :class="[{'animate': !fullscreenLoading}, 'single-payment', 'mx-0', 'm-auto', 'h-screen']">
-
-      <div class="left-side" style="width: 400px;">
-        <div class="position-relative">
-          <div class="go_back cursor" style="display: block; margin-left: -24px; padding-left: 24px;" @click="cancelRequest">
-            <div class="flex-container align-items-center width-auto menu-gray-text" style="height: 50px;">
-              <div class="flex align-items-center">
-                <div class="box-button flex justify-content-center align-items-center">
-                  <i class="el-icon-back position-absolute black-text trans-arrow bold-600 s-18"></i>
+  <div class="checkout" v-loading.fullscreen.lock="fullscreenLoading">
+    <div v-if="customerInfo.is_paid" class="is_paid flex flex-column justify-content-center align-items-center bg-white h-screen">
+      <div class="swal-icon swal-icon--success">
+        <span class="swal-icon--success__line swal-icon--success__line--long"></span>
+        <span class="swal-icon--success__line swal-icon--success__line--tip"></span>
+        <div class="swal-icon--success__ring"></div>
+        <div class="swal-icon--success__hide-corners"></div>
+      </div>
+      <h3>Item Alredy Paid for</h3>
+      <p>Kindly go back and request for a new item.</p>
+      <h4>Thank you</h4>
+    </div>
+    <div v-else :class="[{'animate': !fullscreenLoading }, 'payment_page']">
+      <div :class="[{'animate': !fullscreenLoading}, 'single-payment', 'mx-0', 'm-auto', 'h-screen']">
+        <div class="left_side">
+          <div class="position-relative">
+            <div
+              class="go_back cursor"
+              style="display: block; margin-left: -24px; padding-left: 24px;"
+              @click="cancelRequest"
+            >
+              <div
+                class="flex-container align-items-center width-auto menu-gray-text"
+                style="height: 50px;"
+              >
+                <div class="flex align-items-center">
+                  <div class="box-button flex justify-content-center align-items-center">
+                    <i class="el-icon-back position-absolute black-text trans-arrow bold-600 s-18"></i>
+                  </div>
+                  <span class="black-text bold-600 pl-6">Back</span>
                 </div>
-                <span class="black-text bold-600 pl-6">Back</span>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="flex flex-column justify-content-start mt-5 productSummary">
-          <div class="flex flex-column productContainer w-100">
-            <div class="flex flex-column gray-text w-100">
-              <div class="flex align-items-center">
-                <!-- <img src="@/assets/waec.png" style="max-height: 25px" alt /> -->
-                <span class="m-0 s-14 bold-500">{{customerInfo.meta_items.description || ''}}</span>
+          <div class="flex flex-column justify-content-start mt-5 productSummary">
+            <div class="flex flex-column productContainer w-100">
+              <div class="flex flex-column gray-text w-100">
+                <div class="flex align-items-center desc">
+                  <!-- <img src="@/assets/waec.svg" style="max-height: 25px" alt /> -->
+                  <span class="m-0 s-14 bold-500">{{customerInfo.meta_items.description || ''}}</span>
+                </div>
+
+                <div class="w-100 my-2">
+                  <span
+                    class="s-34 bold-600"
+                    style="font-variant-numeric: tabular-nums;letter-spacing: -0.03rem"
+                  >{{customerInfo.amount | money}}</span>
+                </div>
               </div>
 
-              <div class="w-100 my-2">
-                <span class="s-34 bold-600" style="font-variant-numeric: tabular-nums;letter-spacing: -0.03rem" >{{customerInfo.amount | money}}</span>
-              </div>
-            </div>
-
-            <div class="flex flex-column pt-30 s-18"> <!-- align-items-center justify-content-center -->
-              <p class="text-lineHeight--40">
-                Payment for BECE (
+              <div class="flex flex-column pt-30 s-18">
+                <!-- align-items-center justify-content-center -->
+                <p class="text-lineHeight--40">
+                  Payment for BECE (
                   <span class="bold-700">
                     <template v-if="customerInfo.meta_items.type === 'pece'">Private</template>
                     <template v-else>Basic</template>
                   </span>
-                ) year <span class="bold-700">{{customerInfo.meta_items.year || 'N/A'}}</span> for candidate with index number
-                <span class="bold-700">{{customerInfo.meta_items.index_no || 'N/A'}}</span>
-              </p>
+                  ) year
+                  <span class="bold-700">{{customerInfo.meta_items.year || 'N/A'}}</span> for candidate with index number
+                  <span
+                    class="bold-700"
+                  >{{customerInfo.meta_items.index_no || 'N/A'}}</span>
+                </p>
 
-              <!-- <div class="py-20">
-                <span class="bold-700">{{customerInfo.meta_items.description}}</span>
+                <!-- <div class="py-20">
+                  <span class="bold-700">{{customerInfo.meta_items.description}}</span>
+                </div>
+                <div class="py-20">
+                  <span class="bold-500 pr-10">Index No.: </span>
+                  <span class="bold-700 s-20">{{customerInfo.meta_items.index_no}}</span>
+                </div>
+                <div class="py-20">
+                  <span class="bold-500 pr-10">Year: </span>
+                  <span class="bold-700 s-20">{{customerInfo.meta_items.year}}</span>
+                </div>
+                <div class="py-20">
+                  <span class="bold-500 pr-10">Exams Type: </span>
+                  <span class="bold-700 s-20 upper-case">
+                    <template v-if="customerInfo.meta_items.type === 'pece'">Private</template>
+                    <template v-else>Basic</template>
+                  </span>
+                </div>-->
               </div>
-              <div class="py-20">
-                <span class="bold-500 pr-10">Index No.: </span>
-                <span class="bold-700 s-20">{{customerInfo.meta_items.index_no}}</span>
-              </div>
-              <div class="py-20">
-                <span class="bold-500 pr-10">Year: </span>
-                <span class="bold-700 s-20">{{customerInfo.meta_items.year}}</span>
-              </div>
-              <div class="py-20">
-                <span class="bold-500 pr-10">Exams Type: </span>
-                <span class="bold-700 s-20 upper-case">
-                  <template v-if="customerInfo.meta_items.type === 'pece'">Private</template>
-                  <template v-else>Basic</template>
-                </span>
-              </div> -->
 
+              <div class="image-box flex align-items-center justify-content-center pt-50">
+                <el-card class="box-card">
+                  <img src="@/assets/waec.svg" style="max-height: 80px" alt />
+                </el-card>
+              </div>
             </div>
-
-            <div class="image-box flex align-items-center justify-content-center pt-50">
-              <el-card class="box-card">
-                <img src="@/assets/waec.svg" style="max-height: 80px" alt />
-              </el-card>
-            </div>
-
           </div>
         </div>
-      </div>
 
-      <div class="payment_form">
-        <div class="w-100 m-auto mr-0">
+        <div class="right_side flex align-items-center pt-30">
+          <div class="w-100 m-auto mr-0">
             <el-tabs class="default-tab position-relative" stretch type>
-
-
-                <el-tab-pane label="Mobile Wallet">
-                  <template v-if="loading">
-                    <div class="flex flex-column justify-content-center align-items-center p-30 bold-700">
-                      <div class="py-10">
-                        <i class="el-icon-loading s-24" ></i>
-                      </div>
-                      <div class="box-button flex justify-content-center align-items-center m-0 p-20">
-                        <span class="s-16 gray-text m-2">{{countDown}}</span>
-                      </div>
-                      <div class="payment-form black-text s-14 text-center py-20">
-                        <span>Please complete authorization process on your phone.</span>
-                      </div>
-                      <el-button type="text" @click="cancel">Cancel</el-button>
+              <el-tab-pane label="Mobile Wallet">
+                <template v-if="loading">
+                  <div class="flex flex-column justify-content-center align-items-center p-30 bold-700">
+                    <div class="py-10">
+                      <i class="el-icon-loading s-24"></i>
                     </div>
-                  </template>
-                  <template v-else>
-                    <mobile-money></mobile-money>
-                  </template>
-                </el-tab-pane>
-                <el-tab-pane :disabled="true" label="Card">
-                  <card-payment></card-payment>
-                </el-tab-pane>
-
+                    <div class="box-button flex justify-content-center align-items-center m-0 p-20">
+                      <span class="s-16 gray-text m-2">{{countDown}}</span>
+                    </div>
+                    <div class="payment-form black-text s-14 text-center py-20">
+                      <span>Please complete authorization process on your phone.</span>
+                    </div>
+                    <el-button type="text" @click="cancel">Cancel</el-button>
+                  </div>
+                </template>
+                <template v-else>
+                  <mobile-money></mobile-money>
+                </template>
+              </el-tab-pane>
+              <el-tab-pane :disabled="true" label="Card">
+                <card-payment></card-payment>
+              </el-tab-pane>
             </el-tabs>
 
-            <!-- powered by no -->
             <div class="flex justify-content-center mt-5">
               <div class="flex justify-content-center align-items-center pr-10 w-50">
                 <img style="height: 30%;" src="../assets/images/PoweredBy.svg" alt />
               </div>
             </div>
-          <!-- </div> -->
+          </div>
         </div>
       </div>
     </div>
@@ -144,101 +163,120 @@ export default {
         timeout: 120,
         meta_items: {
           description: null,
-          index_no: null,
-        }
+          index_no: null
+        },
+        is_paid: null
       },
       fullscreenLoading: null,
       countDown: 0,
-      loading: false
+      loading: false,
     };
   },
   created() {
-    // this.fullscreenLoading = true
+    this.fullscreenLoading = true
   },
   mounted() {
     EventBus.$on("startTrans", val => {
-      console.log('val to be appliedd :>> ', val);
-      this.loading = val
-      if (val) this.counter(this.customerInfo.timeout)
+      this.loading = val;
+      if (val) {
+        this.counter(this.customerInfo.timeout || 120);
+      } else {
+        this.loading = false;
+        this.countDown = 0;
+      }
     });
     EventBus.$on("itemFetched", info => {
-      this.fullscreenLoading = false;
       this.customerInfo.email = info.customer.address;
       this.customerInfo.amount = info.invoice.total;
       this.customerInfo.meta_items = info.meta_items;
-      // this.customerInfo.timeout = info.invoice.timeout;
+      this.customerInfo.is_paid = info.invoice.is_paid;
+      this.fullscreenLoading = false;
     });
-
-
   },
   methods: {
     cancelRequest() {
       EventBus.$emit("cancelRequest");
     },
     cancel() {
-
+      this.loading = false;
+      this.countDown = 0;
+      EventBus.$emit("cancelRequest");
     },
     counter(total) {
       let timeout = parseInt(total);
       this.countDown = timeout;
       const timer = setInterval(() => {
-        this.countDown -= 1;
+        this.countDown > 0 ? this.countDown -= 1 : clearInterval(timer)
       }, 1000);
 
       const finaTimeout = timeout * 1000;
-      console.log('Final Timeout: 12000', finaTimeout);
+      console.log("Final Timeout: 12000", finaTimeout);
       const countLimit = setTimeout(() => {
         clearInterval(timer);
-        this.countDown = 0
+        this.countDown = 0;
       }, finaTimeout);
     }
-  },
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-  .payment_page {
-    .single-payment {
-      padding: 20px 10px;
-      max-width: 380px;
-      margin: 0 auto;
+.is_paid {
+  &::before {
+    content: "";
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    position: absolute;
+    z-index: -1;
+  }
+}
+.payment_page {
+  .single-payment {
+    padding: 20px 10px;
+    max-width: 380px;
+    margin: 0 auto;
 
-      .left-side {
-        height: auto;
-      }
+    .left_side, .right_side {
+      width: auto;
+      height: auto;
+    }
 
-      .productSummary {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
+    .right_side {
+      padding-top: 30px;
+    }
 
-        .productContainer {
-          -webkit-box-ordinal-group: 3;
-          order: 2;
+    .productSummary {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+
+      .productContainer {
+        -webkit-box-ordinal-group: 3;
+        order: 2;
+
+        .desc {
+          justify-content: center;
         }
+      }
 
-        .productImage {
-          -webkit-box-ordinal-group: 2;
-          order: 1;
+      .productImage {
+        -webkit-box-ordinal-group: 2;
+        order: 1;
 
-          img {
-            max-height: 120px;
-          }
+        img {
+          max-height: 120px;
         }
-      }
-
-      .clientLogo {
-        margin: 2.5rem auto;
-      }
-
-      .payment_form {
-        width: 400px;
-        padding-top: 30px;
       }
     }
+
+    .clientLogo {
+      margin: 2.5rem auto;
+    }
   }
+}
 
 @media (min-width: 768px) {
   .payment_page {
@@ -251,7 +289,7 @@ export default {
       right: 0;
       background: #fff;
       box-shadow: 2px 1px 20px 2px #f3ecec;
-      background-image: url('../assets/pageBack.jpg');
+      background-image: url("../assets/pageBack.jpg");
       background-repeat: no-repeat;
       background-size: cover;
       opacity: 0.2;
@@ -289,8 +327,13 @@ export default {
       flex-direction: row;
       justify-content: space-between;
 
-      .left-side {
+      .left_side, .right_side {
         height: 100%;
+        width: 400px;
+      }
+
+      .right_side {
+        padding: 0;
       }
 
       &.animate {
@@ -314,6 +357,10 @@ export default {
           .image-box {
             justify-content: flex-start;
           }
+
+          .desc {
+            justify-content: flex-start;
+          }
         }
 
         .productImage {
@@ -332,10 +379,6 @@ export default {
       // .clientLogo {
 
       // }
-    }
-
-    .payment-form {
-      // padding-top: 0!important;
     }
   }
 }
