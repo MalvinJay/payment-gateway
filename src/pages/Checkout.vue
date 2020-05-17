@@ -173,7 +173,7 @@ export default {
     };
   },
   created() {
-    this.fullscreenLoading = true
+    // this.fullscreenLoading = true
   },
   mounted() {
     EventBus.$on("startTrans", val => {
