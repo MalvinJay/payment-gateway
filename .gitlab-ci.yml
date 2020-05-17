@@ -2,19 +2,19 @@ image: node:latest
 variables:
   S3_BUCKET_NAME: "dashboard.flopay.io"
 stages:
-  #- build
+  - build
   - deploy
-#build site:
-#  stage: build
-#  script:
-#    # - npm install --progress=false
-#    - yarn install
-#    # - npm run build
-#    - yarn run build
-#  artifacts:
-#   #    expire_in: 1h
-#    paths:
-#      - dist
+build site:
+ stage: build
+ script:
+    # - npm install --progress=false
+    - yarn install
+    # - npm run build
+    - yarn run build
+ artifacts:
+  #    expire_in: 1h
+    paths:
+     - dist
 deploy to production:
   stage: deploy
   environment: production
