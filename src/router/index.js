@@ -12,7 +12,7 @@ const ContactDetails = () => import(/* webpackChunkName: "payment" */ '../contac
 const NotFound = () => import(/* webpackChunkName: "payment" */ '../pages/NotFound')
 const BsSettings = () => import(/* webpackChunkName: "payment" */ '../business/pages/BsSettings')
 const Teams = () => import(/* webpackChunkName: "payment" */ '../business/pages/Teams')
-const Roles = () => import(/* webpackChunkName: "payment" */ '../business/pages/Roles')
+const Roles = () => import(/* webpackChunkName: "payment" */ '../business/pages/roles')
 const Branches = () => import(/* webpackChunkName: "payment" */ '../business/pages/Branches')
 const Jobs = () => import(/* webpackChunkName: "payment" */ '../transactions/pages/Jobs')
 
@@ -40,7 +40,7 @@ const AccountDetail = () => import(/* webpackChunkName: "connect" */ '../connect
 const AccountSettlements = () => import(/* webpackChunkName: "connect" */ '../connect/pages/AccountSettlements')
 const AccountFees = () => import(/* webpackChunkName: "connect" */ '../connect/pages/AccountFees')
 
-const Logs = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Logs')
+const Logs = () => import(/* webpackChunkName: "developer" */ '../developers/pages/logs')
 const LogsDetails = () => import(/* webpackChunkName: "developer" */ '../developers/pages/LogsDetails')
 const Events = () => import(/* webpackChunkName: "developer" */ '../developers/pages/Events')
 const EventsDetails = () => import(/* webpackChunkName: "developer" */ '../developers/pages/EventsDetails')
