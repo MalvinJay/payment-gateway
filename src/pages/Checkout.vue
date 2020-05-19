@@ -298,10 +298,10 @@ export default {
       right: 0;
       background: #fff;
       box-shadow: 2px 1px 20px 2px #f3ecec;
-      background-image: url("../assets/pageBack.jpg");
-      background-repeat: no-repeat;
-      background-size: cover;
-      opacity: 0.2;
+      // background-image: url("../assets/pageBack.jpg");
+      // background-repeat: no-repeat;
+      // background-size: cover;
+      // opacity: 0.2;
     }
 
     &.animate {
@@ -321,9 +321,10 @@ export default {
       left: 0;
       background: #fff;
       z-index: -1;
-      // background-image: url('../assets/pageBack.jpg');
-      // background-repeat: no-repeat;
-      // background-size: cover;
+      background-image: url('../assets/Frame.svg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      // opacity: 0.5;
     }
 
     .single-payment {
