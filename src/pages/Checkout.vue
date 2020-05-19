@@ -173,7 +173,7 @@ export default {
     };
   },
   created() {
-    // this.fullscreenLoading = true
+    this.fullscreenLoading = true
   },
   mounted() {
     EventBus.$on("startTrans", val => {
@@ -186,10 +186,19 @@ export default {
       }
     });
     EventBus.$on("itemFetched", info => {
-      this.customerInfo.email = info.customer.address;
-      this.customerInfo.amount = info.invoice.total;
-      this.customerInfo.meta_items = info.meta_items;
-      this.customerInfo.is_paid = info.invoice.is_paid;
+      info.customer? this.customerInfo.email = info.customer.address : null;
+      info.invoice? this.customerInfo.amount = info.invoice.total : null;
+      info.meta_items? this.customerInfo.meta_items = info.meta_items : null;
+      info.invoice? this.customerInfo.is_paid = info.invoice.is_paid : null;
+
+      if (info.invoice === undefined) {
+        swal({
+          title: "Sorry! Item Not Found",
+          text: "Item was not found, kindly go back and try again",
+          icon: "error"
+        });
+      }
+
       this.fullscreenLoading = false;
     });
   },

@@ -170,8 +170,9 @@ export default {
       clearTimeout(this.timeOut);
     });
 
-    this.fetchItem().then(res => {
-      EventBus.$emit("itemFetched", this.itemInfo);
+    this.fetchItem()
+    .then(res => {
+      if (this.itemInfo) EventBus.$emit("itemFetched", this.itemInfo);
 
       this.itemInfo.customer.name
         ? (this.form.customer_name = this.itemInfo.customer.name)
@@ -188,7 +189,11 @@ export default {
         ? (this.form.invoice_ref = this.itemInfo.invoice.reference)
         : "";
       this.form.extra_data = this.itemInfo.meta_items;
-    });
+    })
+    .catch(err => {
+      console.info(err);
+      EventBus.$emit("itemFetched", {});
+    })
   },
   methods: {
     formatTel(input) {
