@@ -15,9 +15,11 @@
             <div class="swal-text" style="">Payment successful</div>
           </div>
 
+          <!--
           <div class="flex justify-content-center">
             <el-button type="text" @click="proceed">Continue</el-button>
           </div>
+           -->
         </div>
       </template>
       <template v-else>
@@ -118,6 +120,7 @@ export default {
         live: true,
         dummy: false
       },
+      dummyForm: null,
       providers: [
         {
           label: "MTN",
@@ -238,9 +241,11 @@ export default {
     },
 
     submitForm(formName) {
+      console.log('submitting..');
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.postTranasaction()
+          this.dummyForm = this.form
         } else {
           this.createLoading = false;
           EventBus.$emit("startTrans", false);
@@ -260,15 +265,14 @@ export default {
       this.$store.dispatch("createTransactions", this.form)
       .then(response => {
         if (response.data.success) {
-          swal({
-            title: response.data.response.message.message,
-            text: "Checking transaction status...",  //Add network specific text here to instruct the customer on what to do
-            icon: "info"
-          });
+          // swal({
+          //   title: response.data.response.message.message,
+          //   text: "Checking transaction status...",  //Add network specific text here to instruct the customer on what to do
+          //   icon: "info"
+          // });
 
           // Trigger count down timer event
           EventBus.$emit("startTrans", true);
-
           const trans_ref = response.data.response.message.reference;
 
           if (!this.paymentDone) {
@@ -280,7 +284,7 @@ export default {
               clearInterval(this.timer);
               this.createLoading = false;
               EventBus.$emit("startTrans", false);
-              this.paymentDone = true;
+              this.proceed();
 
               // Call completer function here if after 2 minutes and status is still not 'paid'
               this.transactionCompleter(trans_ref)
@@ -288,12 +292,13 @@ export default {
                 // Check transaction status one more time and either choose to handle
                 // response here or in the checkTransactionStatus method
                 this.checkTransactionStatus(trans_ref, this.timer, this.timeOut)
-                .then(res => {
-                  if (res !== 'paid') {
+                .then(response => {
+                  console.log('response :>> ', response);
+                  if (response.payment_status !== 'paid') {
                     clearInterval(this.timer);
                     clearTimeout(this.timeOut);
 
-                    this.retry();
+                    this.retry(response.response_message);
                   }
                 })
               })
@@ -325,37 +330,35 @@ export default {
     checkTransactionStatus(trans_ref, timer, timeOut) {
       return new Promise((resolve, reject) => {
         this.$store.dispatch("getCurrentTransaction", trans_ref)
-          .then(response => {
-            let status = response.payment_status;
-            console.log("Status: ", status);
+        .then(response => {
+          let status = response.payment_status;
+          console.log("Status: ", status);
 
-            if (status.toLowerCase() === 'paid') {
-              this.createLoading = false;
-              EventBus.$emit("startTrans", false);
-              this.paymentDone = true;
+          if (status.toLowerCase() === 'paid') {
+            this.createLoading = false;
+            EventBus.$emit("startTrans", false);
+            this.paymentDone = true;
 
-              clearInterval(timer);
-              clearTimeout(timeOut);
-            }
+            clearInterval(timer);
+            clearTimeout(timeOut);
+          }
 
-            if (status.toLowerCase() === 'failed') {
-              this.createLoading = false;
-              EventBus.$emit("startTrans", false);
+          if (status.toLowerCase() === 'failed') {
+            this.createLoading = false;
+            EventBus.$emit("startTrans", false);
 
-              this.paymentDone = true;
-              clearInterval(timer);
-              clearTimeout(timeOut);
+            this.paymentDone = true;
+            clearInterval(timer);
+            clearTimeout(timeOut);
 
-              this.retry();
-            }
+            this.retry(response.response_message);
+          }
 
-            resolve(status);
-          })
-          .catch(error => {
-            // Do smth here
-
-            resolve(error);
-          })
+          resolve(response);
+        })
+        .catch(error => {
+          resolve(error);
+        })
       });
     },
 
@@ -369,32 +372,21 @@ export default {
       });
     },
 
-    retry() {
+    retry(msg) {
       swal({
-        title: "Failed",
-        text: "Sorry! Payment failed",
-        icon: "error"
-      });
-
-      swal({
-        title: `Payment Failed!`,
+        title: `${msg}`,
         text: " Do you want to retry?",
         icon: "error",
         buttons: true,
         buttons: ["No", "Yes"],
         dangerMode: true,
       })
-      .then(retry => {
-        if (retry) {
-          swal({
-            title: "Retrying Payment....",
-            icon: "info",
-          });
-          // Start the whole payment again as a new transaction request.
-          this.submitForm('form');
-
+      .then(proceed => {
+        if(proceed) {
+          this.paymentDone = false;
+          this.postTranasaction();
         } else {
-          this.cancel();
+          window.location = this.itemInfo.invoice.cancel_url;
         }
       });
     },
@@ -436,8 +428,14 @@ export default {
     },
 
     proceed() {
-      window.location = this.itemInfo.invoice.return_url
+      this.paymentDone = true;
+
+      setTimeout(() => {
+        window.location = this.itemInfo.invoice.return_url
+      }, 2000);
     },
+
+
   },
   computed: {
     // ...mapGetters({
