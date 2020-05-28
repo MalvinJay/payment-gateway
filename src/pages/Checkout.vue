@@ -9,7 +9,7 @@
         <div class="swal-icon--success__hide-corners"></div>
       </div>
       <h3>Item Alredy Paid for</h3>
-      <p>Kindly go back and request for a new item.</p>
+      <p> Kindly go back and request for a new item.</p>
       <h4>Thank you</h4>
     </div>
     <div v-else :class="[{'animate': !fullscreenLoading }, 'payment_page']">
@@ -39,8 +39,7 @@
             <div class="flex flex-column productContainer w-100">
               <div class="flex flex-column gray-text w-100">
                 <div class="flex align-items-center desc">
-                  <!-- <img src="@/assets/waec.svg" style="max-height: 25px" alt /> -->
-                  <span class="m-0 s-14 bold-500">{{customerInfo.meta_items.description || ''}}</span>
+                  <span class="m-0 s-14 bold-500">{{customerInfo.meta_items.description || 'PAYMENT'}}</span>
                 </div>
 
                 <div class="w-100 my-2">
@@ -52,38 +51,30 @@
               </div>
 
               <div class="flex flex-column pt-30 s-18">
-                <!-- align-items-center justify-content-center -->
                 <p class="text-lineHeight--40">
-                  Payment for BECE (
-                  <span class="bold-700">
-                    <template v-if="customerInfo.meta_items.type === 'pece'">Private</template>
-                    <template v-else>Basic</template>
-                  </span>
-                  ) year
-                  <span class="bold-700">{{customerInfo.meta_items.year || 'N/A'}}</span> for candidate with index number
-                  <span
-                    class="bold-700"
-                  >{{customerInfo.meta_items.index_no || 'N/A'}}</span>
-                </p>
+                  <template v-if="customerInfo.meta_items.request_type === '2'">
+                    Payment for BECE (
+                    <span class="bold-700">
+                      <template v-if="customerInfo.meta_items.type === 'pece'">Private</template>
+                      <template v-else>Basic</template>
+                    </span>
+                    ) year
+                    <span class="bold-700">{{customerInfo.meta_items.year || 'N/A'}}</span> for candidate with index number
+                    <span class="bold-700">
+                      {{customerInfo.meta_items.index_no || 'N/A'}}
+                    </span>
+                  </template>
 
-                <!-- <div class="py-20">
-                  <span class="bold-700">{{customerInfo.meta_items.description}}</span>
-                </div>
-                <div class="py-20">
-                  <span class="bold-500 pr-10">Index No.: </span>
-                  <span class="bold-700 s-20">{{customerInfo.meta_items.index_no}}</span>
-                </div>
-                <div class="py-20">
-                  <span class="bold-500 pr-10">Year: </span>
-                  <span class="bold-700 s-20">{{customerInfo.meta_items.year}}</span>
-                </div>
-                <div class="py-20">
-                  <span class="bold-500 pr-10">Exams Type: </span>
-                  <span class="bold-700 s-20 upper-case">
-                    <template v-if="customerInfo.meta_items.type === 'pece'">Private</template>
-                    <template v-else>Basic</template>
-                  </span>
-                </div>-->
+                  <template v-else-if="customerInfo.meta_items.request_type === '4'">
+                    Payment for REGISTRATION with invoice <br> <span class="bold-700">{{customerInfo.meta_items.invoice_number || 'N/A'}}</span>
+                  </template>
+                  <template v-else-if="customerInfo.meta_items.request_type === '1' || customerInfo.meta_items.request_type === '3'">
+                    Payment for Result Checker PIN
+                  </template>
+                  <template v-else>
+                    Payment
+                  </template>
+                </p>
               </div>
 
               <div class="image-box flex align-items-center justify-content-center pt-50">
@@ -163,7 +154,9 @@ export default {
         timeout: 120,
         meta_items: {
           description: null,
-          index_no: null
+          index_no: null,
+          request_type: 2,
+          invoice_number: null
         },
         is_paid: null
       },
@@ -191,11 +184,20 @@ export default {
       info.meta_items? this.customerInfo.meta_items = info.meta_items : null;
       info.invoice? this.customerInfo.is_paid = info.invoice.is_paid : null;
 
+
       if (info.invoice === undefined) {
         swal({
           title: "Sorry! Item Not Found",
           text: "Item was not found, kindly go back and try again",
-          icon: "error"
+          icon: "error",
+          buttons: true,
+          buttons: {
+            confirm: "Ok"
+          },
+          dangerMode: true,
+        })
+        .then(() => {
+          window.history.back();
         });
       }
 
