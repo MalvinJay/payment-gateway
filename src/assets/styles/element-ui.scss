@@ -150,13 +150,13 @@ $border: #dcdfe6;
     }
 }
 
-.el-table { 
+.el-table {
   .el-table__body-wrapper {
     table {
       tbody {
         .el-table__expanded-cell[class*=cell] {
           padding: 20px!important;
-        }        
+        }
       }
     }
   }
@@ -779,9 +779,9 @@ td.hljs-ln-code {
     font-weight: 700!important;
     line-height: 22px;
   }
-
-
-
+  .el-input.is-disabled .el-input__inner {
+    background: #fff!important; 
+  }
 }
 
 .network_images {

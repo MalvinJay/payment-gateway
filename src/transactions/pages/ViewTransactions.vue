@@ -1,6 +1,12 @@
 <template>
     <div>
-        <el-tabs v-model="activeName" class="default-tab" :class="[{'test-data': test}, 'position-relative']" stretch type="border-card">
+        <el-tabs
+          v-model="activeName"
+          class="default-tab" :class="[{'test-data': test}, 'position-relative']"
+          stretch
+          type="border-card"
+          @tab-click="setTab"
+          >
             <!-- <div v-show="test" class="position-absolute bg-orange test">TEST DATA</div> -->
             <el-tab-pane name="1" label="Receipts">
                 <payment-table type="payment"></payment-table>

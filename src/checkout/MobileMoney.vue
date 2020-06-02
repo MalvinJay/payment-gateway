@@ -14,12 +14,11 @@
             <div class="swal-title m-0" style="">Done</div>
             <div class="swal-text" style="">Payment successful</div>
           </div>
-
           <!--
-          <div class="flex justify-content-center">
-            <el-button type="text" @click="proceed">Continue</el-button>
-          </div>
-           -->
+            <div class="flex justify-content-center">
+              <el-button type="text" @click="proceed">Continue</el-button>
+            </div>
+          -->
         </div>
       </template>
       <template v-else>
@@ -34,7 +33,7 @@
           :status-icon="true"
         >
           <el-form-item class="h-auto" label="Phone" prop="customer_no">
-            <el-input type="tel" v-model="phone" placeholder="000 000 0000" @input="formatTel" style="white-space: pre-line;"></el-input>
+            <el-input type="tel" class="bg-white" v-model="phone" placeholder="000 000 0000" @input="formatTel" style="white-space: pre-line;" :disabled="true"></el-input>
           </el-form-item>
 
           <el-form-item label="Mobile Network">
@@ -44,6 +43,7 @@
                 @change="handleDataChange"
                 :class="[{'add_space': form.provider}, 'w-100', 'network_images']"
                 placeholder="Choose Provider"
+                :disabled="true"
               >
                 <el-option
                   v-for="(item, index) in providers"
@@ -158,12 +158,12 @@ export default {
       phone: "",
       netImage: "",
       timer: null,
-      timeOut: null
+      timeOut: null,
+      timeoutValue: 120,
+      transStatus: null
     };
   },
-  created() {
 
-  },
   mounted() {
     EventBus.$on("cancelRequest", this.cancel);
 
@@ -175,22 +175,48 @@ export default {
 
     this.fetchItem()
     .then(res => {
-      if (this.itemInfo) EventBus.$emit("itemFetched", this.itemInfo);
+      if(this.itemInfo) EventBus.$emit("itemFetched", this.itemInfo);
 
+      // Set form customer's name for payment transaction
       this.itemInfo.customer.name
         ? (this.form.customer_name = this.itemInfo.customer.name)
         : "";
-      this.itemInfo.customer.msisdn
-        ? (this.form.customer_no = this.itemInfo.customer.msisdn)
-        : "";
-      this.itemInfo.invoice.total
-        ? ((this.form.amount = this.itemInfo.invoice.total),
-          (this.form.recipient_amount = this.itemInfo.invoice.total))
-        : "";
+
+      // Set form customer number for payment transaction
+      if(this.itemInfo.customer.msisdn) {
+        this.form.customer_no = this.itemInfo.customer.msisdn
+        this.formatTel(this.itemInfo.customer.msisdn)
+      }
+
+      // Set form customer provider
+      if(this.itemInfo.invoice.provider_network) {
+        this.handleDataChange(this.itemInfo.invoice.provider_network.toLowerCase());
+        this.form.provider = this.itemInfo.invoice.provider_network
+      }
+
+      // Set form amount and recipient_amount respectively
+      if (this.itemInfo.invoice.total) {
+        if (this.itemInfo.invoice.extra_data.charges_info.is_client_charge) {
+          this.form.recipient_amount = this.form.amount = this.itemInfo.invoice.extra_data.charges_info.gross_amount
+        } else {
+         this.form.recipient_amount = this.form.amount = this.itemInfo.invoice.extra_data.charges_info.net_amount
+        }
+      }
+
+      // Set form token for public receive transaction endpoint authentication
       this.itemInfo.token ? (this.form.token = this.itemInfo.token) : "";
+
+      // Set form reference for transaction
       this.itemInfo.invoice.reference
-        ? (this.form.invoice_ref = this.itemInfo.invoice.reference)
-        : "";
+      ? (this.form.invoice_ref = this.itemInfo.invoice.reference)
+      : "";
+
+      // Set form client_ref for info that will be displayed on payment prompt
+      this.itemInfo.invoice.client_ref
+      ? (this.form.client_ref = this.itemInfo.invoice.client_ref)
+      : "";
+
+      // Set form extra data
       this.form.extra_data = this.itemInfo.meta_items;
     })
     .catch(err => {
@@ -198,6 +224,7 @@ export default {
       EventBus.$emit("itemFetched", {});
     })
   },
+
   methods: {
     formatTel(input) {
       let temp = input.slice()
@@ -272,37 +299,49 @@ export default {
           // });
 
           // Trigger count down timer event
-          EventBus.$emit("startTrans", true);
+          EventBus.$emit("startTrans", true); //Emit event to be invoked on Checkout component
           const trans_ref = response.data.response.message.reference;
 
           if (!this.paymentDone) {
+
             this.timer = setInterval(() => {
               this.checkTransactionStatus(trans_ref, this.timer, this.timeOut);
             }, 5000);
 
+            setTimeout(() => {
+              if(this.transStatus === 'pending') this.pendingPayment();
+            }, (this.timeoutValue * 1000)/2);
+
             this.timeOut = setTimeout(() => {
               clearInterval(this.timer);
-              this.createLoading = false;
-              EventBus.$emit("startTrans", false);
-              this.proceed();
+              // this.createLoading = false;
+              // EventBus.$emit("startTrans", false);
+              // this.proceed();
 
               // Call completer function here if after 2 minutes and status is still not 'paid'
               this.transactionCompleter(trans_ref)
               .then(() => {
                 // Check transaction status one more time and either choose to handle
                 // response here or in the checkTransactionStatus method
+
                 this.checkTransactionStatus(trans_ref, this.timer, this.timeOut)
                 .then(response => {
-                  console.log('response :>> ', response);
                   if (response.payment_status !== 'paid') {
-                    clearInterval(this.timer);
-                    clearTimeout(this.timeOut);
+                    this.createLoading = false;
+                    EventBus.$emit("startTrans", false);
 
-                    this.retry(response.response_message);
+                    this.retry(response);
                   }
                 })
+                .catch(err => {
+
+                });
               })
-            }, 120000); //Poll the server for 2 minutes - 120000 micro seconds - 120 seconds
+            }, this.timeoutValue * 1000); //Poll the server for 2 minutes - 120000 micro seconds - 120 seconds - 120000 micro seconds
+
+          } else {
+            console.log('Payment successful!! Now redirect :>> ');
+            this.proceed();
           }
         } else {
           swal({
@@ -334,27 +373,38 @@ export default {
           let status = response.payment_status;
           console.log("Status: ", status);
 
+          this.transStatus == status;
+
           if (status.toLowerCase() === 'paid') {
+            console.log('Here as paid!!');
             this.createLoading = false;
             EventBus.$emit("startTrans", false);
+
+            // Just stay on checkout page
             this.paymentDone = true;
+
+            // Or Show success message and redirect within 2 seconds
+            this.proceed();
 
             clearInterval(timer);
             clearTimeout(timeOut);
           }
 
-          if (status.toLowerCase() === 'failed') {
+          else if (status.toLowerCase() === 'failed') {
+            console.log('Here as failed!!');
             this.createLoading = false;
             EventBus.$emit("startTrans", false);
 
-            this.paymentDone = true;
             clearInterval(timer);
             clearTimeout(timeOut);
 
-            this.retry(response.response_message);
+            this.retry(response);
           }
 
-          resolve(response);
+          else {
+            console.log('Here as pending or queued or whatever status!');
+            resolve(response);
+          }
         })
         .catch(error => {
           resolve(error);
@@ -372,10 +422,10 @@ export default {
       });
     },
 
-    retry(msg) {
+    pendingPayment(msg) {
       swal({
-        title: `${msg}`,
-        text: " Do you want to retry?",
+        title: 'Payment Pending',
+        text: "Have you approved payment prompt yet?",
         icon: "error",
         buttons: true,
         buttons: ["No", "Yes"],
@@ -383,10 +433,30 @@ export default {
       })
       .then(proceed => {
         if(proceed) {
+          return;
+        } else {
+          this.cancel();
+        }
+      });
+    },
+
+    retry(msg) {
+      swal({
+        title: `${msg.response_message || 'Transaction '+ msg.payment_status}`,
+        text: " Do you want to retry or abort transaction?",
+        icon: "error",
+        buttons: true,
+        buttons: ["Abort", "Retry"],
+        dangerMode: true,
+      })
+      .then(proceed => {
+        if(proceed) {
           this.paymentDone = false;
           this.postTranasaction();
         } else {
-          window.location = this.itemInfo.invoice.cancel_url;
+          // window.location = this.itemInfo.invoice.cancel_url;
+          // console.log('cancelling payment but stay on page :>> ');
+          return;
         }
       });
     },
@@ -416,13 +486,14 @@ export default {
           setTimeout(() => {
             window.location = this.itemInfo.invoice.cancel_url;
           }, 2000);
-
         } else {
-          swal({
-            title: "Good",
-            text: "Kindly continue with payment",
-            icon: "info"
-          });
+          // swal({
+          //   title: "Good",
+          //   text: "Kindly try payment again.",
+          //   icon: "info"
+          // });
+
+          return
         }
       });
     },
@@ -433,10 +504,16 @@ export default {
       setTimeout(() => {
         window.location = this.itemInfo.invoice.return_url
       }, 2000);
-    },
-
-
+    }
   },
+
+  watch: {
+    createLoading(newVal) {
+      console.log('createLoading :>> ', newVal);
+      // EventBus.$emit("startTrans", newVal);
+    }
+  },
+
   computed: {
     // ...mapGetters({
     //   providers: 'providers',

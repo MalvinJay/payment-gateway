@@ -43,10 +43,15 @@
                 </div>
 
                 <div class="w-100 my-2">
-                  <span
-                    class="s-34 bold-600"
-                    style="font-variant-numeric: tabular-nums;letter-spacing: -0.03rem"
-                  >{{customerInfo.amount | money}}</span>
+                  <span class="s-34 bold-600" style="font-variant-numeric: tabular-nums;letter-spacing: -0.03rem">
+                    <!-- <template v-if="customerInfo.extra_data.charges_info.is_client_charge">
+                      {{customerInfo.extra_data.charges_info.gross_amount | money}}
+                    </template>
+                    <template v-else>
+                      {{customerInfo.extra_data.charges_info.net_amount | money}}
+                    </template> -->
+                    {{amount | money}}
+                  </span>
                 </div>
               </div>
 
@@ -101,7 +106,8 @@
                     <div class="payment-form black-text s-14 text-center py-20">
                       <span>Please complete authorization process on your phone.</span>
                     </div>
-                    <el-button type="text" @click="cancel">Cancel</el-button>
+
+                    <!-- <el-button type="text" @click="cancel">Cancel</el-button>   -->
                   </div>
                 </template>
                 <template v-else>
@@ -158,6 +164,18 @@ export default {
           request_type: 2,
           invoice_number: null
         },
+        extra_data: {
+          charges_info: {
+            charged_amount: null,
+            gross_amount: null,
+            is_client_charge: null,
+            level: null,
+            message: null,
+            net_amount: null,
+            request_type: null,
+            status: true,
+          }
+        },
         is_paid: null
       },
       fullscreenLoading: null,
@@ -179,11 +197,11 @@ export default {
       }
     });
     EventBus.$on("itemFetched", info => {
-      info.customer? this.customerInfo.email = info.customer.address : null;
-      info.invoice? this.customerInfo.amount = info.invoice.total : null;
-      info.meta_items? this.customerInfo.meta_items = info.meta_items : null;
-      info.invoice? this.customerInfo.is_paid = info.invoice.is_paid : null;
-
+      info.customer ? this.customerInfo.email = info.customer.address : null;
+      info.invoice ? this.customerInfo.amount = info.invoice.total : null;
+      info.meta_items ? this.customerInfo.meta_items = info.meta_items : null;
+      info.invoice ? this.customerInfo.is_paid = info.invoice.is_paid : null;
+      info.invoice.extra_data ? this.customerInfo.extra_data = info.invoice.extra_data : null;
 
       if (info.invoice === undefined) {
         swal({
@@ -227,8 +245,17 @@ export default {
         this.countDown = 0;
       }, finaTimeout);
     }
+  },
+  computed: {
+    amount() {
+      if (this.customerInfo.extra_data.charges_info.is_client_charge) {
+        return this.customerInfo.extra_data.charges_info.gross_amount
+      } else {
+        return this.customerInfo.extra_data.charges_info.net_amount
+      }
+    }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
