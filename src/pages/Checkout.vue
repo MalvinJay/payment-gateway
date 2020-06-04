@@ -100,9 +100,9 @@
                     <div class="py-10">
                       <i class="el-icon-loading s-24"></i>
                     </div>
-                    <!-- <div class="box-button flex justify-content-center align-items-center m-0 p-20">
+                    <div class="box-button flex justify-content-center align-items-center m-0 p-20">
                       <span class="s-16 gray-text m-2">{{countDown}}</span>
-                    </div> -->
+                    </div>
                     <div class="payment-form black-text s-14 text-center py-20">
                       <span>Please complete authorization process on your phone.</span>
                     </div>

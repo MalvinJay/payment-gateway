@@ -69,7 +69,7 @@
                 <img src="@/assets/loading.gif" alt="">
               </template> -->
               <template>
-                Pay {{this.form.amount | money}}
+                Pay {{this.payingAmount | money}}
               </template>
             </el-button>
             <!-- <el-button class="w-50" @click="cancel">Cancel</el-button> -->
@@ -120,6 +120,7 @@ export default {
         live: true,
         dummy: false
       },
+      payingAmount: null,
       dummyForm: null,
       providers: [
         {
@@ -196,10 +197,12 @@ export default {
 
       // Set form amount and recipient_amount respectively
       if (this.itemInfo.invoice.total) {
+        this.form.amount = this.form.recipient_amount = this.itemInfo.invoice.total
+
         if (this.itemInfo.invoice.extra_data.charges_info.is_client_charge) {
-          this.form.recipient_amount = this.form.amount = this.itemInfo.invoice.extra_data.charges_info.gross_amount
+          this.payingAmount = this.itemInfo.invoice.extra_data.charges_info.gross_amount
         } else {
-         this.form.recipient_amount = this.form.amount = this.itemInfo.invoice.extra_data.charges_info.net_amount
+         this.payingAmount = this.itemInfo.invoice.extra_data.charges_info.net_amount
         }
       }
 
@@ -308,9 +311,9 @@ export default {
               this.checkTransactionStatus(trans_ref, this.timer, this.timeOut);
             }, 5000);
 
-            setTimeout(() => {
-              if(this.transStatus === 'pending') this.pendingPayment();
-            }, (this.timeoutValue * 1000)/2);
+            // setTimeout(() => {
+            //   this.pendingPayment();
+            // }, 1000)
 
             this.timeOut = setTimeout(() => {
               clearInterval(this.timer);
@@ -330,14 +333,15 @@ export default {
                     this.createLoading = false;
                     EventBus.$emit("startTrans", false);
 
-                    this.retry(response);
+                    this.pendingPayment(response);
+                    // this.retry(response);
                   }
                 })
                 .catch(err => {
 
                 });
               })
-            }, this.timeoutValue * 1000); //Poll the server for 2 minutes - 120000 micro seconds - 120 seconds - 120000 micro seconds
+            }, 120000); //Poll the server for 2 minutes - 120000 micro seconds - 120 seconds - 120000 micro seconds
 
           } else {
             console.log('Payment successful!! Now redirect :>> ');
@@ -380,14 +384,14 @@ export default {
             this.createLoading = false;
             EventBus.$emit("startTrans", false);
 
+            clearInterval(timer);
+            clearTimeout(timeOut);
+
             // Just stay on checkout page
             this.paymentDone = true;
 
             // Or Show success message and redirect within 2 seconds
-            this.proceed();
-
-            clearInterval(timer);
-            clearTimeout(timeOut);
+            // this.proceed();
           }
 
           else if (status.toLowerCase() === 'failed') {
@@ -425,7 +429,7 @@ export default {
     pendingPayment(msg) {
       swal({
         title: 'Payment Pending',
-        text: "Have you approved payment prompt yet?",
+        text: "Have you already approved payment prompt?",
         icon: "error",
         buttons: true,
         buttons: ["No", "Yes"],
@@ -433,9 +437,18 @@ export default {
       })
       .then(proceed => {
         if(proceed) {
+          // Show info to customer that request is being processed and they should be expectant of an sms.
+          swal({
+            title: 'Request being processed',
+            text: "You will received as sms shortly",
+            icon: "success",
+          })
+          setTimeout(() => {
+            window.location = this.itemInfo.invoice.return_url
+          }, 3000);
           return;
         } else {
-          this.cancel();
+          this.retry(msg);
         }
       });
     },
@@ -443,10 +456,10 @@ export default {
     retry(msg) {
       swal({
         title: `${msg.response_message || 'Transaction '+ msg.payment_status}`,
-        text: " Do you want to retry or abort transaction?",
+        text: " Do you want to retry transaction?",
         icon: "error",
         buttons: true,
-        buttons: ["Abort", "Retry"],
+        buttons: ["No", "Yes"],
         dangerMode: true,
       })
       .then(proceed => {
