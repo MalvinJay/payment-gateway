@@ -1,6 +1,7 @@
 <template>
   <!-- Stripe -->
-  <div class="checkout" v-loading.fullscreen.lock="fullscreenLoading">
+  <div class="checkout">
+    <!-- v-loading.fullscreen.lock="fullscreenLoading" -->
     <div v-if="customerInfo.is_paid" class="is_paid flex flex-column justify-content-center align-items-center bg-white h-screen">
       <div class="swal-icon swal-icon--success">
         <span class="swal-icon--success__line swal-icon--success__line--long"></span>
@@ -132,17 +133,17 @@
 </template>
 
 <script>
-import EventBus from "@/event-bus.js";
-import MobileMoney from "@/checkout/MobileMoney.vue";
-import CardPayment from "@/checkout/MobileMoney.vue";
+import EventBus from '@/event-bus.js'
+import MobileMoney from '@/checkout/MobileMoney.vue'
+import CardPayment from '@/checkout/MobileMoney.vue'
 
 export default {
-  name: "Checkout",
+  name: 'Checkout',
   components: {
-    "mobile-money": MobileMoney,
-    "card-payment": CardPayment
+    'mobile-money': MobileMoney,
+    'card-payment': CardPayment
   },
-  data() {
+  data () {
     return {
       checkAll: false,
       isIndeterminate: false,
@@ -151,12 +152,12 @@ export default {
       },
       modalVisible: false,
       styleObject: {
-        fontSize: "12px"
+        fontSize: '12px'
       },
       test: true,
       customerInfo: {
-        email: "",
-        amount: "",
+        email: '',
+        amount: '',
         timeout: 120,
         meta_items: {
           description: null,
@@ -173,81 +174,81 @@ export default {
             message: null,
             net_amount: null,
             request_type: null,
-            status: true,
+            status: true
           }
         },
         is_paid: null
       },
       fullscreenLoading: null,
       countDown: 0,
-      loading: false,
-    };
+      loading: false
+    }
   },
-  created() {
+  created () {
     this.fullscreenLoading = true
   },
-  mounted() {
-    EventBus.$on("startTrans", val => {
-      this.loading = val;
+  mounted () {
+    EventBus.$on('startTrans', val => {
+      this.loading = val
       if (val) {
-        this.counter(this.customerInfo.timeout || 120);
+        this.counter(this.customerInfo.timeout || 120)
       } else {
-        this.loading = false;
-        this.countDown = 0;
+        this.loading = false
+        this.countDown = 0
       }
-    });
-    EventBus.$on("itemFetched", info => {
-      info.customer ? this.customerInfo.email = info.customer.address : null;
-      info.invoice ? this.customerInfo.amount = info.invoice.total : null;
-      info.meta_items ? this.customerInfo.meta_items = info.meta_items : null;
-      info.invoice ? this.customerInfo.is_paid = info.invoice.is_paid : null;
-      info.invoice.extra_data ? this.customerInfo.extra_data = info.invoice.extra_data : null;
+    })
+    EventBus.$on('itemFetched', info => {
+      info.customer ? this.customerInfo.email = info.customer.address : null
+      info.invoice ? this.customerInfo.amount = info.invoice.total : null
+      info.meta_items ? this.customerInfo.meta_items = info.meta_items : null
+      info.invoice ? this.customerInfo.is_paid = info.invoice.is_paid : null
+      info.invoice.extra_data ? this.customerInfo.extra_data = info.invoice.extra_data : null
 
       if (info.invoice === undefined) {
         swal({
-          title: "Sorry! Item Not Found",
-          text: "Item was not found, kindly go back and try again",
-          icon: "error",
+          title: 'Sorry! Item Not Found',
+          text: 'Item was not found, kindly go back and try again',
+          icon: 'error',
           buttons: true,
           buttons: {
-            confirm: "Ok"
+            confirm: 'Ok'
           },
-          dangerMode: true,
+          dangerMode: true
         })
-        .then(() => {
-          window.history.back();
-        });
+          .then(() => {
+            window.history.back()
+          })
       }
 
-      this.fullscreenLoading = false;
-    });
+      this.fullscreenLoading = false
+    })
   },
   methods: {
-    cancelRequest() {
-      EventBus.$emit("cancelRequest");
+    cancelRequest () {
+      EventBus.$emit('cancelRequest')
     },
-    cancel() {
-      this.loading = false;
-      this.countDown = 0;
-      EventBus.$emit("cancelRequest");
+    cancel () {
+      this.loading = false
+      this.countDown = 0
+      EventBus.$emit('cancelRequest')
     },
-    counter(total) {
-      let timeout = parseInt(total);
-      this.countDown = timeout;
+    counter (total) {
+      let timeout = parseInt(total)
+      this.countDown = timeout
       const timer = setInterval(() => {
         this.countDown > 0 ? this.countDown -= 1 : clearInterval(timer)
-      }, 1000);
+      }, 1000)
 
-      const finaTimeout = timeout * 1000;
-      console.log("Final Timeout: 12000", finaTimeout);
+      const finaTimeout = timeout * 1000
+      console.log('Final Timeout: 12000', finaTimeout)
       const countLimit = setTimeout(() => {
-        clearInterval(timer);
-        this.countDown = 0;
-      }, finaTimeout);
+        clearInterval(timer)
+        this.countDown = 0
+      }, finaTimeout)
     }
   },
   computed: {
-    amount() {
+    amount () {
       if (this.customerInfo.extra_data.charges_info.is_client_charge) {
         return this.customerInfo.extra_data.charges_info.gross_amount
       } else {

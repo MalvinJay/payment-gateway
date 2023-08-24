@@ -98,248 +98,248 @@ export default {
   name: 'DashboardHeader',
   data () {
     return {
-        chartOptions: {
-            scales: {
-                yAxes: [{
-                    display: false,
-                    ticks: {
-                        beginAtZero: true,
-                        display: false
-                    },
-                    gridLines: {
-                        display: false
-                    }
-                    }],
-                xAxes: [{
-                    // display: false,
-                    // type: 'time',
-                    // time: {
-                    //     unit: 'day',
-                    //     min: 1,
-                    //     max: 31,
-                    //     tooltipFormat: 'Do'
-                    // },
-                    ticks: {
-                        // beginAtZero: false,
-                        // display: false,
-                        fontColor: 'white',
-                        lineHeight: 2,
-                        padding: 2,
-                        callback: function(value, index, values) {
-                            switch (value) {
-                                case '0:00':
-                                    return value
-                                    break
-                                case '23:00':
-                                    return value
-                                    break
-                                default:
-                                    return ''
-                            }
-                        }
-                    },
-                    gridLines: {
-                        display: true,
-                        color: "rgba(255, 255, 255, 0.1)",
-                        drawBorder: true,
-                        tickMarkLength: 0
-                    }
-                }],
-                gridLines: {
-                    color: "rgba(255, 255, 255, 0.1)",
-                    drawTicks: true,
-                    drawBorder: false,
-                    // tickMarkLength: 40,
+      chartOptions: {
+        scales: {
+          yAxes: [{
+            display: false,
+            ticks: {
+              beginAtZero: true,
+              display: false
+            },
+            gridLines: {
+              display: false
+            }
+          }],
+          xAxes: [{
+            // display: false,
+            // type: 'time',
+            // time: {
+            //     unit: 'day',
+            //     min: 1,
+            //     max: 31,
+            //     tooltipFormat: 'Do'
+            // },
+            ticks: {
+              // beginAtZero: false,
+              // display: false,
+              fontColor: 'white',
+              lineHeight: 2,
+              padding: 2,
+              callback: function (value, index, values) {
+                switch (value) {
+                  case '0:00':
+                    return value
+                    break
+                  case '23:00':
+                    return value
+                    break
+                  default:
+                    return ''
                 }
+              }
             },
-            legend: {
-                display: false,
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        var label = data.datasets[tooltipItem.datasetIndex].label || ''
+            gridLines: {
+              display: true,
+              color: 'rgba(255, 255, 255, 0.1)',
+              drawBorder: true,
+              tickMarkLength: 0
+            }
+          }],
+          gridLines: {
+            color: 'rgba(255, 255, 255, 0.1)',
+            drawTicks: true,
+            drawBorder: false
+            // tickMarkLength: 40,
+          }
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          callbacks: {
+            label: function (tooltipItem, data) {
+              var label = data.datasets[tooltipItem.datasetIndex].label || ''
 
-                        if (label) {
-                            label += ': ';
-                        }
-                        tooltipItem.width = 500
-                        label += Math.round(tooltipItem.yLabel * 100) / 100;
-                        return label
-                    }
-                },
-                backgroundColor: 'white',
-                titleFontColor: 'black',
-                footerFontColor: 'black',
-                bodyFontColor: 'black',
-                borderColor: '#dcdfe6',
-                borderWidth: 1,
-                displayColors: false
-            },
-            maintainAspectRatio: false,
-            layout: {
-                padding: {
-                    left: 5,
-                    right: 5,
-                    top: 20,
-                    bottom: 10
-                }
+              if (label) {
+                label += ': '
+              }
+              tooltipItem.width = 500
+              label += Math.round(tooltipItem.yLabel * 100) / 100
+              return label
             }
+          },
+          backgroundColor: 'white',
+          titleFontColor: 'black',
+          footerFontColor: 'black',
+          bodyFontColor: 'black',
+          borderColor: '#dcdfe6',
+          borderWidth: 1,
+          displayColors: false
         },
-        options: {
-            scales: {
-                yAxes: [{
-                    display: false,
-                    ticks: {
-                        beginAtZero: false,
-                        display: true
-                    },
-                        // gridLines: {
-                        //     display: false
-                        // }
-                    }],
-                xAxes: [{
-                    display: true,
-                    ticks: {
-                        // beginAtZero: false,
-                        // display: false,
-                        fontColor: 'gray',
-                        lineHeight: 2,
-                        padding: 2,
-                        callback: function(value, index, values) {
-                            switch (value) {
-                                case '0:00':
-                                    return value
-                                    break
-                                case '23:00':
-                                    return value
-                                    break
-                                default:
-                                    return ''
-                            }
-                        }
-                    },
-                    gridLines: {
-                        color: "rgba(128, 142, 227, 0.1)",
-                        drawBorder: false,
-                        tickMarkLength: 0
-                    }
-                }],
-                gridLines: {
-                    display: true,
-                    color: "rgba(255, 255, 255, 0.1)",
-                    drawBorder: false,
-                    tickMarkLength: 0
+        maintainAspectRatio: false,
+        layout: {
+          padding: {
+            left: 5,
+            right: 5,
+            top: 20,
+            bottom: 10
+          }
+        }
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            display: false,
+            ticks: {
+              beginAtZero: false,
+              display: true
+            }
+            // gridLines: {
+            //     display: false
+            // }
+          }],
+          xAxes: [{
+            display: true,
+            ticks: {
+              // beginAtZero: false,
+              // display: false,
+              fontColor: 'gray',
+              lineHeight: 2,
+              padding: 2,
+              callback: function (value, index, values) {
+                switch (value) {
+                  case '0:00':
+                    return value
+                    break
+                  case '23:00':
+                    return value
+                    break
+                  default:
+                    return ''
                 }
+              }
             },
-            legend: {
-                display: false,
-            },
-            tooltips: {
-                callbacks: {
-                    label: function(tooltipItem, data) {
-                        var label = data.datasets[tooltipItem.datasetIndex].label || ''
+            gridLines: {
+              color: 'rgba(128, 142, 227, 0.1)',
+              drawBorder: false,
+              tickMarkLength: 0
+            }
+          }],
+          gridLines: {
+            display: true,
+            color: 'rgba(255, 255, 255, 0.1)',
+            drawBorder: false,
+            tickMarkLength: 0
+          }
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          callbacks: {
+            label: function (tooltipItem, data) {
+              var label = data.datasets[tooltipItem.datasetIndex].label || ''
 
-                        if (label) {
-                            label += ': ';
-                        }
-                        tooltipItem.width = 500
-                        label += Math.round(tooltipItem.yLabel * 100) / 100;
-                        return label
-                    }
-                },
-                backgroundColor: 'white',
-                titleFontColor: 'black',
-                footerFontColor: 'black',
-                bodyFontColor: 'black',
-                borderColor: '#dcdfe6',
-                borderWidth: 1,
-                displayColors: false
-            },
-            maintainAspectRatio: false,
-            layout: {
-                padding: {
-                    left: 5,
-                    right: 5,
-                    top: 5,
-                    bottom: 10
-                }
+              if (label) {
+                label += ': '
+              }
+              tooltipItem.width = 500
+              label += Math.round(tooltipItem.yLabel * 100) / 100
+              return label
             }
+          },
+          backgroundColor: 'white',
+          titleFontColor: 'black',
+          footerFontColor: 'black',
+          bodyFontColor: 'black',
+          borderColor: '#dcdfe6',
+          borderWidth: 1,
+          displayColors: false
         },
-        pickerOptions: {
-            disabledDate(time) {
-                return time.getTime() > Date.now();
-            },
-            shortcuts: [{
-            text: 'Today',
-            onClick(picker) {
-                picker.$emit('pick', new Date());
-            }
-            }, {
-            text: 'Yesterday',
-            onClick(picker) {
-                const date = new Date();
-                date.setTime(date.getTime() - 3600 * 1000 * 24);
-                picker.$emit('pick', date);
-            }
-            }, {
-            text: 'A week ago',
-            onClick(picker) {
-                const date = new Date();
-                date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-                picker.$emit('pick', date);
-            }
-            }, {
-            text: 'A month ago',
-            onClick(picker) {
-                const date = new Date();
-                date.setTime(date.getTime() - 3600 * 1000 * 24 * 30);
-                picker.$emit('pick', date);
-            }
-            }, {
-            text: 'A year ago',
-            onClick(picker) {
-                const date = new Date();
-                date.setTime(date.getTime() - 3600 * 1000 * 24 * 365);
-                picker.$emit('pick', date);
-            }
-            }
-            ]
+        maintainAspectRatio: false,
+        layout: {
+          padding: {
+            left: 5,
+            right: 5,
+            top: 5,
+            bottom: 10
+          }
+        }
+      },
+      pickerOptions: {
+        disabledDate (time) {
+          return time.getTime() > Date.now()
         },
-        currentDate: ''
+        shortcuts: [{
+          text: 'Today',
+          onClick (picker) {
+            picker.$emit('pick', new Date())
+          }
+        }, {
+          text: 'Yesterday',
+          onClick (picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24)
+            picker.$emit('pick', date)
+          }
+        }, {
+          text: 'A week ago',
+          onClick (picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', date)
+          }
+        }, {
+          text: 'A month ago',
+          onClick (picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 30)
+            picker.$emit('pick', date)
+          }
+        }, {
+          text: 'A year ago',
+          onClick (picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 365)
+            picker.$emit('pick', date)
+          }
+        }
+        ]
+      },
+      currentDate: ''
     }
   },
   computed: {
     ...mapGetters({
-        user: 'user',
-        today: 'today',
-        sum: 'todaySum',
-        todayState: 'todayState',
-        amount: 'balance'
+      user: 'user',
+      today: 'today',
+      sum: 'todaySum',
+      todayState: 'todayState',
+      amount: 'balance'
     }),
     balance () {
-        return this.amount.available_balance ? this.amount.available_balance : 0
+      return this.amount.available_balance ? this.amount.available_balance : 0
     },
     fon () {
-        return this.amount.fon_messanger_balance
+      return this.amount.fon_messanger_balance
     },
     chartData () {
       var count = ''
       return {
-          labels: this.days,
-          datasets: [{
-              // label: this.labels,
-              data: this.count,
-              // backgroundColor: '#E8EBF8',
-              // borderColor: '#808EE3',
-              borderColor: '#ffffff',
-              pointHoverBackgroundColor: '#ffffff',
-              borderWidth: 2,
-              pointRadius: 0,
-              pointHitRadius: 20,
-              lineTension: 0,
-              fill: false
-          }]
+        labels: this.days,
+        datasets: [{
+          // label: this.labels,
+          data: this.count,
+          // backgroundColor: '#E8EBF8',
+          // borderColor: '#808EE3',
+          borderColor: '#ffffff',
+          pointHoverBackgroundColor: '#ffffff',
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHitRadius: 20,
+          lineTension: 0,
+          fill: false
+        }]
       }
     },
     todayLoading () {
@@ -350,12 +350,12 @@ export default {
     },
     days () {
       return this.today.map((el) => {
-          return el.label
+        return el.label
       })
     },
     count () {
       return this.today.map((el) => {
-          return `${el.count}`
+        return `${el.count}`
       })
     },
     sData () {
@@ -369,11 +369,11 @@ export default {
     }
   },
   methods: {
-    fetchToday() {
+    fetchToday () {
       this.$store.dispatch('getTodayGraph', {cache: false})
-      .then(() => {
-        EventBus.$emit('updateGraph')
-      })
+        .then(() => {
+          EventBus.$emit('updateGraph')
+        })
     },
 
     handleChange (val) {
@@ -383,16 +383,16 @@ export default {
 
       this.$store.dispatch('setTodayFilters', form)
       this.$store.dispatch('setDashboardFilters', {
-        time_interval: "date",
+        time_interval: 'date',
         statuses: 'succeeded',
         date_value: form.date
       })
-      .then((res) => {
-        EventBus.$emit('updateGraph')
-      })
+        .then((res) => {
+          EventBus.$emit('updateGraph')
+        })
     },
 
-    openDate() {
+    openDate () {
       this.$refs.datePick.focus()
     }
   }
@@ -448,4 +448,3 @@ export default {
       width: 80px;
   }
 </style>
-
