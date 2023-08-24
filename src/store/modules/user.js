@@ -138,6 +138,7 @@ const user = {
           resolve(response)
         })
         .catch((error) => {
+          
           console.log(error)
           reject(error)
         })
